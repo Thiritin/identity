@@ -1,0 +1,171 @@
+version: '3.7'
+########################################################################################################################
+# Variables
+########################################################################################################################
+x-variables:
+  database:
+    USER: &idp-db-username "idp"
+    PASSWORD: &idp-db-password "idp"
+    DATABASE: &idp-db-database "idp"
+  laravel-general:
+    &laravel-general
+    APP_KEY: base64:8EuWVWRVLiQcKZV7RIKhnqvBg1QUts1yg8VN6jeCQbI=
+    APP_ENV: "local"
+    APP_DEBUG: "true"
+    DB_CONNECTION: pgsql
+    DB_HOST: database
+    DB_DATABASE: *idp-db-database
+    DB_USERNAME: *idp-db-username
+    DB_PASSWORD: *idp-db-password
+    DB_PORT: 5432
+    BROADCAST_DRIVER: log
+    REDIS_HOST: redis
+    CACHE_DRIVER: redis
+    QUEUE_CONNECTION: redis
+    SESSION_DRIVER: redis
+    SESSION_LIFETIME: 120
+    OIDC_ADMIN_CLIENT_ID: ce94f7ac-1c9a-4d5d-8159-56b37562f9b1
+    OIDC_ADMIN_SECRET: optimus1
+    OIDC_MAIN_CLIENT_ID:
+    OIDC_MAIN_SECRET:
+  laravel-urls:
+    &laravel-urls
+    HYDRA_PUBLIC_URL: "hydra:4444"
+    HYDRA_ADMIN_URL: "hydra:4445"
+    HYDRA_LOCAL_PUBLIC: "http://auth.eurofurence.localhost/"
+    APP_URL: "http://identity.eurofurence.localhost/"
+    ROUTER_API_DOMAIN: identity.eurofurence.localhost
+  hydra:
+    &hydra
+    DSN: &hydra-dsn "postgres://hydra:hydra@hydra-database:5432/hydra?sslmode=disable&max_conns=20&max_idle_conns=4"
+    SECRETS_SYSTEM: R8owcHU_~fAG7rkAL0sdR06mJ1TQtUrb
+    URLS_SELF_ISSUER: http://auth.eurofurence.localhost/
+    URLS_CONSENT: http://identity.eurofurence.localhost/auth/consent
+    URLS_LOGIN: http://identity.eurofurence.localhost/auth/login
+    SERVE_COOKIES_SAME_SITE_MODE: Lax
+    #OIDC_SUBJECT_IDENTIFIERS_SUPPORTED_TYPES: pairwise
+    LOG_LEAK_SENSITIVE_VALUES: "true"
+    OAUTH2_EXPOSE_INTERNAL_ERRORS: "true"
+    # TRACING_PROVIDER: zipkin
+    # TRACING_PROVIDERS_ZIPKIN_SERVER_URL: http://zipkin:9411/api/v2/spans
+  hydra-database:
+    USER: &hydra-db-user "hydra"
+    PASSWORD: &hydra-db-password "hydra"
+    DATABASE: &hydra-db-database "hydra"
+########################################################################################################################
+# Services
+########################################################################################################################
+services:
+  ######################################################################################################################
+  # Identity Main | Laravel
+  ######################################################################################################################
+  api:
+    build:
+      context: ./
+      target: development
+    environment:
+      <<: *laravel-general
+      <<: *laravel-urls
+    volumes:
+      - '~/.psyhistory:/home/.config'
+      - './:/app/'
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.app.rule=Host(`identity.eurofurence.localhost`)
+      - traefik.http.services.app.loadbalancer.server.port=80
+      - traefik.http.routers.app.entrypoints=web
+  ######################################################################################################################
+  # Other
+  ######################################################################################################################
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+  database:
+    image: 'postgres:13'
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: *idp-db-username
+      POSTGRES_PASSWORD: *idp-db-password
+      POSTGRES_DB: *idp-db-database
+    volumes:
+      - 'database:/var/lib/postgresql/data'
+  ######################################################################################################################
+  # Hydra
+  ######################################################################################################################
+  hydra:
+    image: 'oryd/hydra:v1.9.0'
+    environment:
+      <<: *hydra
+    ports:
+      - '4444:4444'
+      - '4445:4445' # NEVER EXPOSE PUBLICLY ON PROD, ADMIN ENDPONT!!!
+      - '5555:5555'
+    command: serve all --dangerous-force-http
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.hydra.rule=Host(`auth.eurofurence.localhost`)
+      - traefik.http.services.hydra.loadbalancer.server.port=4444
+      - traefik.http.routers.hydra.entrypoints=web
+  hydra-migrate:
+    image: 'oryd/hydra:v1.9.0'
+    environment:
+      DSN: *hydra-dsn
+    command: migrate sql -e --yes
+    restart: on-failure
+  hydra-database:
+    image: 'postgres:13'
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_USER: *hydra-db-user
+      POSTGRES_PASSWORD: *hydra-db-password
+      POSTGRES_DB: *hydra-db-database
+    volumes:
+      - 'hydra-database:/var/lib/postgresql/data'
+  ######################################################################################################################
+  # Reverse Proxy | Traefik
+  ######################################################################################################################
+  traefik:
+    image: 'traefik:v2.3'
+    command:
+      - '--api=true'
+      - '--api.insecure=true'
+      - '--providers.docker=true'
+      - '--providers.docker.exposedbydefault=false'
+      - '--entrypoints.web.address=:80'
+  #    - '--tracing.zipkin=true'
+  #    - '--tracing.zipkin.httpEndpoint=http://zipkin:9411/api/v2/spans'
+  #    - '--tracing.zipkin.sampleRate=1'
+  #    - '--metrics.prometheus=true'
+  #    - '--entryPoints.metrics.address=:8082'
+  #    - '--metrics.prometheus.entryPoint=metrics'
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8080:8080'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+  ######################################################################################################################
+  # Logging/Tracing | Prometheus & Zipkin
+  ######################################################################################################################
+  #prometheus-main:
+  #  image: prom/prometheus:v2.12.0
+  #  ports:
+  #    - "9090:9090"
+  #  depends_on:
+  #    - hydra
+  #  command:
+  #    --config.file=/etc/prometheus/prometheus.yml
+  #  volumes:
+  #    - ./prometheus/config.yml:/etc/prometheus/prometheus.yml
+  #zipkin:
+  #  image: openzipkin/zipkin:2
+  #  environment:
+  #    - STORAGE_TYPE=mem
+  #  ports:
+  #    - "9411:9411" # The UI/API port
+volumes:
+  hydra-database:
+  database:
