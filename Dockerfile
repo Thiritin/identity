@@ -60,15 +60,27 @@ COPY composer.json composer.lock /app/
 FROM base as development
 ENTRYPOINT ["/bin/ash", ".github/docker/entrypoint.sh"]
 CMD [ "supervisord", "-n", "-c", "/etc/supervisord.conf" ]
+
+######################################################
+# NodeJS Stage
+######################################################
+FROM node:16-buster as mix
+WORKDIR /app
+COPY package.json package-lock.json webpack.mix.js tailwind.config.js webpack.config.js ./
+RUN npm install
+COPY . /app/
+RUN npm run prod
 ######################################################
 # Production Stage
 ######################################################
 FROM base as production
 COPY . /app/
+COPY --from=mix /app/public/css/app.css ./public/css/app.css
+COPY --from=mix /app/public/js/app.js ./public/js/app.js
 RUN composer install --no-dev --optimize-autoloader \
     && chmod 777 -R bootstrap storage \
     && rm -rf .env bootstrap/cache/*.php auth.json \
-    && chown -R www-data:www-data /app
+    && chown -R www-data:www-data /app \
     && rm -rf ~/.composer
 ENTRYPOINT ["/bin/ash", ".github/docker/entrypoint.sh"]
 CMD [ "supervisord", "-n", "-c", "/etc/supervisord.conf" ]
