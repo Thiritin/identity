@@ -74,9 +74,9 @@ RUN npm run prod
 # Production Stage
 ######################################################
 FROM base as production
-COPY . /app/
 COPY --from=mix /app/public/css/app.css ./public/css/app.css
 COPY --from=mix /app/public/js/app.js ./public/js/app.js
+COPY . /app/
 RUN composer install --no-dev --optimize-autoloader \
     && chmod 777 -R bootstrap storage \
     && rm -rf .env bootstrap/cache/*.php auth.json \

@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 use Jumbojett\OpenIDConnectClient;
+use Vinkla\Hashids\Facades\Hashids;
 
 class LoginController extends Controller
 {
@@ -19,20 +20,23 @@ class LoginController extends Controller
             config('services.oidc.admin.client_id'),
             config('services.oidc.admin.secret')
         );
-        $oidc->addScope('openid','admin');
+        $oidc->addScope(['openid']);
         /**
          * Only for development
          */
-        if(App::isLocal()) {
+        if (App::isLocal()) {
             $oidc->setVerifyHost(false);
             $oidc->setVerifyPeer(false);
             $oidc->providerConfigParam([
                 "authorization_endpoint" => config('services.hydra.local_public')."/oauth2/auth",
-                "token_endpoint" => config('services.hydra.local_public')."/oauth2/token",
-                "jwks_uri" => config('services.hydra.local_public')."/.well-known/jwks.json",
+                "token_endpoint" => config('services.hydra.public')."/oauth2/token",
+                "jwks_uri" => config('services.hydra.public')."/.well-known/jwks.json",
             ]);
         }
         $oidc->setRedirectURL(route('admin.login.callback'));
-        $oidc->authenticate();
+        if ($oidc->authenticate()) {
+            Auth::loginUsingId(Hashids::decode($oidc->getIdTokenPayload()->sub));
+            return redirect(route('backpack'));
+        }
     }
 }

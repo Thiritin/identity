@@ -32,14 +32,14 @@ x-variables:
     &laravel-urls
     HYDRA_PUBLIC_URL: "hydra:4444"
     HYDRA_ADMIN_URL: "hydra:4445"
-    HYDRA_LOCAL_PUBLIC: "http://identity.eurofurence.localhost"
-    APP_URL: "http://identity.eurofurence.localhost/"
+    HYDRA_LOCAL_PUBLIC: "http://auth.eurofurence.localhost"
+    APP_URL: "http://identity.eurofurence.localhost"
     ROUTER_API_DOMAIN: identity.eurofurence.localhost
   hydra:
     &hydra
     DSN: &hydra-dsn "postgres://hydra:hydra@hydra-database:5432/hydra?sslmode=disable&max_conns=20&max_idle_conns=4"
-    SECRETS_SYSTEM: R8owcHU_~fAG7rkAL0sdR06mJ1TQtUrb
-    URLS_SELF_ISSUER: http://identity.eurofurence.localhost/
+    SECRETS_SYSTEM: 3zmBik#H7g9LKT?Fb9FnbGxytAc49yn9@sKiYhY8
+    URLS_SELF_ISSUER: http://auth.eurofurence.localhost/
     URLS_CONSENT: http://identity.eurofurence.localhost/auth/consent
     URLS_LOGIN: http://identity.eurofurence.localhost/auth/login
     SERVE_COOKIES_SAME_SITE_MODE: Lax
@@ -114,7 +114,7 @@ services:
     command: serve all --dangerous-force-http
     labels:
       - traefik.enable=true
-      - traefik.http.routers.hydra.rule=Host(`identity.eurofurence.localhost`) && (PathPrefix(`/.well-known`) || PathPrefix(`/health`) || PathPrefix(`/oauth2`))
+      - traefik.http.routers.hydra.rule=Host(`auth.eurofurence.localhost`)
       - traefik.http.services.hydra.loadbalancer.server.port=4444
       - traefik.http.routers.hydra.entrypoints=web
   hydra-migrate:

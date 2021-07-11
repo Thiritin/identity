@@ -6,6 +6,7 @@
 
 @section('title')
   Page not found.
+    {{ request()->url() }}
 @endsection
 
 @section('description')
