@@ -64,11 +64,11 @@ CMD [ "supervisord", "-n", "-c", "/etc/supervisord.conf" ]
 # Production Stage
 ######################################################
 FROM base as production
-RUN composer install --no-dev --prefer-dist --no-scripts --no-autoloader && rm -rf ~/.composer
 COPY . /app/
 RUN composer install --no-dev --optimize-autoloader \
     && chmod 777 -R bootstrap storage \
     && rm -rf .env bootstrap/cache/*.php auth.json \
     && chown -R www-data:www-data /app
+    && rm -rf ~/.composer
 ENTRYPOINT ["/bin/ash", ".github/docker/entrypoint.sh"]
 CMD [ "supervisord", "-n", "-c", "/etc/supervisord.conf" ]
