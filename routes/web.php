@@ -2,9 +2,7 @@
 
 use App\Http\Controllers\Auth\ConsentController;
 use App\Http\Controllers\Auth\LoginController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,10 +15,8 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/auth/login',function () {
-    return Inertia::render('Auth/Login');
-})->name('auth.login.view');
-Route::post('/auth/login', LoginController::class)->name('auth.login.submit');
+Route::get('/auth/login', [LoginController::class,'view'])->name('auth.login.view');
+Route::post('/auth/login', [LoginController::class,'submit'])->name('auth.login.submit');
 Route::get('/auth/consent', ConsentController::class)->name('auth.consent');
 
 /**

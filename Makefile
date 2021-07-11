@@ -1,6 +1,4 @@
 api:
-	docker-compose run --rm api sh
-login-api:
-	docker-compose run --rm login-api sh
+	docker-compose run --rm cli sh
 hydra:
 	docker-compose run --rm hydra sh

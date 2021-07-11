@@ -8,10 +8,18 @@ use App\Providers\HydraServiceProvider;
 use App\Services\Hydra;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
 
 class LoginController extends Controller
 {
-    public function __invoke(LoginRequest $request)
+    public function view(\Illuminate\Http\Request $request)
+    {
+        return Inertia::render('Auth/Login',[
+            'canSeeLogin' => $request->exists('login_challenge'),
+        ]);
+    }
+
+    public function submit(LoginRequest $request)
     {
         $hydra = new Hydra();
         $loginData = [
@@ -24,6 +32,6 @@ class LoginController extends Controller
         $hydraResponse = $hydra->acceptLoginRequest(Auth::user()->getHashId(), $request->get('login_challenge'));
         abort_if(empty($hydraResponse->redirect_to), 500);
 
-        return redirect($hydraResponse->redirect_to);
+        return Inertia::location($hydraResponse->redirect_to);
     }
 }

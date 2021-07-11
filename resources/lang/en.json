@@ -8,5 +8,6 @@
     "wrong_login_details_message": "Wrong username or password.",
     "username": "Username",
     "roles": "Roles",
-    "created at": "Created at"
+    "created at": "Created at",
+    "no_login_challenge": "Initiating a login into the App is currently not supported. Only external authentication is possible."
 }
