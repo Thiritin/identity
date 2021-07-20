@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use Exception;
+use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Ory\Hydra\Client\Api\AdminApi;
@@ -18,7 +19,7 @@ class Hydra
     public function __construct($host = 'hydra:4445')
     {
         $configuration = (new Configuration())->setHost(config('services.hydra.admin'));
-        $this->api = new AdminApi(null, $configuration);
+        $this->api = new AdminApi(new Client(['verify' => false]), $configuration);
     }
 
     public function getLoginRequest(string $loginChallenge)
