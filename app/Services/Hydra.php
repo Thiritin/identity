@@ -17,7 +17,7 @@ class Hydra
 
     public function __construct($host = 'hydra:4445')
     {
-        $configuration = (new Configuration())->setHost('hydra:4445');
+        $configuration = (new Configuration())->setHost(config('services.hydra.admin'));
         $this->api = new AdminApi(null, $configuration);
     }
 
