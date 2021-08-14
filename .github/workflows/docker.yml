@@ -5,7 +5,7 @@ on:
     types:
       - created
 jobs:
-  main:
+  build-docker:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -54,3 +54,14 @@ jobs:
           target: production
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.prep.outputs.tags }}
+  deploy-to-production:
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: build-docker
+    steps:
+      - name: Redeploy on Development Server
+        uses: fjogeleit/http-request-action@v1.8.0
+        with:
+          url: https://swarmpit.main.thiritin.com/api/services/lq6r9zu3lfpu3pye66kf55v6o/redeploy
+          method: POST
+          bearerToken: ${{ secrets.MAIN_SWARMPIT_BEARER }}
