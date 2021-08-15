@@ -1,7 +1,5 @@
 <?php
 
-use Laravel\Jetstream\Features;
-
 return [
 
     /*
@@ -46,7 +44,7 @@ return [
         // Features::profilePhotos(),
         // Features::api(),
         // Features::teams(['invitations' => true]),
-        Features::accountDeletion(),
+        // Features::accountDeletion(),
     ],
 
     /*

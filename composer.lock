@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2d0d064d98db8c650a123e9f4564474f",
+    "content-hash": "ab822f2b1284f9118cb675c88c1fe900",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2108,16 +2108,16 @@
         },
         {
             "name": "laravel/fortify",
-            "version": "v1.7.13",
+            "version": "v1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/fortify.git",
-                "reference": "1753d05c80f930cc2715051858900965b49f32d9"
+                "reference": "84649d53465bb4eae1b09357c98ceef56a41b680"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/fortify/zipball/1753d05c80f930cc2715051858900965b49f32d9",
-                "reference": "1753d05c80f930cc2715051858900965b49f32d9",
+                "url": "https://api.github.com/repos/laravel/fortify/zipball/84649d53465bb4eae1b09357c98ceef56a41b680",
+                "reference": "84649d53465bb4eae1b09357c98ceef56a41b680",
                 "shasum": ""
             },
             "require": {
@@ -2167,7 +2167,7 @@
                 "issues": "https://github.com/laravel/fortify/issues",
                 "source": "https://github.com/laravel/fortify"
             },
-            "time": "2021-05-25T16:35:21+00:00"
+            "time": "2021-08-10T17:23:06+00:00"
         },
         {
             "name": "laravel/framework",
@@ -2339,16 +2339,16 @@
         },
         {
             "name": "laravel/jetstream",
-            "version": "v2.3.10",
+            "version": "v2.3.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/jetstream.git",
-                "reference": "cfe20b1462b9f8994861496ad72a3a3c7f30f553"
+                "reference": "7446fc7c6e62457bf37fef22e0a0e96956dee089"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/jetstream/zipball/cfe20b1462b9f8994861496ad72a3a3c7f30f553",
-                "reference": "cfe20b1462b9f8994861496ad72a3a3c7f30f553",
+                "url": "https://api.github.com/repos/laravel/jetstream/zipball/7446fc7c6e62457bf37fef22e0a0e96956dee089",
+                "reference": "7446fc7c6e62457bf37fef22e0a0e96956dee089",
                 "shasum": ""
             },
             "require": {
@@ -2356,7 +2356,7 @@
                 "illuminate/support": "^8.0",
                 "jenssegers/agent": "^2.6",
                 "laravel/fortify": "^1.6.1",
-                "league/commonmark": "^1.3",
+                "league/commonmark": "^1.3|^2.0",
                 "php": "^7.3|^8.0"
             },
             "require-dev": {
@@ -2402,7 +2402,7 @@
                 "issues": "https://github.com/laravel/jetstream/issues",
                 "source": "https://github.com/laravel/jetstream"
             },
-            "time": "2021-06-22T15:28:58+00:00"
+            "time": "2021-07-28T10:12:38+00:00"
         },
         {
             "name": "laravel/sanctum",
@@ -9646,5 +9646,5 @@
         "php": "^7.4|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }

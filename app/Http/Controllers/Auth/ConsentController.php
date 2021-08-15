@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ConsentRequest;
+use App\Http\Requests\Auth\ConsentRequest;
 use App\Models\User;
 use App\Services\Hydra;
 use Vinkla\Hashids\Facades\Hashids;

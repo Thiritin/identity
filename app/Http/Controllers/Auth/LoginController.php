@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\LoginRequest;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\HydraServiceProvider;
 use App\Services\Hydra;
 use Illuminate\Support\Facades\Auth;

@@ -1,95 +1,83 @@
 <template>
-    <jet-authentication-card>
-        <template #logo>
-            <jet-authentication-card-logo />
-        </template>
+    <auth-layout class="w-full">
+        <head>
+            <title>{{ $trans('meta_title_prefix') }} - </title>
+        </head>
+        <Logo></Logo>
+        <LoginScreenWelcome :sub-title="$trans('register_subtitle')" :title="$trans('register_title')" class="mb-10"/>
+        <form class="space-y-3" @submit.prevent="submit">
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700" for="username"> {{ $trans('username') }} </label>
+                <FormInput id="username"
+                           v-model.trim.lazy="form.username"
+                           :class="{'border-red-500 focus:border-red-500': (errors?.username != null)}"
+                           :placeholder="$trans('username')"
+                           autocomplete="username"
+                           type="text"/>
 
-        <jet-validation-errors class="mb-4" />
-
-        <form @submit.prevent="submit">
-            <div>
-                <jet-label for="name" value="Name" />
-                <jet-input id="name" v-model="form.name" autocomplete="name" autofocus class="mt-1 block w-full" required type="text" />
+                <span v-show="errors.username" class="w-full text-red-600 text-xs rounded">
+                    {{ errors.username }}
+                </span>
             </div>
-
-            <div class="mt-4">
-                <jet-label for="email" value="Email" />
-                <jet-input id="email" v-model="form.email" class="mt-1 block w-full" required type="email" />
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700" for="email"> {{ $trans('email') }} </label>
+                <FormInput id="email"
+                           v-model.trim.lazy="form.email"
+                           :class="{'border-red-500 focus:border-red-500': (errors?.email != null)}"
+                           autocomplete="email"
+                           class="mb-4"
+                           placeholder="me@example.org"
+                           type="text"/>
+                <span v-show="errors.email" class="w-full text-red-600 text-xs rounded">
+                    {{ errors.email }}
+                </span>
             </div>
-
-            <div class="mt-4">
-                <jet-label for="password" value="Password" />
-                <jet-input id="password" v-model="form.password" autocomplete="new-password" class="mt-1 block w-full" required type="password" />
-            </div>
-
-            <div class="mt-4">
-                <jet-label for="password_confirmation" value="Confirm Password" />
-                <jet-input id="password_confirmation" v-model="form.password_confirmation" autocomplete="new-password" class="mt-1 block w-full" required type="password" />
-            </div>
-
-            <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">
-                <jet-label for="terms">
-                    <div class="flex items-center">
-                        <jet-checkbox id="terms" v-model:checked="form.terms" name="terms" />
-
-                        <div class="ml-2">
-                            I agree to the <a :href="route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900" target="_blank">Terms of Service</a> and <a :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900" target="_blank">Privacy Policy</a>
-                        </div>
-                    </div>
-                </jet-label>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <inertia-link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                    Already registered?
+            <div class="flex flex-col pt-10">
+                <button :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
+                        :disabled="form.processing"
+                        class="py-3 rounded-lg px-12 ml-auto text-white text-2xl mb-4 font-semibold focus:outline-none"
+                        type="submit">
+                    {{ $trans('register_button') }}
+                </button>
+                <inertia-link :href="route('auth.login.view')" class="ml-auto text-gray-700">
+                    {{ $trans('register_back_to_login') }}
                 </inertia-link>
-
-                <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing" class="ml-4">
-                    Register
-                </jet-button>
             </div>
         </form>
-    </jet-authentication-card>
+    </auth-layout>
 </template>
 
 <script>
-import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
-import JetButton from '@/Jetstream/Button'
-import JetInput from '@/Jetstream/Input'
-import JetCheckbox from "@/Jetstream/Checkbox";
-import JetLabel from '@/Jetstream/Label'
-import JetValidationErrors from '@/Jetstream/ValidationErrors'
+import Logo from "@/Auth/Logo";
+import LoginScreenWelcome from "@/Auth/LoginScreenWelcome";
+import FormInput from "@/Auth/Form/FormInput";
+import AuthLayout from "@/Layouts/AuthLayout";
 
 export default {
-        components: {
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
-            JetButton,
-            JetInput,
-            JetCheckbox,
-            JetLabel,
-            JetValidationErrors
-        },
+    components: {
+        AuthLayout,
+        Logo,
+        LoginScreenWelcome,
+        FormInput
+    },
 
-        data() {
-            return {
-                form: this.$inertia.form({
-                    name: '',
-                    email: '',
-                    password: '',
-                    password_confirmation: '',
-                    terms: false,
-                })
-            }
-        },
+    props: {
+        errors: Object,
+    },
 
-        methods: {
-            submit() {
-                this.form.post(this.route('register'), {
-                    onFinish: () => this.form.reset('password', 'password_confirmation'),
-                })
-            }
+    data() {
+        return {
+            form: this.$inertia.form({
+                email: null,
+                username: null
+            })
+        }
+    },
+
+    methods: {
+        submit() {
+            this.form.post(this.route('auth.register.store'))
         }
     }
+}
 </script>

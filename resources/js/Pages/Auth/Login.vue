@@ -1,32 +1,48 @@
 <template>
-    <auth-layout class="w-full">
+
+    <auth-layout>
         <Logo></Logo>
         <LoginScreenWelcome :sub-title="$trans('loginscreen_sign_in_to_continue')"
                             :title="$trans('loginscreen_welcome')"
                             class="mb-10"/>
-        <form @submit.prevent="submit">
-            <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-                {{ status }}
+        <form class="space-y-12" @submit.prevent="submit">
+            <div>
+                <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+                    {{ status }}
+                </div>
+                <div v-if="!canSeeLogin" class="w-full mb-8 bg-white shadow-md py-4 px-3 border-l-[4px] border-red-600">
+                    <span>{{ $trans('no_login_challenge') }}</span>
+                </div>
+                <div v-show="errors.nouser"
+                     class="w-full mb-8 bg-white shadow-md py-4 px-3 border-l-[4px] border-red-600">
+                    <span>{{ $trans('wrong_login_details_message') }}</span>
+                </div>
             </div>
-            <div v-if="!canSeeLogin" class="w-full mb-8 bg-white shadow-md py-4 px-3 border-l-[4px] border-red-600">
-                <span>{{ $trans('no_login_challenge') }}</span>
-            </div>
-            <div v-if="errors.nouser" class="w-full mb-8 bg-white shadow-md py-4 px-3 border-l-[4px] border-red-600">
-                <span>{{ $trans('wrong_login_details_message') }}</span>
-            </div>
-            <div v-if="canSeeLogin">
-                <FormInput v-model.trim.lazy="form.email"
-                           :class="{'border-red-500 focus:border-red-500': (errors?.email != null)}"
-                           :placeholder="$trans('email')"
-                           autocomplete="email"
-                           class="mb-4"
-                           type="email"/>
-                <FormInput v-model.lazy="form.password"
-                           :class="{'border-red-500 focus:border-red-500': (errors?.password != null)}"
-                           :placeholder="$trans('password')"
-                           autocomplete="password"
-                           class="mb-16"
-                           type="password"/>
+            <div v-if="canSeeLogin" class="space-y-4">
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700" for="email"> {{
+                            $trans('email')
+                        }} </label>
+                    <FormInput id="email"
+                               v-model.trim.lazy="form.email"
+                               :class="{'border-red-500 focus:border-red-500': (errors?.email != null)}"
+                               :placeholder="$trans('email')"
+                               autocomplete="email"
+                               class="mb-4"
+                               type="email"/>
+                </div>
+                <div class="space-y-1">
+                    <label class="block text-sm font-medium text-gray-700" for="password"> {{
+                            $trans('password')
+                        }} </label>
+                    <FormInput id="password"
+                               v-model.lazy="form.password"
+                               :class="{'border-red-500 focus:border-red-500': (errors?.password != null)}"
+                               :placeholder="$trans('password')"
+                               autocomplete="password"
+                               class="mb-16"
+                               type="password"/>
+                </div>
             </div>
             <div class="flex flex-col" v-if="canSeeLogin">
                 <button :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
@@ -35,7 +51,7 @@
                         type="submit">
                     {{ $trans('sign_in') }}
                 </button>
-                <inertia-link :href="route('password.request')" class="ml-auto text-gray-700">
+                <inertia-link :href="route('auth.forgot-password.view')" class="ml-auto text-gray-700">
                     {{ $trans('forgot_password_btn') }}
                 </inertia-link>
             </div>
@@ -60,7 +76,6 @@ export default {
     },
 
     props: {
-        canResetPassword: Boolean,
         status: String,
         errors: Object,
         canSeeLogin: Boolean

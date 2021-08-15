@@ -1,68 +1,79 @@
 <template>
-    <jet-authentication-card>
-        <template #logo>
-            <jet-authentication-card-logo />
-        </template>
 
-        <div class="mb-4 text-sm text-gray-600">
-            Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
-        </div>
-
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
-        </div>
-
-        <jet-validation-errors class="mb-4" />
-
-        <form @submit.prevent="submit">
-            <div>
-                <jet-label for="email" value="Email" />
-                <jet-input id="email" v-model="form.email" autofocus class="mt-1 block w-full" required type="email" />
+    <auth-layout>
+        <Logo></Logo>
+        <LoginScreenWelcome :sub-title="$trans('password_reset_sub_title')"
+                            :title="$trans('password_reset_title')"
+                            class="mb-10"/>
+        <form class="space-y-12" @submit.prevent="submit">
+            <div class="space-y-6">
+                <div class="text-sm shadow-md p-2 border-l-[4px] border-primary-600">{{ $trans('forgot_password_helptext')}}</div>
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700" for="email"> {{
+                            $trans('email')
+                        }} </label>
+                    <FormInput id="email"
+                               v-model.trim.lazy="form.email"
+                               :class="{'border-red-500 focus:border-red-500': (errors?.email != null)}"
+                               autocomplete="email"
+                               placeholder="me@example.com"
+                               type="email"/>
+                    <span v-show="errors.email" class="w-full text-red-600 text-xs rounded">
+                    {{ errors.email }}
+                </span>
+                </div>
             </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Email Password Reset Link
-                </jet-button>
+            <div class="flex flex-col">
+                <button :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
+                        :disabled="form.processing"
+                        class="py-3 rounded-lg px-12 ml-auto text-white text-2xl mb-4 font-semibold focus:outline-none"
+                        type="submit">
+                    {{ $trans('reset_password') }}
+                </button>
+                <inertia-link :href="route('auth.login.view')" class="ml-auto text-gray-700">
+                    {{ $trans('back_to_login') }}
+                </inertia-link>
             </div>
         </form>
-    </jet-authentication-card>
+    </auth-layout>
 </template>
 
 <script>
-import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
-import JetButton from '@/Jetstream/Button'
-import JetInput from '@/Jetstream/Input'
-import JetLabel from '@/Jetstream/Label'
-import JetValidationErrors from '@/Jetstream/ValidationErrors'
+import Logo from "@/Auth/Logo";
+import LoginScreenWelcome from "@/Auth/LoginScreenWelcome";
+import FormInput from "@/Auth/Form/FormInput";
+import ValidationErrors from "@/Jetstream/ValidationErrors";
+import AuthLayout from "@/Layouts/AuthLayout";
 
 export default {
-        components: {
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
-            JetButton,
-            JetInput,
-            JetLabel,
-            JetValidationErrors
-        },
+    components: {
+        AuthLayout,
+        ValidationErrors,
+        Logo,
+        LoginScreenWelcome,
+        FormInput
+    },
 
-        props: {
-            status: String
-        },
+    props: {
+        status: String,
+        errors: Object,
+        canSeeLogin: Boolean
+    },
 
-        data() {
-            return {
-                form: this.$inertia.form({
-                    email: ''
-                })
-            }
-        },
+    data() {
+        return {
+            form: this.$inertia.form({
+                email: null,
+            }),
+            show: true
+        }
+    },
 
-        methods: {
-            submit() {
-                this.form.post(this.route('password.email'))
-            }
+    methods: {
+        submit() {
+            this.form.post(this.route('auth.forgot-password.store'))
         }
     }
+}
 </script>
+

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\Auth\UserRequest;
 use App\Models\Role;
 use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;

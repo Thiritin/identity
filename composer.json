@@ -15,6 +15,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "inertiajs/inertia-laravel": "^0.4.2",
         "jumbojett/openid-connect-php": "^0.9.2",
+        "laravel/fortify": "^1.8",
         "laravel/framework": "^8.40",
         "laravel/jetstream": "^2.3",
         "laravel/sanctum": "^2.6",

@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Auth\ConsentController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,21 +18,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/auth/login', [LoginController::class,'view'])->name('auth.login.view');
-Route::post('/auth/login', [LoginController::class,'submit'])->name('auth.login.submit');
-Route::get('/auth/consent', ConsentController::class)->name('auth.consent');
 
-/**
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+Route::prefix('auth')->name('auth.')->group(function () {
+    Route::get('login', [LoginController::class, 'view'])->name('login.view');
+    Route::post('login', [LoginController::class, 'submit'])->name('login.submit');
+    Route::get('consent', ConsentController::class)->name('consent');
+    // Register
+    Route::inertia('register', 'Auth/Register')->name('register.view');
+    Route::post('register', RegisterController::class)->middleware('guest')->name('register.store');
+    // Password Reset
+    Route::inertia('forgot-password','Auth/ForgotPassword')->name('forgot-password.view');
+    Route::post('forgot-password', ForgotPasswordController::class)->name('forgot-password.store');
+    // Set new Password
+    Route::inertia('password-reset','Auth/PasswordReset')->name('password-reset.view');
+    Route::post('password-reset', PasswordResetController::class)->name('password-reset.view');
 });
+
+
+Route::get('/', function () {
+    return "TODO";
+})->middleware('auth:sanctum', 'verified');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
-**/
+
