@@ -20,9 +20,7 @@
             </div>
             <div v-if="canSeeLogin" class="space-y-4">
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700" for="email"> {{
-                            $trans('email')
-                        }} </label>
+                    <label class="block text-sm font-medium text-gray-700" for="email"> {{ $trans('email') }} </label>
                     <FormInput id="email"
                                v-model.trim.lazy="form.email"
                                :class="{'border-red-500 focus:border-red-500': (errors?.email != null)}"
@@ -32,8 +30,7 @@
                                type="email"/>
                 </div>
                 <div class="space-y-1">
-                    <label class="block text-sm font-medium text-gray-700" for="password"> {{
-                            $trans('password')
+                    <label class="block text-sm font-medium text-gray-700" for="password"> {{ $trans('password')
                         }} </label>
                     <FormInput id="password"
                                v-model.lazy="form.password"
@@ -44,7 +41,7 @@
                                type="password"/>
                 </div>
             </div>
-            <div class="flex flex-col" v-if="canSeeLogin">
+            <div v-if="canSeeLogin" class="flex flex-col">
                 <button :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
                         :disabled="form.processing"
                         class="py-3 rounded-lg px-12 ml-auto text-white text-2xl mb-4 font-semibold focus:outline-none"

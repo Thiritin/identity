@@ -1,57 +1,141 @@
 <template>
-    <jet-authentication-card>
-        <template #logo>
-            <jet-authentication-card-logo />
-        </template>
-
-        <jet-validation-errors class="mb-4" />
-
-        <form @submit.prevent="submit">
-            <div>
-                <jet-label for="email" value="Email" />
-                <jet-input id="email" v-model="form.email" autofocus class="mt-1 block w-full" required type="email" />
+    <auth-layout>
+        <Logo></Logo>
+        <LoginScreenWelcome
+            :sub-title="$trans('password_reset_sub_title')"
+            :title="$trans('password_reset_title')"
+            class="mb-10"
+        />
+        <form class="space-y-12" @submit.prevent="submit">
+            <div class="space-y-6">
+                <div class="space-y-2">
+                    <label
+                        class="block text-sm font-medium text-gray-700"
+                        for="email"
+                    >
+                        {{ $trans('email') }}
+                    </label>
+                    <FormInput
+                        id="email"
+                        v-model.trim.lazy="form.email"
+                        :class="{
+                            'border-red-500 focus:border-red-500':
+                                errors?.email != null,
+                        }"
+                        autocomplete="email"
+                        placeholder="me@example.com"
+                        readonly=""
+                        type="email"
+                    />
+                    <span
+                        v-if="errors.email"
+                        class="w-full text-red-600 text-xs rounded"
+                    >
+                        {{ errors.email }}
+                    </span>
+                </div>
+                <div class="space-y-2">
+                    <label
+                        class="block text-sm font-medium text-gray-700"
+                        for="password"
+                    >
+                        {{ $trans('password') }}
+                    </label>
+                    <FormInput
+                        id="password"
+                        v-model.trim.lazy="form.password"
+                        :class="{
+                            'border-red-500 focus:border-red-500':
+                                errors?.email != null,
+                        }"
+                        autocomplete="email"
+                        placeholder=""
+                        type="password"
+                    />
+                    <span
+                        v-show="errors.password"
+                        class="w-full text-red-600 text-xs rounded"
+                    >
+                        {{ errors.password }}
+                    </span>
+                </div>
+                <div class="space-y-2">
+                    <label
+                        class="block text-sm font-medium text-gray-700"
+                        for="password_confirmation"
+                    >
+                        {{ $trans('password_confirmation') }}
+                    </label>
+                    <FormInput
+                        id="password_confirmation"
+                        v-model.trim.lazy="form.password_confirmation"
+                        :class="{
+                            'border-red-500 focus:border-red-500':
+                                errors?.email != null,
+                        }"
+                        autocomplete="email"
+                        placeholder=""
+                        type="password"
+                    />
+                    <span
+                        v-show="errors.password_confirmation"
+                        class="w-full text-red-600 text-xs rounded"
+                    >
+                        {{ errors.password_confirmation }}
+                    </span>
+                </div>
             </div>
-
-            <div class="mt-4">
-                <jet-label for="password" value="Password" />
-                <jet-input id="password" v-model="form.password" autocomplete="new-password" class="mt-1 block w-full" required type="password" />
-            </div>
-
-            <div class="mt-4">
-                <jet-label for="password_confirmation" value="Confirm Password" />
-                <jet-input id="password_confirmation" v-model="form.password_confirmation" autocomplete="new-password" class="mt-1 block w-full" required type="password" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Reset Password
-                </jet-button>
+            <div class="flex flex-col">
+                <button
+                    :class="
+                        form.processing ? 'bg-primary-400' : 'bg-primary-500'
+                    "
+                    :disabled="form.processing"
+                    class="
+                        py-3
+                        rounded-lg
+                        px-12
+                        ml-auto
+                        text-white text-2xl
+                        mb-4
+                        font-semibold
+                        focus:outline-none
+                    "
+                    type="submit"
+                >
+                    {{ $trans('reset_password') }}
+                </button>
+                <inertia-link
+                    :href="route('auth.login.view')"
+                    class="ml-auto text-gray-700"
+                >
+                    {{ $trans('back_to_login') }}
+                </inertia-link>
             </div>
         </form>
-    </jet-authentication-card>
+    </auth-layout>
 </template>
 
 <script>
-import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
-import JetButton from '@/Jetstream/Button'
-import JetInput from '@/Jetstream/Input'
-import JetLabel from '@/Jetstream/Label'
-import JetValidationErrors from '@/Jetstream/ValidationErrors'
+    import Logo from '@/Auth/Logo'
+    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome'
+    import FormInput from '@/Auth/Form/FormInput'
+    import ValidationErrors from '@/Jetstream/ValidationErrors'
+    import AuthLayout from '@/Layouts/AuthLayout'
 
-export default {
+    export default {
         components: {
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
-            JetButton,
-            JetInput,
-            JetLabel,
-            JetValidationErrors
+            AuthLayout,
+            ValidationErrors,
+            Logo,
+            LoginScreenWelcome,
+            FormInput,
         },
 
         props: {
             email: String,
             token: String,
+            errors: Object,
         },
 
         data() {
@@ -61,16 +145,17 @@ export default {
                     email: this.email,
                     password: '',
                     password_confirmation: '',
-                })
+                }),
             }
         },
 
         methods: {
             submit() {
-                this.form.post(this.route('password.update'), {
-                    onFinish: () => this.form.reset('password', 'password_confirmation'),
+                this.form.post(this.route('auth.password-reset.store'), {
+                    onFinish: () =>
+                        this.form.reset('password', 'password_confirmation'),
                 })
-            }
-        }
+            },
+        },
     }
 </script>

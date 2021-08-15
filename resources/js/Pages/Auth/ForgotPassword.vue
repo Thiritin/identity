@@ -2,16 +2,16 @@
 
     <auth-layout>
         <Logo></Logo>
-        <LoginScreenWelcome :sub-title="$trans('password_reset_sub_title')"
-                            :title="$trans('password_reset_title')"
+        <LoginScreenWelcome :sub-title="$trans('forgot_password_reset_sub_title')"
+                            :title="$trans('forgot_password_reset_title')"
                             class="mb-10"/>
         <form class="space-y-12" @submit.prevent="submit">
             <div class="space-y-6">
-                <div class="text-sm shadow-md p-2 border-l-[4px] border-primary-600">{{ $trans('forgot_password_helptext')}}</div>
+                <div class="text-sm shadow-md p-2 border-l-[4px] border-primary-600">{{
+                    $trans('forgot_password_helptext')}}
+                </div>
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700" for="email"> {{
-                            $trans('email')
-                        }} </label>
+                    <label class="block text-sm font-medium text-gray-700" for="email"> {{ $trans('email') }} </label>
                     <FormInput id="email"
                                v-model.trim.lazy="form.email"
                                :class="{'border-red-500 focus:border-red-500': (errors?.email != null)}"

@@ -1,48 +1,88 @@
 <template>
-    <jet-authentication-card>
-        <template #logo>
-            <jet-authentication-card-logo />
-        </template>
-
-        <div class="mb-4 text-sm text-gray-600">
-            Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.
-        </div>
-
-        <div v-if="verificationLinkSent" class="mb-4 font-medium text-sm text-green-600" >
-            A new verification link has been sent to the email address you provided during registration.
-        </div>
-
-        <form @submit.prevent="submit">
-            <div class="mt-4 flex items-center justify-between">
-                <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Resend Verification Email
-                </jet-button>
-
-                <inertia-link :href="route('logout')" as="button" class="underline text-sm text-gray-600 hover:text-gray-900" method="post">Log Out</inertia-link>
+    <auth-layout>
+        <Logo></Logo>
+        <LoginScreenWelcome
+            :sub-title="$trans('verify_subtitle')"
+            :title="$trans('verify_title')"
+            class="mb-10"
+        />
+        <div class="space-y-12">
+            <div
+                class="text-sm shadow-md p-2 border-l-[4px] border-primary-600"
+            >
+                {{ $trans('verify_helptext') }}
             </div>
-        </form>
-    </jet-authentication-card>
+
+            <div
+                v-if="verificationLinkSent"
+                class="mb-4 font-medium text-sm text-green-600"
+            >
+                {{ $trans('verify_text_sent_to_your_mail') }}
+            </div>
+
+            <form @submit.prevent="submit">
+                <div class="mt-4 flex items-center justify-between">
+                    <button
+                        :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
+                        :disabled="form.processing"
+                        class="
+                            py-3
+                            rounded-lg
+                            px-8
+                            mr-auto
+                            text-white text-sm
+                            mb-4
+                            font-semibold
+                            focus:outline-none
+                        "
+                    >
+                        {{ $trans('resend_verification_mail') }}
+                    </button>
+
+                    <inertia-link
+                        :href="route('auth.logout')"
+                        as="button"
+                        class="
+                            underline
+                            text-sm text-gray-600
+                            hover:text-gray-900
+                        "
+                        method="post"
+                        >{{ $trans('logout') }}
+                    </inertia-link>
+                </div>
+            </form>
+        </div>
+    </auth-layout>
 </template>
 
 <script>
-import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
-import JetButton from '@/Jetstream/Button'
+    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
+    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
+    import JetButton from '@/Jetstream/Button'
+    import Logo from '@/Auth/Logo'
+    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome'
+    import AuthLayout from '@/Layouts/AuthLayout'
+    import Button from '@/Jetstream/Button'
 
-export default {
+    export default {
         components: {
+            Button,
             JetAuthenticationCard,
             JetAuthenticationCardLogo,
             JetButton,
+            AuthLayout,
+            Logo,
+            LoginScreenWelcome,
         },
 
         props: {
-            status: String
+            status: String,
         },
 
         data() {
             return {
-                form: this.$inertia.form()
+                form: this.$inertia.form(),
             }
         },
 
@@ -54,8 +94,8 @@ export default {
 
         computed: {
             verificationLinkSent() {
-                return this.status === 'verification-link-sent';
-            }
-        }
+                return this.status === 'verification-link-sent'
+            },
+        },
     }
 </script>

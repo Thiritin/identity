@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class RegisterRequest extends FormRequest
 {
@@ -16,9 +14,7 @@ class RegisterRequest extends FormRequest
                 "max:25",
                 "required",
                 "string",
-                Rule::unique('users', function (Builder $table, string $value) {
-                    $table->where('name', 'ILIKE', $value);
-                })
+                "unique:users,name"
             ],
             "email" => [
                 "email",
