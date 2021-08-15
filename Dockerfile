@@ -33,11 +33,11 @@ RUN set -eux; \
 	caddy version
 
 RUN apk add --no-cache --virtual .build-deps curl-dev libzip-dev icu-dev libtool libxml2-dev oniguruma-dev postgresql-dev autoconf gcc make g++ zlib-dev libjpeg-turbo-dev libpng-dev freetype-dev  \
-    && apk add --no-cache curl supervisor libzip libintl icu git unzip zip tar ca-certificates dcron postgresql-client freetype libzip libjpeg-turbo libpng \
+    && apk add --no-cache curl supervisor libzip libintl icu git unzip zip tar ca-certificates dcron mysql-client freetype libzip libjpeg-turbo libpng \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd bcmath curl iconv mbstring pdo pdo_pgsql tokenizer xml zip intl opcache pcntl \
+    && docker-php-ext-install gd bcmath curl iconv mbstring pdo pdo_mysql tokenizer xml zip intl opcache pcntl \
     && echo "* * * * * /usr/local/bin/php /app/artisan schedule:run >> /dev/null 2>&1" >> /var/spool/cron/crontabs/www-data \
     && apk del -f .build-deps \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
