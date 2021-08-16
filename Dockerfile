@@ -37,7 +37,7 @@ RUN apk add --no-cache --virtual .build-deps curl-dev libzip-dev icu-dev openssl
     && pecl install redis \
     && docker-php-ext-enable redis \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd bcmath curl iconv mbstring pdo pdo_mysql tokenizer xml zip intl opcache pcntl \
+    && docker-php-ext-install gd bcmath iconv pdo pdo_mysql tokenizer xml zip intl opcache pcntl \
     && echo "* * * * * /usr/local/bin/php /app/artisan schedule:run >> /dev/null 2>&1" >> /var/spool/cron/crontabs/www-data \
     && apk del -f .build-deps \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
