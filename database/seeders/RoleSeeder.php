@@ -16,9 +16,11 @@ class RoleSeeder extends Seeder
     {
         Role::findOrCreate('banned');
         Role::findOrCreate('attendee');
-        Role::findOrCreate('verified');
         Role::findOrCreate('staff');
         Role::findOrCreate('director');
         Role::findOrCreate('board_of_directors');
+        // Actual User Access Levels
+        Role::findOrCreate('admin');
+        Role::findOrCreate('superadmin');
     }
 }
