@@ -25,10 +25,11 @@
     "forgot_password_helptext": "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.\n",
     "reset_password": "Set password",
     "password_confirmation": "Repeat Password",
+    "send_reset_mail": "Send reset mail",
     "verify_subtitle": "Please verify your email",
-    "verify_title":"Aloah,",
+    "verify_title": "Aloah,",
     "verify_helptext": "Thanks for signing up! Before getting started, could you verify your email address by clicking on the\n                link we just emailed to you? If you didn't receive the email, we will gladly send you another.",
-    "verify_text_sent_to_your_mail":"A new verification link has been sent to the email address you provided during registration.",
+    "verify_text_sent_to_your_mail": "A new verification link has been sent to the email address you provided during registration.",
     "resend_verification_mail": "Resend Verification Email",
-    "logout":"Logout"
+    "logout": "Logout"
 }

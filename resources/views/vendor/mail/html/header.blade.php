@@ -6,6 +6,7 @@
 @else
 {{ $slot }}
 @endif
+
 </a>
 </td>
 </tr>
