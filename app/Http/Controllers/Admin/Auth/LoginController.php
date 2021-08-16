@@ -36,7 +36,7 @@ class LoginController extends Controller
         $oidc->setRedirectURL(route('admin.login.callback'));
         if ($oidc->authenticate()) {
             if (!$oidc->verifyJWTsignature($oidc->getIdToken())) abort(403, 'ID Token invalid.');
-            Auth::guard('web-admin')->loginUsingId(Hashids::decode($oidc->getIdTokenPayload()->sub));
+            Auth::guard('admin')->loginUsingId(Hashids::decode($oidc->getIdTokenPayload()->sub));
             return redirect(route('backpack'));
         }
     }

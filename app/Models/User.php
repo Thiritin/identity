@@ -60,4 +60,14 @@ class User extends Authenticatable implements \Illuminate\Contracts\Auth\MustVer
     {
         return Hashids::encode($this->id);
     }
+
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new \App\Notifications\VerifyEmailQueuedNotification());
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new \App\Notifications\PasswordResetQueuedNotification($token));
+    }
 }
