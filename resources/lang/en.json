@@ -17,7 +17,7 @@
     "created at": "Created at",
     "no_login_challenge": "Initiating a login into the App is currently not supported. Only external authentication is possible.",
     "register_title": "Ahoj!",
-    "register_subtitle": "Continue",
+    "register_subtitle": "Create new account",
     "meta_title_prefix": "EF Identity",
     "back_to_login": "Back to login",
     "forgot_password_reset_sub_title":  "Forgot your password?",

@@ -1,8 +1,6 @@
 <template>
     <auth-layout class="w-full">
-        <head>
-            <title>{{ $trans('meta_title_prefix') }} - </title>
-        </head>
+        <Head title="Home">
         <Logo></Logo>
         <LoginScreenWelcome :sub-title="$trans('register_subtitle')" :title="$trans('register_title')" class="mb-10"/>
         <form class="space-y-3" @submit.prevent="submit">
@@ -52,13 +50,15 @@ import Logo from "@/Auth/Logo";
 import LoginScreenWelcome from "@/Auth/LoginScreenWelcome";
 import FormInput from "@/Auth/Form/FormInput";
 import AuthLayout from "@/Layouts/AuthLayout";
+import Head from '@inertiajs/inertia-vue3'
 
 export default {
     components: {
         AuthLayout,
         Logo,
         LoginScreenWelcome,
-        FormInput
+        FormInput,
+        Head
     },
 
     props: {

@@ -53,6 +53,10 @@ Route::prefix('auth')->middleware('auth')->name('auth.')->group(function () {
     })->name('logout');
 });
 
+Route::get('/',function () {
+   return Redirect::route('dashboard');
+});
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

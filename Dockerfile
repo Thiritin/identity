@@ -82,5 +82,4 @@ RUN composer install --no-dev --optimize-autoloader \
     && rm -rf .env bootstrap/cache/*.php auth.json \
     && chown -R www-data:www-data /app \
     && rm -rf ~/.composer
-ENTRYPOINT ["/bin/ash", ".github/docker/entrypoint.sh"]
 CMD [ "supervisord", "-n", "-c", "/etc/supervisord.conf" ]
