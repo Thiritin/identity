@@ -14,12 +14,11 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        Role::create(['name' => 'banned']);
-        Role::create(['name' => 'attendee']);
-        Role::create(['name' => 'verified']);
-        Role::create(['name' => 'staff']);
-        Role::create(['name' => 'director']);
-        Role::create(['name' => 'board_of_directors']);
-        Role::create(['name' => 'admin']);
+        Role::findOrCreate('banned');
+        Role::findOrCreate('attendee');
+        Role::findOrCreate('verified');
+        Role::findOrCreate('staff');
+        Role::findOrCreate('director');
+        Role::findOrCreate('board_of_directors');
     }
 }
