@@ -23,7 +23,7 @@
     "forgot_password_reset_sub_title":  "Forgot your password?",
     "forgot_password_reset_title": "Bonjour,",
     "forgot_password_helptext": "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.\n",
-    "reset_password": "Send reset link",
+    "reset_password": "Set password",
     "password_confirmation": "Repeat Password",
     "verify_subtitle": "Please verify your email",
     "verify_title":"Aloah,",
