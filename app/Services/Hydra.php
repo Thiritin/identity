@@ -71,7 +71,7 @@ class Hydra
     public function acceptConsentRequest(string $consentChallenge, User $user)
     {
         try {
-            $response = $this->http->put('/oauth2/auth/requests/consent/accept',[
+            $response = $this->http->put('/oauth2/auth/requests/consent/accept', [
                 'query' => [
                     'challenge' => $consentChallenge
                 ],
@@ -85,7 +85,8 @@ class Hydra
                             "global" => [
                                 "name" => $user->name,
                                 "email" => $user->email,
-                                "roles" => $user->roles->pluck('name')
+                                "email_verified" => $user->hasVerifiedEmail(),
+                                "roles" => $user->roles->pluck('name'),
                             ]
                         ]
                     ]
@@ -107,6 +108,25 @@ class Hydra
                 'query' => [
                     'challenge' => $consentChallenge
                 ]
+            ]);
+            return json_decode($response->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
+        } catch (Exception $e) {
+            if ($e->getCode() === 404) {
+                throw new ModelNotFoundException('The requested Resource does not exist.');
+            }
+
+            return $e;
+        }
+    }
+
+    public function getToken(string $token, array $scopes)
+    {
+        try {
+            $response = $this->http->post('/oauth2/introspect', [
+                'body' => json_encode([
+                    'token' => $token,
+                    'scopes' => implode(' ', $scopes)
+                ], JSON_THROW_ON_ERROR),
             ]);
             return json_decode($response->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
         } catch (Exception $e) {

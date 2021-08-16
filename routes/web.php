@@ -26,19 +26,23 @@ use Laravel\Fortify\Http\Controllers\VerifyEmailController;
  * - NON-GUEST
  */
 // GUEST
-Route::prefix('auth')->name('auth.')->middleware('guest')->group(function () {
-    Route::get('login', [LoginController::class, 'view'])->name('login.view');
-    Route::post('login', [LoginController::class, 'submit'])->name('login.submit');
-    Route::get('consent', ConsentController::class)->name('consent');
-    // Register
-    Route::inertia('register', 'Auth/Register')->name('register.view');
-    Route::post('register', RegisterController::class)->middleware('guest')->name('register.store');
-    // Password Reset
-    Route::inertia('forgot-password', 'Auth/ForgotPassword')->name('forgot-password.view');
-    Route::post('forgot-password', ForgotPasswordController::class)->name('forgot-password.store');
-    // Set new Password
-    Route::get('password-reset', [PasswordResetController::class, 'view'])->name('password-reset.view');
-    Route::post('password-reset', [PasswordResetController::class, 'store'])->name('password-reset.store');
+Route::prefix('auth')->name('auth.')->group(function () {
+    Route::get('login', [LoginController::class, 'view'])->name('login.view'); // Must be accessible as a logged in user.
+    Route::get('callback', [LoginController::class, 'callback'])->name('login.callback');
+    Route::middleware('guest')->group(function () {
+        Route::post('login', [LoginController::class, 'submit'])->name('login.submit');
+        Route::get('consent', ConsentController::class)->name('consent');
+
+        // Register
+        Route::inertia('register', 'Auth/Register')->name('register.view');
+        Route::post('register', RegisterController::class)->middleware('guest')->name('register.store');
+        // Password Reset
+        Route::inertia('forgot-password', 'Auth/ForgotPassword')->name('forgot-password.view');
+        Route::post('forgot-password', ForgotPasswordController::class)->name('forgot-password.store');
+        // Set new Password
+        Route::get('password-reset', [PasswordResetController::class, 'view'])->name('password-reset.view');
+        Route::post('password-reset', [PasswordResetController::class, 'store'])->name('password-reset.store');
+    });
 });
 
 Route::inertia('verify', 'Auth/VerifyEmail')->name('verification.notice')->middleware(['auth']);
@@ -48,13 +52,13 @@ Route::post('resend', \App\Http\Controllers\ResendVerificationEmailController::c
 
 Route::prefix('auth')->middleware('auth')->name('auth.')->group(function () {
     Route::post('logout', function () {
-       Auth::logout();
-       return Redirect::route('auth.login.view');
+        Auth::logout();
+        return Redirect::route('auth.login.view');
     })->name('logout');
 });
 
-Route::get('/',function () {
-   return Redirect::route('dashboard');
+Route::get('/', function () {
+    return Redirect::route('dashboard');
 });
 
 Route::get('/dashboard', function () {
