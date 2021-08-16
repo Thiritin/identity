@@ -1,6 +1,6 @@
 <template>
     <auth-layout class="w-full">
-        <Head title="Home">
+        <Head title="Home"/>
         <Logo></Logo>
         <LoginScreenWelcome :sub-title="$trans('register_subtitle')" :title="$trans('register_title')" class="mb-10"/>
         <form class="space-y-3" @submit.prevent="submit">
