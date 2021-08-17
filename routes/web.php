@@ -28,9 +28,9 @@ use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 // GUEST
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('login', [LoginController::class, 'view'])->name('login.view'); // Must be accessible as a logged in user.
+    Route::post('login', [LoginController::class, 'submit'])->name('login.submit');
     Route::get('callback', [LoginController::class, 'callback'])->name('login.callback');
     Route::middleware('guest')->group(function () {
-        Route::post('login', [LoginController::class, 'submit'])->name('login.submit');
         Route::get('consent', ConsentController::class)->name('consent');
 
         // Register
