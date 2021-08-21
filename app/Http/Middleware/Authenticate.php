@@ -18,4 +18,5 @@ class Authenticate extends Middleware
             return route('auth.login.view');
         }
     }
+
 }

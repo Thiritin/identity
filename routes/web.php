@@ -6,7 +6,6 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 
 /*
@@ -49,19 +48,20 @@ Route::inertia('verify', 'Auth/VerifyEmail')->name('verification.notice')->middl
 Route::get('verify/{id}/{hash}', \App\Http\Controllers\VerifyEmailController::class)->middleware(['auth', 'signed'])->name('verification.verify');
 Route::post('resend', \App\Http\Controllers\ResendVerificationEmailController::class)->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-
-Route::prefix('auth')->middleware('auth')->name('auth.')->group(function () {
-    Route::post('logout', function () {
-        Auth::logout();
-        return Redirect::route('auth.login.view');
-    })->name('logout');
-});
+Route::get('auth/logout', \App\Http\Controllers\Auth\LogoutController::class)->name('auth.logout')->middleware('auth');
 
 Route::get('/', function () {
     return Redirect::route('dashboard');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// General Routes
+Route::middleware('auth')->group(function () {
+    Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
+    Route::inertia('/profile', 'Profile/Show')->name('profile');
+    Route::inertia('/profile/edit', 'Profile/Edit')->name('profile.edit');
+    Route::inertia('/profile/update-photo', 'Profile/Photo');
+    Route::inertia('/security', 'Security')->name('security');
+});
+
+
 

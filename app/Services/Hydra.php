@@ -119,6 +119,25 @@ class Hydra
         }
     }
 
+    public function acceptLogoutRequest(string $logoutChallenge)
+    {
+        try {
+            $response = $this->http->put('/oauth2/auth/requests/logout/accept?challenge='.$logoutChallenge, [
+                'query' => [
+                    'challenge' => $logoutChallenge,
+                ]
+            ]);
+
+            return json_decode($response->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
+        } catch (Exception $e) {
+            if ($e->getCode() === 404) {
+                throw new ModelNotFoundException('The requested Resource does not exist.');
+            }
+            Log::error($e->getMessage());
+            throw $e;
+        }
+    }
+
     public function getToken(string $token, array $scopes)
     {
         try {

@@ -29,6 +29,9 @@
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
-        "matice": "^1.1.4"
+        "@headlessui/vue": "^1.4.0",
+        "@heroicons/vue": "^1.0.4",
+        "matice": "^1.1.4",
+        "vue-cropperjs": "^5.0.0"
     }
 }

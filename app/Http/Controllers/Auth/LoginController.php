@@ -9,6 +9,7 @@ use App\Services\Hydra;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Jumbojett\OpenIDConnectClient;
@@ -50,6 +51,7 @@ class LoginController extends Controller
         if ($oidc->authenticate()) {
             if (!$oidc->verifyJWTsignature($oidc->getIdToken())) abort(403, 'ID Token invalid.');
             Auth::guard('web')->loginUsingId(Hashids::decode($oidc->getIdTokenPayload()->sub));
+            Session::put('id_token', $oidc->getIdToken());
             return Redirect::route('dashboard');
         }
         return Redirect::route('auth.login.view');
