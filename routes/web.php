@@ -48,7 +48,8 @@ Route::inertia('verify', 'Auth/VerifyEmail')->name('verification.notice')->middl
 Route::get('verify/{id}/{hash}', \App\Http\Controllers\VerifyEmailController::class)->middleware(['auth', 'signed'])->name('verification.verify');
 Route::post('resend', \App\Http\Controllers\ResendVerificationEmailController::class)->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-Route::get('auth/logout', \App\Http\Controllers\Auth\LogoutController::class)->name('auth.logout')->middleware('auth');
+Route::post('auth/logout', \App\Http\Controllers\Auth\LogoutController::class)->name('auth.logout')->middleware('auth');
+Route::post('auth/logout-local', \App\Http\Controllers\Auth\LogoutController::class)->name('auth.logout.local')->middleware('auth');
 
 Route::get('/', function () {
     return Redirect::route('dashboard');

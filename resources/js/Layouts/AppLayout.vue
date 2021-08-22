@@ -109,6 +109,12 @@
                                                         ]" :href="route(item.route)">{{ $trans(item.name) }}
                                                     </InertiaLink>
                                                 </MenuItem>
+                                                <MenuItem>
+                                                    <a class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-100"
+                                                       href="#" @click="logout">{{
+                                                            $trans('logout')
+                                                        }} </a>
+                                                </MenuItem>
                                             </MenuItems>
                                         </transition>
                                     </Menu>
