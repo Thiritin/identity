@@ -4,6 +4,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h1 class="text-3xl font-bold text-white">{{ $trans('edit-your-profile') }}</h1>
             </div>
+            <avatar-modal ref="avatarmodal" :file="file" :url="previewUrl"></avatar-modal>
         </template>
 
         <form class="space-y-8 divide-y divide-gray-200">
@@ -26,7 +27,7 @@
                 <span
                     class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
                   @
-                </span> <input id="username" :value="$page.props.user.name" autocomplete="username"
+                </span> <input id="username" v-model="form.name" autocomplete="username"
                                class="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300"
                                name="username" type="text"/>
                                 </div>
@@ -39,10 +40,12 @@
                             <div class="mt-1 sm:mt-0 sm:col-span-2">
                                 <div class="flex items-center">
                                     <span class="h-12 w-12 rounded-full overflow-hidden bg-gray-100">
-                                      <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                      <svg v-if="$page.props.user.avatar == null" class="h-full w-full text-gray-300"
+                                           fill="currentColor" viewBox="0 0 24 24">
                                         <path
                                             d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"/>
                                       </svg>
+                                        <img v-else :src="$page.props.user.avatar" class="h-full w-full">
                                     </span>
                                     <div
                                         class="relative  ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -50,21 +53,15 @@
                                             class="sr-only"> user photo</span> </label> <input id="avatar"
                                                                                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer border-gray-300 rounded-md"
                                                                                                name="avatar" type="file"
+                                                                                               accept="image/png,image/jpeg,image/jpg"
                                                                                                @change="onFileChange($event)"/>
                                     </div>
                                 </div>
+                                <span v-show="errors.image" class="text-xs text-red-600">{{ errors.image }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
-                <vue-cropper v-if="previewUrl != null" ref="cropper" :aspectRatio="1" :guides="false" :rotatable="false"
-                             :scalable="false" :src="previewUrl" :zoomable="false" alt="Source Image"/>
-                <button
-                    class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Upload
-                </button>
 
                 <div class="pt-8 space-y-6 sm:pt-10 sm:space-y-5">
                     <div>
@@ -80,7 +77,7 @@
                             <label class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2" for="email"> Email
                                 address </label>
                             <div class="mt-1 sm:mt-0 sm:col-span-2">
-                                <input id="email" :value="$page.props.user.email" autocomplete="email"
+                                <input id="email" v-model="form.email" autocomplete="email"
                                        class="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                                        name="email" type="email"/>
                             </div>
@@ -162,11 +159,11 @@
 
             <div class="pt-5">
                 <div class="flex justify-end">
-                    <button
-                        class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        type="button">
+                    <InertiaLink :href="route('profile')"
+                                 class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                 type="button">
                         Cancel
-                    </button>
+                    </InertiaLink>
                     <button
                         class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         type="submit">
@@ -181,30 +178,41 @@
 <script>
 import AppLayout from '@/Layouts/AppLayout'
 import BoxedLayout from "@/Layouts/BoxedLayout";
-import VueCropper from 'vue-cropperjs';
-import 'cropperjs/dist/cropper.css';
+import AvatarModal from "@/Profile/AvatarModal";
+import {useForm} from '@inertiajs/inertia-vue3'
+import {HomeIcon} from '@heroicons/vue/outline'
 
 export default {
-    props: ['sessions'],
+    props: {
+        errors: Object
+    },
 
     components: {
+        AvatarModal,
         BoxedLayout,
         AppLayout,
-        VueCropper
+        HomeIcon
     },
 
     data() {
         return {
-            previewUrl: null
+            previewUrl: null,
+            file: null,
+            form: useForm({
+                user: null,
+                email: null
+            })
         }
     },
 
     methods: {
         onFileChange(e) {
             const file = e.target.files[0];
+            this.file = file;
             this.previewUrl = URL.createObjectURL(file);
+            this.$refs.avatarmodal.open = true;
             URL.revokeObjectURL(file);
         }
-    }
+    },
 }
 </script>

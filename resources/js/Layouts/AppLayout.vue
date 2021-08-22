@@ -76,7 +76,7 @@
                                                 ">
                                                 <span class="sr-only">Open user menu</span> <img alt=""
                                                                                                  class="h-8 w-8 rounded-full"
-                                                                                                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
+                                                                                                 :src="$page.props.user.avatar"/>
                                             </MenuButton>
                                         </div>
                                         <transition enter-active-class="transition ease-out duration-100"
@@ -171,8 +171,7 @@
                     <div class="pt-4 pb-3 border-t border-primary-700">
                         <div class="flex items-center px-5">
                             <div class="flex-shrink-0">
-                                <img alt="" class="h-10 w-10 rounded-full"
-                                     src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
+                                <img alt="" class="h-10 w-10 rounded-full" :src="$page.props.user.avatar"/>
                             </div>
                             <div class="ml-3">
                                 <div class="

@@ -57,20 +57,12 @@
 </template>
 
 <script>
-    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
-    import JetButton from '@/Jetstream/Button'
     import Logo from '@/Auth/Logo'
     import LoginScreenWelcome from '@/Auth/LoginScreenWelcome'
     import AuthLayout from '@/Layouts/AuthLayout'
-    import Button from '@/Jetstream/Button'
 
     export default {
         components: {
-            Button,
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
-            JetButton,
             AuthLayout,
             Logo,
             LoginScreenWelcome,

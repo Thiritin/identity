@@ -30,7 +30,7 @@
                                     ">
                                     <div class="sm:flex sm:space-x-5">
                                         <div class="flex-shrink-0">
-                                            <img alt="" class="
+                                            <img :src="$page.props.user.avatar" alt="" class="
                                                     mx-auto
                                                     h-20
                                                     w-20

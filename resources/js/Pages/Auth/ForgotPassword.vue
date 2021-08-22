@@ -79,13 +79,11 @@
     import Logo from '@/Auth/Logo'
     import LoginScreenWelcome from '@/Auth/LoginScreenWelcome'
     import FormInput from '@/Auth/Form/FormInput'
-    import ValidationErrors from '@/Jetstream/ValidationErrors'
     import AuthLayout from '@/Layouts/AuthLayout'
 
     export default {
         components: {
             AuthLayout,
-            ValidationErrors,
             Logo,
             LoginScreenWelcome,
             FormInput,

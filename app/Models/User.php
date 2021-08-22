@@ -25,6 +25,7 @@ class User extends Authenticatable implements \Illuminate\Contracts\Auth\MustVer
         'name',
         'email',
         'password',
+        'profile_photo_path'
     ];
 
     /**
