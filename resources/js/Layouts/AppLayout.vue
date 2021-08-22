@@ -74,9 +74,8 @@
                                                     focus:ring-offset-primary-800
                                                     focus:ring-white
                                                 ">
-                                                <span class="sr-only">Open user menu</span> <img alt=""
-                                                                                                 class="h-8 w-8 rounded-full"
-                                                                                                 :src="$page.props.user.avatar"/>
+                                                <span class="sr-only">Open user menu</span>
+                                                <AvatarImage class="h-8 w-8 rounded-full"/>
                                             </MenuButton>
                                         </div>
                                         <transition enter-active-class="transition ease-out duration-100"
@@ -177,7 +176,7 @@
                     <div class="pt-4 pb-3 border-t border-primary-700">
                         <div class="flex items-center px-5">
                             <div class="flex-shrink-0">
-                                <img alt="" class="h-10 w-10 rounded-full" :src="$page.props.user.avatar"/>
+                                <AvatarImage class="h-10 w-10 rounded-full"/>
                             </div>
                             <div class="ml-3">
                                 <div class="
@@ -255,6 +254,7 @@ import {BellIcon, MenuIcon, XIcon} from '@heroicons/vue/outline'
 import Logo from '@/Auth/Logo'
 import {usePage} from '@inertiajs/inertia-vue3'
 import {computed} from 'vue'
+import AvatarImage from "@/Pages/Profile/AvatarImage";
 
 const navigation = [
     {
@@ -276,6 +276,7 @@ const profile = [
 
 export default {
     components: {
+        AvatarImage,
         Logo,
         Disclosure,
         DisclosureButton,

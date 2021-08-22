@@ -15,7 +15,7 @@
                 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5">
                         <div class="flex">
-                            <img :src="$page.props.user.avatar" alt=""
+                            <AvatarImage :src="$page.props.user.avatar" alt=""
                                  class="h-24 w-24 rounded-full ring-4 ring-white sm:h-32 sm:w-32"/>
                         </div>
                         <div
@@ -77,6 +77,7 @@
 import AppLayout from "@/Layouts/AppLayout";
 import {PencilIcon, PhoneIcon} from "@heroicons/vue/solid";
 import AvatarModal from "@/Profile/AvatarModal";
+import AvatarImage from "@/Pages/Profile/AvatarImage";
 
 const profile = {
     backgroundImage:
@@ -86,6 +87,7 @@ const profile = {
 export default {
     name: "Show",
     components: {
+        AvatarImage,
         AvatarModal,
         PencilIcon,
         PhoneIcon,

@@ -30,7 +30,8 @@
                                     ">
                                     <div class="sm:flex sm:space-x-5">
                                         <div class="flex-shrink-0">
-                                            <img :src="$page.props.user.avatar" alt="" class="
+                                            <AvatarImage class="
+                                                    shadow-inner
                                                     mx-auto
                                                     h-20
                                                     w-20
@@ -117,9 +118,11 @@
 import AppLayout from '@/Layouts/AppLayout'
 import {computed} from 'vue'
 import {usePage} from '@inertiajs/inertia-vue3'
+import AvatarImage from "@/Pages/Profile/AvatarImage";
 
 export default {
     components: {
+        AvatarImage,
         AppLayout
     },
     setup() {

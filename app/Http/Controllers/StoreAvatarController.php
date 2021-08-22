@@ -24,7 +24,7 @@ class StoreAvatarController extends Controller
             'crop.y' => 'integer|required',
         ]);
         $image = $request->file('image');
-        $image = Image::make($image)->crop($data['crop']['width'], $data['crop']['height'], $data['crop']['x'], $data['crop']['y'])->encode('webp', '90');
+        $image = Image::make($image)->crop($data['crop']['width'], $data['crop']['height'], $data['crop']['x'], $data['crop']['y'])->encode('webp', '100');
         $path = Str::random(40).".webp";
         \Storage::disk('avatars')->put($path, $image);
         NewProfilePhotoEvent::dispatch(\Auth::user(), $path);
