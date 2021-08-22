@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="bg-gray-100 rounded-full">
         <svg v-if="$page.props.user.avatar == null" class="h-full w-full text-gray-300 rounded-full" fill="currentColor"
              viewBox="0 0 24 24">
             <path
