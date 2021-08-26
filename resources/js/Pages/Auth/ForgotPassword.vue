@@ -6,7 +6,7 @@
             :title="$trans('forgot_password_reset_title')"
             class="mb-10"
         />
-        <form class="space-y-12" @submit.prevent="submit">
+        <form class="space-y-12" @submit.prevent="submit" v-if="!status">
             <div class="space-y-6">
                 <div
                     class="
@@ -47,9 +47,9 @@
             <div class="flex flex-col">
                 <button
                     :class="
-                        form.processing ? 'bg-primary-400' : 'bg-primary-500'
+                        (form.processing || status !== undefined) ? 'bg-primary-400' : 'bg-primary-500'
                     "
-                    :disabled="form.processing"
+                    :disabled="form.processing || status !== undefined"
                     class="
                         py-3
                         rounded-lg
@@ -64,50 +64,62 @@
                 >
                     {{ $trans('send_reset_mail') }}
                 </button>
-                <inertia-link
+                <a
                     :href="route('auth.login.view')"
                     class="ml-auto text-gray-700"
                 >
                     {{ $trans('back_to_login') }}
-                </inertia-link>
+                </a>
             </div>
         </form>
+        <div v-else>
+            <div
+                class="
+                        text-sm
+                        shadow-md
+                        p-2
+                        border-l-[4px] border-primary-600
+                    "
+            >
+                {{ status }}
+            </div>
+        </div>
     </auth-layout>
 </template>
 
 <script>
-    import Logo from '@/Auth/Logo'
-    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome'
-    import FormInput from '@/Auth/Form/FormInput'
-    import AuthLayout from '@/Layouts/AuthLayout'
+import Logo from '@/Auth/Logo'
+import LoginScreenWelcome from '@/Auth/LoginScreenWelcome'
+import FormInput from '@/Auth/Form/FormInput'
+import AuthLayout from '@/Layouts/AuthLayout'
 
-    export default {
-        components: {
-            AuthLayout,
-            Logo,
-            LoginScreenWelcome,
-            FormInput,
-        },
+export default {
+    components: {
+        AuthLayout,
+        Logo,
+        LoginScreenWelcome,
+        FormInput,
+    },
 
-        props: {
-            status: String,
-            errors: Object,
-            canSeeLogin: Boolean,
-        },
+    props: {
+        status: String,
+        errors: Object,
+        canSeeLogin: Boolean,
+    },
 
-        data() {
-            return {
-                form: this.$inertia.form({
-                    email: null,
-                }),
-                show: true,
-            }
-        },
+    data() {
+        return {
+            form: this.$inertia.form({
+                email: null,
+            }),
+            show: true,
+        }
+    },
 
-        methods: {
-            submit() {
-                this.form.post(this.route('auth.forgot-password.store'))
-            },
+    methods: {
+        submit() {
+            this.form.post(this.route('auth.forgot-password.store'))
         },
-    }
+    },
+}
 </script>

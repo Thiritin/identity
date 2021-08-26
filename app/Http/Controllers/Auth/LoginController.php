@@ -26,9 +26,9 @@ class LoginController extends Controller
             $this->useOwnOidcClient();
         }
 
-        if (Auth::check()) {
-            $this->acceptLogin($request->get('login_challenge'));
-        }
+        //if (Auth::check()) {
+        //    return $this->acceptLogin($request->get('login_challenge'));
+        // }
 
         return Inertia::render('Auth/Login');
     }

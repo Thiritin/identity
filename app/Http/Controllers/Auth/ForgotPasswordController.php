@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Password;
 
 class ForgotPasswordController extends Controller
@@ -19,7 +20,7 @@ class ForgotPasswordController extends Controller
         );
 
         return $status === Password::RESET_LINK_SENT
-            ? back()->with(['status' => __($status)])
+            ? Inertia::render('Auth/ForgotPassword',['status' => __($status)])
             : back()->withErrors(['email' => __($status)]);
     }
 }

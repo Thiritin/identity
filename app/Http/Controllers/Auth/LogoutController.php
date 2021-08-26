@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Services\Hydra;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class LogoutController extends Controller
 {
@@ -12,8 +13,9 @@ class LogoutController extends Controller
     {
         if ($request->missing('logout_challenge')) {
             \Auth::logout();
-            return \Redirect::route('auth.login.view');
+            return Inertia::location(route('auth.login.view'));
         }
+
         $request->validate(['logout_challenge' => 'required|string']);
         $hydra = new Hydra();
         $response = $hydra->acceptLogoutRequest()->get('logout_challenge');
