@@ -80,76 +80,6 @@
 
                     </div>
                 </div>
-
-                <div class="divide-y divide-gray-200 pt-8 space-y-6 sm:pt-10 sm:space-y-5">
-                    <div>
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">
-                            Notifications </h3>
-                        <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                            We'll always let you know about important changes, but you pick what else you want to hear
-                            about. </p>
-                    </div>
-                    <div class="space-y-6 sm:space-y-5 divide-y divide-gray-200">
-                        <div class="pt-6 sm:pt-5">
-                            <div aria-labelledby="label-email" role="group">
-                                <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-baseline">
-                                    <div>
-                                        <div id="label-email"
-                                             class="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700">
-                                            By Email
-                                        </div>
-                                    </div>
-                                    <div class="mt-4 sm:mt-0 sm:col-span-2">
-                                        <div class="max-w-lg space-y-4">
-                                            <div class="relative flex items-start">
-                                                <div class="flex items-center h-5">
-                                                    <input id="comments"
-                                                           class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                                                           name="comments" type="checkbox"/>
-                                                </div>
-                                                <div class="ml-3 text-sm">
-                                                    <label class="font-medium text-gray-700"
-                                                           for="comments">Comments</label>
-                                                    <p class="text-gray-500">Get notified when someones posts a comment
-                                                        on a posting.</p>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div class="relative flex items-start">
-                                                    <div class="flex items-center h-5">
-                                                        <input id="candidates"
-                                                               class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                                                               name="candidates" type="checkbox"/>
-                                                    </div>
-                                                    <div class="ml-3 text-sm">
-                                                        <label class="font-medium text-gray-700" for="candidates">Candidates</label>
-                                                        <p class="text-gray-500">Get notified when a candidate applies
-                                                            for a job.</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div class="relative flex items-start">
-                                                    <div class="flex items-center h-5">
-                                                        <input id="offers"
-                                                               class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                                                               name="offers" type="checkbox"/>
-                                                    </div>
-                                                    <div class="ml-3 text-sm">
-                                                        <label class="font-medium text-gray-700"
-                                                               for="offers">Offers</label>
-                                                        <p class="text-gray-500">Get notified when a candidate accepts
-                                                            or rejects an offer.</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="pt-5">
@@ -160,7 +90,7 @@
                         Cancel
                     </InertiaLink>
                     <button
-                        class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         type="submit">
                         Save
                     </button>
@@ -194,8 +124,8 @@ export default {
             previewUrl: null,
             file: null,
             form: useForm({
-                user: null,
-                email: null
+                name: this.$page.props.user.name,
+                email: this.$page.props.user.email
             })
         }
     },

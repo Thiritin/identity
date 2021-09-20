@@ -22,6 +22,10 @@ Route::group(
     function () {
         Route::get('dashboard', 'AdminController@dashboard')->name('backpack.dashboard');
         Route::get('/', 'AdminController@redirect')->name('backpack');
+        Route::get('/logout', function () {
+            Auth::guard('admin')->logout();
+            return redirect(route('auth.choose'));
+        })->name('logout');
 
         if (config('backpack.base.setup_my_account_routes')) {
             Route::get('edit-account-info', 'MyAccountController@getAccountInfoForm')->name('backpack.account.info');

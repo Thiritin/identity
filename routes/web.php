@@ -28,10 +28,12 @@ use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('login', [LoginController::class, 'view'])->name('login.view'); // Must be accessible as a logged in user.
     Route::post('login', [LoginController::class, 'submit'])->name('login.submit');
-    Route::get('callback', [LoginController::class, 'callback'])->name('login.callback');
-    Route::middleware('guest')->group(function () {
-        Route::get('consent', ConsentController::class)->name('consent');
+    Route::get('callback', [\App\Http\Controllers\OidcClientController::class, 'callback'])->name('oidc.callback');
+    Route::get('consent', ConsentController::class)->name('consent');
 
+    Route::middleware('guest')->group(function () {
+        Route::get('choose', \App\Http\Controllers\Auth\ChooseController::class)->name('choose');
+        Route::get('choose/login', [\App\Http\Controllers\OidcClientController::class, 'login'])->name('oidc.login');
         // Register
         Route::inertia('register', 'Auth/Register')->name('register.view');
         Route::post('register', RegisterController::class)->middleware('guest')->name('register.store');
@@ -56,7 +58,7 @@ Route::get('/', function () {
 });
 
 // General Routes
-Route::middleware('auth','verified')->group(function () {
+Route::middleware('auth', 'verified')->group(function () {
     Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
     Route::inertia('/profile', 'Profile/Show')->name('profile');
     Route::inertia('/profile/edit', 'Profile/Edit')->name('profile.edit');

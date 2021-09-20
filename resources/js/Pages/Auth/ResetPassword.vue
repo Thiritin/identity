@@ -34,6 +34,7 @@
                         {{ errors.email }}
                     </span>
                 </div>
+                <PasswordInfoBox/>
                 <div class="space-y-2">
                     <label
                         class="block text-sm font-medium text-gray-700"
@@ -52,11 +53,10 @@
                         placeholder=""
                         type="password"
                     />
-                    <span
-                        v-show="errors.password"
-                        class="w-full text-red-600 text-xs rounded"
+                    <span v-show="errors.password" v-for="error in errors.password"
+                          class="w-full text-red-600 text-xs rounded"
                     >
-                        {{ errors.password }}
+                        {{ error }}
                     </span>
                 </div>
                 <div class="space-y-2">
@@ -121,9 +121,11 @@
     import LoginScreenWelcome from '@/Auth/LoginScreenWelcome'
     import FormInput from '@/Auth/Form/FormInput'
     import AuthLayout from '@/Layouts/AuthLayout'
+    import PasswordInfoBox from "@/Auth/PasswordInfoBox";
 
     export default {
         components: {
+            PasswordInfoBox,
             AuthLayout,
             Logo,
             LoginScreenWelcome,

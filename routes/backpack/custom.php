@@ -24,7 +24,7 @@ Route::group([
      */
     Route::get('callback', [LoginController::class, 'init'])
         ->name('admin.login.callback')
-        ->middleware('guest')
+        ->middleware('guest:admin')
         ->withoutMiddleware(config('backpack.base.middleware_key', 'admin'));
     Route::get('login', [LoginController::class, 'init'])
         ->name('admin.login.init')

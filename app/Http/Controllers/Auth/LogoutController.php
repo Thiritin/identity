@@ -13,7 +13,7 @@ class LogoutController extends Controller
     {
         if ($request->missing('logout_challenge')) {
             \Auth::logout();
-            return Inertia::location(route('auth.login.view'));
+            return Inertia::location(route('auth.choose'));
         }
 
         $request->validate(['logout_challenge' => 'required|string']);
