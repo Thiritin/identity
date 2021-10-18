@@ -12,22 +12,33 @@ x-variables:
     APP_KEY: base64:8EuWVWRVLiQcKZV7RIKhnqvBg1QUts1yg8VN6jeCQbI=
     APP_ENV: "local"
     APP_DEBUG: "true"
-    DB_CONNECTION: pgsql
+    DB_CONNECTION: mysql
     DB_HOST: database
     DB_DATABASE: *idp-db-database
     DB_USERNAME: *idp-db-username
     DB_PASSWORD: *idp-db-password
-    DB_PORT: 5432
+    DB_PORT: 3306
     BROADCAST_DRIVER: log
     REDIS_HOST: redis
     CACHE_DRIVER: redis
     QUEUE_CONNECTION: redis
-    SESSION_DRIVER: redis
+    SESSION_DRIVER: database
     SESSION_LIFETIME: 120
     OIDC_ADMIN_CLIENT_ID: ce94f7ac-1c9a-4d5d-8159-56b37562f9b1
     OIDC_ADMIN_SECRET: optimus1
-    OIDC_MAIN_CLIENT_ID:
-    OIDC_MAIN_SECRET:
+    OIDC_MAIN_CLIENT_ID: 99adccb8-5712-4ac1-8b54-21dd616b4902
+    OIDC_MAIN_SECRET: optimus
+    MAIL_MAILER: smtp
+    MAIL_HOST: smtp.mailtrap.io
+    MAIL_PORT: 2525
+    MAIL_USERNAME: 9d0ec7c1225175
+    MAIL_PASSWORD: 1531d8cc79aefb
+    MAIL_ENCRYPTION: tls
+    MAIL_FROM_ADDRESS: identity@eurofurence.org
+    MAIL_FROM_NAME: "[DEV] Identity"
+    SENTRY_ENVIRONMENT: local
+    SENTRY_LARAVEL_DSN: ""
+    SENTRY_TRACES_SAMPLE_RATE: 1
   laravel-urls:
     &laravel-urls
     HYDRA_PUBLIC_URL: "hydra:4444"
@@ -37,11 +48,13 @@ x-variables:
     ROUTER_API_DOMAIN: identity.eurofurence.localhost
   hydra:
     &hydra
-    DSN: &hydra-dsn "postgres://hydra:hydra@hydra-database:5432/hydra?sslmode=disable&max_conns=20&max_idle_conns=4"
+    DSN: &hydra-dsn "mysql://hydra:hydra@tcp(hydra-database:3306)/hydra?parseTime=true&tls=skip-verify&max_conns=20&max_idle_conns=4"
     SECRETS_SYSTEM: 3zmBik#H7g9LKT?Fb9FnbGxytAc49yn9@sKiYhY8
     URLS_SELF_ISSUER: http://auth.eurofurence.localhost/
     URLS_CONSENT: http://identity.eurofurence.localhost/auth/consent
     URLS_LOGIN: http://identity.eurofurence.localhost/auth/login
+    URLS_LOGOUT: http://identity.eurofurence.localhost/auth/logout
+    URLS_ERROR: http://identity.eurofurence.localhost/auth/error
     SERVE_COOKIES_SAME_SITE_MODE: Lax
     #OIDC_SUBJECT_IDENTIFIERS_SUPPORTED_TYPES: pairwise
     LOG_LEAK_SENSITIVE_VALUES: "true"
@@ -68,6 +81,8 @@ services:
       <<: *laravel-urls
     volumes:
       - './:/app/'
+    extra_hosts:
+      - "docker.host.internal:host-gateway"
     labels:
       - traefik.enable=true
       - traefik.http.routers.app.rule=Host(`identity.eurofurence.localhost`)
@@ -91,20 +106,21 @@ services:
     ports:
       - '6379:6379'
   database:
-    image: 'postgres:13'
+    image: 'mysql:8.0'
     ports:
-      - '5432:5432'
+      - '3306:3306'
     environment:
-      POSTGRES_USER: *idp-db-username
-      POSTGRES_PASSWORD: *idp-db-password
-      POSTGRES_DB: *idp-db-database
+      MYSQL_USER: *idp-db-username
+      MYSQL_ROOT_PASSWORD: *idp-db-password
+      MYSQL_PASSWORD: *idp-db-password
+      MYSQL_DATABASE: *idp-db-database
     volumes:
-      - 'database:/var/lib/postgresql/data'
+      - 'database:/var/lib/mysql'
   ######################################################################################################################
   # Hydra
   ######################################################################################################################
   hydra:
-    image: 'oryd/hydra:v1.9.0'
+    image: 'oryd/hydra:v1.10'
     environment:
       <<: *hydra
     ports:
@@ -124,15 +140,16 @@ services:
     command: migrate sql -e --yes
     restart: on-failure
   hydra-database:
-    image: 'postgres:13'
+    image: 'mysql:8'
     ports:
-      - '5433:5432'
+      - '3307:3306'
     environment:
-      POSTGRES_USER: *hydra-db-user
-      POSTGRES_PASSWORD: *hydra-db-password
-      POSTGRES_DB: *hydra-db-database
+      MYSQL_USER: *hydra-db-user
+      MYSQL_PASSWORD: *hydra-db-password
+      MYSQL_ROOT_PASSWORD: *hydra-db-password
+      MYSQL_DATABASE: *hydra-db-database
     volumes:
-      - 'hydra-database:/var/lib/postgresql/data'
+      - 'hydra-database:/var/lib/mysql'
   ######################################################################################################################
   # Reverse Proxy | Traefik
   ######################################################################################################################
