@@ -1,8 +1,16 @@
 <template>
-    <input ref="input"
-           :value="modelValue"
-           style="-webkit-box-sizing: border-box;"
-           class="w-full bg-gray-100 p-6 py-5 rounded-md transition-all duration-75 ease-in-out tran border-transparent border focus:ring-primary-500  focus:border-primary-500 focus:outline-none"
+    <input ref="input" :value="modelValue" class="w-full
+           shadow-sm
+           p-6
+           py-5
+           rounded-md
+           border-gray-200
+           border
+           focus:ring-primary-500
+           focus:border-primary-500
+           focus:ring-1
+           focus:outline-none
+           transition ease-in-out duration-100" style="-webkit-box-sizing: border-box;"
            @input="$emit('update:modelValue', $event.target.value)">
 </template>
 
