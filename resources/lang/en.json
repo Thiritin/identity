@@ -40,5 +40,13 @@
     "choose_sub_title": "Please choose to continue",
     "choose_title": "Hola,",
     "choose_create_new_account": "Create new account",
-    "choose_login_with_existing_account": "Login with existing account"
+    "choose_login_with_existing_account": "Login with existing account",
+    "logo": "Logo",
+    "grouptype": "Group type",
+    "name": "Name",
+    "description": "Description",
+    "default": "Default",
+    "department": "Department",
+    "groups": "Groups",
+    "update-your-security-settings": "Update your security settings"
 }

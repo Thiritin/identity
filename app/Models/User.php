@@ -71,4 +71,17 @@ class User extends Authenticatable implements \Illuminate\Contracts\Auth\MustVer
     {
         $this->notify(new \App\Notifications\PasswordResetQueuedNotification($token));
     }
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class)
+            ->using('App\Models\GroupUser')
+            ->withPivot(
+                [
+                    'title',
+                    'authorization_level',
+                    'is_director',
+                ]
+            );
+    }
 }

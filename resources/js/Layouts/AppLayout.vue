@@ -234,22 +234,18 @@
 
         <main class="-mt-32">
             <div class="max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8">
-                <slot></slot>
+                <transition name="page">
+                    <div v-if="animated">
+                        <slot></slot>
+                    </div>
+                </transition>
             </div>
         </main>
     </div>
 </template>
 
 <script>
-import {
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
-} from '@headlessui/vue'
+import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems,} from '@headlessui/vue'
 import {BellIcon, MenuIcon, XIcon} from '@heroicons/vue/outline'
 import Logo from '@/Auth/Logo'
 import {usePage} from '@inertiajs/inertia-vue3'
@@ -290,6 +286,12 @@ export default {
         XIcon,
     },
 
+    data() {
+        return {
+            animated: false
+        }
+    },
+
     setup() {
         const user = computed(() => usePage().props.value.user)
         return {
@@ -299,10 +301,28 @@ export default {
         }
     },
 
+    mounted() {
+        this.animated = true;
+    },
+
     methods: {
         logout() {
             this.$inertia.post(route('auth.logout'))
-        },
+        }
     },
 }
 </script>
+<style>
+.page-enter-active {
+    transition: opacity .1s ease-in;
+    opacity: 0;
+}
+
+.page-enter {
+    opacity: 0;
+}
+
+.page-enter-to {
+    opacity: 1;
+}
+</style>

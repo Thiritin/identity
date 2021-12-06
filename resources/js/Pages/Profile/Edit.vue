@@ -28,8 +28,8 @@
                     class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
                   @
                 </span> <input id="username" v-model="form.name" autocomplete="username"
-                               class="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300"
-                               name="username" type="text"/>
+                               class="flex-1 bg-gray-100 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300"
+                               name="username" type="text" disabled/>
                                 </div>
                             </div>
                         </div>
@@ -101,11 +101,9 @@
 </template>
 
 <script>
-import AppLayout from '@/Layouts/AppLayout'
 import BoxedLayout from "@/Layouts/BoxedLayout";
 import AvatarModal from "@/Profile/AvatarModal";
 import {useForm} from '@inertiajs/inertia-vue3'
-import {HomeIcon} from '@heroicons/vue/outline'
 import AvatarImage from "@/Pages/Profile/AvatarImage";
 
 export default {

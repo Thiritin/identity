@@ -44,7 +44,7 @@ class Group extends Model
     public function users()
     {
         return $this->belongsToMany(User::class)
-            ->using('App\Models\RoleUser')
+            ->using('App\Models\GroupUser')
             ->withPivot(
                 [
                     'title',

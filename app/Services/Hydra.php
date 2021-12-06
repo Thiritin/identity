@@ -51,9 +51,8 @@ class Hydra
                     'challenge' => $loginChallenge,
                 ],
                 'body' => json_encode([
-                    'acr' => 'default',
                     'subject' => $userId,
-                    'remember' => false, // Add option for remember submission onto login
+                    'remember' => false, // TODO: Add option for remember submission onto login
                     'remember_for' => 3600,
                 ], JSON_THROW_ON_ERROR)
             ]);

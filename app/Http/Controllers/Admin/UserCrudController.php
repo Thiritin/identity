@@ -164,6 +164,11 @@ class UserCrudController extends CrudController
                 'attribute' => 'name', // foreign key attribute that is shown to user
                 'pivot' => true,
             ],
+            [
+                'name' => 'groups',
+                'label' => __('groups'),
+                'entity' => 'groups'
+            ]
         ]);
 
         /**

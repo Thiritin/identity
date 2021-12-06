@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\GroupTypeEnum;
 use App\Http\Requests\Auth\GroupRequest;
 use App\Models\Group;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -92,8 +93,9 @@ class GroupCrudController extends CrudController
                 'type' => 'select_from_array',
                 'label' => __('grouptype'),
                 'options' => [
-                    'none' => 'none',
-                    'department' => 'department',
+                    GroupTypeEnum::DEFAULT->value => __(GroupTypeEnum::DEFAULT->value),
+                    GroupTypeEnum::SYSTEM->value => __(GroupTypeEnum::SYSTEM->value),
+                    GroupTypeEnum::DEPARTMENT->value => __(GroupTypeEnum::DEPARTMENT->value),
                 ],
                 'allows_null' => false,
                 'default' => 'none',

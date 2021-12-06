@@ -29,7 +29,7 @@ class GroupRequest extends FormRequest
     {
         return [
             'name' => 'required|min:5|max:255',
-            'type' => new In(['']),
+            'type' => new In(['default','department']),
             'description' => 'nullable',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
         ];

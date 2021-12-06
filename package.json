@@ -21,16 +21,17 @@
         "browser-sync-webpack-plugin": "^2.3.0",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
-        "postcss": "^8.1.14",
+        "postcss": "^8.4.4",
         "postcss-import": "^12.0.1",
         "prettier": "2.3.2",
-        "tailwindcss": "^2.0.1",
-        "vue": "^3.0.5",
+        "tailwindcss": "^2.2.19",
+        "vue": "^3.2.23",
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
         "@headlessui/vue": "^1.4.0",
         "@heroicons/vue": "^1.0.4",
+        "autoprefixer": "^10.4.0",
         "matice": "^1.1.4",
         "vue-cropperjs": "^5.0.0"
     }

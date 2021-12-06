@@ -62,7 +62,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
     Route::inertia('/profile', 'Profile/Show')->name('profile');
     Route::inertia('/profile/edit', 'Profile/Edit')->name('profile.edit');
-    Route::inertia('/security', 'Security')->name('security');
+    Route::inertia('/security', 'Profile/Security')->name('security');
 
     Route::post('/profile/avatar/store', \App\Http\Controllers\StoreAvatarController::class)->name('profile.avatar.store');
 });

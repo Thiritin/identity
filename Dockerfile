@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-alpine as base
+FROM php:8.1-fpm-alpine as base
 WORKDIR /app
 
 ENV COMPOSER_MEMORY_LIMIT=-1
@@ -32,12 +32,12 @@ RUN set -eux; \
 	chmod +x /usr/bin/caddy; \
 	caddy version
 
-RUN apk add --no-cache --virtual .build-deps curl-dev libzip-dev icu-dev openssl-dev libtool libxml2-dev oniguruma-dev autoconf gcc make g++ zlib-dev libjpeg-turbo-dev libpng-dev freetype-dev  \
-    && apk add --no-cache curl supervisor libzip libintl icu git unzip openssl zip tar ca-certificates dcron mysql-client freetype libzip libjpeg-turbo libpng libwebp-dev \
+RUN apk add --no-cache --virtual .build-deps libzip-dev icu-dev openssl-dev libtool autoconf gcc make g++ zlib-dev libjpeg-turbo-dev libpng-dev freetype-dev  \
+    && apk add --no-cache curl supervisor libzip git icu unzip openssl zip tar ca-certificates dcron mysql-client freetype libzip libjpeg-turbo libpng libwebp-dev \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg \
-    && docker-php-ext-install gd bcmath iconv pdo pdo_mysql tokenizer xml zip intl opcache pcntl \
+    && docker-php-ext-install gd bcmath pdo_mysql zip intl opcache pcntl \
     && echo "* * * * * /usr/local/bin/php /app/artisan schedule:run >> /dev/null 2>&1" >> /var/spool/cron/crontabs/www-data \
     && apk del -f .build-deps \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
