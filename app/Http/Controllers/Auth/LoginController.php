@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Providers\HydraServiceProvider;
 use App\Services\Hydra;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -16,13 +15,13 @@ class LoginController extends Controller
     public function view(\Illuminate\Http\Request $request)
     {
         if ($request->missing('login_challenge')) {
-            if (Auth::check()) {
-                return Redirect::route('dashboard');
-            }
             return Redirect::route('auth.choose');
         }
-        if (Auth::check()) {
-            return redirect($this->acceptLogin($request->get('login_challenge')));
+
+        $hydra = new Hydra();
+        $loginRequest = $hydra->getLoginRequest($request->get('login_challenge'));
+        if ($loginRequest->skip === true) {
+            return Redirect::to($this->acceptLogin($loginRequest->subject,$loginRequest->challenge,0)); // 180 Days
         }
 
         return Inertia::render('Auth/Login');
@@ -37,20 +36,20 @@ class LoginController extends Controller
         if (!Auth::once($loginData)) {
             throw ValidationException::withMessages(['nouser' => 'Wrong details']);
         }
-        return Inertia::location($this->acceptLogin($request->get('login_challenge')));
+        return Inertia::location($this->acceptLogin(Auth::user()?->getHashId(),$request->get('login_challenge'),15552000));
     }
 
     /**
      * Accept OIDC Login Request
      *
-     * @param  string  $login_challenge
+     * @param string $login_challenge
      * @return \Illuminate\Http\Response
      * @throws \JsonException
      */
-    private function acceptLogin(string $login_challenge): string
+    private function acceptLogin(string $subject, string $login_challenge, int $remember_seconds = 0): string
     {
         $hydra = new Hydra();
-        $hydraResponse = $hydra->acceptLoginRequest(Auth::user()->getHashId(), $login_challenge);
+        $hydraResponse = $hydra->acceptLoginRequest($subject, $login_challenge, $remember_seconds);
         abort_if(empty($hydraResponse->redirect_to), 500);
 
         return $hydraResponse->redirect_to;
