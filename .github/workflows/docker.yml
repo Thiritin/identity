@@ -10,3 +10,4 @@ jobs:
     secrets:
       DockerHubUser: ${{ secrets.DOCKERHUB_USERNAME }}
       DockerHubPass: ${{ secrets.DOCKERHUB_PASSWORD }}
+      DockerHubPrefix: eurofurence
