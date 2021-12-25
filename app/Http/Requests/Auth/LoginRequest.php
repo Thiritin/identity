@@ -11,7 +11,8 @@ class LoginRequest extends FormRequest
         return [
             'email' => 'required|email',
             'password' => 'required',
-            'login_challenge' => 'required',
+            'login_challenge' => 'required|alpha_num',
+            'remember' => 'required|bool'
         ];
     }
 }

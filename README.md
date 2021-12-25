@@ -12,8 +12,8 @@ This is a Laravel, IntertiaJS with Vue based application that works as an OIDC P
 
 ### Hydra quick commands for local setup
 #### Admin create client
-```
- hydra --endpoint http://127.0.0.1:4445 clients create --secret optimus -n Admin -c https://identity.eurofurence.org/callback,https://identity.eurofurence.org/admin/callback --id ce94f7ac-1c9a-4d5d-8159-56b37562f9b1
+```bash
+ docker-compose exec hydra hydra clients create --secret optimus -n Admin -c https://identity.eurofurence.org/callback,https://identity.eurofurence.org/admin/callback --id ce94f7ac-1c9a-4d5d-8159-56b37562f9b1
 ```
 
 ### Security

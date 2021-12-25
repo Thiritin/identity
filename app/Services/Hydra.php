@@ -43,7 +43,7 @@ class Hydra
         }
     }
 
-    public function acceptLoginRequest(string $userId, string $loginChallenge)
+    public function acceptLoginRequest(string $userId, string $loginChallenge, int $remember = 0)
     {
         try {
             $response = $this->http->put('/oauth2/auth/requests/login/accept?challenge='.$loginChallenge, [
@@ -52,8 +52,8 @@ class Hydra
                 ],
                 'body' => json_encode([
                     'subject' => $userId,
-                    'remember' => false, // TODO: Add option for remember submission onto login
-                    'remember_for' => 3600,
+                    'remember' => ($remember === 0) ? false : true,
+                    'remember_for' => $remember,
                 ], JSON_THROW_ON_ERROR)
             ]);
 

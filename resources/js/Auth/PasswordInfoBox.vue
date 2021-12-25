@@ -5,7 +5,7 @@
             <li>Minimum of 8 characters</li>
             <li>Must contain lowercase and uppercase letter</li>
             <li>Must contain numbers</li>
-            <li>Must not been listed with <a ref="nofollow" href="https://haveibeenpwned.com/Passwords" target="_blank">"have
+            <li>Must not been listed with <a tabindex="-1" ref="nofollow" href="https://haveibeenpwned.com/Passwords" target="_blank">"have
                 i been pwned?"</a></li>
         </ul>
     </div>
