@@ -6,7 +6,7 @@ on:
       - created
 jobs:
   build-docker:
-    uses: thiritin/workflows/.github/workflows/docker.yml@main
+    uses: thiritin/workflows/.github/workflows/docker-semver.yml@main
     secrets:
       DockerHubUser: ${{ secrets.DOCKERHUB_USERNAME }}
       DockerHubPass: ${{ secrets.DOCKERHUB_PASSWORD }}
