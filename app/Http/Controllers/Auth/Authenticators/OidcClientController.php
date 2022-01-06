@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth\Authenticators;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -9,6 +10,9 @@ use Illuminate\Support\Facades\Session;
 use Jumbojett\OpenIDConnectClient;
 use Jumbojett\OpenIDConnectClientException;
 use Vinkla\Hashids\Facades\Hashids;
+use function abort;
+use function config;
+use function route;
 
 class OidcClientController extends Controller
 {

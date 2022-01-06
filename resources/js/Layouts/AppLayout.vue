@@ -14,7 +14,7 @@
                             ">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
-                                    <Logo class="w-14"></Logo>
+                                    <Logo class='w-14'></Logo>
                                 </div>
                                 <div class="text-white font-bold ml-2">
                                     EF Identity
@@ -261,12 +261,8 @@ const navigation = [
 const profile = [
     {
         name: 'profile',
-        route: 'profile',
-    },
-    {
-        name: 'security',
-        route: 'security',
-    },
+        route: 'settings.profile',
+    }
 
 ]
 

@@ -49,5 +49,7 @@
     "department": "Department",
     "groups": "Groups",
     "update-your-security-settings": "Update your security settings",
-    "remember_me": "Remember me"
+    "remember_me": "Remember me",
+    "settings": "Settings",
+    "your_profile": "Your Profile"
 }

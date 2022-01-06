@@ -47,7 +47,7 @@
 </template>
 <script> import Logo from '@/Auth/Logo'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome'
-import FormInput from '@/Auth/Form/FormInput'
+import FormInput from '@/Auth/Form/AuthFormInput'
 import AuthLayout from '@/Layouts/AuthLayout'
 
 export default {

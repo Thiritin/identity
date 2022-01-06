@@ -1,5 +1,6 @@
+
+<!-- This following SVG is not part of the MIT Software License. Must be replaced. -->
 <template>
-    <!-- This following SVG is not part of the MIT Software License. Must be replaced. -->
     <svg height='69.103' viewBox='0 0 69.103 69.103' width='69.103' xmlns='http://www.w3.org/2000/svg'>
         <g id='Gruppe_5' data-name='Gruppe 5' transform='translate(-2317.36 1065.784)'>
             <g id='Gruppe_6' data-name='Gruppe 6' transform='translate(2317.36 -1065.784)'>

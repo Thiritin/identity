@@ -7,11 +7,9 @@ use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
-use Ory\Hydra\Client\Api\AdminApi;
 
 class Hydra
 {
-    private AdminApi $api;
     private Client $http;
 
     public function __construct($host = 'hydra:4445')
