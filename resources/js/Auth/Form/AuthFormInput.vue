@@ -1,5 +1,6 @@
 <template>
-    <input ref="input" :value="modelValue" class="w-full
+    <input ref="input" :value="modelValue" class="form-input
+           w-full
            shadow-sm
            p-6
            py-5

@@ -54,22 +54,20 @@
                     <div>
                         <SettingsHeader>Contact Information</SettingsHeader>
                         <SettingsSubHeader>How can we reach you?</SettingsSubHeader>
-                        <BaseInput :label="$trans('email')" id='email' v-model='form.email' autocomplete='email' name='email'
+                        <BaseInput :label="$trans('email')" id='email' v-model='form.email' autocomplete='email'
+                                   name='email'
                                    type="email"></BaseInput>
                     </div>
                 </div>
 
                 <div class='flex justify-end pt-5'>
-                    <InertiaLink :href="route('profile')"
-                                 class='bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                                 type='button'>
-                        Cancel
+                    <InertiaLink :href="route('profile')">
+                        <BaseButton type='button'>
+                            Cancel
+                        </BaseButton>
                     </InertiaLink>
-                    <button
-                        class='ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                        type='submit'>
-                        Save
-                    </button>
+
+                    <PrimaryButton class="ml-3">Save</PrimaryButton>
                 </div>
             </div>
         </form>
@@ -83,6 +81,8 @@ import SettingsLayout from '@/Layouts/SettingsLayout'
 import SettingsHeader from '@/Components/Settings/SettingsHeader'
 import SettingsSubHeader from '@/Components/Settings/SettingsSubHeader'
 import BaseInput from "@/Components/BaseInput";
+import BaseButton from "@/Components/BaseButton";
+import PrimaryButton from "@/Components/PrimaryButton";
 
 export default {
     props: {
@@ -90,6 +90,8 @@ export default {
     },
 
     components: {
+        PrimaryButton,
+        BaseButton,
         SettingsSubHeader,
         SettingsHeader,
         SettingsLayout,

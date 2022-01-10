@@ -9,6 +9,9 @@
                        type="password"></BaseInput>
             <BaseInput label="Confirm new password" id='confirmNewPassword' v-model='form.confirmNewPassword' autocomplete='password' name='confirmNewPassword'
                        type="password"></BaseInput>
+            <div class="flex justify-end">
+                <PrimaryButton class="">Change password</PrimaryButton>
+            </div>
         </div>
     </SettingsLayout>
 </template>
@@ -17,10 +20,11 @@
 import SettingsLayout from "../../Layouts/SettingsLayout";
 import SettingsHeader from "@/Components/Settings/SettingsHeader";
 import BaseInput from "@/Components/BaseInput";
+import PrimaryButton from "@/Components/PrimaryButton";
 
 export default {
     name: 'UpdatePassword',
-    components: {SettingsHeader, SettingsLayout, BaseInput},
+    components: {SettingsHeader, SettingsLayout, BaseInput, PrimaryButton},
     data() {
         return {
             form: {
