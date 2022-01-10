@@ -1,6 +1,5 @@
 const mix = require('laravel-mix');
 const config = require('./webpack.config');
-mix.webpackConfig(config);
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -11,17 +10,14 @@ mix.webpackConfig(config);
  | file for the application as well as bundling up all the JS files.
  |
  */
-
-mix.disableNotifications()
-
-mix.browserSync('identity.eurofurence.localhost')
-
 mix.js('resources/js/app.js', 'public/js').vue()
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),
         require('tailwindcss'),
     ])
-    .webpackConfig(require('./webpack.config'));
+    .webpackConfig(config)
+    .disableNotifications()
+    .browserSync('identity.eurofurence.localhost')
 
 if (mix.inProduction()) {
     mix.version();

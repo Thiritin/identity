@@ -1,15 +1,21 @@
 <template>
     <settings-layout>
-        <h1>test</h1>
+        <div>
+            <SettingsHeader>{{ $trans('two_factor') }}</SettingsHeader>
+            <SettingsSubHeader>{{ $trans('two_factor') }}</SettingsSubHeader>
+        </div>
     </settings-layout>
 </template>
 
 <script>
-    import SettingsLayout from '@/Layouts/SettingsLayout'
-    export default {
-        name: 'TwoFactor',
-        components: { SettingsLayout },
-    }
+import SettingsLayout from '@/Layouts/SettingsLayout'
+import SettingsHeader from "@/Components/Settings/SettingsHeader";
+import SettingsSubHeader from "@/Components/Settings/SettingsSubHeader";
+
+export default {
+    name: 'TwoFactor',
+    components: {SettingsLayout, SettingsHeader, SettingsSubHeader},
+}
 </script>
 
 <style scoped>

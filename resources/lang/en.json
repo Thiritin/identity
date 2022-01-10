@@ -51,5 +51,7 @@
     "update-your-security-settings": "Update your security settings",
     "remember_me": "Remember me",
     "settings": "Settings",
-    "your_profile": "Your Profile"
+    "your_profile": "Your Profile",
+    "update_your_password": "Update your password",
+    "two_factor": "Two Factor"
 }

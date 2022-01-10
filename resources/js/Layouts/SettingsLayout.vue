@@ -39,7 +39,6 @@
                         route: 'two-factor',
                     },
                 ],
-                currentMenuItemRoute: {}
             }
         },
     }
