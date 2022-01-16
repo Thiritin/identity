@@ -56,4 +56,12 @@ RUN composer install --no-dev --optimize-autoloader \
     && chmod 777 -R bootstrap storage \
     && rm -rf .env bootstrap/cache/*.php auth.json \
     && chown -R www-data:www-data /app \
-    && rm -rf ~/.composer \
+    && rm -rf ~/.composer
+######################################################
+# Production Webserver Stage
+######################################################
+FROM caddy as production-webserver
+COPY --from=mix /app/public/css/app.css ./public/css/app.css
+COPY --from=mix /app/public/js/app.js ./public/js/app.js
+COPY ./public /app/public
+COPY ./.github/docker/Caddyfile /etc/caddy/Caddyfile
