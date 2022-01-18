@@ -1,4 +1,4 @@
-FROM php:8.1-fpm-alpine as base
+FROM php:8.1-alpine as base
 WORKDIR /app
 
 ENV COMPOSER_MEMORY_LIMIT=-1
@@ -19,9 +19,6 @@ RUN apk add --no-cache --virtual .build-deps libzip-dev icu-dev openssl-dev libt
 ######################################################
 COPY .github/docker/php/opcache.ini $PHP_INI_DIR/conf.d/opcache.ini
 COPY .github/docker/php/php.ini $PHP_INI_DIR/conf.d/php.ini
-COPY .github/docker/php/www.conf /usr/local/etc/php-fpm.d/www.conf
-COPY .github/docker/supervisord.conf /etc/supervisord.conf
-COPY .github/docker/Caddyfile /etc/caddy/Caddyfile
 
 ######################################################
 # Step 6 | Configure Credentials & Hosts for external Git (optional)
@@ -36,7 +33,7 @@ RUN addgroup -g 1024 app \
   && adduser www-data app
 USER app
 # yarn install as command
-CMD sh -c "composer install && php artisan serve --host=0.0.0.0 --port=80"
+CMD sh -c "composer install && php artisan octane:start --host=0.0.0.0 --port=80"
 ######################################################
 # NodeJS Stage
 ######################################################
@@ -58,3 +55,4 @@ RUN composer install --no-dev --optimize-autoloader \
     && rm -rf .env bootstrap/cache/*.php auth.json \
     && chown -R www-data:www-data /app \
     && rm -rf ~/.composer
+CMD "php artisan octane:start --host=0.0.0.0 --port=80"
