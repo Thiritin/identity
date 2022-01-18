@@ -10,6 +10,7 @@ RUN apk add --no-cache --virtual .build-deps libzip-dev icu-dev openssl-dev libt
     && pecl install redis \
     && docker-php-ext-enable redis \
     && pecl install swoole \
+    && docker-php-ext-enable swoole \
     && docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg \
     && docker-php-ext-install gd bcmath pdo_mysql zip intl opcache pcntl \
     && apk del -f .build-deps \
