@@ -57,4 +57,4 @@ RUN composer install --no-dev --optimize-autoloader \
     && chmod 777 -R bootstrap storage \
     && rm -rf .env bootstrap/cache/*.php auth.json \
     && chown -R www-data:www-data /app \
-    && rm -rf ~/.composer \
+    && rm -rf ~/.composer
