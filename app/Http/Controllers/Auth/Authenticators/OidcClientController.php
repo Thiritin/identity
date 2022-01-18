@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Auth\Authenticators;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
-use Jumbojett\OpenIDConnectClient;
+use App\Services\OpenIDConnectClient;
 use Jumbojett\OpenIDConnectClientException;
 use Vinkla\Hashids\Facades\Hashids;
 use function abort;
@@ -19,11 +20,11 @@ class OidcClientController extends Controller
     /**
      * @throws \Jumbojett\OpenIDConnectClientException
      */
-    public function callback()
+    public function callback(Request $request)
     {
-        $oidc = $this->setupOIDC();
+        $oidc = $this->setupOIDC($request);
         try {
-            if ($oidc->authenticate()) {
+            if ($oidc->authenticate() === true) {
                 if (!$oidc->verifyJWTsignature($oidc->getIdToken())) abort(403, 'ID Token invalid.');
                 Auth::guard('web')->loginUsingId(Hashids::decode($oidc->getIdTokenPayload()->sub));
                 Session::put('id_token', $oidc->getIdToken());
@@ -35,12 +36,14 @@ class OidcClientController extends Controller
         return Redirect::route('auth.login.view');
     }
 
-    private function setupOIDC(): OpenIDConnectClient
+    private function setupOIDC(Request $request): OpenIDConnectClient
     {
         $oidc = new OpenIDConnectClient(
             config('services.hydra.public'),
             config('services.oidc.main.client_id'),
-            config('services.oidc.main.secret')
+            config('services.oidc.main.secret'),
+            null,
+            $request
         );
         $oidc->addScope(['openid']);
         $oidc->setRedirectURL(route('auth.oidc.callback'));
@@ -60,9 +63,10 @@ class OidcClientController extends Controller
     /**
      * @throws \Jumbojett\OpenIDConnectClientException
      */
-    public function login(): void
+    public function login(Request $request): \Illuminate\Http\RedirectResponse
     {
-        $oidc = $this->setupOIDC();
+        $oidc = $this->setupOIDC($request);
         $oidc->authenticate();
+        return response()->redirectTo($oidc->laravelRedirectUrl);
     }
 }

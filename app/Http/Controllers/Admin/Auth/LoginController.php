@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use Jumbojett\OpenIDConnectClient;
+use App\Services\OpenIDConnectClient;
 use Vinkla\Hashids\Facades\Hashids;
 
 class LoginController extends Controller
@@ -13,12 +14,14 @@ class LoginController extends Controller
     /**
      * Initiate OAUTH Session
      */
-    public function init()
+    public function init(Request $request)
     {
         $oidc = new OpenIDConnectClient(
             config('services.hydra.public'),
             config('services.oidc.admin.client_id'),
-            config('services.oidc.admin.secret')
+            config('services.oidc.admin.secret'),
+            null,
+            $request
         );
         $oidc->addScope(['openid']);
         /**
@@ -39,5 +42,6 @@ class LoginController extends Controller
             Auth::guard('admin')->loginUsingId(Hashids::decode($oidc->getIdTokenPayload()->sub));
             return redirect(route('backpack'));
         }
+        return redirect($oidc->laravelRedirectUrl);
     }
 }

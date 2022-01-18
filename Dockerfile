@@ -31,10 +31,11 @@ COPY composer.json composer.lock /app/
 FROM base as local
 RUN addgroup -g 1024 app \
   && adduser -u 1024 --disabled-password --ingroup app app \
-  && adduser www-data app
+  && adduser www-data app \
+  && apk add --no-cache nodejs npm
 USER app
 # yarn install as command
-CMD sh -c "composer install && php artisan octane:start --host=0.0.0.0 --port=80"
+CMD sh -c "composer install && php artisan octane:start --watch --host=0.0.0.0 --port=80"
 ######################################################
 # NodeJS Stage
 ######################################################

@@ -25,8 +25,8 @@ x-variables:
     SESSION_DRIVER: database
     SESSION_LIFETIME: 120
     OIDC_ADMIN_CLIENT_ID: ce94f7ac-1c9a-4d5d-8159-56b37562f9b1
-    OIDC_ADMIN_SECRET: optimus1
-    OIDC_MAIN_CLIENT_ID: 99adccb8-5712-4ac1-8b54-21dd616b4902
+    OIDC_ADMIN_SECRET: optimus
+    OIDC_MAIN_CLIENT_ID: ce94f7ac-1c9a-4d5d-8159-56b37562f9b1
     OIDC_MAIN_SECRET: optimus
     MAIL_MAILER: smtp
     MAIL_HOST: smtp.mailtrap.io
