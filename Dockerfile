@@ -56,4 +56,4 @@ RUN composer install --no-dev --optimize-autoloader \
     && rm -rf .env bootstrap/cache/*.php auth.json \
     && chown -R www-data:www-data /app \
     && rm -rf ~/.composer
-CMD "php artisan octane:start --host=0.0.0.0 --port=80"
+CMD sh -c "php artisan octane:start --host=0.0.0.0 --port=80"
