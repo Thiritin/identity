@@ -6,9 +6,10 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 # Step 1 | Install Dependencies
 ######################################################
 RUN apk add --no-cache --virtual .build-deps libzip-dev icu-dev openssl-dev libtool autoconf gcc make g++ zlib-dev libjpeg-turbo-dev libpng-dev freetype-dev libwebp-dev  \
-    && apk add --no-cache curl libzip git icu unzip openssl zip tar ca-certificates mysql-client freetype libzip libjpeg-turbo libpng libwebp \
+    && apk add --no-cache curl libzip git icu unzip openssl zip tar ca-certificates mysql-client freetype libzip libjpeg-turbo libpng libwebp procps \
     && pecl install redis \
     && docker-php-ext-enable redis \
+    && pecl install swoole \
     && docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg \
     && docker-php-ext-install gd bcmath pdo_mysql zip intl opcache pcntl \
     && apk del -f .build-deps \
