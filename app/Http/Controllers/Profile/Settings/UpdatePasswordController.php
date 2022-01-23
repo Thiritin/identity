@@ -33,7 +33,7 @@ class UpdatePasswordController extends Controller
             Auth::logout();
         }
 
-        return Inertia::location(route('auth.choose'));,
+        return Inertia::location(route('auth.choose'));
 
     }
 }
