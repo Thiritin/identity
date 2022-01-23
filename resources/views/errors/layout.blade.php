@@ -1,6 +1,23 @@
 @extends(backpack_user() && (Str::startsWith(\Request::path(), config('backpack.base.route_prefix'))) ? 'backpack::layouts.top_left' : 'backpack::layouts.plain')
 {{-- show error using sidebar layout if looged in AND on an admin page; otherwise use a blank page --}}
 
+<script
+    src="https://browser.sentry-cdn.com/6.16.1/bundle.min.js"
+    integrity="sha384-WkFzsrcXKeJ3KlWNXojDiim8rplIj1RPsCbuv7dsLECoXY8C6Cx158CMgl+O+QKW"
+    crossorigin="anonymous"
+></script>
+
+@php
+    $event_id = \Sentry\SentrySdk::getCurrentHub()->getLastEventId();
+@endphp
+
+<script>
+    Sentry.init({ dsn: "https://{{ config('sentry.dsn') }}@o0.ingest.sentry.io/0" });
+    Sentry.showReportDialog({
+        eventId: "{{ $event_id }}",
+    });
+</script>
+
 @php
   $title = 'Error '.$error_number;
 @endphp

@@ -23,6 +23,7 @@
 namespace App\Services;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 /**
  *
@@ -724,7 +725,6 @@ class OpenIDConnectClient
 
         $auth_endpoint .= (strpos($auth_endpoint, '?') === false ? '?' : '&') . http_build_query($auth_params, null, '&', $this->enc_type);
 
-        $this->commitSession();
         $this->redirect($auth_endpoint);
     }
 
@@ -1861,45 +1861,20 @@ class OpenIDConnectClient
         return ($status === 0);
     }
 
-    /**
-     * Use session to manage a nonce
-     */
-    protected function startSession()
-    {
-        if (!isset($_SESSION)) {
-            @session_start();
-        }
-    }
 
-    protected function commitSession()
-    {
-        $this->startSession();
-
-        session_write_close();
-    }
 
     protected function getSessionKey($key)
     {
-        $this->startSession();
-
-        if (array_key_exists($key, $_SESSION)) {
-            return $_SESSION[$key];
-        }
-        return false;
+        return Session::get($key);
     }
 
-    protected function setSessionKey($key, $value)
-    {
-        $this->startSession();
-
-        $_SESSION[$key] = $value;
+    protected function setSessionKey($key, $value) {
+        Session::put($key, $value);
     }
 
     protected function unsetSessionKey($key)
     {
-        $this->startSession();
-
-        unset($_SESSION[$key]);
+        Session::forget($key);
     }
 
     public function setUrlEncoding($curEncoding)

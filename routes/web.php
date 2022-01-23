@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResendVerificationEmailController;
 use App\Http\Controllers\Auth\Authenticators\OidcClientController;
 use App\Http\Controllers\Profile\SecurityController;
+use App\Http\Controllers\Profile\Settings\UpdatePasswordController;
 use App\Http\Controllers\Profile\StoreAvatarController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\VerifyEmailController;
@@ -68,12 +69,12 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
     Route::inertia('/profile', 'Profile/Show')->name('profile');
     Route::inertia('/settings/profile', 'Settings/Profile')->name('settings.profile');
+
     Route::inertia('/settings/update-password', 'Settings/UpdatePassword')->name('settings.update-password');
+    Route::post('/settings/update-password', UpdatePasswordController::class)->name('settings.update-password.store');
+
     Route::inertia('/settings/two-factor', 'Settings/TwoFactor')->name('settings.two-factor');
     Route::get('/security', [SecurityController::class,'index'])->name('security');
 
     Route::post('/profile/avatar/store', StoreAvatarController::class)->name('profile.avatar.store');
 });
-
-
-

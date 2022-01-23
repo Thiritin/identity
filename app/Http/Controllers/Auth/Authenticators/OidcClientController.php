@@ -28,6 +28,7 @@ class OidcClientController extends Controller
                 if (!$oidc->verifyJWTsignature($oidc->getIdToken())) abort(403, 'ID Token invalid.');
                 Auth::guard('web')->loginUsingId(Hashids::decode($oidc->getIdTokenPayload()->sub));
                 Session::put('id_token', $oidc->getIdToken());
+                Session::put('access_token', $oidc->getAccessToken());
                 return Redirect::route('dashboard');
             }
         } catch (OpenIDConnectClientException $e) {
