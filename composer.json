@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8",
+        "ext-curl": "*",
         "ext-json": "*",
         "backpack/crud": "4.1.*",
         "backpack/logmanager": "^4.0",
@@ -24,9 +25,9 @@
         "laravel/tinker": "^2.5",
         "sentry/sentry-laravel": "^2.8",
         "spatie/laravel-permission": "^4.2",
+        "spatie/laravel-translatable": "^5.2",
         "tightenco/ziggy": "^1.0",
-        "vinkla/hashids": "^9.1",
-        "ext-curl": "*"
+        "vinkla/hashids": "^9.1"
     },
     "require-dev": {
         "backpack/generators": "^3.1",

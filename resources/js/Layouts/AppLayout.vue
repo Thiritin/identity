@@ -41,7 +41,7 @@
                                                     " href="#">{{ $trans(item.name) }}
                                                 </InertiaLink>
                                             </template>
-                                            <InertiaLink v-else :href="item.route" class="
+                                            <InertiaLink v-else-if="item.inertia" :href="item.route" class="
                                                     text-primary-300
                                                     hover:bg-primary-700
                                                     hover:text-white
@@ -52,6 +52,17 @@
                                                     font-medium
                                                 ">{{ $trans(item.name) }}
                                             </InertiaLink>
+                                            <a v-else :href="item.route" class="
+                                                    text-primary-300
+                                                    hover:bg-primary-700
+                                                    hover:text-white
+                                                    px-3
+                                                    py-2
+                                                    rounded-md
+                                                    text-sm
+                                                    font-medium
+                                                ">{{ $trans(item.name) }}
+                                            </a>
                                         </template>
                                     </div>
                                 </div>
@@ -252,18 +263,24 @@ import {usePage} from '@inertiajs/inertia-vue3'
 import {computed} from 'vue'
 import AvatarImage from "@/Pages/Profile/AvatarImage";
 
-const navigation = [
-    {
-        name: 'dashboard',
-        route: '/dashboard',
-    },
-]
 const profile = [
     {
         name: 'profile',
         route: 'settings.profile',
     }
+]
 
+var navigation = [
+    {
+        name: 'dashboard',
+        route: route('dashboard'),
+        inertia: true
+    },
+    {
+        name: 'admin',
+        route: route('backpack.dashboard'),
+        inertia: false
+    },
 ]
 
 export default {
@@ -284,15 +301,18 @@ export default {
 
     data() {
         return {
-            animated: false
+            animated: false,
         }
     },
 
     setup() {
         const user = computed(() => usePage().props.value.user)
+        navigation = navigation.filter(function (value) {
+            return (value.name === 'admin' && user.value.isAdmin === true) || value.name !== 'admin'
+        })
         return {
-            user,
             navigation,
+            user,
             profile,
         }
     },
@@ -303,7 +323,7 @@ export default {
 
     methods: {
         logout() {
-            this.$inertia.post(route('auth.logout'))
+            window.location.href = "/oauth2/sessions/logout"
         }
     },
 }

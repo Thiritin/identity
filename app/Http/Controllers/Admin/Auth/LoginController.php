@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\OpenIDConnectClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use App\Services\OpenIDConnectClient;
 use Vinkla\Hashids\Facades\Hashids;
 
 class LoginController extends Controller
@@ -16,6 +16,7 @@ class LoginController extends Controller
      */
     public function init(Request $request)
     {
+
         $oidc = new OpenIDConnectClient(
             config('services.hydra.public'),
             config('services.oidc.admin.client_id'),

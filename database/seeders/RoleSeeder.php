@@ -17,5 +17,7 @@ class RoleSeeder extends Seeder
         // Actual User Access Levels
         Role::findOrCreate('admin');
         Role::findOrCreate('superadmin');
+        // Staff
+        Role::findOrCreate('staffbooking');
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\Authenticators\OidcClientController;
 use App\Http\Controllers\Auth\ChooseController;
 use App\Http\Controllers\Auth\ConsentController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -8,7 +9,6 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResendVerificationEmailController;
-use App\Http\Controllers\Auth\Authenticators\OidcClientController;
 use App\Http\Controllers\Profile\SecurityController;
 use App\Http\Controllers\Profile\Settings\UpdatePasswordController;
 use App\Http\Controllers\Profile\StoreAvatarController;
@@ -37,6 +37,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('login', [LoginController::class, 'submit'])->name('login.submit');
     Route::get('callback', [OidcClientController::class, 'callback'])->name('oidc.callback');
     Route::get('consent', ConsentController::class)->name('consent');
+    Route::get('logout', LogoutController::class)->name('logout');
 
     Route::middleware('guest')->group(function () {
         Route::get('choose', ChooseController::class)->name('choose');
@@ -51,21 +52,18 @@ Route::prefix('auth')->name('auth.')->group(function () {
         Route::get('password-reset', [PasswordResetController::class, 'view'])->name('password-reset.view');
         Route::post('password-reset', [PasswordResetController::class, 'store'])->name('password-reset.store');
     });
+
+    Route::inertia('verify', 'Auth/VerifyEmail')->name('verification.notice')->middleware(['auth']);
+    Route::get('verify/{id}/{hash}', \App\Http\Controllers\Auth\VerifyEmailController::class)->middleware(['auth', 'signed'])->name('verification.verify');
+    Route::post('resend', ResendVerificationEmailController::class)->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 });
-
-Route::inertia('verify', 'Auth/VerifyEmail')->name('verification.notice')->middleware(['auth']);
-Route::get('verify/{id}/{hash}', \App\Http\Controllers\Auth\VerifyEmailController::class)->middleware(['auth', 'signed'])->name('verification.verify');
-Route::post('resend', ResendVerificationEmailController::class)->middleware(['auth', 'throttle:6,1'])->name('verification.send');
-
-Route::post('auth/logout', LogoutController::class)->name('auth.logout')->middleware('auth');
-Route::post('auth/logout-local', LogoutController::class)->name('auth.logout.local')->middleware('auth');
 
 Route::get('/', function () {
     return Redirect::route('dashboard');
 });
 
 // General Routes
-Route::middleware('auth', 'verified')->group(function () {
+Route::middleware('auth', 'auth.oidc', 'verified')->group(function () {
     Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
     Route::inertia('/profile', 'Profile/Show')->name('profile');
     Route::inertia('/settings/profile', 'Settings/Profile')->name('settings.profile');
@@ -74,7 +72,9 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/settings/update-password', UpdatePasswordController::class)->name('settings.update-password.store');
 
     Route::inertia('/settings/two-factor', 'Settings/TwoFactor')->name('settings.two-factor');
-    Route::get('/security', [SecurityController::class,'index'])->name('security');
+    Route::get('/security', [SecurityController::class, 'index'])->name('security');
+
+    Route::inertia('/settings/sessions', 'Settings/TwoFactor')->name('settings.sessions');
 
     Route::post('/profile/avatar/store', StoreAvatarController::class)->name('profile.avatar.store');
 });

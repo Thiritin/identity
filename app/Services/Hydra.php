@@ -139,10 +139,29 @@ class Hydra
     {
         try {
             $response = $this->http->post('/oauth2/introspect', [
-                'body' => json_encode([
+                'form_params' => [
                     'token' => $token,
                     'scopes' => implode(' ', $scopes)
-                ], JSON_THROW_ON_ERROR),
+                ],
+            ]);
+            return json_decode($response->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
+        } catch (Exception $e) {
+            if ($e->getCode() === 404) {
+                throw new ModelNotFoundException('The requested Resource does not exist.');
+            }
+
+            return $e;
+        }
+    }
+
+    public function logout(string $token, array $scopes)
+    {
+        try {
+            $response = $this->http->post('/oauth2/introspect', [
+                'form_params' => [
+                    'token' => $token,
+                    'scopes' => implode(' ', $scopes)
+                ],
             ]);
             return json_decode($response->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
         } catch (Exception $e) {

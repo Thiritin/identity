@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\Auth\AdminAuth;
+use App\Services\Auth\TokenAuth;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;

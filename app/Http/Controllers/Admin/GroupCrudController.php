@@ -101,6 +101,12 @@ class GroupCrudController extends CrudController
                 'default' => 'none',
             ],
             [
+                'name' => 'internal_name',
+                'type' => 'text',
+                'allows_null' => false,
+                'aspect_ratio' => 1,
+            ],
+            [
                 'name' => 'name',
                 'type' => 'text',
                 'label' => __('name'),

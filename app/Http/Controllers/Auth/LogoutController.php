@@ -18,7 +18,7 @@ class LogoutController extends Controller
 
         $request->validate(['logout_challenge' => 'required|string']);
         $hydra = new Hydra();
-        $response = $hydra->acceptLogoutRequest()->get('logout_challenge');
+        $response = $hydra->acceptLogoutRequest($request->get('logout_challenge'));
         return redirect($response->redirect_to);
     }
 }

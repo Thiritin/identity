@@ -28,8 +28,12 @@ class GroupRequest extends FormRequest
     public function rules()
     {
         return [
+            'internal_name' => 'required|alpha_dash',
             'name' => 'required|min:5|max:255',
-            'type' => new In(['default','department']),
+            'type' => [
+                new In(['default', 'department', 'system']),
+                'required'
+            ],
             'description' => 'nullable',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
         ];

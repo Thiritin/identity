@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Backpack\CRUD\app\Models\Traits\SpatieTranslatable\HasTranslations;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -34,8 +35,13 @@ class Group extends Model
 {
     use CrudTrait;
     use HasFactory;
+    use HasTranslations;
+
+    public $translatable = ['name', 'description'];
 
     protected $fillable = [
+        'internal_name',
+        'description',
         'name',
         'type',
         'logo',

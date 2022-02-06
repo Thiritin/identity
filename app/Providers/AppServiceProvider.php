@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use App\Services\OidcService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
@@ -18,9 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        App::singleton('oidc', function () {
-            return new OidcService();
-        });
+
     }
 
     /**

@@ -59,6 +59,7 @@ x-variables:
     #OIDC_SUBJECT_IDENTIFIERS_SUPPORTED_TYPES: pairwise
     LOG_LEAK_SENSITIVE_VALUES: "true"
     OAUTH2_EXPOSE_INTERNAL_ERRORS: "true"
+    WEBFINGER_JWKS_BROADCAST_KEYS: hydra.jwt.access-token
     # TRACING_PROVIDER: zipkin
     # TRACING_PROVIDERS_ZIPKIN_SERVER_URL: http://zipkin:9411/api/v2/spans
   hydra-database:

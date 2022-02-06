@@ -16,29 +16,33 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout'
-    import SettingsSidebarMenu from '@/Components/Settings/SettingsSidebarMenu'
-    import SettingsContent from '@/Components/Settings/SettingsContent'
+import AppLayout from '@/Layouts/AppLayout'
+import SettingsSidebarMenu from '@/Components/Settings/SettingsSidebarMenu'
+import SettingsContent from '@/Components/Settings/SettingsContent'
 
-    export default {
-        name: 'SettingsLayout',
-        components: { SettingsContent, SettingsSidebarMenu, AppLayout },
-        data() {
-            return {
-                settingsMenu: [
-                    {
-                        name: 'profile',
-                        route: 'profile',
-                    },
-                    {
-                        name: 'update_your_password',
-                        route: 'update-password',
-                    },
-                    {
-                        name: 'two_factor',
-                        route: 'two-factor',
-                    },
-                ],
+export default {
+    name: 'SettingsLayout',
+    components: {SettingsContent, SettingsSidebarMenu, AppLayout},
+    data() {
+        return {
+            settingsMenu: [
+                {
+                    name: 'profile',
+                    route: 'profile',
+                },
+                {
+                    name: 'update_your_password',
+                    route: 'update-password',
+                },
+                {
+                    name: 'two_factor',
+                    route: 'two-factor',
+                },
+                {
+                    name: 'sessions',
+                    route: 'sessions',
+                },
+            ],
             }
         },
     }

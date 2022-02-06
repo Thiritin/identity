@@ -2,7 +2,7 @@
     <settings-layout>
         <div>
             <SettingsHeader>{{ $trans('two_factor') }}</SettingsHeader>
-            <SettingsSubHeader>{{ $trans('two_factor') }}</SettingsSubHeader>
+            <SettingsSubHeader>Check back soon!</SettingsSubHeader>
         </div>
     </settings-layout>
 </template>

@@ -53,5 +53,7 @@
     "settings": "Settings",
     "your_profile": "Your Profile",
     "update_your_password": "Update your password",
-    "two_factor": "Two Factor"
+    "two_factor": "Two Factor",
+    "sessions": "Sessions",
+    "admin": "Admin"
 }
