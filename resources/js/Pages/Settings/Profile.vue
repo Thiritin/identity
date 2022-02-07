@@ -60,14 +60,16 @@
                     </div>
                 </div>
 
-                <div class='flex justify-end pt-5'>
-                    <InertiaLink :href="route('profile')">
-                        <BaseButton type='button'>
-                            Cancel
-                        </BaseButton>
-                    </InertiaLink>
+                <div class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-startsm:pt-5 pt-5'>
+                    <div class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2">
+                        <InertiaLink :href="route('profile')">
+                            <BaseButton type='button'>
+                                Cancel
+                            </BaseButton>
+                        </InertiaLink>
 
-                    <PrimaryButton class="ml-3">Save</PrimaryButton>
+                        <PrimaryButton class="ml-3">Save</PrimaryButton>
+                    </div>
                 </div>
             </div>
         </form>
@@ -118,6 +120,9 @@ export default {
             this.$refs.avatarmodal.open = true
             URL.revokeObjectURL(file)
         },
+        submitForm() {
+            this.form.post(route('settings.update-profile'), this.form)
+        }
     },
 }
 </script>

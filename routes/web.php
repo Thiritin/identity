@@ -1,4 +1,6 @@
-<?php
+<?php /** @noinspection NullPointerExceptionInspection */
+
+/** @noinspection PhpVoidFunctionResultUsedInspection */
 
 use App\Http\Controllers\Auth\Authenticators\OidcClientController;
 use App\Http\Controllers\Auth\ChooseController;
@@ -14,6 +16,8 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Profile\SecurityController;
 use App\Http\Controllers\Profile\Settings\UpdatePasswordController;
 use App\Http\Controllers\Profile\StoreAvatarController;
+use App\Http\Controllers\Profile\UpdateProfileController;
+use App\Http\Controllers\UpdateProfileEmailController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -72,6 +76,8 @@ Route::middleware('auth', 'auth.oidc', 'verified')->group(function () {
     Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
     Route::inertia('/profile', 'Profile/Show')->name('profile');
     Route::inertia('/settings/profile', 'Settings/Profile')->name('settings.profile');
+    Route::post('/settings/profile/update', UpdateProfileController::class)->name('settings.update-profile.update');
+    Route::get('/settings/profile/update/email', UpdateProfileEmailController::class)->name('settings.update-profile.email.update')->middleware('signed');
 
     Route::inertia('/settings/update-password', 'Settings/UpdatePassword')->name('settings.update-password');
     Route::post('/settings/update-password', UpdatePasswordController::class)->name('settings.update-password.store');

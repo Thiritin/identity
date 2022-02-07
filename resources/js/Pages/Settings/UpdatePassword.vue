@@ -16,10 +16,13 @@
                        autocomplete='password' name='confirmNewPassword'
                        type="password" :error="errors.password_confirmation"></BaseInput>
             <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-end">
-                <BaseCheckbox class="sm:col-span-2 sm:col-start-2" v-model="form.destroy_sessions" label="Destroy all existing sessions."></BaseCheckbox>
+                <BaseCheckbox class="sm:col-span-2 sm:col-start-2" v-model="form.destroy_sessions"
+                              label="Destroy all existing sessions."></BaseCheckbox>
             </div>
-            <div class="flex justify-end">
-                <PrimaryButton @click="submitForm()" class="">Change password</PrimaryButton>
+            <div class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-startsm:pt-5 pt-5'>
+                <div class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2">
+                    <PrimaryButton class="" @click="submitForm()">Change password</PrimaryButton>
+                </div>
             </div>
         </div>
     </SettingsLayout>
@@ -30,8 +33,6 @@ import SettingsLayout from "../../Layouts/SettingsLayout";
 import SettingsHeader from "@/Components/Settings/SettingsHeader";
 import BaseInput from "@/Components/BaseInput";
 import PrimaryButton from "@/Components/PrimaryButton";
-import {reactive} from "vue";
-import Inertia from '@inertiajs/inertia';
 import SettingsSubHeader from "@/Components/Settings/SettingsSubHeader";
 import PasswordInfoBox from "@/Auth/PasswordInfoBox";
 import BaseCheckbox from "@/Components/BaseCheckbox";

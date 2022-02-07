@@ -3,7 +3,7 @@
         <div class="bg-primary-600 pb-32">
             <Disclosure v-slot="{ open }" as="nav" class="bg-primary-600">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div class="border-b border-primary-700">
+                    <div class="pt-2">
                         <div class="
                                 flex
                                 items-center

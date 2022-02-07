@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use App\Notifications\PasswordResetQueuedNotification;
+use App\Notifications\UpdateEmailNotification;
+use App\Notifications\VerifyEmailQueuedNotification;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Vinkla\Hashids\Facades\Hashids;
 
-class User extends Authenticatable implements \Illuminate\Contracts\Auth\MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory;
     use Notifiable;
@@ -64,12 +68,17 @@ class User extends Authenticatable implements \Illuminate\Contracts\Auth\MustVer
 
     public function sendEmailVerificationNotification(): void
     {
-        $this->notify(new \App\Notifications\VerifyEmailQueuedNotification());
+        $this->notify(new VerifyEmailQueuedNotification());
     }
 
     public function sendPasswordResetNotification($token): void
     {
-        $this->notify(new \App\Notifications\PasswordResetQueuedNotification($token));
+        $this->notify(new PasswordResetQueuedNotification($token));
+    }
+
+    public function changeMail(string $newEmail)
+    {
+        $this->notify(new UpdateEmailNotification($newEmail));
     }
 
     public function groups()
