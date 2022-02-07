@@ -11,6 +11,5 @@ class FrontChannelLogoutController extends Controller
     public function __invoke(Request $request)
     {
         Auth::logout();
-        Auth::guard('admin')->logout();
     }
 }
