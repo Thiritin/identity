@@ -1,6 +1,6 @@
 <template>
     <settings-layout>
-        <form>
+        <form @submit.prevent>
             <div class='space-y-8 divide-y divide-gray-200 sm:space-y-5'>
                 <div>
                     <SettingsHeader>Public Profile</SettingsHeader>
@@ -57,6 +57,21 @@
                         <BaseInput :label="$trans('email')" id='email' v-model='form.email' autocomplete='email'
                                    name='email'
                                    type="email"></BaseInput>
+
+                        <div v-if="showEmailVerify"
+                             class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start'>
+                            <div class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2">
+                                <BaseAlert message="We have sent you a verification email to confirm your change."
+                                           title="Please check your email."></BaseAlert>
+                            </div>
+                        </div>
+                        <div v-else-if="showEmailTooMany"
+                             class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start'>
+                            <div class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2">
+                                <BaseAlert message="Please try again in 15 minutes."
+                                           title="Too many requests"></BaseAlert>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -68,7 +83,7 @@
                             </BaseButton>
                         </InertiaLink>
 
-                        <PrimaryButton class="ml-3">Save</PrimaryButton>
+                        <PrimaryButton class="ml-3" @click="submitForm">Save</PrimaryButton>
                     </div>
                 </div>
             </div>
@@ -85,13 +100,16 @@ import SettingsSubHeader from '@/Components/Settings/SettingsSubHeader'
 import BaseInput from "@/Components/BaseInput";
 import BaseButton from "@/Components/BaseButton";
 import PrimaryButton from "@/Components/PrimaryButton";
+import BaseAlert from "@/Components/BaseAlert";
 
 export default {
     props: {
         errors: Object,
+        flash: Object
     },
 
     components: {
+        BaseAlert,
         PrimaryButton,
         BaseButton,
         SettingsSubHeader,
@@ -99,6 +117,15 @@ export default {
         SettingsLayout,
         AvatarImage,
         BaseInput
+    },
+
+    computed: {
+        showEmailVerify() {
+            return this.flash.message === "emailVerify";
+        },
+        showEmailTooMany() {
+            return this.flash.message === "emailTooMany";
+        }
     },
 
     data() {
@@ -121,7 +148,8 @@ export default {
             URL.revokeObjectURL(file)
         },
         submitForm() {
-            this.form.post(route('settings.update-profile'), this.form)
+            this.form.post(route('settings.update-profile.update'), this.form)
+
         }
     },
 }
