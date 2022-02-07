@@ -22,9 +22,14 @@ Route::group(
     function () {
         Route::get('dashboard', 'AdminController@dashboard')->name('backpack.dashboard');
         Route::get('/', 'AdminController@redirect')->name('backpack');
-        Route::get('/logout', function () {
+
+        // OIDC Frontchannel Logout
+        Route::get('frontchannel-logout', function () {
             Auth::guard('admin')->logout();
-            return redirect(route('auth.choose'));
+        })->middleware(['auth'])->name('frontchannel_logout');
+
+        Route::get('/logout', function () {
+            return redirect('/oauth2/sessions/logout');
         })->name('logout');
 
         if (config('backpack.base.setup_my_account_routes')) {

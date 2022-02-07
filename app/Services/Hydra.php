@@ -74,8 +74,6 @@ class Hydra
                 ],
                 'body' => json_encode([
                     'grant_scope' => ['openid', 'offline_access'], // array
-                    //'remember' => true, // boolean
-                    //'rememberFor' => 600, // integer
                     'handled_at' => now(),
                     'session' => [
                         'id_token' => [
@@ -116,16 +114,52 @@ class Hydra
         }
     }
 
+    public function getLogoutRequest(string $loginChallenge)
+    {
+        try {
+            $response = $this->http->get('/oauth2/auth/requests/logout', [
+                'query' => [
+                    'challenge' => $loginChallenge
+                ]
+            ]);
+            return json_decode($response->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
+        } catch (Exception $e) {
+            if ($e->getCode() === 404) {
+                throw new ModelNotFoundException('The requested Resource does not exist.');
+            }
+
+            return $e;
+        }
+    }
+
     public function acceptLogoutRequest(string $logoutChallenge)
     {
         try {
-            $response = $this->http->put('/oauth2/auth/requests/logout/accept?challenge='.$logoutChallenge, [
+            $response = $this->http->put('/oauth2/auth/requests/logout/accept?challenge=' . $logoutChallenge, [
                 'query' => [
                     'challenge' => $logoutChallenge,
                 ]
             ]);
 
             return json_decode($response->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
+        } catch (Exception $e) {
+            if ($e->getCode() === 404) {
+                throw new ModelNotFoundException('The requested Resource does not exist.');
+            }
+            Log::error($e->getMessage());
+            throw $e;
+        }
+    }
+
+    public function invalidateAllSessions(string $subject)
+    {
+        try {
+            $response = $this->http->delete('/oauth2/auth/sessions/login', [
+                'query' => [
+                    "subject" => $subject
+                ],
+            ]);
+            return $response->getStatusCode() === 204;
         } catch (Exception $e) {
             if ($e->getCode() === 404) {
                 throw new ModelNotFoundException('The requested Resource does not exist.');

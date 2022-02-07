@@ -9,11 +9,13 @@ This is a Laravel, IntertiaJS with Vue based application that works as an OIDC P
 3. Add auth.eurofurence.localhost and identity.eurofurence.localhost to your hosts file and forward them to 127.0.0.1
 4. Project has been Setup
 
-
 ### Hydra quick commands for local setup
+
 #### Admin create client
+
 ```bash
- docker-compose exec hydra hydra clients create --secret optimus -n Client -c http://identity.eurofurence.localhost/auth/callback,http://identity.eurofurence.localhost/admin/callback --id ce94f7ac-1c9a-4d5d-8159-56b37562f9b1
+hydra clients create -n "Eurofurence IAM" -c http://identity.eurofurence.localhost/auth/callback --frontchannel-logout-callback http://identity.eurofurence.localhost/auth/frontchannel-logout
+hydra clients create -n "Eurofurence IAM Admin" -c http://identity.eurofurence.localhost/admin/callback --frontchannel-logout-callback http://identity.eurofurence.localhost/admin/frontchannel-logout
 ```
 
 ### Security
@@ -22,5 +24,5 @@ If you discover any security related issues, please email me@thiritin.com instea
 
 ## Credits
 
--   [Thiritin](https://github.com/thiritin)
--   [All Contributors](../../contributors)
+- [Thiritin](https://github.com/thiritin)
+- [All Contributors](../../contributors)
