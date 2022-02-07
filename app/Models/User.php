@@ -78,6 +78,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function changeMail(string $newEmail)
     {
+        $this->email = $newEmail;
         $this->notify(new UpdateEmailNotification($newEmail));
     }
 

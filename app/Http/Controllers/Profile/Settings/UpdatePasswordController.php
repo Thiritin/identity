@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Inertia\Inertia;
+use Illuminate\Validation\Rules\Password;
 
 class UpdatePasswordController extends Controller
 {
@@ -20,7 +20,7 @@ class UpdatePasswordController extends Controller
             "password" => [
                 "required",
                 "confirmed",
-                \Illuminate\Validation\Rules\Password::min(8)->uncompromised()->mixedCase()->numbers()
+                Password::min(8)->uncompromised()->mixedCase()->numbers()
             ],
             "destroy_sessions" => [
                 "boolean"
@@ -32,8 +32,5 @@ class UpdatePasswordController extends Controller
         if($data['destroy_sessions']) {
             Auth::logout();
         }
-
-        return Inertia::location(route('auth.choose'));
-
     }
 }

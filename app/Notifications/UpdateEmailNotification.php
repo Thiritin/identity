@@ -25,7 +25,7 @@ class UpdateEmailNotification extends Notification
 
     public function toMail($notifiable): MailMessage
     {
-        $url = URL::signedRoute('settings.update-profile.email.update', ['newEmail' => $this->newEmail]);
+        $url = URL::temporarySignedRoute('settings.update-profile.email.update', now()->addHours(4), ['newEmail' => $this->newEmail]);
         return (new MailMessage)
             ->subject(Lang::get('Verify Email Address'))
             ->line(Lang::get('Please click the button below to verify your email address.'))
