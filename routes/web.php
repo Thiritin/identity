@@ -58,13 +58,15 @@ Route::prefix('auth')->name('auth.')->group(function () {
         Route::post('password-reset', [PasswordResetController::class, 'store'])->name('password-reset.store');
     });
 
-    // E-Mail First Sign Up
+    // OIDC Frontchannel Logout
+    Route::get('frontchannel-logout', FrontChannelLogoutController::class)->middleware(['auth'])->name('frontchannel_logout');
+});
+
+// E-Mail First Sign Up
+Route::prefix('auth')->group(function () {
     Route::inertia('verify', 'Auth/VerifyEmail')->name('verification.notice')->middleware(['auth']);
     Route::get('verify/{id}/{hash}', VerifyEmailController::class)->middleware(['auth', 'signed'])->name('verification.verify');
     Route::post('resend', ResendVerificationEmailController::class)->middleware(['auth', 'throttle:6,1'])->name('verification.send');
-
-    // OIDC Frontchannel Logout
-    Route::get('frontchannel-logout', FrontChannelLogoutController::class)->middleware(['auth'])->name('frontchannel_logout');
 });
 
 Route::get('/', function () {

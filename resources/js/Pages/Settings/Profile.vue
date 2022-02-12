@@ -1,5 +1,6 @@
 <template>
     <settings-layout>
+        <AvatarModal ref='avatarmodal' :file='file' :url='previewUrl'></AvatarModal>
         <form @submit.prevent>
             <div class='space-y-8 divide-y divide-gray-200 sm:space-y-5'>
                 <div>
@@ -101,6 +102,7 @@ import BaseInput from "@/Components/BaseInput";
 import BaseButton from "@/Components/BaseButton";
 import PrimaryButton from "@/Components/PrimaryButton";
 import BaseAlert from "@/Components/BaseAlert";
+import AvatarModal from "@/Profile/AvatarModal";
 
 export default {
     props: {
@@ -109,6 +111,7 @@ export default {
     },
 
     components: {
+        AvatarModal,
         BaseAlert,
         PrimaryButton,
         BaseButton,

@@ -23,14 +23,15 @@
                                         <vue-cropper v-if="url != null" ref="cropper" :aspectRatio="1" :guides="false"
                                                      :rotatable="false" :scalable="false" :src="url" :zoomable="false"
                                                      alt="Source Image"
-                                                     @cropend="form.crop = $event.target.cropper.getData()"
-                                                     @ready="form.crop = $event.target.cropper.getData()"/>
+                                                     @cropend="avatarform.crop = $event.target.cropper.getData()"
+                                                     @ready="avatarform.crop = $event.target.cropper.getData()"/>
                                     </div>
                                 </div>
                             </div>
 
-                            <progress v-if="form.progress" :value="form.progress.percentage" class="w-full" max="100">
-                                {{ form.progress.percentage }}%
+                            <progress v-if="avatarform.progress" :value="avatarform.progress.percentage" class="w-full"
+                                      max="100">
+                                {{ avatarform.progress.percentage }}%
                             </progress>
 
                             <div class="mt-5 sm:mt-6 flex flex-row justify-end">
@@ -77,7 +78,7 @@ export default {
     },
     data() {
         return {
-            form: useForm({
+            avatarform: useForm({
                 image: null,
                 crop: null,
             })
@@ -85,8 +86,8 @@ export default {
     },
     methods: {
         submit() {
-            this.form.image = this.file
-            this.form.transform((data) => ({
+            this.avatarform.image = this.file
+            this.avatarform.transform((data) => ({
                 ...data,
                 crop: {
                     x: Math.round(data.crop.x),
