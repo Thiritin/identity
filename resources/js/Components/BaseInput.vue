@@ -2,7 +2,7 @@
     <div class='pt-4 pb-5 space-y-6 sm:pt-6 sm:space-y-5'>
         <div class='space-y-6 sm:space-y-5'>
             <div
-                class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-startsm:pt-5'>
+                class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5'>
                 <label :for="fieldId" v-if="label" class='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>{{ label }}</label>
                 <div class='mt-1 sm:mt-0 sm:col-span-2'>
                     <input
@@ -39,7 +39,7 @@ export default {
         }
     },
     setup(props) {
-        const fieldId = "checkbox-" + props.label.trim().replace(/\W/g, '').toLowerCase() + "-" + Math.random().toString(36).slice(2);
+        const fieldId = "input-" + props.label.trim().replace(/\W/g, '').toLowerCase() + "-" + Math.random().toString(36).slice(2);
         return {
             fieldId
         };

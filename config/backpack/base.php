@@ -45,7 +45,7 @@ return [
 
     // CSS files that are loaded in all pages, using Laravel's asset() helper
     'styles' => [
-        'admin/style.min.css',
+        'css/admin/style.min.css',
         'packages/animate.css/animate.min.css',
         'packages/noty/noty.css',
 

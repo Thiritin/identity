@@ -41,8 +41,10 @@ class HandleInertiaRequests extends Middleware
         if ($request->user()) {
             $user = array_merge([
                 "id" => $request->user()->getHashId(),
-                "avatar" => ($request->user()->profile_photo_path) ? Storage::disk('avatars')->url($request->user()->profile_photo_path) : null,
-                "isAdmin" => $request->user()->hasRole(['admin', 'superadmin'])
+                "avatar" => ($request->user()->profile_photo_path) ? \Storage::disk('avatars')->url($request->user()->profile_photo_path) : null,
+                "isAdmin" => $request->user()->hasRole(['admin', 'superadmin']),
+                "roles" => $request->user()->getRoleNames(),
+                "groups" => $request->user()->groups()->pluck("name"),
             ], $request->user()->only('name', 'email'));
         }
         return array_merge(parent::share($request), [

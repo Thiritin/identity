@@ -1,4 +1,4 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
+const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
     mode: 'jit',
@@ -22,10 +22,10 @@ module.exports = {
                     600: '#00504B',
                     700: '#003532',
                     800: '#002825',
-                    900: '#001B19'
-                }
-            }
-        }
+                    900: '#001B19',
+                },
+            },
+        },
     },
     future: {
         removeDeprecatedGapUtilities: true,
@@ -34,13 +34,13 @@ module.exports = {
     variants: {
         backgroundColor: ['responsive', 'hover', 'focus'],
         borderColor: ['responsive', 'hover', 'focus'],
-        borderWidth: ['responsive', 'hover', 'focus']
+        borderWidth: ['responsive', 'hover', 'focus'],
     },
 
     plugins: [
-        require("@tailwindcss/forms")({
+        require('@tailwindcss/forms')({
             strategy: 'class',
         }),
-        require('@tailwindcss/typography')
+        require('@tailwindcss/typography'),
     ],
-};
+}
