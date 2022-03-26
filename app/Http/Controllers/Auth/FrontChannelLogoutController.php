@@ -10,6 +10,7 @@ class FrontChannelLogoutController extends Controller
 {
     public function __invoke(Request $request)
     {
-        Auth::logout();
+        Auth::guard('web')::logout();
+        return "Logout successful.";
     }
 }

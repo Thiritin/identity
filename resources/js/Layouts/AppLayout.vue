@@ -246,7 +246,7 @@
         <main class="-mt-32">
             <div class="max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8">
                 <transition name="page">
-                    <div v-if="animated">
+                    <div v-if="animated" :key="$page.url">
                         <slot></slot>
                     </div>
                 </transition>
@@ -328,17 +328,3 @@ export default {
     },
 }
 </script>
-<style>
-.page-enter-active {
-    transition: opacity .1s ease-in;
-    opacity: 0;
-}
-
-.page-enter {
-    opacity: 0;
-}
-
-.page-enter-to {
-    opacity: 1;
-}
-</style>

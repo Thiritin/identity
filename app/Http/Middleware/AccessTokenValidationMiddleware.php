@@ -20,7 +20,10 @@ class AccessTokenValidationMiddleware
         }
         // Get Token that is saved in session.
         $token = $request->session()->get('access_token');
-        if ($token === null) Auth::logout();
+        if ($token === null) {
+            Auth::logout();
+            return abort(401, "Unauthorized.");
+        }
 
         // No need to call Hydra on every request.
         if (Cache::has('accessToken.' . $token . '.validated')) {
