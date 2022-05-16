@@ -30,7 +30,7 @@
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
-        "@headlessui/vue": "^1.4.0",
+        "@headlessui/vue": "^1.6.0",
         "@heroicons/vue": "^1.0.4",
         "autoprefixer": "^10.4.0",
         "matice": "^1.1.4",
