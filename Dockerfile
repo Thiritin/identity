@@ -1,19 +1,24 @@
-FROM php:8-alpine as base
+FROM php:8.1.11-bullseye as base
 WORKDIR /app
 
 ENV COMPOSER_MEMORY_LIMIT=-1
 ######################################################
 # Step 1 | Install Dependencies
 ######################################################
-RUN apk add --no-cache --virtual .build-deps libzip-dev icu-dev openssl-dev libtool autoconf gcc make g++ zlib-dev libjpeg-turbo-dev libpng-dev freetype-dev libwebp-dev  \
-    && apk add --no-cache curl libzip git icu unzip openssl zip tar ca-certificates mysql-client freetype libzip libjpeg-turbo libpng libwebp procps \
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+
+RUN apt-get update \
+    && chmod +x /usr/local/bin/install-php-extensions \
+    && apt-get install -y autoconf gcc make g++  \
+    && apt-get install -y curl git unzip openssl tar ca-certificates libfreetype6-dev libjpeg62-turbo-dev zlib1g-dev libpng-dev libwebp-dev \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && pecl install swoole \
     && docker-php-ext-enable swoole \
     && docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg \
-    && docker-php-ext-install gd bcmath pdo_mysql zip intl opcache pcntl \
-    && apk del -f .build-deps \
+    && install-php-extensions gd bcmath pdo_mysql zip intl opcache pcntl \
+    && apt-get remove -y autoconf gcc make g++ \
+    && apt-get clean -y \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
 ######################################################
 # Copy Configuration
