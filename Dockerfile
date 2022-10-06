@@ -1,4 +1,4 @@
-FROM php:8-alpine as base
+FROM php:8.0.24-alpine3.15 as base
 WORKDIR /app
 
 ENV COMPOSER_MEMORY_LIMIT=-1
