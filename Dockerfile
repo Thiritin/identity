@@ -9,15 +9,8 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 
 RUN apt-get update \
     && chmod +x /usr/local/bin/install-php-extensions \
-    && apt-get install -y autoconf gcc make g++  \
-    && apt-get install -y curl git unzip openssl tar ca-certificates libfreetype6-dev libjpeg62-turbo-dev zlib1g-dev libpng-dev libwebp-dev \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
-    && pecl install swoole \
-    && docker-php-ext-enable swoole \
-    && docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg \
-    && install-php-extensions gd bcmath pdo_mysql zip intl opcache pcntl \
-    && apt-get remove -y autoconf gcc make g++ \
+    && apt-get install -y curl git unzip openssl tar ca-certificates \
+    && install-php-extensions gd bcmath pdo_mysql zip intl opcache pcntl redis swoole @composer \
     && apt-get clean -y \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
 ######################################################
@@ -34,10 +27,12 @@ COPY composer.json composer.lock /app/
 # Local Stage
 ######################################################
 FROM base as local
-RUN addgroup -g 1024 app \
-  && adduser -u 1024 --disabled-password --ingroup app app \
+RUN addgroup -gid 1024 app \
+  && adduser -uid 1024 --disabled-password --ingroup app app \
   && adduser www-data app \
-  && apk add --no-cache nodejs npm
+  && apt-get update \
+  && apt-get install -y nodejs npm \
+  && apt-get clean -y
 USER app
 # yarn install as command
 CMD sh -c "composer install && php artisan octane:start --watch --host=0.0.0.0 --port=80"
