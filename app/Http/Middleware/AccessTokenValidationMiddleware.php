@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\Hydra;
+use App\Services\Client;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +27,7 @@ class AccessTokenValidationMiddleware
 
         // No need to call Hydra on every request.
         if (Cache::has('accessToken.' . $token . '.validated')) {
-            $hydra = new Hydra();
+            $hydra = new Client();
             $response = $hydra->getToken($token, ['openid']);
 
             if ($response->active === false) {

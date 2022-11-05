@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Services\Hydra;
+use App\Services\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +21,7 @@ class LoginController extends Controller
             return Redirect::route('auth.choose');
         }
 
-        $hydra = new Hydra();
+        $hydra = new Client();
         $loginRequest = $hydra->getLoginRequest($request->get('login_challenge'));
         if ($loginRequest->skip === true) {
             return Redirect::to($this->acceptLogin($loginRequest->subject, $loginRequest->challenge, 0));
@@ -51,7 +51,7 @@ class LoginController extends Controller
      */
     private function acceptLogin(string $subject, string $login_challenge, int $remember_seconds = 0): string
     {
-        $hydra = new Hydra();
+        $hydra = new Client();
         $hydraResponse = $hydra->acceptLoginRequest($subject, $login_challenge, $remember_seconds);
         abort_if(empty($hydraResponse->redirect_to), 500);
 

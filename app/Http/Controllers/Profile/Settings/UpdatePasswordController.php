@@ -32,5 +32,6 @@ class UpdatePasswordController extends Controller
         if($data['destroy_sessions']) {
             Auth::logout();
         }
+
     }
 }

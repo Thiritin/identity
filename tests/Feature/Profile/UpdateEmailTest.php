@@ -26,8 +26,6 @@ class UpdateEmailTest extends TestCase
             "email" => "test2@email.de"
         ]);
 
-        $response->assertStatus(200);
-
         Notification::assertSentTo($user, UpdateEmailNotification::class);
     }
 

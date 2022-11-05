@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Hydra;
 
 use App\Models\User;
 use Exception;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 
-class Hydra
+class Client
 {
-    private Client $http;
+    private GuzzleClient $http;
 
     public function __construct($host = 'hydra:4445')
     {
-        $this->http = new Client([
+        $this->http = new GuzzleClient([
             'base_uri' => config('services.hydra.admin'),
             'verify' => false,
             'headers' => [

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Controller;
-use App\Services\Hydra;
+use App\Services\Client;
 use Illuminate\Http\Request;
 
 class UserinfoController extends Controller
@@ -13,7 +13,7 @@ class UserinfoController extends Controller
         $data = $request->validate([
             'token' => 'string|required'
         ]);
-        $hydra = new Hydra();
+        $hydra = new Client();
         $hydra->getToken($data['token'], ['openid', 'profile']);
 
         // Dead code may be used in the future

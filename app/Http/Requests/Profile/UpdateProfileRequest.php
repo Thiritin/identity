@@ -11,7 +11,7 @@ class UpdateProfileRequest extends FormRequest
         return [
             "name" => [
                 "min:3",
-                "max:25",
+                "max:39",
                 "required",
                 "string",
             ],
