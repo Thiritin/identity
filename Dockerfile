@@ -30,6 +30,7 @@ FROM base as local
 RUN addgroup -gid 1024 app \
   && adduser -uid 1024 --disabled-password --ingroup app app \
   && adduser www-data app \
+  && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
   && apt-get update \
   && apt-get install -y nodejs npm \
   && apt-get clean -y
@@ -41,7 +42,7 @@ CMD sh -c "composer install && php artisan octane:start --watch --host=0.0.0.0 -
 ######################################################
 FROM node:16-buster as mix
 WORKDIR /app
-COPY package.json package-lock.json webpack.mix.js tailwind.config.js webpack.config.js ./
+COPY package.json package-lock.json tailwind.config.js vite.config.js ./
 RUN npm install
 COPY . /app/
 RUN npm run prod
