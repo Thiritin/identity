@@ -9,10 +9,10 @@ class Admin
     private $url;
     protected $http;
 
-    public function __construct(string $url)
+    public function __construct()
     {
-        $this->url = $url;
-        $this->http = Http::baseUrl($url)->accept("application/json")->withoutVerifying();
+        $this->url = config('services.hydra.admin');
+        $this->http = Http::baseUrl($this->url)->accept("application/json")->withoutVerifying();
     }
 
     public function apps()
@@ -33,7 +33,7 @@ class Admin
         return $this->http->post($path, $body)->json();
     }
 
-    public function deleteRequest(string $path, array $body): bool
+    public function deleteRequest(string $path, array $body = []): bool
     {
         return $this->http->delete($path, $body)->successful();
     }

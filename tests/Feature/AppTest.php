@@ -1,19 +1,20 @@
 <?php
 
-namespace Database\Seeders;
+namespace Tests\Feature;
 
 use App\Models\App;
 use App\Models\User;
-use Illuminate\Database\Seeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
+use Tests\TestCase;
 
-class AppSeeder extends Seeder
+class AppTest extends TestCase
 {
-    /**
-     * This seeder makes sure that we always have two apps in the system.
-     * One for the Client Application and one for the Admin Application.
-     */
-    public function run()
+    use RefreshDatabase;
+
+    public function test_app_creation()
     {
+        Artisan::call('db:seed');
         $app1 = App::firstOrCreate([
             "id" => 1
         ], [

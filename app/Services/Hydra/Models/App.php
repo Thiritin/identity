@@ -5,7 +5,7 @@ namespace App\Services\Hydra\Models;
 class App extends \App\Services\Hydra\Admin
 {
     public string $client_name = "";
-    public string $client_id;
+    public string $client_id = "";
     public string|null $client_secret = null;
     public array $allowed_cors_origins = [];
     public array $audience = [];
@@ -50,25 +50,25 @@ class App extends \App\Services\Hydra\Admin
     {
         $this->fill($attributes);
         $data = $this->postRequest("/clients", $this->payload());
-        dd($data);
         $this->fill($data);
         return $this;
     }
 
-    public function delete(): void
+    public function delete(): bool
     {
-        $this->deleteRequest("/clients", [
-            "client_id" => $this->client_id
-        ]);
+        return $this->deleteRequest("/clients/" . $this->client_id);
     }
 
     public function update(array $attributes = []): array
     {
+        $this->load($this->client_id);
         $this->fill($attributes);
-        return $this->putRequest("/clients/" . $this->client_id, $this->payload());
+        $data = $this->putRequest("/clients/" . $this->client_id, $this->payload());
+        $this->fill($data);
+        return $data;
     }
 
-    private function payload(): array
+    public function payload(): array
     {
         return [
             "client_name" => $this->client_name,
@@ -114,5 +114,40 @@ class App extends \App\Services\Hydra\Admin
                 }
             }
         });
+    }
+
+    public function toArray(): array
+    {
+        return [
+            "client_id" => $this->client_id,
+            "client_name" => $this->client_name,
+            "client_secret" => $this->client_secret,
+            "allowed_cors_origins" => $this->allowed_cors_origins,
+            "audience" => $this->audience,
+            "backchannel_logout_session_required" => $this->backchannel_logout_session_required,
+            "backchannel_logout_uri" => $this->backchannel_logout_uri,
+            "client_uri" => $this->client_uri,
+            "contacts" => $this->contacts,
+            "frontchannel_logout_session_required" => $this->frontchannel_logout_session_required,
+            "frontchannel_logout_uri" => $this->frontchannel_logout_uri,
+            "grant_types" => $this->grant_types,
+            "jwks_uri" => $this->jwks_uri,
+            "logo_uri" => $this->logo_uri,
+            "metadata" => $this->metadata,
+            "owner" => $this->owner,
+            "policy_uri" => $this->policy_uri,
+            "post_logout_redirect_uris" => $this->post_logout_redirect_uris,
+            "redirect_uris" => $this->redirect_uris,
+            "request_object_signing_alg" => $this->request_object_signing_alg,
+            "request_uris" => $this->request_uris,
+            "response_types" => $this->response_types,
+            "scopes" => $this->scopes,
+            "sector_identifier_uri" => $this->sector_identifier_uri,
+            "subject_type" => $this->subject_type,
+            "token_endpoint_auth_method" => $this->token_endpoint_auth_method,
+            "token_endpoint_auth_signing_alg" => $this->token_endpoint_auth_signing_alg,
+            "tos_uri" => $this->tos_uri,
+            "userinfo_signed_response_alg" => $this->userinfo_signed_response_alg,
+        ];
     }
 }

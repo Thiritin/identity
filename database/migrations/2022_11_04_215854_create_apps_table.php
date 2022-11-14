@@ -9,9 +9,9 @@ return new class extends Migration {
     {
         Schema::create('apps', function (Blueprint $table) {
             $table->id();
-            $table->string('client_id')->unique();
+            $table->string('client_id')->unique()->nullable();
             $table->foreignIdFor(\App\Models\User::class)->references('id')->on('users')->restrictOnDelete()->restrictOnUpdate();
-
+            $table->json('data')->nullable();
             $table->timestamps();
         });
     }
