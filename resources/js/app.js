@@ -1,19 +1,22 @@
 require('./bootstrap');
+import '../css/app.css';
 
 // Import modules...
 import {createApp, h} from 'vue';
 import {App as InertiaApp, plugin as InertiaPlugin} from '@inertiajs/inertia-vue3';
 import {InertiaProgress} from '@inertiajs/progress';
 import {__, getLocale, locales, setLocale, trans, transChoice} from "matice"
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 
 const el = document.getElementById('app');
 
-createApp({
-    render: () =>
-        h(InertiaApp, {
-            initialPage: JSON.parse(el.dataset.page),
-            resolveComponent: (name) => require(`./Pages/${name}`).default,
-        }),
+createInertiaApp({
+    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+    setup({ el, App, props, plugin }) {
+        createApp({ render: () => h(App, props) })
+            .use(plugin)
+            .mount(el)
+    },
 })
     .mixin({methods: {route}})
     .mixin({

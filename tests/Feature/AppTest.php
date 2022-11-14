@@ -28,5 +28,6 @@ class AppTest extends TestCase
                 "frontchannel_logout_callback" => "http://identity.eurofurence.localhost/auth/frontchannel-logout"
             ]
         ]);
+        $this->assertModelExists($app1);
     }
 }

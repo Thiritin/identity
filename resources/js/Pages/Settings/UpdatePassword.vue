@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import SettingsLayout from "../../Layouts/SettingsLayout";
+import SettingsLayout from "@/Layouts/SettingsLayout";
 import SettingsHeader from "@/Components/Settings/SettingsHeader";
 import BaseInput from "@/Components/BaseInput";
 import PrimaryButton from "@/Components/PrimaryButton";

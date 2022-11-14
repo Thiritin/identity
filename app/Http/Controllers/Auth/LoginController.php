@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Services\Client;
+use App\Services\Hydra\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -23,8 +23,8 @@ class LoginController extends Controller
 
         $hydra = new Client();
         $loginRequest = $hydra->getLoginRequest($request->get('login_challenge'));
-        if ($loginRequest->skip === true) {
-            return Redirect::to($this->acceptLogin($loginRequest->subject, $loginRequest->challenge, 0));
+        if ($loginRequest["skip"] === true) {
+            return Redirect::to($this->acceptLogin($loginRequest['subject'], $loginRequest["challenge"], 0));
         }
 
         return Inertia::render('Auth/Login');
@@ -53,8 +53,8 @@ class LoginController extends Controller
     {
         $hydra = new Client();
         $hydraResponse = $hydra->acceptLoginRequest($subject, $login_challenge, $remember_seconds);
-        abort_if(empty($hydraResponse->redirect_to), 500);
+        abort_if(!isset($hydraResponse["redirect_to"]), 500,"The Login Server did not return any redirection url.");
 
-        return $hydraResponse->redirect_to;
+        return $hydraResponse["redirect_to"];
     }
 }

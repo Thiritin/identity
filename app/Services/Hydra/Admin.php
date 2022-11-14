@@ -12,12 +12,12 @@ class Admin
     public function __construct()
     {
         $this->url = config('services.hydra.admin');
-        $this->http = Http::baseUrl($this->url)->accept("application/json")->withoutVerifying();
+        $this->http = Http::baseUrl($this->url."/admin")->acceptJson();
     }
 
     public function apps()
     {
-        return new \App\Services\Hydra\Admin($this->url);
+        return new Admin();
     }
 
     /**
@@ -30,7 +30,7 @@ class Admin
 
     public function postRequest(string $path, array $body): array
     {
-        return $this->http->post($path, $body)->json();
+        return $this->http->post($path,$body)->json();
     }
 
     public function deleteRequest(string $path, array $body = []): bool

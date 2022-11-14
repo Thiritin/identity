@@ -35,9 +35,9 @@
     import AppLayout from '@/Layouts/AppLayout'
     import { computed } from 'vue'
     import { usePage } from '@inertiajs/inertia-vue3'
-    import CogsDuotone from '../Components/Icons/CogsDuotone'
-    import TicketDuotone from '../Components/Icons/TicketDuotone'
-    import WorkInProgressBanner from './Profile/WorkInProgressBanner'
+    import CogsDuotone from '@/Components/Icons/CogsDuotone'
+    import TicketDuotone from '@/Components/Icons/TicketDuotone'
+    import WorkInProgressBanner from '@/Pages/Profile/WorkInProgressBanner'
 
     export default {
         components: {

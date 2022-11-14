@@ -278,7 +278,7 @@ var navigation = [
     },
     {
         name: 'admin',
-        route: route('backpack.dashboard'),
+        route: "#",
         inertia: false
     },
 ]

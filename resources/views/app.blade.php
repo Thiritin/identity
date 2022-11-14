@@ -10,20 +10,13 @@
         <!-- Favicon -->
         <link rel="icon" type="image/svg" href="/favicon.svg">
 
-        <!-- Styles -->
-        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-
         <!-- Scripts -->
-        @routes
-        @translations
+        <!-- @routes
+        @translations -->
 
-        <script src="{{ mix('js/app.js') }}" defer></script>
+        @vite
     </head>
     <body class="font-sans antialiased">
         @inertia
-
-        @env ('local')
-            <script src="http://localhost:3000/browser-sync/browser-sync-client.js"></script>
-        @endenv
     </body>
 </html>

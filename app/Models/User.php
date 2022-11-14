@@ -59,6 +59,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
+    public function getProfilePhotoUrlAttribute()
+    {
+        return "";
+    }
+
     public function getHashId(): string
     {
         return Hashids::encode($this->id);
