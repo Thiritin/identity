@@ -45,7 +45,7 @@ WORKDIR /app
 COPY package.json package-lock.json tailwind.config.js vite.config.js ./
 RUN npm install
 COPY . /app/
-RUN npm run prod
+RUN npm run build
 ######################################################
 # Production Stage
 ######################################################
