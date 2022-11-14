@@ -32,7 +32,7 @@ RUN addgroup -gid 1024 app \
   && adduser www-data app \
   && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
   && apt-get update \
-  && apt-get install -y nodejs npm \
+  && apt-get install -y nodejs \
   && apt-get clean -y
 USER app
 # yarn install as command
