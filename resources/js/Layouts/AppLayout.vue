@@ -258,10 +258,10 @@
 <script>
 import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems,} from '@headlessui/vue'
 import {BellIcon, MenuIcon, XIcon} from '@heroicons/vue/outline'
-import Logo from '@/Auth/Logo'
+import Logo from '@/Auth/Logo.vue'
 import {usePage} from '@inertiajs/inertia-vue3'
 import {computed} from 'vue'
-import AvatarImage from "@/Pages/Profile/AvatarImage";
+import AvatarImage from "@/Pages/Profile/AvatarImage.vue";
 
 const profile = [
     {

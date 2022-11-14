@@ -45,10 +45,10 @@
         </form>
     </auth-layout>
 </template>
-<script> import Logo from '@/Auth/Logo'
-import LoginScreenWelcome from '@/Auth/LoginScreenWelcome'
-import FormInput from '@/Auth/Form/AuthFormInput'
-import AuthLayout from '@/Layouts/AuthLayout'
+<script> import Logo from '@/Auth/Logo.vue'
+import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
+import FormInput from '@/Auth/Form/AuthFormInput.vue'
+import AuthLayout from '@/Layouts/AuthLayout.vue'
 
 export default {
     components: { AuthLayout, Logo, LoginScreenWelcome, FormInput },

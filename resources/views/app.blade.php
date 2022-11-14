@@ -11,8 +11,8 @@
         <link rel="icon" type="image/svg" href="/favicon.svg">
 
         <!-- Scripts -->
-        <!-- @routes
-        @translations -->
+        @routes
+        @translations
 
         @vite
     </head>

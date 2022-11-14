@@ -16,3 +16,4 @@ yarn-error.log
 /.vscode
 /public/js/app.js
 /public/css/app.css
+/public/build/

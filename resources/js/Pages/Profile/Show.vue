@@ -72,10 +72,10 @@
     </app-layout>
 </template>
 <script>
-    import AppLayout from '@/Layouts/AppLayout'
+    import AppLayout from '@/Layouts/AppLayout.vue'
     import { PencilIcon, PhoneIcon } from '@heroicons/vue/solid'
-    import AvatarModal from '@/Profile/AvatarModal'
-    import AvatarImage from '@/Pages/Profile/AvatarImage'
+    import AvatarModal from '@/Profile/AvatarModal.vue'
+    import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
 
     const profile = {
         backgroundImage:

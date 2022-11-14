@@ -29,13 +29,13 @@
 </template>
 
 <script>
-import SettingsLayout from "@/Layouts/SettingsLayout";
-import SettingsHeader from "@/Components/Settings/SettingsHeader";
-import BaseInput from "@/Components/BaseInput";
-import PrimaryButton from "@/Components/PrimaryButton";
-import SettingsSubHeader from "@/Components/Settings/SettingsSubHeader";
-import PasswordInfoBox from "@/Auth/PasswordInfoBox";
-import BaseCheckbox from "@/Components/BaseCheckbox";
+import SettingsLayout from "@/Layouts/SettingsLayout.vue";
+import SettingsHeader from "@/Components/Settings/SettingsHeader.vue";
+import BaseInput from "@/Components/BaseInput.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SettingsSubHeader from "@/Components/Settings/SettingsSubHeader.vue";
+import PasswordInfoBox from "@/Auth/PasswordInfoBox.vue";
+import BaseCheckbox from "@/Components/BaseCheckbox.vue";
 
 export default {
     name: 'UpdatePassword',

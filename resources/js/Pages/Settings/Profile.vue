@@ -94,15 +94,15 @@
 
 <script>
 import {useForm} from '@inertiajs/inertia-vue3'
-import AvatarImage from '@/Pages/Profile/AvatarImage'
-import SettingsLayout from '@/Layouts/SettingsLayout'
-import SettingsHeader from '@/Components/Settings/SettingsHeader'
-import SettingsSubHeader from '@/Components/Settings/SettingsSubHeader'
-import BaseInput from "@/Components/BaseInput";
-import BaseButton from "@/Components/BaseButton";
-import PrimaryButton from "@/Components/PrimaryButton";
-import BaseAlert from "@/Components/BaseAlert";
-import AvatarModal from "@/Profile/AvatarModal";
+import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
+import SettingsLayout from '@/Layouts/SettingsLayout.vue'
+import SettingsHeader from '@/Components/Settings/SettingsHeader.vue'
+import SettingsSubHeader from '@/Components/Settings/SettingsSubHeader.vue'
+import BaseInput from "@/Components/BaseInput.vue";
+import BaseButton from "@/Components/BaseButton.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import BaseAlert from "@/Components/BaseAlert.vue";
+import AvatarModal from "@/Profile/AvatarModal.vue";
 
 export default {
     props: {

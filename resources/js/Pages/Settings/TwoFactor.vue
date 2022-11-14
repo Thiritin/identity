@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import SettingsLayout from '@/Layouts/SettingsLayout'
-import SettingsHeader from "@/Components/Settings/SettingsHeader";
-import SettingsSubHeader from "@/Components/Settings/SettingsSubHeader";
+import SettingsLayout from '@/Layouts/SettingsLayout.vue'
+import SettingsHeader from "@/Components/Settings/SettingsHeader.vue";
+import SettingsSubHeader from "@/Components/Settings/SettingsSubHeader.vue";
 
 export default {
     name: 'TwoFactor',

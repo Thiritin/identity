@@ -15,9 +15,9 @@
 </template>
 
 <script>
-import AppLayout from '@/Layouts/AppLayout'
-import SettingsSidebarMenu from '@/Components/Settings/SettingsSidebarMenu'
-import SettingsContent from '@/Components/Settings/SettingsContent'
+import AppLayout from '@/Layouts/AppLayout.vue'
+import SettingsSidebarMenu from '@/Components/Settings/SettingsSidebarMenu.vue'
+import SettingsContent from '@/Components/Settings/SettingsContent.vue'
 
 export default {
     name: 'SettingsLayout',

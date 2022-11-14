@@ -117,11 +117,11 @@
 </template>
 
 <script>
-    import Logo from '@/Auth/Logo'
-    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome'
-    import FormInput from '@/Auth/Form/AuthFormInput'
-    import AuthLayout from '@/Layouts/AuthLayout'
-    import PasswordInfoBox from "@/Auth/PasswordInfoBox";
+    import Logo from '@/Auth/Logo.vue'
+    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
+    import FormInput from '@/Auth/Form/AuthFormInput.vue'
+    import AuthLayout from '@/Layouts/AuthLayout.vue'
+    import PasswordInfoBox from "@/Auth/PasswordInfoBox.vue";
 
     export default {
         components: {

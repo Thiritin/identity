@@ -32,12 +32,12 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout'
+    import AppLayout from '@/Layouts/AppLayout.vue'
     import { computed } from 'vue'
     import { usePage } from '@inertiajs/inertia-vue3'
-    import CogsDuotone from '@/Components/Icons/CogsDuotone'
-    import TicketDuotone from '@/Components/Icons/TicketDuotone'
-    import WorkInProgressBanner from '@/Pages/Profile/WorkInProgressBanner'
+    import CogsDuotone from '@/Components/Icons/CogsDuotone.vue'
+    import TicketDuotone from '@/Components/Icons/TicketDuotone.vue'
+    import WorkInProgressBanner from '@/Pages/Profile/WorkInProgressBanner.vue'
 
     export default {
         components: {

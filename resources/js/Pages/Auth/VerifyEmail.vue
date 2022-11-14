@@ -57,9 +57,9 @@
 </template>
 
 <script>
-    import Logo from '@/Auth/Logo'
-    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome'
-    import AuthLayout from '@/Layouts/AuthLayout'
+    import Logo from '@/Auth/Logo.vue'
+    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
+    import AuthLayout from '@/Layouts/AuthLayout.vue'
 
     export default {
         components: {
