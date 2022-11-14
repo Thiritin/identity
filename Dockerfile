@@ -40,7 +40,7 @@ CMD sh -c "composer install && php artisan octane:start --watch --host=0.0.0.0 -
 ######################################################
 # NodeJS Stage
 ######################################################
-FROM node:16-buster as mix
+FROM node:16-buster as vite
 WORKDIR /app
 COPY package.json package-lock.json tailwind.config.js vite.config.js ./
 RUN npm install
@@ -50,8 +50,7 @@ RUN npm run build
 # Production Stage
 ######################################################
 FROM base as production
-COPY --from=mix /app/public/css/app.css ./public/css/app.css
-COPY --from=mix /app/public/js/app.js ./public/js/app.js
+COPY --from=vite /app/public/build ./public/build
 COPY . /app/
 RUN composer install --no-dev --optimize-autoloader \
     && chmod 777 -R bootstrap storage \
