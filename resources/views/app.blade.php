@@ -14,7 +14,7 @@
         @routes
         @translations
 
-        @vite
+        {{ Vite::useBuildDirectory('build')->withEntryPoints(['resources/js/app.js']) }}
     </head>
     <body class="font-sans antialiased">
         @inertia
