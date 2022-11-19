@@ -4,7 +4,6 @@ namespace App\Services\Hydra;
 
 use App\Models\User;
 use Exception;
-use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -105,7 +104,9 @@ class Client
     public function acceptLogoutRequest(string $logoutChallenge)
     {
         try {
-            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/logout/accept?challenge=' . $logoutChallenge)->jsom();
+            return Http::hydraAdmin()->put(
+                '/admin/oauth2/auth/requests/logout/accept?challenge=' . $logoutChallenge
+            )->json();
         } catch (Exception $e) {
             if ($e->getCode() === 404) {
                 throw new ModelNotFoundException('The requested Resource does not exist.');

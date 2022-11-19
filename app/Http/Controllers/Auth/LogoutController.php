@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Services\Client;
+use App\Services\Hydra\Client;
 use Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -24,6 +24,6 @@ class LogoutController extends Controller
         // $hydra->invalidateAllSessions($hydraLogoutRequest->subject);
 
         $hydraResponse = $hydra->acceptLogoutRequest($request->get('logout_challenge'));
-        return redirect($hydraResponse->redirect_to);
+        return redirect($hydraResponse["redirect_to"]);
     }
 }
