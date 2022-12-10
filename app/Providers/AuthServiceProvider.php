@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Services\Auth\AdminAuth;
 use App\Services\Auth\TokenAuth;
+use App\Services\Hydra\Client;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthServiceProvider extends ServiceProvider
@@ -33,7 +35,17 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         ResetPassword::createUrlUsing(function ($user, string $token) {
-            return route('auth.password-reset.view',['token' => $token, 'email' => $user->email]);
+            return route('auth.password-reset.view', ['token' => $token, 'email' => $user->email]);
+        });
+
+        Auth::viaRequest('hydra', function (Request $request) {
+            $user = null;
+            if (!empty($request->bearerToken())) {
+                $hydra = new Client();
+                $token = $hydra->getToken($request->bearerToken());
+                dd($token);
+            }
+            return $user;
         });
     }
 }

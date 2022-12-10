@@ -10,7 +10,7 @@ class GroupController extends Controller
 {
     public function index()
     {
-
+        return "Happy face";
     }
 
     public function store(Request $request)

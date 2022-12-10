@@ -44,7 +44,8 @@ FROM node:16-buster as vite
 WORKDIR /app
 COPY package.json package-lock.json tailwind.config.js vite.config.js ./
 RUN npm install
-COPY . /app/
+COPY ./resources /app/resources
+COPY ./vendor/tightenco/ziggy /app/vendor/tightenco/ziggy
 RUN npm run build
 ######################################################
 # Production Stage

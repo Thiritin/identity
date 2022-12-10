@@ -19,7 +19,6 @@ class UpdateProfileController extends Controller
         }
 
         if ($user->email !== $request->get('email')) {
-
             $done = RateLimiter::attempt(
                 'emailVerify:' . $user->id,
                 5,

@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -17,6 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasFactory;
     use Notifiable;
     use HasRoles;
+    use HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -39,6 +41,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'two_factor_recovery_codes',
         'two_factor_secret',
+        'remember_token'
     ];
 
     /**

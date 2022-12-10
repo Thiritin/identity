@@ -47,9 +47,8 @@ return [
         ],
 
         'api' => [
-            'driver' => 'token',
+            'driver' => 'hydra',
             'provider' => 'users',
-            'hash' => false,
         ],
     ],
 
