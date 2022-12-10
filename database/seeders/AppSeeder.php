@@ -14,7 +14,7 @@ class AppSeeder extends Seeder
      */
     public function run()
     {
-        $app1 = App::firstOrCreate([
+        App::firstOrCreate([
             "id" => 1,
         ], [
             'user_id' => User::first()->id,
@@ -25,7 +25,22 @@ class AppSeeder extends Seeder
                     "http://identity.eurofurence.localhost/auth/callback"
                 ],
                 "token_endpoint_auth_method" => "client_secret_basic",
-                "frontchannel_logout_callback" => "http://identity.eurofurence.localhost/auth/frontchannel-logout"
+                "frontchannel_logout_uri" => "http://identity.eurofurence.localhost/auth/frontchannel-logout"
+            ]
+        ]);
+
+        App::firstOrCreate([
+            "id" => 2,
+        ], [
+            'user_id' => User::first()->id,
+            'data' => [
+                "client_secret" => "optimus",
+                "client_name" => "Eurofurence IAM Admin",
+                "redirect_uris" => [
+                    route('filament.auth.callback')
+                ],
+                "token_endpoint_auth_method" => "client_secret_basic",
+                "frontchannel_logout_uri" => route('filament.auth.frontchannel-logout')
             ]
         ]);
     }

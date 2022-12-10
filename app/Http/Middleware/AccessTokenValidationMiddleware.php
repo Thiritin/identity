@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\Client;
+use App\Services\Hydra\Client;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,22 +19,21 @@ class AccessTokenValidationMiddleware
             return $next($request);
         }
         // Get Token that is saved in session.
-        $token = $request->session()->get('access_token');
+        $token = $request->session()->get('web.access_token');
         if ($token === null) {
             Auth::logout();
             return abort(401, "Unauthorized.");
         }
 
         // No need to call Hydra on every request.
-        if (Cache::has('accessToken.' . $token . '.validated')) {
+        if (Cache::missing('accessToken.' . sha1($token) . '.validated')) {
             $hydra = new Client();
             $response = $hydra->getToken($token, ['openid']);
-
-            if ($response->active === false) {
+            if ($response['active'] === false) {
                 Auth::logout();
                 return abort(401, "Unauthorized.");
             }
-            Cache::put('accessToken.' . $token . '.validated', true, now()->addSeconds(120));
+            Cache::put('accessToken.' . sha1($token) . '.validated', true, now()->addSeconds(120));
         }
 
         return $next($request);

@@ -1,7 +1,9 @@
-<?php /** @noinspection NullPointerExceptionInspection */
+<?php
+/** @noinspection NullPointerExceptionInspection */
 
 /** @noinspection PhpVoidFunctionResultUsedInspection */
 
+use App\Http\Controllers\AppsController;
 use App\Http\Controllers\Auth\Authenticators\OidcClientController;
 use App\Http\Controllers\Auth\ChooseController;
 use App\Http\Controllers\Auth\ConsentController;
@@ -38,13 +40,15 @@ use Illuminate\Support\Facades\Route;
  */
 // GUEST
 Route::prefix('auth')->name('auth.')->group(function () {
-    Route::get('login', [LoginController::class, 'view'])->name('login.view'); // Must be accessible as a logged in user.
+    Route::get('login', [LoginController::class, 'view'])->name(
+        'login.view'
+    ); // Must be accessible as a logged in user.
     Route::post('login', [LoginController::class, 'submit'])->name('login.submit');
     Route::get('callback', [OidcClientController::class, 'callback'])->name('oidc.callback');
     Route::get('consent', ConsentController::class)->name('consent');
     Route::get('logout', LogoutController::class)->name('logout');
 
-    Route::middleware('guest')->group(function () {
+    Route::middleware('guest:web')->group(function () {
         Route::get('choose', ChooseController::class)->name('choose');
         Route::get('choose/login', [OidcClientController::class, 'login'])->name('oidc.login');
         // Register
@@ -59,14 +63,20 @@ Route::prefix('auth')->name('auth.')->group(function () {
     });
 
     // OIDC Frontchannel Logout
-    Route::get('frontchannel-logout', FrontChannelLogoutController::class)->middleware(['auth'])->name('frontchannel_logout');
+    Route::get('frontchannel-logout', FrontChannelLogoutController::class)->middleware(['auth'])->name(
+        'frontchannel_logout'
+    );
 });
 
 // E-Mail First Sign Up
 Route::prefix('auth')->group(function () {
     Route::inertia('verify', 'Auth/VerifyEmail')->name('verification.notice')->middleware(['auth']);
-    Route::get('verify/{id}/{hash}', VerifyEmailController::class)->middleware(['auth', 'signed'])->name('verification.verify');
-    Route::post('resend', ResendVerificationEmailController::class)->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+    Route::get('verify/{id}/{hash}', VerifyEmailController::class)->middleware(['auth', 'signed'])->name(
+        'verification.verify'
+    );
+    Route::post('resend', ResendVerificationEmailController::class)->middleware(['auth', 'throttle:6,1'])->name(
+        'verification.send'
+    );
 });
 
 Route::get('/', function () {
@@ -79,7 +89,9 @@ Route::middleware('auth', 'auth.oidc', 'verified')->group(function () {
     Route::inertia('/profile', 'Profile/Show')->name('profile');
     Route::inertia('/settings/profile', 'Settings/Profile')->name('settings.profile');
     Route::post('/settings/profile/update', UpdateProfileController::class)->name('settings.update-profile.update');
-    Route::get('/settings/profile/update/email', UpdateProfileEmailController::class)->name('settings.update-profile.email.update')->middleware('signed');
+    Route::get('/settings/profile/update/email', UpdateProfileEmailController::class)->name(
+        'settings.update-profile.email.update'
+    )->middleware('signed');
 
     Route::inertia('/settings/update-password', 'Settings/UpdatePassword')->name('settings.update-password');
     Route::post('/settings/update-password', UpdatePasswordController::class)->name('settings.update-password.store');
@@ -90,4 +102,19 @@ Route::middleware('auth', 'auth.oidc', 'verified')->group(function () {
     Route::inertia('/settings/sessions', 'Settings/TwoFactor')->name('settings.sessions');
 
     Route::post('/profile/avatar/store', StoreAvatarController::class)->name('profile.avatar.store');
+
+    Route::resource('apps', AppsController::class);
 });
+
+/**
+ * Admin
+ */
+Route::middleware('guest:admin')->group(function () {
+    Route::get('/admin/login', \App\Http\Controllers\Admin\Auth\LoginController::class)->name('filament.auth.login');
+    Route::get('/admin/callback', \App\Http\Controllers\Admin\Auth\LoginController::class)
+         ->name('filament.auth.callback');
+});
+
+Route::get('/admin/frontchannel-logout', \App\Http\Controllers\Admin\Auth\FrontChannelLogoutController::class)
+     ->middleware('auth:admin')
+     ->name('filament.auth.frontchannel-logout');

@@ -25,7 +25,7 @@ class AppTest extends TestCase
                     "http://identity.eurofurence.localhost/auth/callback"
                 ],
                 "token_endpoint_auth_method" => "post",
-                "frontchannel_logout_callback" => "http://identity.eurofurence.localhost/auth/frontchannel-logout"
+                "frontchannel_logout_uri" => "http://identity.eurofurence.localhost/auth/frontchannel-logout"
             ]
         ]);
         $this->assertModelExists($app1);

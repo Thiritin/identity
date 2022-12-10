@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.1",
@@ -10,6 +13,10 @@
         "ext-json": "*",
         "doctrine/dbal": "^3.5",
         "fideloper/proxy": "^4.4",
+        "filament/filament": "^2.16",
+        "filament/forms": "^2.16",
+        "filament/notifications": "^2.16",
+        "filament/tables": "^2.16",
         "firebase/php-jwt": "^5.4",
         "fruitcake/laravel-cors": "^2.0",
         "genl/matice": "^1.1",
@@ -66,6 +73,9 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan filament:upgrade"
         ]
     },
     "extra": {

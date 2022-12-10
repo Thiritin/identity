@@ -8,10 +8,11 @@
         "@inertiajs/inertia": "^0.9.1",
         "@inertiajs/inertia-vue3": "^0.4.2",
         "@inertiajs/progress": "^0.2.6",
-        "@tailwindcss/forms": "^0.3",
-        "@tailwindcss/typography": "^0.3.0",
+        "@tailwindcss/forms": "^0.3.4",
+        "@tailwindcss/typography": "^0.3.1",
         "@vitejs/plugin-vue": "^3.2.0",
         "@vue/compiler-sfc": "^3.2.45",
+        "autoprefixer": "^10.4.13",
         "axios": "^1.1.2",
         "browser-sync": "^2.27.1",
         "browser-sync-webpack-plugin": "^2.3.0",
@@ -23,6 +24,7 @@
         "postcss-import": "^12.0.1",
         "prettier": "2.3.2",
         "tailwindcss": "^2.2.19",
+        "tippy.js": "^6.3.7",
         "vite": "^3.2.3",
         "vue": "^3.2.23",
         "vue-loader": "^16.1.2"
@@ -30,7 +32,6 @@
     "dependencies": {
         "@headlessui/vue": "^1.4.0",
         "@heroicons/vue": "^1.0.4",
-        "autoprefixer": "^10.4.0",
         "matice": "^1.1.4",
         "vue-cropperjs": "^5.0.0"
     }

@@ -1,4 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
+const colors = require('tailwindcss/colors')
 
 module.exports = {
     mode: 'jit',
@@ -9,6 +10,8 @@ module.exports = {
         './resources/views/**/*.blade.php',
         './resources/js/**/*.vue',
     ],
+
+    darkMode: 'class',
 
     theme: {
         extend: {
@@ -24,6 +27,9 @@ module.exports = {
                     800: '#002825',
                     900: '#001B19',
                 },
+                danger: colors.rose,
+                success: colors.green,
+                warning: colors.yellow,
             },
         },
     },
@@ -32,7 +38,6 @@ module.exports = {
     },
 
     variants: {
-        backgroundColor: ['responsive', 'hover', 'focus'],
         borderColor: ['responsive', 'hover', 'focus'],
         borderWidth: ['responsive', 'hover', 'focus'],
     },

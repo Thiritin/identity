@@ -55,5 +55,6 @@
     "update_your_password": "Update your password",
     "two_factor": "Two Factor",
     "sessions": "Sessions",
-    "admin": "Admin"
+    "admin": "Admin",
+    "apps": "Apps"
 }

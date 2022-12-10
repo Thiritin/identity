@@ -14,4 +14,9 @@ class App extends Model
     protected $casts = [
         "data" => "array"
     ];
+
+    public function owner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class,'user_id','id');
+    }
 }

@@ -136,7 +136,7 @@ class Client
     public function getToken(string $token, array $scopes)
     {
         try {
-            return Http::hydraAdmin()->post('/admin/oauth2/introspect', [
+            return Http::hydraAdmin()->asForm()->post('/admin/oauth2/introspect', [
                 'token' => $token,
                 'scopes' => implode(' ', $scopes)
             ])->json();

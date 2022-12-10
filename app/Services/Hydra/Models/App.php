@@ -2,6 +2,8 @@
 
 namespace App\Services\Hydra\Models;
 
+use function Clue\StreamFilter\fun;
+
 class App extends \App\Services\Hydra\Admin
 {
     public string $client_name = "";
@@ -23,16 +25,26 @@ class App extends \App\Services\Hydra\Admin
     public string $policy_uri = "";
     public array $post_logout_redirect_uris = [];
     public array $redirect_uris = [];
-    public string $request_object_signing_alg = "";
+    public string $request_object_signing_alg = "RS256";
     public array $request_uris = [];
-    public array $response_types = [];
-    public array $scopes = ['openid'];
+    public array $response_types = ["code"];
+    public array $scope = ['openid'];
     public string $sector_identifier_uri = "";
     public string $subject_type = "public";
     public string $token_endpoint_auth_method = "none";
     public string $token_endpoint_auth_signing_alg = "";
     public string $tos_uri = "";
     public string $userinfo_signed_response_alg = "";
+    public string $authorization_code_grant_access_token_lifespan = "";
+    public string $authorization_code_grant_id_token_lifespan = "";
+    public string $authorization_code_grant_refresh_token_lifespan = "";
+    public string $client_credentials_grant_access_token_lifespan = "";
+    public string $implicit_grant_access_token_lifespan = "";
+    public string $implicit_grant_id_token_lifespan = "";
+    public string $jwt_bearer_grant_access_token_lifespan = "";
+    public string $refresh_token_grant_access_token_lifespan = "";
+    public string $refresh_token_grant_id_token_lifespan = "";
+    public string $refresh_token_grant_refresh_token_lifespan = "";
 
     public static function find(string $id)
     {
@@ -41,7 +53,7 @@ class App extends \App\Services\Hydra\Admin
 
     private function load(string $id): App
     {
-        $data = $this->getRequest("/clients/" . $id);
+        $data = $this->getRequest("/clients/".$id);
         $this->fill($data);
         return $this;
     }
@@ -49,21 +61,21 @@ class App extends \App\Services\Hydra\Admin
     public function create(array $attributes = [])
     {
         $this->fill($attributes);
-        $data = $this->postRequest("/clients", $this->payload());
+        $data = $this->postRequest("/clients", $this->formPayload());
         $this->fill($data);
         return $this;
     }
 
     public function delete(): bool
     {
-        return $this->deleteRequest("/clients/" . $this->client_id);
+        return $this->deleteRequest("/clients/".$this->client_id);
     }
 
     public function update(array $attributes = []): array
     {
         $this->load($this->client_id);
         $this->fill($attributes);
-        $data = $this->putRequest("/clients/" . $this->client_id, $this->payload());
+        $data = $this->putRequest("/clients/".$this->client_id, $this->formPayload());
         $this->fill($data);
         return $data;
     }
@@ -84,7 +96,6 @@ class App extends \App\Services\Hydra\Admin
             "grant_types" => $this->grant_types,
             "jwks_uri" => $this->jwks_uri,
             "logo_uri" => $this->logo_uri,
-            "metadata" => json_encode($this->metadata, JSON_THROW_ON_ERROR),
             "owner" => $this->owner,
             "policy_uri" => $this->policy_uri,
             "post_logout_redirect_uris" => $this->post_logout_redirect_uris,
@@ -92,14 +103,30 @@ class App extends \App\Services\Hydra\Admin
             "request_object_signing_alg" => $this->request_object_signing_alg,
             "request_uris" => $this->request_uris,
             "response_types" => $this->response_types,
-            "scopes" => implode(" ", $this->scopes),
+            "scope" => implode(" ", $this->scope),
             "sector_identifier_uri" => $this->sector_identifier_uri,
             "subject_type" => $this->subject_type,
             "token_endpoint_auth_method" => $this->token_endpoint_auth_method,
             "token_endpoint_auth_signing_alg" => $this->token_endpoint_auth_signing_alg,
             "tos_uri" => $this->tos_uri,
             "userinfo_signed_response_alg" => $this->userinfo_signed_response_alg,
+            // Lifespans
+            "authorization_code_grant_access_token_lifespan" => $this->authorization_code_grant_access_token_lifespan,
+            "authorization_code_grant_id_token_lifespan" => $this->authorization_code_grant_id_token_lifespan,
+            "authorization_code_grant_refresh_token_lifespan" => $this->authorization_code_grant_refresh_token_lifespan,
+            "client_credentials_grant_access_token_lifespan" => $this->client_credentials_grant_access_token_lifespan,
+            "implicit_grant_access_token_lifespan" => $this->implicit_grant_access_token_lifespan,
+            "implicit_grant_id_token_lifespan" => $this->implicit_grant_id_token_lifespan,
+            "jwt_bearer_grant_access_token_lifespan" => $this->jwt_bearer_grant_access_token_lifespan,
+            "refresh_token_grant_access_token_lifespan" => $this->refresh_token_grant_access_token_lifespan,
+            "refresh_token_grant_id_token_lifespan" => $this->refresh_token_grant_id_token_lifespan,
+            "refresh_token_grant_refresh_token_lifespan" => $this->refresh_token_grant_refresh_token_lifespan,
         ];
+    }
+
+    public function formPayload()
+    {
+        return collect($this->payload())->reject(fn($v) => empty($v))->toArray();
     }
 
 
@@ -107,8 +134,18 @@ class App extends \App\Services\Hydra\Admin
     {
         collect($attributes)->each(function ($value, $key) {
             if ($value !== null) {
-                if ($key === "metadata") {
-                    $this->$key = json_decode($key) ?? [];
+                if ($key === "scope") {
+                    if (!is_array($value)) {
+                        $this->$key = explode(" ", $value);
+                    } else {
+                        $this->$key = $value;
+                    }
+                } elseif ($key === "metadata") {
+                    if (!is_array($value)) {
+                        $this->$key = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+                    } else {
+                        $this->$key = $value;
+                    }
                 } else {
                     $this->$key = $value;
                 }
@@ -141,13 +178,24 @@ class App extends \App\Services\Hydra\Admin
             "request_object_signing_alg" => $this->request_object_signing_alg,
             "request_uris" => $this->request_uris,
             "response_types" => $this->response_types,
-            "scopes" => $this->scopes,
+            "scope" => $this->scope,
             "sector_identifier_uri" => $this->sector_identifier_uri,
             "subject_type" => $this->subject_type,
             "token_endpoint_auth_method" => $this->token_endpoint_auth_method,
             "token_endpoint_auth_signing_alg" => $this->token_endpoint_auth_signing_alg,
             "tos_uri" => $this->tos_uri,
             "userinfo_signed_response_alg" => $this->userinfo_signed_response_alg,
+            // Lifespans
+            "authorization_code_grant_access_token_lifespan" => $this->authorization_code_grant_access_token_lifespan,
+            "authorization_code_grant_id_token_lifespan" => $this->authorization_code_grant_id_token_lifespan,
+            "authorization_code_grant_refresh_token_lifespan" => $this->authorization_code_grant_refresh_token_lifespan,
+            "client_credentials_grant_access_token_lifespan" => $this->client_credentials_grant_access_token_lifespan,
+            "implicit_grant_access_token_lifespan" => $this->implicit_grant_access_token_lifespan,
+            "implicit_grant_id_token_lifespan" => $this->implicit_grant_id_token_lifespan,
+            "jwt_bearer_grant_access_token_lifespan" => $this->jwt_bearer_grant_access_token_lifespan,
+            "refresh_token_grant_access_token_lifespan" => $this->refresh_token_grant_access_token_lifespan,
+            "refresh_token_grant_id_token_lifespan" => $this->refresh_token_grant_id_token_lifespan,
+            "refresh_token_grant_refresh_token_lifespan" => $this->refresh_token_grant_refresh_token_lifespan,
         ];
     }
 }

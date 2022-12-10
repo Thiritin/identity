@@ -7,6 +7,7 @@ use App\Services\OpenIDConnectClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Vinkla\Hashids\Facades\Hashids;
 
 class LoginController extends Controller
@@ -14,7 +15,7 @@ class LoginController extends Controller
     /**
      * Initiate OAUTH Session
      */
-    public function init(Request $request)
+    public function __invoke(Request $request)
     {
 
         $oidc = new OpenIDConnectClient(
@@ -37,11 +38,15 @@ class LoginController extends Controller
                 "jwks_uri" => config('services.hydra.public')."/.well-known/jwks.json",
             ]);
         }
-        $oidc->setRedirectURL(route('admin.login.callback'));
+
+        $oidc->setRedirectURL(route('filament.auth.callback'));
         if ($oidc->authenticate()) {
-            if (!$oidc->verifyJWTsignature($oidc->getIdToken())) abort(403, 'ID Token invalid.');
+            $idToken = $oidc->getIdToken();
+            Session::put('admin.id_token',$idToken);
+
+            if (!$oidc->verifyJWTsignature($idToken)) abort(403, 'ID Token invalid.');
             Auth::guard('admin')->loginUsingId(Hashids::decode($oidc->getIdTokenPayload()->sub));
-            return redirect(route('backpack'));
+            return redirect(route('filament.pages.dashboard'));
         }
         return redirect($oidc->laravelRedirectUrl);
     }

@@ -2,10 +2,14 @@
 
 namespace App\Providers;
 
+use Filament\Facades\Filament;
+use Filament\Navigation\UserMenuItem;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -40,7 +44,14 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Http::macro('hydraAdmin', function () {
-            return Http::baseUrl("http://hydra:4445")->acceptJson();
+            return Http::baseUrl("http://hydra:4445");
+        });
+
+        Filament::serving(function () {
+            Filament::registerUserMenuItems([
+                'logout-everywhere' => UserMenuItem::make()->icon('heroicon-o-arrow-circle-right')->url(route('dashboard'))->label('To User Interface'),
+                'logout' => UserMenuItem::make()->url('/oauth2/sessions/logout')->label('Log out'),
+            ]);
         });
     }
 }
