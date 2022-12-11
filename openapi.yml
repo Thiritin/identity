@@ -474,10 +474,6 @@ paths:
           example: 1VJEQAYWW54TZ5VD
       responses:
         '204':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Group'
           description: No Content
       tags:
         - Group Memberships
