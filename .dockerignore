@@ -4,3 +4,4 @@ vendor
 .github/workflows
 bootstrap/cache/*
 public/build
+openapi.yml
