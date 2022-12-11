@@ -22,6 +22,7 @@ COPY .github/docker/php/php.ini $PHP_INI_DIR/conf.d/php.ini
 # Step 6 | Configure Credentials & Hosts for external Git (optional)
 ######################################################
 COPY composer.json composer.lock /app/
+RUN composer install --no-dev --no-scripts --no-autoloader
 ######################################################
 # Local Stage
 ######################################################
