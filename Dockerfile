@@ -5,7 +5,7 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 ######################################################
 # Step 1 | Install Dependencies
 ######################################################
-ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+ADD .github/docker/install-php-extensions /usr/local/bin/
 
 RUN apt-get update \
     && chmod +x /usr/local/bin/install-php-extensions \
