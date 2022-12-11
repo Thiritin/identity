@@ -38,6 +38,12 @@ USER app
 # yarn install as command
 CMD sh -c "composer install && php artisan octane:start --watch --host=0.0.0.0 --port=80"
 ######################################################
+# Build Ziggy Package
+######################################################
+FROM base as vite-vendor-build
+WORKDIR /app
+RUN COMPOSER_ALLOW_SUPERUSER=1 | rm composer.lock composer.json && composer require tightenco/ziggy --ignore-platform-reqs
+######################################################
 # NodeJS Stage
 ######################################################
 FROM node:16-buster as vite
@@ -45,7 +51,7 @@ WORKDIR /app
 COPY package.json package-lock.json tailwind.config.js vite.config.js ./
 RUN npm install
 COPY ./resources /app/resources
-COPY ./vendor/tightenco/ziggy /app/vendor/tightenco/ziggy
+COPY --from=vite-vendor-build /app/vendor/tightenco/ziggy /app/vendor/tightenco/ziggy
 RUN npm run build
 ######################################################
 # Production Stage
