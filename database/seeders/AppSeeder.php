@@ -22,10 +22,10 @@ class AppSeeder extends Seeder
                 "client_secret" => "optimus",
                 "client_name" => "Eurofurence IAM",
                 "redirect_uris" => [
-                    "http://identity.eurofurence.localhost/auth/callback"
+                    route('auth.oidc.callback')
                 ],
                 "token_endpoint_auth_method" => "client_secret_basic",
-                "frontchannel_logout_uri" => "http://identity.eurofurence.localhost/auth/frontchannel-logout"
+                "frontchannel_logout_uri" => route('auth.frontchannel_logout')
             ]
         ]);
 

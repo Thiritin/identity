@@ -9,10 +9,9 @@ class AppObserver
     public function created(App $app)
     {
         $hydraApp = new \App\Services\Hydra\Models\App();
-        $app->data = $hydraApp->create($app->data)->toArray();
         $app->client_id = $app->data['client_id'];
+        $app->data = $hydraApp->create($app->data)->toArray();
         $app->saveQuietly();
-
     }
 
     public function updated(App $app)
