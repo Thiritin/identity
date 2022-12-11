@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Notifications\PasswordResetQueuedNotification;
 use App\Notifications\UpdateEmailNotification;
 use App\Notifications\VerifyEmailQueuedNotification;
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -16,7 +17,7 @@ use Mtvs\EloquentHashids\HashidRouting;
 use Spatie\Permission\Traits\HasRoles;
 use Vinkla\Hashids\Facades\Hashids;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 {
     use HasFactory;
     use Notifiable;
@@ -119,5 +120,10 @@ class User extends Authenticatable implements MustVerifyEmail
         $sanctumCheck = $this->tokenCan($ability);
         $appCheck = $this->appCan($ability);
         return ($sanctumCheck && $appCheck);
+    }
+
+    public function canAccessFilament(): bool
+    {
+        return $this->hasRole('superadmin');
     }
 }
