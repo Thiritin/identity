@@ -5,7 +5,7 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 ######################################################
 # Step 1 | Install Dependencies
 ######################################################
-ADD .github/docker/install-php-extensions /usr/local/bin/
+COPY .github/docker/install-php-extensions /usr/local/bin/
 
 RUN apt-get update \
     && chmod +x /usr/local/bin/install-php-extensions \
