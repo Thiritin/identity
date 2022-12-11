@@ -132,12 +132,13 @@ paths:
         - Groups
       operationId: getGroups
     post:
+      operationId: createGroup
       summary: Create a new group
       security:
         - OpenID:
-            - groups.read
+            - groups.create
         - AccessToken:
-            - groups.read
+            - groups.create
       description: This call returns a paginated result of all groups.
       requestBody:
         description: Create a new group
@@ -274,6 +275,7 @@ paths:
       operationId: patchGroup
     delete:
       summary: Deletes a group
+      description: Delete a group with the given identifier
       security:
         - OpenID:
             - groups.delete
@@ -304,6 +306,7 @@ paths:
   '/groups/{group}/members':
     get:
       summary: Shows user memberships of group
+      description: Show members of the groups, please keep in mind that unless filtered banned and invited membes will be also shown.
       security:
         - OpenID:
             - groups.update
@@ -404,6 +407,7 @@ paths:
       operationId: getGroupMembers
     post:
       summary: Add a new user to a group
+      description: Add a new user to the group, use status "invited" to send an invitation to the user.
       security:
         - OpenID:
             - groups.update
@@ -448,6 +452,7 @@ paths:
   '/groups/{group}/members/{user}':
     delete:
       summary: Removes user membership from group
+      description: Remove a user account from the group
       security:
         - OpenID:
             - groups.delete
