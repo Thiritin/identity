@@ -4,25 +4,18 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AppResource\Pages;
 use App\Models\App;
-use Faker\Provider\Text;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
-use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TagsInput;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
-use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 
 class AppResource extends Resource
@@ -132,7 +125,8 @@ class AppResource extends Resource
                     Section::make('Owner')
                            ->columns(1)
                            ->schema([
-                               Select::make('owner')
+                               Select::make('user_id')
+                                     ->label('Owner')
                                      ->relationship('owner', 'name')->required(),
                            ]),
                     Card::make()->schema([
