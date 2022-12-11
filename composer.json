@@ -29,9 +29,11 @@
         "laravel/octane": "^v1.3.6",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.5",
+        "mtvs/eloquent-hashids": "^3.3",
         "ohseesoftware/laravel-vite-manifest": "^1.2",
         "sentry/sentry-laravel": "^2.8",
         "spatie/laravel-permission": "^5.4.2",
+        "spatie/laravel-query-builder": "^5.1",
         "spatie/laravel-translatable": "^5.2",
         "tightenco/ziggy": "^1.0",
         "vinkla/hashids": "^10.0"

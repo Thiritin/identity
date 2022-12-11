@@ -2,13 +2,17 @@
 
 namespace App\Providers;
 
+use App\Models\Group;
+use App\Models\GroupUser;
+use App\Policies\GroupPolicy;
+use App\Policies\GroupUserPolicy;
 use App\Services\Auth\AdminAuth;
+use App\Services\Auth\ApiGuard;
 use App\Services\Auth\TokenAuth;
-use App\Services\Hydra\Client;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -19,6 +23,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        Group::class => GroupPolicy::class,
+        GroupUser::class => GroupUserPolicy::class,
     ];
 
     /**
@@ -30,6 +36,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('superadmin') ? true : null;
+        });
+
         Auth::extend('admin', function ($app, $name, array $config) {
             return new AdminAuth(Auth::createUserProvider($config['provider']));
         });
@@ -38,14 +48,8 @@ class AuthServiceProvider extends ServiceProvider
             return route('auth.password-reset.view', ['token' => $token, 'email' => $user->email]);
         });
 
-        Auth::viaRequest('hydra', function (Request $request) {
-            $user = null;
-            if (!empty($request->bearerToken())) {
-                $hydra = new Client();
-                $token = $hydra->getToken($request->bearerToken());
-                dd($token);
-            }
-            return $user;
+        Auth::extend('hydra', function ($app, $name, array $config) {
+            return new ApiGuard(Auth::createUserProvider($config['provider']), $app->make('request'));
         });
     }
 }

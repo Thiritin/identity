@@ -1,16 +1,19 @@
 <?php
 
+use Illuminate\Container\Container;
+use Laravel\Lumen\Application;
+
 return [
 
-	/*
-	|------------------------------------------------------------------------------------------------------------------
-	| Enable Clockwork
-	|------------------------------------------------------------------------------------------------------------------
-	|
-	| Clockwork is enabled by default only when your application is in debug mode. Here you can explicitly enable or
-	| disable Clockwork. When disabled, no data is collected and the api and web ui are inactive.
-	|
-	*/
+    /*
+    |------------------------------------------------------------------------------------------------------------------
+    | Enable Clockwork
+    |------------------------------------------------------------------------------------------------------------------
+    |
+    | Clockwork is enabled by default only when your application is in debug mode. Here you can explicitly enable or
+    | disable Clockwork. When disabled, no data is collected and the api and web ui are inactive.
+    |
+    */
 
 	'enable' => env('CLOCKWORK_ENABLE', null),
 
@@ -142,16 +145,16 @@ return [
 	|
 	*/
 
-	'toolbar' => env('CLOCKWORK_TOOLBAR', true),
+    'toolbar' => env('CLOCKWORK_TOOLBAR', false),
 
-	/*
-	|------------------------------------------------------------------------------------------------------------------
-	| HTTP requests collection
-	|------------------------------------------------------------------------------------------------------------------
-	|
-	| Clockwork collects data about HTTP requests to your app. Here you can choose which requests should be collected.
-	|
-	*/
+    /*
+    |------------------------------------------------------------------------------------------------------------------
+    | HTTP requests collection
+    |------------------------------------------------------------------------------------------------------------------
+    |
+    | Clockwork collects data about HTTP requests to your app. Here you can choose which requests should be collected.
+    |
+    */
 
 	'requests' => [
 		// With on-demand mode enabled, Clockwork will only profile requests when the browser extension is open or you
@@ -368,10 +371,10 @@ return [
 
 	// A list of classes that will never be serialized (e.g. a common service container class)
 	'serialization_blackbox' => [
-		\Illuminate\Container\Container::class,
-		\Illuminate\Foundation\Application::class,
-		\Laravel\Lumen\Application::class
-	],
+        Container::class,
+        \Illuminate\Foundation\Application::class,
+        Application::class
+    ],
 
 	/*
 	|------------------------------------------------------------------------------------------------------------------

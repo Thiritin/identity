@@ -277,11 +277,6 @@ var navigation = [
         inertia: true
     },
     {
-        name: 'apps',
-        route: route('apps.index'),
-        inertia: true
-    },
-    {
         name: 'admin',
         route: "/admin",
         inertia: false

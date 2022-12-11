@@ -17,7 +17,11 @@ info:
   description: |-
     This is the official API Documentation for the Eurofurence Identity service. This can be used to query or automated different things within the Identity service.
 
-    To request a new oauth2 client contact [Thiritin](https://t.me/thiritin) via telegram.           
+    To request a new oauth2 client contact [Thiritin](https://t.me/thiritin) via telegram.
+  x-logo:
+    url: https://raw.githubusercontent.com/Thiritin/identity/main/resources/assets/ef.svg
+    backgroundColor: "#004e4c"
+    altText: Eurofurence e.V. Logo
 tags:
   - name: Open ID Connect
     description: Endpoints related to OpenID Connect
@@ -48,6 +52,8 @@ paths:
       description: >-
         This is an example operation to show how security is applied to the
         call.
+      security:
+        - OpenID: [ openid, profile, email, groups ]
       responses:
         '200':
           content:
@@ -57,7 +63,7 @@ paths:
           description: OK
       tags:
         - Open ID Connect
-          
+
   /groups:
     get:
       summary: Get all groups
@@ -78,10 +84,46 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items: 
-                  oneOf:
-                    - $ref: '#/components/schemas/Group'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      oneOf:
+                        - $ref: '#/components/schemas/Group'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: https://identity.eurofurence.org/api/v1/groups?page=1
+                      last:
+                        type: string
+                        nullable: true
+                        example: https://identity.eurofurence.org/api/v1/groups?page=5
+                      prev:
+                        type: string
+                        nullable: true
+                        example: null
+                      next:
+                        type: string
+                        nullable: true
+                        example: https://identity.eurofurence.org/api/v1/groups?page=2
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: integer
+                        example: 1
+                      path:
+                        type: integer
+                        example: 5
+                      to:
+                        type: object
+                        example: 25
           description: OK
       tags:
         - Groups
@@ -103,11 +145,14 @@ paths:
             schema:
               $ref: '#/components/schemas/Group'
       responses:
-        '200':
+        '201':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Group'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Group'
           description: OK
       tags:
         - Groups
@@ -132,14 +177,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Group'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Group'
           description: OK
         '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-              example: 
+              example:
                 message: "Not Found!"
           description: Not Found
       tags:
@@ -164,14 +212,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Group'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Group'
           description: OK
         '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-              example: 
+              example:
                 message: "Not Found!"
           description: Not Found
       tags:
@@ -195,17 +246,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Group'
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Group'
           description: OK
         '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-              example: 
+              example:
                 message: "Not Found!"
           description: Not Found
-                
+
       tags:
         - Groups
     delete:
@@ -229,7 +283,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-              example: 
+              example:
                 message: "Not Found!"
           description: Not Found
       tags:
@@ -252,48 +306,93 @@ paths:
           name: filter[level]
           schema:
             type: string
-          examples: 
+          examples:
             invited:
               value: invited
+              description: Shows any member that is invited to a group but has not accepted the invitation.
             banned:
               value: banned
+              description: Shows any member that is banned from a group.
             member:
               value: member
+              description: Shows any member that has the member level.
             moderator:
               value: moderator
+              description: Shows any member that has the moderator level.
             admin:
               value: admin
+              description: Shows any member that has the admin level.
             owner:
               value: owner
-          description: Group Identifier
+              description: Shows any member that has the owner level.
+            only_members:
+              value: member,moderator,admin,owner
+              description: Shows only members that are either a member, moderator admin or owner.
+          description: Filter results by user level
           required: true
-          
+
       responses:
         '200':
           content:
             application/json:
               schema:
-                type: array
-                items: 
-                  oneOf:
-                    - $ref: '#/components/schemas/GroupMembership'
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      oneOf:
+                        - $ref: '#/components/schemas/GroupMembership'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/members?page=1
+                      last:
+                        type: string
+                        nullable: true
+                        example: https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/members?page=10
+                      prev:
+                        type: string
+                        nullable: true
+                        example: null
+                      next:
+                        type: string
+                        nullable: true
+                        example: https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/members?page=2
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: integer
+                        example: 1
+                      path:
+                        type: integer
+                        example: 5
+                      to:
+                        type: object
+                        example: 100
           description: OK
         '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-              example: 
+              example:
                 message: "Not Found!"
           description: Not Found
       tags:
         - Group Memberships
-        
+
     post:
-      summary: Invites a new user to your group
+      summary: Add a new user to a group
       security:
-        - OpenID: [groups.update]
-        - AccessToken: [groups.update]
+        - OpenID: [ groups.update ]
+        - AccessToken: [ groups.update ]
       parameters:
         - in: path
           name: group
@@ -302,27 +401,29 @@ paths:
           description: Group Identifier
           required: true
           example: 8513K1FW0H4W2SJG
-        - in: query
-          name: email
-          schema:
-            oneOf:
-              - type: string
-          description: User's email
-          required: false
-          example: example@eurofurence.org
+      requestBody:
+        description: Add a user to a group
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupMembershipForm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GroupMembershipForm'
       responses:
-        '200':
+        '201':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Group'
+                $ref: '#/components/schemas/GroupMembership'
           description: OK
         '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-              example: 
+              example:
                 message: "Not Found!"
           description: Not Found
       tags:
@@ -385,18 +486,17 @@ components:
           type: array
           uniqueItems: true
           readOnly: true
-          items: 
+          items:
             type: string
-            
-            
+
     GroupMembership:
       type: object
       properties:
-        id:
+        group_id:
           readOnly: true
           type: string
-          description: The group membership id
-        user:
+          description: The group id
+        user_id:
           type: string
           description: The user id
         level:
@@ -408,7 +508,28 @@ components:
             - moderator
             - admin
             - owner
-          
+
+    GroupMembershipForm:
+      type: object
+      properties:
+        email:
+          type: string
+          example: thiritin@eurofurence.org
+        level:
+          type: string
+          enum:
+            - invited
+            - banned
+            - member
+            - moderator
+            - admin
+            - owner
+          default: invited
+          description: Please note, adding someone with level "invited" will send an invitation email to the user.
+      required:
+        - email
+        - level
+
     Group:
       type: object
       properties:
@@ -416,17 +537,58 @@ components:
           readOnly: true
           type: string
           description: The groups uuid
+          example: Y6K08PEKXG9Q7ZWJ
+        type:
+          default: none
+          enum:
+            - none
+            - department
         name:
           type: string
-        slug:
-          type: string
-          description: Unique identifier for the group, but not immuteable.
+          example: Attendees 2021
         description:
           type: string
+          example: <b>Thanks for Attending Eurofurence 2021</b>
         logo:
           type: string
           description: URL to the groups logo
-          
+          example: http://identity.eurofurence.org/storage/avatars/mqKYRqC8aEXifh1muaTJgzIysGRykr-metaMTIucG5n-.png
+        slug:
+          type: string
+          readOnly: true
+          description: Unique identifier for the group, but not immuteable.
+          example: attendees-2021
+        translations:
+          type: object
+          readOnly: true
+          properties:
+            name:
+              type: object
+              nullable: true
+              properties:
+                en:
+                  type: string
+                  example: Attendees 2021
+                de:
+                  type: string
+                  example: Teilnehmer 2021
+            description:
+              type: object
+              nullable: true
+              properties:
+                en:
+                  type: string
+                  example: <b>Thanks for Attending Eurofurence 2021</b>
+                de:
+                  type: string
+                  example: <b>Vielen Dank für die teilnahme Eurofurence 2021</b>
+        created_at:
+          type: string
+          example: 2022-12-10T20:41:34.000000Z
+        updated_at:
+          type: string
+          example: 2022-12-10T20:41:34.000000Z
+
     Error:
       type: object
       properties:

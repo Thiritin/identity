@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Mtvs\EloquentHashids\HasHashid;
+use Mtvs\EloquentHashids\HashidRouting;
 use Spatie\Translatable\HasTranslations;
 
 /**
@@ -34,27 +37,27 @@ class Group extends Model
 {
     use HasFactory;
     use HasTranslations;
+    use HasHashid;
+    use HashidRouting;
 
     public $translatable = ['name', 'description'];
 
-    protected $fillable = [
-        'internal_name',
-        'description',
-        'name',
-        'type',
-        'logo',
-    ];
+    protected $guarded = [];
 
     public function users()
     {
         return $this->belongsToMany(User::class)
-            ->using('App\Models\GroupUser')
-            ->withPivot(
-                [
-                    'title',
-                    'authorization_level',
-                    'is_director',
-                ]
-            );
+                    ->using('App\Models\GroupUser')
+                    ->withPivot(
+                        [
+                            'level',
+                        ]
+                    );
+    }
+
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = $value;
+        $this->attributes['slug'] = Str::slug($value);
     }
 }

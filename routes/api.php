@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\v1\GroupController;
+use App\Http\Controllers\Api\v1\GroupUserController;
+use App\Http\Controllers\UserinfoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,5 +17,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('api')->prefix('v1/')->name('api.v1.')->group(function () {
-    Route::resource("groups", GroupController::class);
+    Route::get('userinfo', UserinfoController::class)->name('userinfo');
+    Route::apiResource("groups", GroupController::class);
+    Route::apiResource("groups.users", GroupUserController::class, [
+        "only" => ["index", "store", "destroy"]
+    ]);
 });

@@ -9,7 +9,10 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
+use Mtvs\EloquentHashids\HasHashid;
+use Mtvs\EloquentHashids\HashidRouting;
 use Spatie\Permission\Traits\HasRoles;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -19,6 +22,8 @@ class User extends Authenticatable implements MustVerifyEmail
     use Notifiable;
     use HasRoles;
     use HasApiTokens;
+    use HasHashid;
+    use HashidRouting;
 
     /**
      * The attributes that are mass assignable.
@@ -59,13 +64,8 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $appends = [
-        'profile_photo_url',
+        'hashid'
     ];
-
-    public function getProfilePhotoUrlAttribute()
-    {
-        return "";
-    }
 
     public function getHashId(): string
     {
@@ -91,13 +91,33 @@ class User extends Authenticatable implements MustVerifyEmail
     public function groups()
     {
         return $this->belongsToMany(Group::class)
-            ->using('App\Models\GroupUser')
-            ->withPivot(
-                [
-                    'title',
-                    'authorization_level',
-                    'is_director',
-                ]
-            );
+                    ->using('App\Models\GroupUser')
+                    ->withPivot(
+                        [
+                            'level',
+                        ]
+                    );
+    }
+
+    public function appCan(string $scope)
+    {
+        if (!Auth::guard('api')->check()) {
+            return true;
+        }
+        $auth = Auth::guard('api');
+        return in_array($scope, $auth->getScopes(), true);
+    }
+
+    public function permCheck(string $ability)
+    {
+        $adminCheck = $this->can('admin.'.$ability);
+        return $adminCheck || $this->scopeCheck($ability);
+    }
+
+    public function scopeCheck(string $ability)
+    {
+        $sanctumCheck = $this->tokenCan($ability);
+        $appCheck = $this->appCan($ability);
+        return ($sanctumCheck && $appCheck);
     }
 }
