@@ -41,6 +41,29 @@ test('Create Group success as Admin', function () {
     ]);
 });
 
+test('Create Group and validate user is set as owner', function () {
+    $role = Role::findOrCreate('superadmin');
+
+    $user = Sanctum::actingAs(
+        User::factory()->create(),
+        ['groups.read', 'groups.update', 'groups.delete']
+    );
+    $user->assignRole('superadmin');
+
+    $data = [
+        "type" => "none",
+        "name" => "Testgroup",
+        "logo" => "https://test.de/img-create-group-test.png"
+    ];
+    $request = postJson(route('api.v1.groups.store'), $data);
+    $request->assertSuccessful();
+    assertDatabaseHas('group_user', [
+        "level" => "owner",
+        "group_id" => Hashids::decode($request->json('data')['id'])[0],
+        "user_id" => $user->id
+    ]);
+});
+
 test('Create Group fails as non Admin', function () {
     $group = Group::factory()->create();
 

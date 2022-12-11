@@ -2,27 +2,18 @@
 
 namespace App\Observers;
 
+use App\Enums\GroupUserLevel;
 use App\Models\Group;
+use Illuminate\Support\Facades\Auth;
 
 class GroupObserver
 {
     public function created(Group $group)
     {
-    }
-
-    public function updated(Group $group)
-    {
-    }
-
-    public function deleted(Group $group)
-    {
-    }
-
-    public function restored(Group $group)
-    {
-    }
-
-    public function forceDeleted(Group $group)
-    {
+        if (Auth::user()) {
+            $group->users()->attach(Auth::user(), [
+                "level" => GroupUserLevel::Owner
+            ]);
+        }
     }
 }
