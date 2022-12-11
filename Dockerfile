@@ -38,7 +38,7 @@ USER app
 # yarn install as command
 CMD sh -c "composer install && php artisan octane:start --watch --host=0.0.0.0 --port=80"
 ######################################################
-# Build Ziggy Package
+# Build Ziggy Package - Vite needs ziggy package available
 ######################################################
 FROM base as vite-vendor-build
 WORKDIR /app
