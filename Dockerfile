@@ -11,8 +11,7 @@ RUN apt-get update \
     && chmod +x /usr/local/bin/install-php-extensions \
     && apt-get install -y curl git unzip openssl tar ca-certificates \
     && install-php-extensions gd bcmath pdo_mysql zip intl opcache pcntl redis swoole @composer \
-    && apt-get clean -y \
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && apt-get clean -y
 ######################################################
 # Copy Configuration
 ######################################################
