@@ -1,0 +1,443 @@
+openapi: 3.0.0
+servers:
+  - description: Production
+    url: https://identity.eurofurence.org/api/v1
+  - description: Local
+    url: https://identity.eurofurence.localhost/api/v1
+info:
+  version: "1.0.0"
+  title: Eurofurence Identity
+  contact:
+    email: me@thiritin.com
+    name: Thiritin
+  license:
+    name: Licensed under MIT
+    url: https://github.com/Thiritin/identity/blob/main/LICENSE
+  termsOfService: https://help.eurofurence.org/legal/terms
+  description: |-
+    This is the official API Documentation for the Eurofurence Identity service. This can be used to query or automated different things within the Identity service.
+
+    To request a new oauth2 client contact [Thiritin](https://t.me/thiritin) via telegram.           
+tags:
+  - name: Open ID Connect
+    description: Endpoints related to OpenID Connect
+  - name: Groups
+    description: Endpoints related the Group resource
+  - name: Group Memberships
+security:
+  - OpenID:
+      - openid
+      - offline
+      - offline_access
+      - profile
+      - email
+      - groups
+      - groups.read
+      - groups.write
+      - groups.delete
+  - AccessToken:
+      - read
+      - write
+      - groups.read
+      - groups.write
+      - groups.delete
+paths:
+  /userinfo:
+    get:
+      summary: Gets userinfo for the user
+      description: >-
+        This is an example operation to show how security is applied to the
+        call.
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Userinfo'
+          description: OK
+      tags:
+        - Open ID Connect
+          
+  /groups:
+    get:
+      summary: Get all groups
+      security:
+        - OpenID: [groups.read]
+        - AccessToken: [groups.read]
+      description: >-
+        This call returns a paginated result of all groups.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Used for pagination.
+          example: 1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  oneOf:
+                    - $ref: '#/components/schemas/Group'
+          description: OK
+      tags:
+        - Groups
+    post:
+      summary: Create a new group
+      security:
+        - OpenID: [groups.read]
+        - AccessToken: [groups.read]
+      description: >-
+        This call returns a paginated result of all groups.
+      requestBody:
+        description: Create a new group
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Group'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Group'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+          description: OK
+      tags:
+        - Groups
+  /groups/{group}:
+    get:
+      summary: Get single group
+      security:
+        - OpenID: [groups.read]
+        - AccessToken: [groups.read]
+      description: >-
+        This call returns a paginated result of all groups.
+      parameters:
+        - in: path
+          name: group
+          schema:
+            type: string
+          description: Group Identifier
+          required: true
+          example: 8513K1FW0H4W2SJG
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: "Not Found!"
+          description: Not Found
+      tags:
+        - Groups
+    put:
+      summary: Update single group
+      security:
+        - OpenID: [groups.update]
+        - AccessToken: [groups.update]
+      description: >-
+        This call updates a single group.
+      parameters:
+        - in: path
+          name: group
+          schema:
+            type: string
+          description: Group Identifier
+          required: true
+          example: 8513K1FW0H4W2SJG
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: "Not Found!"
+          description: Not Found
+      tags:
+        - Groups
+    patch:
+      summary: Update single group
+      security:
+        - OpenID: [groups.update]
+        - AccessToken: [groups.update]
+      description: >-
+        This call updates a single group.
+      parameters:
+        - in: path
+          name: group
+          schema:
+            type: string
+          description: Group Identifier
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: "Not Found!"
+          description: Not Found
+                
+      tags:
+        - Groups
+    delete:
+      summary: Deletes a group
+      security:
+        - OpenID: [groups.delete]
+        - AccessToken: [groups.delete]
+      parameters:
+        - in: path
+          name: group
+          schema:
+            type: string
+          description: Group Identifier
+          required: true
+          example: 8513K1FW0H4W2SJG
+      responses:
+        '200':
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: "Not Found!"
+          description: Not Found
+      tags:
+        - Groups
+  /groups/{group}/members:
+    get:
+      summary: Shows user memberships of group
+      security:
+        - OpenID: [groups.update]
+        - AccessToken: [groups.update]
+      parameters:
+        - in: path
+          name: group
+          schema:
+            type: string
+          description: Group Identifier
+          required: true
+          example: 8513K1FW0H4W2SJG
+        - in: query
+          name: filter[level]
+          schema:
+            type: string
+          examples: 
+            invited:
+              value: invited
+            banned:
+              value: banned
+            member:
+              value: member
+            moderator:
+              value: moderator
+            admin:
+              value: admin
+            owner:
+              value: owner
+          description: Group Identifier
+          required: true
+          
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  oneOf:
+                    - $ref: '#/components/schemas/GroupMembership'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: "Not Found!"
+          description: Not Found
+      tags:
+        - Group Memberships
+        
+    post:
+      summary: Invites a new user to your group
+      security:
+        - OpenID: [groups.update]
+        - AccessToken: [groups.update]
+      parameters:
+        - in: path
+          name: group
+          schema:
+            type: string
+          description: Group Identifier
+          required: true
+          example: 8513K1FW0H4W2SJG
+        - in: query
+          name: email
+          schema:
+            oneOf:
+              - type: string
+          description: User's email
+          required: false
+          example: example@eurofurence.org
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: 
+                message: "Not Found!"
+          description: Not Found
+      tags:
+        - Group Memberships
+  /groups/{group}/members/{user}:
+    delete:
+      summary: Removes user membership from group
+      security:
+        - OpenID: [groups.delete]
+        - AccessToken: [groups.delete]
+      parameters:
+        - in: path
+          name: group
+          schema:
+            type: string
+          description: Group Identifier
+          required: true
+        - in: path
+          name: user
+          schema:
+            type: string
+          description: User's UUID
+          required: true
+          example: 1VJEQAYWW54TZ5VD
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+          description: OK
+      tags:
+        - Group Memberships
+components:
+  schemas:
+    Userinfo:
+      type: object
+      properties:
+        sub:
+          readOnly: true
+          type: string
+          description: Uuid of the user
+        name:
+          readOnly: true
+          type: string
+          description: Choosen username by the user
+        email:
+          readOnly: true
+          type: string
+          description: Primary email of the user
+        email_verified:
+          readOnly: true
+          type: boolean
+          description: Boolean value, true if email is verified. false if email is not verified.
+        avatar:
+          readOnly: true
+          type: string
+          description: Returns full url of users avatar.
+        groups:
+          type: array
+          uniqueItems: true
+          readOnly: true
+          items: 
+            type: string
+            
+            
+    GroupMembership:
+      type: object
+      properties:
+        id:
+          readOnly: true
+          type: string
+          description: The group membership id
+        user:
+          type: string
+          description: The user id
+        level:
+          type: string
+          enum:
+            - invited
+            - banned
+            - member
+            - moderator
+            - admin
+            - owner
+          
+    Group:
+      type: object
+      properties:
+        id:
+          readOnly: true
+          type: string
+          description: The groups uuid
+        name:
+          type: string
+        slug:
+          type: string
+          description: Unique identifier for the group, but not immuteable.
+        description:
+          type: string
+        logo:
+          type: string
+          description: URL to the groups logo
+          
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+
+  securitySchemes:
+    OpenID:
+      type: openIdConnect
+      openIdConnectUrl: https://identity.eurofurence.org/.well-known/openid-configuration
+      description: OpenID Connect
+    AccessToken:
+      type: http
+      scheme: bearer
