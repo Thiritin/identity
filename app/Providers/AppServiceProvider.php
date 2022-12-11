@@ -43,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Http::macro('hydraAdmin', function () {
-            return Http::baseUrl("http://hydra:4445");
+            return Http::baseUrl(config('services.hydra.admin'));
         });
 
         Filament::serving(function () {
