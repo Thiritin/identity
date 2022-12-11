@@ -1,26 +1,26 @@
 openapi: 3.0.0
 servers:
   - description: Production
-    url: https://identity.eurofurence.org/api/v1
+    url: 'https://identity.eurofurence.org/api/v1'
   - description: Local
-    url: https://identity.eurofurence.localhost/api/v1
+    url: 'https://identity.eurofurence.localhost/api/v1'
 info:
-  version: "1.0.0"
+  version: 1.0.0
   title: Eurofurence Identity
   contact:
     email: me@thiritin.com
     name: Thiritin
   license:
     name: Licensed under MIT
-    url: https://github.com/Thiritin/identity/blob/main/LICENSE
-  termsOfService: https://help.eurofurence.org/legal/terms
+    url: 'https://github.com/Thiritin/identity/blob/main/LICENSE'
+  termsOfService: 'https://help.eurofurence.org/legal/terms'
   description: |-
     This is the official API Documentation for the Eurofurence Identity service. This can be used to query or automated different things within the Identity service.
 
     To request a new oauth2 client contact [Thiritin](https://t.me/thiritin) via telegram.
   x-logo:
-    url: https://raw.githubusercontent.com/Thiritin/identity/main/resources/assets/ef.svg
-    backgroundColor: "#004e4c"
+    url: 'https://raw.githubusercontent.com/Thiritin/identity/main/resources/assets/ef.svg'
+    backgroundColor: '#004e4c'
     altText: Eurofurence e.V. Logo
 tags:
   - name: Open ID Connect
@@ -49,11 +49,13 @@ paths:
   /userinfo:
     get:
       summary: Gets userinfo for the user
-      description: >-
-        This is an example operation to show how security is applied to the
-        call.
+      description: This is an example operation to show how security is applied to the call.
       security:
-        - OpenID: [ openid, profile, email, groups ]
+        - OpenID:
+            - openid
+            - profile
+            - email
+            - groups
       responses:
         '200':
           content:
@@ -63,15 +65,16 @@ paths:
           description: OK
       tags:
         - Open ID Connect
-
+      operationId: getUserinfo
   /groups:
     get:
       summary: Get all groups
       security:
-        - OpenID: [groups.read]
-        - AccessToken: [groups.read]
-      description: >-
-        This call returns a paginated result of all groups.
+        - OpenID:
+            - groups.read
+        - AccessToken:
+            - groups.read
+      description: This call returns a paginated result of all groups.
       parameters:
         - in: query
           name: page
@@ -96,11 +99,11 @@ paths:
                     properties:
                       first:
                         type: string
-                        example: https://identity.eurofurence.org/api/v1/groups?page=1
+                        example: 'https://identity.eurofurence.org/api/v1/groups?page=1'
                       last:
                         type: string
                         nullable: true
-                        example: https://identity.eurofurence.org/api/v1/groups?page=5
+                        example: 'https://identity.eurofurence.org/api/v1/groups?page=5'
                       prev:
                         type: string
                         nullable: true
@@ -108,7 +111,7 @@ paths:
                       next:
                         type: string
                         nullable: true
-                        example: https://identity.eurofurence.org/api/v1/groups?page=2
+                        example: 'https://identity.eurofurence.org/api/v1/groups?page=2'
                   meta:
                     type: object
                     properties:
@@ -122,18 +125,20 @@ paths:
                         type: integer
                         example: 5
                       to:
-                        type: object
+                        type: integer
                         example: 25
           description: OK
       tags:
         - Groups
+      operationId: getGroups
     post:
       summary: Create a new group
       security:
-        - OpenID: [groups.read]
-        - AccessToken: [groups.read]
-      description: >-
-        This call returns a paginated result of all groups.
+        - OpenID:
+            - groups.read
+        - AccessToken:
+            - groups.read
+      description: This call returns a paginated result of all groups.
       requestBody:
         description: Create a new group
         required: true
@@ -156,14 +161,15 @@ paths:
           description: OK
       tags:
         - Groups
-  /groups/{group}:
+  '/groups/{group}':
     get:
       summary: Get single group
       security:
-        - OpenID: [groups.read]
-        - AccessToken: [groups.read]
-      description: >-
-        This call returns a paginated result of all groups.
+        - OpenID:
+            - groups.read
+        - AccessToken:
+            - groups.read
+      description: This call returns a paginated result of all groups.
       parameters:
         - in: path
           name: group
@@ -188,17 +194,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                message: "Not Found!"
+                message: Not Found!
           description: Not Found
       tags:
         - Groups
+      operationId: getGroup
     put:
       summary: Update single group
       security:
-        - OpenID: [groups.update]
-        - AccessToken: [groups.update]
-      description: >-
-        This call updates a single group.
+        - OpenID:
+            - groups.update
+        - AccessToken:
+            - groups.update
+      description: This call updates a single group.
       parameters:
         - in: path
           name: group
@@ -223,17 +231,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                message: "Not Found!"
+                message: Not Found!
           description: Not Found
       tags:
         - Groups
+      operationId: putGroup
     patch:
       summary: Update single group
       security:
-        - OpenID: [groups.update]
-        - AccessToken: [groups.update]
-      description: >-
-        This call updates a single group.
+        - OpenID:
+            - groups.update
+        - AccessToken:
+            - groups.update
+      description: This call updates a single group.
       parameters:
         - in: path
           name: group
@@ -257,16 +267,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                message: "Not Found!"
+                message: Not Found!
           description: Not Found
-
       tags:
         - Groups
+      operationId: patchGroup
     delete:
       summary: Deletes a group
       security:
-        - OpenID: [groups.delete]
-        - AccessToken: [groups.delete]
+        - OpenID:
+            - groups.delete
+        - AccessToken:
+            - groups.delete
       parameters:
         - in: path
           name: group
@@ -276,24 +288,27 @@ paths:
           required: true
           example: 8513K1FW0H4W2SJG
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No Content
         '404':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                message: "Not Found!"
+                message: Not Found!
           description: Not Found
       tags:
         - Groups
-  /groups/{group}/members:
+      operationId: deleteGroup
+  '/groups/{group}/members':
     get:
       summary: Shows user memberships of group
       security:
-        - OpenID: [groups.update]
-        - AccessToken: [groups.update]
+        - OpenID:
+            - groups.update
+        - AccessToken:
+            - groups.update
       parameters:
         - in: path
           name: group
@@ -303,7 +318,7 @@ paths:
           required: true
           example: 8513K1FW0H4W2SJG
         - in: query
-          name: filter[level]
+          name: 'filter[level]'
           schema:
             type: string
           examples:
@@ -326,11 +341,10 @@ paths:
               value: owner
               description: Shows any member that has the owner level.
             only_members:
-              value: member,moderator,admin,owner
-              description: Shows only members that are either a member, moderator admin or owner.
+              value: 'member,moderator,admin,owner'
+              description: 'Shows only members that are either a member, moderator admin or owner.'
           description: Filter results by user level
           required: true
-
       responses:
         '200':
           content:
@@ -348,11 +362,11 @@ paths:
                     properties:
                       first:
                         type: string
-                        example: https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/members?page=1
+                        example: 'https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/members?page=1'
                       last:
                         type: string
                         nullable: true
-                        example: https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/members?page=10
+                        example: 'https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/members?page=10'
                       prev:
                         type: string
                         nullable: true
@@ -360,7 +374,7 @@ paths:
                       next:
                         type: string
                         nullable: true
-                        example: https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/members?page=2
+                        example: 'https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/members?page=2'
                   meta:
                     type: object
                     properties:
@@ -374,7 +388,7 @@ paths:
                         type: integer
                         example: 5
                       to:
-                        type: object
+                        type: integer
                         example: 100
           description: OK
         '404':
@@ -383,16 +397,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                message: "Not Found!"
+                message: Not Found!
           description: Not Found
       tags:
         - Group Memberships
-
+      operationId: getGroupMembers
     post:
       summary: Add a new user to a group
       security:
-        - OpenID: [ groups.update ]
-        - AccessToken: [ groups.update ]
+        - OpenID:
+            - groups.update
+        - AccessToken:
+            - groups.update
       parameters:
         - in: path
           name: group
@@ -424,16 +440,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                message: "Not Found!"
+                message: Not Found!
           description: Not Found
       tags:
         - Group Memberships
-  /groups/{group}/members/{user}:
+      operationId: createGroupMember
+  '/groups/{group}/members/{user}':
     delete:
       summary: Removes user membership from group
       security:
-        - OpenID: [groups.delete]
-        - AccessToken: [groups.delete]
+        - OpenID:
+            - groups.delete
+        - AccessToken:
+            - groups.delete
       parameters:
         - in: path
           name: group
@@ -449,14 +468,15 @@ paths:
           required: true
           example: 1VJEQAYWW54TZ5VD
       responses:
-        '200':
+        '204':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Group'
-          description: OK
+          description: No Content
       tags:
         - Group Memberships
+      operationId: deleteGroupMember
 components:
   schemas:
     Userinfo:
@@ -477,7 +497,7 @@ components:
         email_verified:
           readOnly: true
           type: boolean
-          description: Boolean value, true if email is verified. false if email is not verified.
+          description: 'Boolean value, true if email is verified. false if email is not verified.'
         avatar:
           readOnly: true
           type: string
@@ -488,7 +508,6 @@ components:
           readOnly: true
           items:
             type: string
-
     GroupMembership:
       type: object
       properties:
@@ -508,7 +527,6 @@ components:
             - moderator
             - admin
             - owner
-
     GroupMembershipForm:
       type: object
       properties:
@@ -525,11 +543,10 @@ components:
             - admin
             - owner
           default: invited
-          description: Please note, adding someone with level "invited" will send an invitation email to the user.
+          description: 'Please note, adding someone with level "invited" will send an invitation email to the user.'
       required:
         - email
         - level
-
     Group:
       type: object
       properties:
@@ -552,11 +569,11 @@ components:
         logo:
           type: string
           description: URL to the groups logo
-          example: http://identity.eurofurence.org/storage/avatars/mqKYRqC8aEXifh1muaTJgzIysGRykr-metaMTIucG5n-.png
+          example: 'http://identity.eurofurence.org/storage/avatars/mqKYRqC8aEXifh1muaTJgzIysGRykr-metaMTIucG5n-.png'
         slug:
           type: string
           readOnly: true
-          description: Unique identifier for the group, but not immuteable.
+          description: 'Unique identifier for the group, but not immuteable.'
           example: attendees-2021
         translations:
           type: object
@@ -584,21 +601,19 @@ components:
                   example: <b>Vielen Dank für die teilnahme Eurofurence 2021</b>
         created_at:
           type: string
-          example: 2022-12-10T20:41:34.000000Z
+          example: '2022-12-10T20:41:34.000000Z'
         updated_at:
           type: string
-          example: 2022-12-10T20:41:34.000000Z
-
+          example: '2022-12-10T20:41:34.000000Z'
     Error:
       type: object
       properties:
         message:
           type: string
-
   securitySchemes:
     OpenID:
       type: openIdConnect
-      openIdConnectUrl: https://identity.eurofurence.org/.well-known/openid-configuration
+      openIdConnectUrl: 'https://identity.eurofurence.org/.well-known/openid-configuration'
       description: OpenID Connect
     AccessToken:
       type: http
