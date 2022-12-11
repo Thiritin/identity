@@ -292,6 +292,9 @@ paths:
       responses:
         '204':
           description: No Content
+          content:
+            text/html:
+              example: ''
         '404':
           content:
             application/json:
@@ -475,6 +478,9 @@ paths:
       responses:
         '204':
           description: No Content
+          content:
+            text/html:
+              example: ''
       tags:
         - Group Memberships
       operationId: deleteGroupMember
