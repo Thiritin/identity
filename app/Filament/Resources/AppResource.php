@@ -33,7 +33,8 @@ class AppResource extends Resource
                 Group::make()->columnSpan(2)->schema([
                     Group::make()->columns()->schema([
                         TextInput::make('client_id')->label('Client ID')->disabled(),
-                        TextInput::make('data.client_name')->required(),
+                        TextInput::make('data.client_secret')->disabled(),
+                        TextInput::make('data.client_name')->columnSpan(2)->required(),
                     ]),
                     Tabs::make('Tabs')->tabs([
                         Tabs\Tab::make('Information')->icon('heroicon-o-paper-clip')->schema([
