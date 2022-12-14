@@ -27,10 +27,15 @@ class Client
         }
     }
 
+    public function getScopes()
+    {
+        return Http::hydraPublic()->get("/.well-known/openid-configuration")->json('scopes_supported');
+    }
+
     public function acceptLoginRequest(string $userId, string $loginChallenge, int $remember = 0)
     {
         try {
-            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/login/accept?challenge=' . $loginChallenge, [
+            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/login/accept?challenge='.$loginChallenge, [
                 'subject' => $userId,
                 'remember' => ($remember === 0) ? false : true,
                 'remember_for' => $remember,

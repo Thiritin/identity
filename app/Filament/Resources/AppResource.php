@@ -4,8 +4,10 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AppResource\Pages;
 use App\Models\App;
+use App\Services\Hydra\Client;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
@@ -80,9 +82,12 @@ class AppResource extends Resource
                                      ->helperText('When authenticating with a signed jwks key against the token endpoint, you may enter a path to a keys.json containing the public keys of your app here.')
                                      ->url(),
 
-                            Tabs\Tab::make('Audience')->schema([
-                                TagsInput::make('data.audience')->columnSpan(1),
-                            ]),
+                            CheckboxList::make('data.scope')->options(static function () {
+                                return collect((new Client())->getScopes())->mapWithKeys(fn($v) => [$v => $v]);
+                            })->afterStateHydrated(function (CheckboxList $component, $state) {
+                                $component->state(explode(" ", $state));
+                            }),
+
                         ]),
                         Tabs\Tab::make('Logout')->icon('heroicon-o-logout')->schema([
                             TagsInput::make('data.post_logout_redirect_uris')->columnSpan(2),
@@ -118,6 +123,10 @@ class AppResource extends Resource
 
                         Tabs\Tab::make('CORS')->icon('heroicon-o-globe-alt')->schema([
                             TagsInput::make('data.allowed_cors_origins')->columnSpan(2),
+                        ]),
+
+                        Tabs\Tab::make('Audience')->schema([
+                            TagsInput::make('data.audience')->columnSpan(1),
                         ]),
                     ]),
                 ]),

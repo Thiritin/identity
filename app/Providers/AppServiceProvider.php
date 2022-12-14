@@ -46,6 +46,10 @@ class AppServiceProvider extends ServiceProvider
             return Http::baseUrl(config('services.hydra.admin'));
         });
 
+        Http::macro('hydraPublic', function () {
+            return Http::baseUrl(config('services.hydra.public'));
+        });
+
         Filament::serving(function () {
             Filament::registerUserMenuItems([
                 'logout-everywhere' => UserMenuItem::make()
