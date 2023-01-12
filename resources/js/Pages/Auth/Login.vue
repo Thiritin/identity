@@ -9,6 +9,10 @@
                 <div v-show='errors.nouser'
                      class='w-full mb-8 bg-white shadow-md py-4 px-3 border-l-[4px] border-red-600'>
                     <span>{{ $trans('wrong_login_details_message') }}</span></div>
+
+                <div v-show='errors.general'
+                     class='w-full mb-8 bg-white shadow-md py-4 px-3 border-l-[4px] border-red-600'>
+                    <span>{{ errors.general }}</span></div>
             </div>
             <div class='space-y-4'>
                 <div class='space-y-2'><label class='block text-sm font-medium text-gray-700'

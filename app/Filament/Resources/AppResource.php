@@ -28,6 +28,8 @@ class AppResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'client_id';
 
+    protected static ?string $navigationIcon = "heroicon-o-collection";
+
     public static function form(Form $form): Form
     {
         return $form
@@ -158,6 +160,7 @@ class AppResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('client_id'),
+                TextColumn::make('data.client_name')->label('Name'),
                 TextColumn::make('owner.name')
             ]);
     }
@@ -173,6 +176,8 @@ class AppResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return [];
+        return [
+            "data.client_name"
+        ];
     }
 }

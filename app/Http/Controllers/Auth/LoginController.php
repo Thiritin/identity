@@ -15,14 +15,26 @@ use JsonException;
 
 class LoginController extends Controller
 {
+    private Request $request;
+
     public function view(Request $request)
     {
+        $this->request = $request;
         if ($request->missing('login_challenge')) {
             return Redirect::route('auth.choose');
         }
 
         $hydra = new Client();
         $loginRequest = $hydra->getLoginRequest($request->get('login_challenge'));
+
+        // redirect_to key is added when login request expired.
+        if (isset($loginRequest['redirect_to'])) {
+            return Redirect::to($loginRequest['redirect_to']);
+        }
+
+        /**
+         * If skip is true do not show UI but simply accept
+         */
         if ($loginRequest["skip"] === true) {
             return Redirect::to($this->acceptLogin($loginRequest['subject'], $loginRequest["challenge"], 0));
         }
@@ -32,6 +44,7 @@ class LoginController extends Controller
 
     public function submit(LoginRequest $request)
     {
+        $this->request = $request;
         $loginData = [
             'email' => $request->get('email'),
             'password' => $request->get('password'),
@@ -39,7 +52,7 @@ class LoginController extends Controller
         if (!Auth::once($loginData)) {
             throw ValidationException::withMessages(['nouser' => 'Wrong details']);
         }
-        return Inertia::location($this->acceptLogin(Auth::user()?->getHashId(),$request->get('login_challenge'),15552000));
+        return Inertia::location($this->acceptLogin(Auth::user()?->getHashId(), $request->get('login_challenge'), 15552000));
     }
 
     /**
@@ -53,7 +66,10 @@ class LoginController extends Controller
     {
         $hydra = new Client();
         $hydraResponse = $hydra->acceptLoginRequest($subject, $login_challenge, $remember_seconds);
-        abort_if(!isset($hydraResponse["redirect_to"]), 500,"The Login Server did not return any redirection url.");
+
+        if (!isset($hydraResponse["redirect_to"])) {
+            throw ValidationException::withMessages(['general' => $hydraResponse['error_description'] ?? "Unknown error"]);
+        }
 
         return $hydraResponse["redirect_to"];
     }

@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Auth\Authenticators;
 
 use App\Http\Controllers\Controller;
+use App\Services\OpenIDConnectClient;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
-use App\Services\OpenIDConnectClient;
 use Jumbojett\OpenIDConnectClientException;
 use Vinkla\Hashids\Facades\Hashids;
 use function abort;
@@ -18,7 +19,7 @@ use function route;
 class OidcClientController extends Controller
 {
     /**
-     * @throws \Jumbojett\OpenIDConnectClientException
+     * @throws OpenIDConnectClientException
      */
     public function callback(Request $request)
     {
@@ -31,7 +32,7 @@ class OidcClientController extends Controller
                 Session::put('web.access_token', $oidc->getAccessToken());
                 return Redirect::route('dashboard');
             }
-        } catch (OpenIDConnectClientException $e) {
+        } catch (\App\Services\OpenIDConnectClientException $e) {
             return Redirect::route('auth.oidc.login');
         }
         return Redirect::route('auth.login.view');
@@ -62,9 +63,9 @@ class OidcClientController extends Controller
     }
 
     /**
-     * @throws \Jumbojett\OpenIDConnectClientException
+     * @throws OpenIDConnectClientException
      */
-    public function login(Request $request): \Illuminate\Http\RedirectResponse
+    public function login(Request $request): RedirectResponse
     {
         $oidc = $this->setupOIDC($request);
         $oidc->authenticate();
