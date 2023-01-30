@@ -35,7 +35,7 @@ class Client
     public function acceptLoginRequest(string $userId, string $loginChallenge, int $remember = 0)
     {
         try {
-            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/login/accept?challenge='.$loginChallenge, [
+            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/login/accept?challenge=' . $loginChallenge, [
                 'subject' => $userId,
                 'remember' => ($remember === 0) ? false : true,
                 'remember_for' => $remember,
@@ -50,24 +50,28 @@ class Client
         }
     }
 
-    public function acceptConsentRequest(string $consentChallenge, User $user)
+    public function acceptConsentRequest(array $consentChallenge, User $user)
     {
         try {
-            $response = Http::hydraAdmin()->put('/admin/oauth2/auth/requests/consent/accept?challenge=' . $consentChallenge, [
-                'grant_scope' => ['openid', 'offline_access'], // array
+            $requestData = [
+                'grant_scope' => $consentChallenge['requested_scope'],
+                'grant_access_token_audience' => $consentChallenge['requested_access_token_audience'],
                 'handled_at' => now(),
-                'session' => [
-                    'id_token' => [
-                        "global" => [
-                            "name" => $user->name,
-                            "email" => $user->email,
-                            "email_verified" => $user->hasVerifiedEmail(),
-                            "roles" => $user->roles->pluck('name'),
-                        ]
-                    ]
-                ]
-            ]);
-            return json_decode($response->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
+            ];
+
+            if (in_array('email', $consentChallenge['requested_scope'])) {
+                $requestData['session']['id_token']['email'] = $user->email;
+                $requestData['session']['id_token']['email_verified'] = !is_null($user->email_verified_at);
+            }
+            if (in_array('profile', $consentChallenge['requested_scope'])) {
+                $requestData['session']['id_token']['name'] = $user->name;
+                $requestData['session']['id_token']['avatar'] = $user->profile_photo_path;
+            }
+            if (in_array('groups', $consentChallenge['requested_scope'])) {
+                $requestData['session']['id_token']['groups'] = $user->groups->pluck('hashid');
+            }
+
+            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/consent/accept?challenge=' . $consentChallenge['challenge'], $requestData)->json();
         } catch (Exception $e) {
             if ($e->getCode() === 404) {
                 throw new ModelNotFoundException('The requested Resource does not exist.');

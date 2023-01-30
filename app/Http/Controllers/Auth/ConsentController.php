@@ -14,8 +14,11 @@ class ConsentController extends Controller
     {
         $hydra = new Client();
         $consentRequest = $hydra->getConsentRequest($request->get('consent_challenge'));
+        if (isset($consentRequest['redirect_to'])) {
+            return redirect($consentRequest['redirect_to']);
+        }
         $user = User::where('id', '=', Hashids::decode($consentRequest["subject"]))->firstOrFail();
-        $response = $hydra->acceptConsentRequest($request->get('consent_challenge'), $user);
-        return redirect($response->redirect_to);
+        $response = $hydra->acceptConsentRequest($consentRequest, $user);
+        return redirect($response['redirect_to']);
     }
 }

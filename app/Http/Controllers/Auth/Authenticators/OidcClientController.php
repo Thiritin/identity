@@ -47,7 +47,7 @@ class OidcClientController extends Controller
             null,
             $request
         );
-        $oidc->addScope(['openid']);
+        $oidc->addScope(['openid', 'email', 'profile', 'groups']);
         $oidc->setRedirectURL(route('auth.oidc.callback'));
 
         if (App::isLocal()) {
