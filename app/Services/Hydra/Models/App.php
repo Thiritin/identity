@@ -2,9 +2,9 @@
 
 namespace App\Services\Hydra\Models;
 
-use function Clue\StreamFilter\fun;
+use App\Services\Hydra\Admin;
 
-class App extends \App\Services\Hydra\Admin
+class App extends Admin
 {
     public string $client_name = "";
     public string $client_id = "";
@@ -73,7 +73,6 @@ class App extends \App\Services\Hydra\Admin
 
     public function update(array $attributes = []): array
     {
-        $this->load($this->client_id);
         $this->fill($attributes);
         $data = $this->putRequest("/clients/".$this->client_id, $this->formPayload());
         $this->fill($data);

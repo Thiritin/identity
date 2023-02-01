@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => 'main',
+    'default' => 'default',
 
     /*
     |--------------------------------------------------------------------------
@@ -27,9 +27,18 @@ return [
     */
 
     'connections' => [
-
-        'main' => [
+        'default' => [
             'salt' => env('HASHIDS_SALT'),
+            'length' => 16,
+            'alphabet' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
+        ],
+        'user' => [
+            'salt' => env('HASHIDS_USER_SALT'),
+            'length' => 16,
+            'alphabet' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
+        ],
+        'group' => [
+            'salt' => env('HASHIDS_GROUP_SALT'),
             'length' => 16,
             'alphabet' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
         ],

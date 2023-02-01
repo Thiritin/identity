@@ -52,7 +52,7 @@ class LoginController extends Controller
         if (!Auth::once($loginData)) {
             throw ValidationException::withMessages(['nouser' => 'Wrong details']);
         }
-        return Inertia::location($this->acceptLogin(Auth::user()?->getHashId(), $request->get('login_challenge'), 15552000));
+        return Inertia::location($this->acceptLogin(Auth::user()?->hashId(), $request->get('login_challenge'), 15552000));
     }
 
     /**

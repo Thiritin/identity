@@ -15,7 +15,6 @@ use Laravel\Sanctum\HasApiTokens;
 use Mtvs\EloquentHashids\HasHashid;
 use Mtvs\EloquentHashids\HashidRouting;
 use Spatie\Permission\Traits\HasRoles;
-use Vinkla\Hashids\Facades\Hashids;
 
 class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 {
@@ -67,11 +66,6 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
     protected $appends = [
         'hashid'
     ];
-
-    public function getHashId(): string
-    {
-        return Hashids::encode($this->id);
-    }
 
     public function sendEmailVerificationNotification(): void
     {
@@ -125,5 +119,10 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
     public function canAccessFilament(): bool
     {
         return $this->hasRole('superadmin');
+    }
+
+    public function getHashidsConnection(): string
+    {
+        return 'user';
     }
 }
