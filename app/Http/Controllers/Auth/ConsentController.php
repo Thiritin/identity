@@ -17,7 +17,7 @@ class ConsentController extends Controller
         if (isset($consentRequest['redirect_to'])) {
             return redirect($consentRequest['redirect_to']);
         }
-        $user = User::where('id', '=', Hashids::decode($consentRequest["subject"]))->firstOrFail();
+        $user = User::where('id', '=', Hashids::connection('user')->decode($consentRequest["subject"]))->firstOrFail();
         $response = $hydra->acceptConsentRequest($consentRequest, $user);
         return redirect($response['redirect_to']);
     }

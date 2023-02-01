@@ -27,7 +27,7 @@ class OidcClientController extends Controller
         try {
             if ($oidc->authenticate() === true) {
                 if (!$oidc->verifyJWTsignature($oidc->getIdToken())) abort(403, 'ID Token invalid.');
-                Auth::guard('web')->loginUsingId(Hashids::decode($oidc->getIdTokenPayload()->sub));
+                Auth::guard('web')->loginUsingId(Hashids::connection('user')->decode($oidc->getIdTokenPayload()->sub));
                 Session::put('web.id_token', $oidc->getIdToken());
                 Session::put('web.access_token', $oidc->getAccessToken());
                 return Redirect::route('dashboard');

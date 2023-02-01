@@ -6,7 +6,6 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\delete;
@@ -59,7 +58,7 @@ test('Create Group and validate user is set as owner', function () {
     $request->assertSuccessful();
     assertDatabaseHas('group_user', [
         "level" => "owner",
-        "group_id" => Hashids::decode($request->json('data')['id'])[0],
+        "group_id" => Hashids::connection('group')->decode($request->json('data')['id'])[0],
         "user_id" => $user->id
     ]);
 });

@@ -48,7 +48,7 @@ class LoginController extends Controller
                 Session::put('admin.id_token', $idToken);
 
                 if (!$oidc->verifyJWTsignature($idToken)) abort(403, 'ID Token invalid.');
-                Auth::guard('admin')->loginUsingId(Hashids::decode($oidc->getIdTokenPayload()->sub));
+                Auth::guard('admin')->loginUsingId(Hashids::connection('user')->decode($oidc->getIdTokenPayload()->sub));
                 return redirect(route('filament.pages.dashboard'));
             }
             return redirect($oidc->laravelRedirectUrl);

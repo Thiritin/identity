@@ -29,7 +29,7 @@ class ApiGuard extends TokenGuard
             if ($response['active'] === true) {
                 $this->scopes = explode(" ", $response['scope']);
                 $user = $this->provider->retrieveByCredentials([
-                    'id' => Hashids::decode($response['sub'])
+                    'id' => Hashids::connection('user')->decode($response['sub'])
                 ]);
             }
         }
