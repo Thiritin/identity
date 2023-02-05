@@ -33,7 +33,8 @@ RUN addgroup -gid 1024 app \
   && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
   && apt-get update \
   && apt-get install -y nodejs \
-  && apt-get clean -y
+  && apt-get clean -y \
+  && install-php-extensions xdebug
 USER app
 # yarn install as command
 CMD sh -c "composer install && php artisan octane:start --watch --host=0.0.0.0 --port=80"
