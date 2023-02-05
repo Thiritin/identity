@@ -114,9 +114,9 @@ Route::middleware(['auth', 'verified', 'auth.oidc'])->group(function () {
 Route::middleware('guest:admin')->group(function () {
     Route::get('/admin/login', \App\Http\Controllers\Admin\Auth\LoginController::class)->name('filament.auth.login');
     Route::get('/admin/callback', \App\Http\Controllers\Admin\Auth\LoginController::class)
-         ->name('filament.auth.callback');
+        ->name('filament.auth.callback');
 });
 
 Route::get('/admin/frontchannel-logout', \App\Http\Controllers\Admin\Auth\FrontChannelLogoutController::class)
-     ->middleware('auth:admin')
-     ->name('filament.auth.frontchannel-logout');
+    ->middleware('auth:admin')
+    ->name('filament.auth.frontchannel-logout');
