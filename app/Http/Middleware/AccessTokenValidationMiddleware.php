@@ -26,14 +26,14 @@ class AccessTokenValidationMiddleware
         }
 
         // No need to call Hydra on every request.
-        if (Cache::missing('accessToken.' . sha1($token) . '.validated')) {
+        if (Cache::missing('accessToken.' . Auth::id() . '.validated')) {
             $hydra = new Client();
             $response = $hydra->getToken($token, ['openid']);
             if ($response['active'] === false) {
                 Auth::logout();
                 return abort(401, "Unauthorized.");
             }
-            Cache::put('accessToken.' . sha1($token) . '.validated', true, now()->addSeconds(120));
+            Cache::put('accessToken.' . Auth::id() . '.validated', true, now()->addSeconds(120));
         }
 
         return $next($request);
