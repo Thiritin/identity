@@ -22,8 +22,15 @@
 
 namespace App\Services;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use phpseclib\Crypt\RSA;
+use phpseclib3\Crypt\PublicKeyLoader;
+use function bin2hex;
+use function is_object;
+use function is_string;
+use function random_bytes;
 
 /**
  *
@@ -71,7 +78,7 @@ function b64url2b64($base64url)
 /**
  * OpenIDConnect Exception Class
  */
-class OpenIDConnectClientException extends \Exception
+class OpenIDConnectClientException extends Exception
 {
 
 }
@@ -662,12 +669,12 @@ class OpenIDConnectClient
         // Error and Exception need to be catched in this order, see https://github.com/paragonie/random_compat/blob/master/README.md
         // random_compat polyfill library should be removed if support for PHP versions < 7 is dropped
         try {
-            return \bin2hex(\random_bytes(16));
+            return bin2hex(random_bytes(16));
         } catch (Error $e) {
             throw new OpenIDConnectClientException('Random token generation failed.');
         } catch (Exception $e) {
             throw new OpenIDConnectClientException('Random token generation failed.');
-        };
+        }
     }
 
     /**
@@ -759,7 +766,7 @@ class OpenIDConnectClient
      * Requests a resource owner token
      * (Defined in https://tools.ietf.org/html/rfc6749#section-4.3)
      *
-     * @param boolean $bClientAuth Indicates that the Client ID and Secret be used for client authentication
+     * @param bool $bClientAuth Indicates that the Client ID and Secret be used for client authentication
      * @return mixed
      * @throws OpenIDConnectClientException
      */
@@ -839,7 +846,7 @@ class OpenIDConnectClient
         }
 
         // Convert token params to string format
-        $token_params = http_build_query($token_params, null, '&', $this->enc_type);
+        $token_params = http_build_query($token_params, '', '&', $this->enc_type);
 
         $this->tokenResponse = json_decode($this->fetchURL($token_endpoint, $token_params, $headers));
 
@@ -959,7 +966,7 @@ class OpenIDConnectClient
             '  <Exponent>' . b64url2b64($key->e) . "</Exponent>\r\n" .
             '</RSAKeyValue>';
         if (class_exists('\phpseclib3\Crypt\RSA', false)) {
-            $key = \phpseclib3\Crypt\PublicKeyLoader::load($public_key_xml)
+            $key = PublicKeyLoader::load($public_key_xml)
                 ->withHash($hashtype);
             if ($signatureType === 'PSS') {
                 $key = $key->withMGFHash($hashtype)
@@ -978,13 +985,13 @@ class OpenIDConnectClient
             $rsa->setSignatureMode($signatureType === 'PSS' ? Crypt_RSA::SIGNATURE_PSS : Crypt_RSA::SIGNATURE_PKCS1);
             return $rsa->verify($payload, $signature);
         } else {
-            $rsa = new \phpseclib\Crypt\RSA();
+            $rsa = new RSA();
             $rsa->setHash($hashtype);
             if ($signatureType === 'PSS') {
                 $rsa->setMGFHash($hashtype);
             }
-            $rsa->loadKey($public_key_xml, \phpseclib\Crypt\RSA::PUBLIC_FORMAT_XML);
-            $rsa->setSignatureMode($signatureType === 'PSS' ? \phpseclib\Crypt\RSA::SIGNATURE_PSS : \phpseclib\Crypt\RSA::SIGNATURE_PKCS1);
+            $rsa->loadKey($public_key_xml, RSA::PUBLIC_FORMAT_XML);
+            $rsa->setSignatureMode($signatureType === 'PSS' ? RSA::SIGNATURE_PSS : RSA::SIGNATURE_PKCS1);
             return $rsa->verify($payload, $signature);
         }
     }
@@ -1019,7 +1026,7 @@ class OpenIDConnectClient
      */
     public function verifyJWTsignature($jwt)
     {
-        if (!\is_string($jwt)) {
+        if (!is_string($jwt)) {
             throw new OpenIDConnectClientException('Error token is not a string');
         }
         $parts = explode('.', $jwt);
@@ -1031,7 +1038,7 @@ class OpenIDConnectClient
             throw new OpenIDConnectClientException('Error decoding signature from token');
         }
         $header = json_decode(base64url_decode($parts[0]));
-        if (null === $header || !\is_object($header)) {
+        if (null === $header || !is_object($header)) {
             throw new OpenIDConnectClientException('Error decoding JSON from token header');
         }
         $payload = implode('.', $parts);
@@ -1862,13 +1869,13 @@ class OpenIDConnectClient
     }
 
 
-
     protected function getSessionKey($key)
     {
         return Session::get($key);
     }
 
-    protected function setSessionKey($key, $value) {
+    protected function setSessionKey($key, $value)
+    {
         Session::put($key, $value);
     }
 
