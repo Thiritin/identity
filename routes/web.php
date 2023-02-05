@@ -60,6 +60,8 @@ Route::prefix('auth')->name('auth.')->group(function () {
         // Set new Password
         Route::get('password-reset', [PasswordResetController::class, 'view'])->name('password-reset.view');
         Route::post('password-reset', [PasswordResetController::class, 'store'])->name('password-reset.store');
+        // Auth
+        Route::get('error', App\Http\Controllers\Auth\ErrorController::class)->name('error');
     });
 
     // OIDC Frontchannel Logout
