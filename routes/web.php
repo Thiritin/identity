@@ -84,7 +84,7 @@ Route::get('/', function () {
 });
 
 // General Routes
-Route::middleware('auth', 'auth.oidc', 'verified')->group(function () {
+Route::middleware(['auth', 'verified', 'auth.oidc'])->group(function () {
     Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
     Route::inertia('/profile', 'Profile/Show')->name('profile');
     Route::inertia('/settings/profile', 'Settings/Profile')->name('settings.profile');
