@@ -3,9 +3,9 @@
     <tr>
         <td>
             <div align="center">
-            <!--[if mso]>
+                <!--[if mso]>
                 <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word"
-                             href="{{ $url }}" style="height:42px;width:128px;v-text-anchor:middle;" arcsize="10%"
+                             href="{{ $url }}" style="height:42px;width:250px;v-text-anchor:middle;" arcsize="10%"
                              stroke="false" fillcolor="#00504b">
                     <w:anchorlock/>
                     <v:textbox inset="0px,0px,0px,0px">
