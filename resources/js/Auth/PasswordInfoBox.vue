@@ -1,12 +1,15 @@
 <template>
-    <div class="text-gray-800">
-        <span class="block mb-2 text-sm">Your password must meet the following requirements</span>
-        <ul class="text-sm list-disc ml-4">
-            <li>Minimum of 8 characters</li>
-            <li>Must contain lowercase and uppercase letter</li>
-            <li>Must contain numbers</li>
-            <li>Must not been listed with <a tabindex="-1" ref="nofollow" href="https://haveibeenpwned.com/Passwords" target="_blank">"have
-                i been pwned?"</a></li>
+    <div>
+        <span
+            class="block mb-2 text-xs">{{ $trans('password_requirements_title') }}</span>
+        <ul class="text-xs list-disc ml-4">
+            <li>{{ $trans('password_requirement_1') }}</li>
+            <li>{{ $trans('password_requirement_2') }}</li>
+            <li>{{ $trans('password_requirement_3') }}</li>
+            <li>{{ $trans('password_requirement_4') }} <a ref="nofollow" href="https://haveibeenpwned.com/Passwords"
+                                                          tabindex="-1"
+                                                          target="_blank">"have i been pwned?"</a>
+            </li>
         </ul>
     </div>
 </template>
