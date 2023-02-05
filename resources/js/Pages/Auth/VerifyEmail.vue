@@ -47,8 +47,7 @@
                             text-sm text-gray-600
                             hover:text-gray-900
                         "
-                        method="post"
-                        >{{ $trans('logout') }}
+                    >{{ $trans('logout') }}
                     </inertia-link>
                 </div>
             </form>
@@ -57,37 +56,37 @@
 </template>
 
 <script>
-    import Logo from '@/Auth/Logo.vue'
-    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
-    import AuthLayout from '@/Layouts/AuthLayout.vue'
+import Logo from '@/Auth/Logo.vue'
+import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
+import AuthLayout from '@/Layouts/AuthLayout.vue'
 
-    export default {
-        components: {
-            AuthLayout,
-            Logo,
-            LoginScreenWelcome,
-        },
+export default {
+    components: {
+        AuthLayout,
+        Logo,
+        LoginScreenWelcome,
+    },
 
-        props: {
-            status: String,
-        },
+    props: {
+        status: String,
+    },
 
-        data() {
-            return {
-                form: this.$inertia.form(),
-            }
-        },
+    data() {
+        return {
+            form: this.$inertia.form(),
+        }
+    },
 
-        methods: {
-            submit() {
-                this.form.post(this.route('verification.send'))
-            },
+    methods: {
+        submit() {
+            this.form.post(this.route('verification.send'))
         },
+    },
 
-        computed: {
-            verificationLinkSent() {
-                return this.status === 'verification-link-sent'
-            },
+    computed: {
+        verificationLinkSent() {
+            return this.status === 'verification-link-sent'
         },
-    }
+    },
+}
 </script>

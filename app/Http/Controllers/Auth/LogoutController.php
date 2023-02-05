@@ -13,6 +13,7 @@ class LogoutController extends Controller
     public function __invoke(Request $request)
     {
         if ($request->missing('logout_challenge')) {
+            Auth::logout();
             return Inertia::location(route('auth.choose'));
         }
 
