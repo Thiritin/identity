@@ -1,24 +1,22 @@
 <template>
-    <div class='pt-4 pb-5 space-y-6 sm:pt-6 sm:space-y-5'>
-        <div class='space-y-6 sm:space-y-5'>
-            <div
-                class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5'>
-                <label :for="fieldId" v-if="label" class='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>{{ label }}</label>
-                <div class='mt-1 sm:mt-0 sm:col-span-2'>
-                    <input
-                        class='form-input block transition-all max-w-lg w-full shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md'
-                        :class="[error ? 'border-red-600' : 'border-gray-300']"
-                        :value="modelValue"
-                        :placeholder="label"
-                        :id="fieldId"
-                        v-bind="$attrs"
-                        @input="$emit('update:modelValue', $event.target.value)"
-                    />
-                    <transition name="error">
-                        <span class="text-sm text-red-600" v-if="error">{{ error }}</span>
-                    </transition>
-                </div>
-            </div>
+    <div
+        class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5'>
+        <label v-if="label" :for="fieldId" class='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>{{
+                label
+            }}</label>
+        <div class='mt-1 sm:mt-0 sm:col-span-2'>
+            <input
+                :id="fieldId"
+                :class="[error ? 'border-red-600' : 'border-gray-300']"
+                :placeholder="label"
+                :value="modelValue"
+                class='form-input block transition-all max-w-lg w-full shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md'
+                v-bind="$attrs"
+                @input="$emit('update:modelValue', $event.target.value)"
+            />
+            <transition name="error">
+                <span v-if="error" class="text-sm text-red-600">{{ error }}</span>
+            </transition>
         </div>
     </div>
 </template>
