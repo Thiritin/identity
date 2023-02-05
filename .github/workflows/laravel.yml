@@ -18,10 +18,10 @@ jobs:
       - uses: shogo82148/actions-setup-mysql@v1
         with:
           mysql-version: '8.0'
-          root-password: 'root'
           user: 'identity'
           password: 'identity'
           auto-start: 'true'
+      - run: mysql -uroot -h127.0.0.1 -e 'CREATE DATABASE identity;'
       - uses: actions/checkout@v3
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
@@ -37,5 +37,5 @@ jobs:
           DB_HOST: 127.0.0.1
           DB_DATABASE: identity
           DB_USERNAME: root
-          DB_PASSWORD: root
+          DB_PASSWORD: ""
         run: vendor/bin/pest
