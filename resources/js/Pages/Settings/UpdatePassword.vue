@@ -7,7 +7,7 @@
                        autocomplete='password' name='currentPassword'
                        type="password" :error="errors.current_password"></BaseInput>
             <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-end">
-                <PasswordInfoBox class="sm:col-span-2 sm:col-start-2"></PasswordInfoBox>
+                <PasswordInfoBox class="sm:col-span-2 sm:col-start-2 mt-2"></PasswordInfoBox>
             </div>
             <BaseInput label="New password" id='newPassword' v-model='form.password' autocomplete='password'
                        name='newPassword'
@@ -15,10 +15,6 @@
             <BaseInput label="Confirm new password" id='confirmNewPassword' v-model='form.password_confirmation'
                        autocomplete='password' name='confirmNewPassword'
                        type="password" :error="errors.password_confirmation"></BaseInput>
-            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-end">
-                <BaseCheckbox class="sm:col-span-2 sm:col-start-2" v-model="form.destroy_sessions"
-                              label="Destroy all existing sessions."></BaseCheckbox>
-            </div>
             <div class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-startsm:pt-5 pt-5'>
                 <div class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2">
                     <PrimaryButton class="" @click="submitForm()">Change password</PrimaryButton>
