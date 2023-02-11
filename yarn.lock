@@ -38,7 +38,7 @@
   resolved "https://registry.yarnpkg.com/@esbuild/linux-loong64/-/linux-loong64-0.15.18.tgz#128b76ecb9be48b60cf5cfc1c63a4f00691a3239"
   integrity sha512-L4jVKS82XVhw2nvzLg/19ClLWg0y27ulRwuP7lcyL6AbUWB5aPglXY3M21mauDQMDfRLs8cQmeT03r/+X3cZYQ==
 
-"@headlessui/vue@^1.7.5":
+"@headlessui/vue@^1.7.7":
   version "1.7.9"
   resolved "https://registry.yarnpkg.com/@headlessui/vue/-/vue-1.7.9.tgz#459e4ad6a14add4c70c616b10e1aab5a720ff87d"
   integrity sha512-vgLBKszj+m2ozaPOnjWMGnspoLJcU/06vygdEAyAS4nDjp72yA7AYbOIEgdaspUhaMs585ApyiSm3jPTuIxAzg==
@@ -638,7 +638,7 @@ browser-sync-webpack-plugin@^2.3.0:
   dependencies:
     lodash "^4"
 
-browser-sync@^2.27.1:
+browser-sync@^2.27.11:
   version "2.27.11"
   resolved "https://registry.yarnpkg.com/browser-sync/-/browser-sync-2.27.11.tgz#bb2c07fa586863612507cf0b7963e352a26a07af"
   integrity sha512-U5f9u97OYJH66T0MGWWzG9rOQTW6ZmDMj97vsmtqwNS03JAwdLVES8eel2lD3rvAqQCNAFqaJ74NMacBI57vJg==
