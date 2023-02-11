@@ -23,10 +23,15 @@ class OidcClientController extends Controller
      */
     public function callback(Request $request)
     {
+        if ($request->get('error')) {
+            return Redirect::route('auth.error', ['error' => $request->get('error'), 'error_description' => $request->get('error_description')]);
+        }
         $oidc = $this->setupOIDC($request);
         try {
             if ($oidc->authenticate() === true) {
-                if (!$oidc->verifyJWTsignature($oidc->getIdToken())) abort(403, 'ID Token invalid.');
+                if (!$oidc->verifyJWTsignature($oidc->getIdToken())) {
+                    abort(403, 'ID Token invalid.');
+                }
                 Auth::guard('web')->loginUsingId(Hashids::connection('user')->decode($oidc->getIdTokenPayload()->sub));
                 Session::put('web.id_token', $oidc->getIdToken());
                 Session::put('web.access_token', $oidc->getAccessToken());
@@ -54,9 +59,9 @@ class OidcClientController extends Controller
             $oidc->setVerifyHost(false);
             $oidc->setVerifyPeer(false);
             $oidc->providerConfigParam([
-                "authorization_endpoint" => config('services.hydra.local_public')."/oauth2/auth",
-                "token_endpoint" => config('services.hydra.public')."/oauth2/token",
-                "jwks_uri" => config('services.hydra.public')."/.well-known/jwks.json",
+                "authorization_endpoint" => config('services.hydra.local_public') . "/oauth2/auth",
+                "token_endpoint" => config('services.hydra.public') . "/oauth2/token",
+                "jwks_uri" => config('services.hydra.public') . "/.well-known/jwks.json",
             ]);
         }
         return $oidc;
