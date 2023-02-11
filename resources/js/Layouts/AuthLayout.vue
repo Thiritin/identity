@@ -4,7 +4,7 @@
         <div class="hidden lg:block relative w-0 flex-auto">
             <img alt="EF26 Background Image"
                  class="absolute inset-0 object-right h-full w-full object-cover bg-primary-600"
-                 src="https://www.eurofurence.org/EF27/img/blackmagic_by_kur0.jpg"/>
+                 src="../../assets/blackmagic_by_kur0.jpg"/>
         </div>
         <!-- Page Content -->
         <div class="flex-1 flex flex-col items-center p-4 sm:px-6 lg:flex-none lg:px-20 xl:px-12">
