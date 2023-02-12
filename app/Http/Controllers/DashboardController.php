@@ -22,7 +22,7 @@ class DashboardController extends Controller
             })->where(function (Builder $q) {
                 $q->whereDate('ends_at', '>=', now())->orWhereNull('ends_at');
             });
-        })->get();
+        })->orderBy('priority')->get();
 
         return Inertia::render('Dashboard', [
             'apps' => $apps,
