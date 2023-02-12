@@ -87,7 +87,10 @@ class AppResource extends Resource
                             CheckboxList::make('data.scope')->options(static function () {
                                 return collect((new Client())->getScopes())->mapWithKeys(fn($v) => [$v => $v]);
                             })->afterStateHydrated(function (CheckboxList $component, $state) {
-                                $component->state(explode(" ", $state));
+                                if (!is_array($state)) {
+                                    $state = explode(" ", $state);
+                                }
+                                $component->state($state);
                             }),
 
                         ]),

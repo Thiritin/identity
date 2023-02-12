@@ -68,13 +68,20 @@ class App extends Admin
 
     public function delete(): bool
     {
-        return $this->deleteRequest("/clients/".$this->client_id);
+        return $this->deleteRequest("/clients/" . $this->client_id);
+    }
+
+    public function get(): array
+    {
+        $data = $this->getRequest("/clients/" . $this->client_id);
+        $this->fill($data);
+        return $data;
     }
 
     public function update(array $attributes = []): array
     {
         $this->fill($attributes);
-        $data = $this->putRequest("/clients/".$this->client_id, $this->formPayload());
+        $data = $this->putRequest("/clients/" . $this->client_id, $this->formPayload());
         $this->fill($data);
         return $data;
     }
