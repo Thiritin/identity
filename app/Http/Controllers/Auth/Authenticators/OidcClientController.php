@@ -3,77 +3,97 @@
 namespace App\Http\Controllers\Auth\Authenticators;
 
 use App\Http\Controllers\Controller;
+use App\Services\Hydra\Client;
 use App\Services\OpenIDConnectClient;
+use App\Services\OpenIDService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
-use Jumbojett\OpenIDConnectClientException;
+use UnexpectedValueException;
 use Vinkla\Hashids\Facades\Hashids;
-use function abort;
-use function config;
-use function route;
 
 class OidcClientController extends Controller
 {
-    /**
-     * @throws OpenIDConnectClientException
-     */
+    private OpenIDService $openIDService;
+
+    public function __construct()
+    {
+        $this->openIDService = new OpenIDService();
+    }
+
     public function callback(Request $request)
     {
-        if ($request->get('error')) {
-            return Redirect::route('auth.error', ['error' => $request->get('error'), 'error_description' => $request->get('error_description')]);
-        }
-        $oidc = $this->setupOIDC($request);
-        try {
-            if ($oidc->authenticate() === true) {
-                if (!$oidc->verifyJWTsignature($oidc->getIdToken())) {
-                    abort(403, 'ID Token invalid.');
-                }
-                Auth::guard('web')->loginUsingId(Hashids::connection('user')->decode($oidc->getIdTokenPayload()->sub));
-                Session::put('web.id_token', $oidc->getIdToken());
-                Session::put('web.access_token', $oidc->getAccessToken());
-                return Redirect::route('dashboard');
-            }
-        } catch (\App\Services\OpenIDConnectClientException $e) {
-            return Redirect::route('auth.oidc.login');
-        }
-        return Redirect::route('auth.login.view');
-    }
-
-    private function setupOIDC(Request $request): OpenIDConnectClient
-    {
-        $oidc = new OpenIDConnectClient(
-            config('services.hydra.public'),
-            config('services.oidc.main.client_id'),
-            config('services.oidc.main.secret'),
-            null,
-            $request
-        );
-        $oidc->addScope(['openid', 'email', 'profile', 'groups']);
-        $oidc->setRedirectURL(route('auth.oidc.callback'));
-
-        if (App::isLocal()) {
-            $oidc->setVerifyHost(false);
-            $oidc->setVerifyPeer(false);
-            $oidc->providerConfigParam([
-                "authorization_endpoint" => config('services.hydra.local_public') . "/oauth2/auth",
-                "token_endpoint" => config('services.hydra.public') . "/oauth2/token",
-                "jwks_uri" => config('services.hydra.public') . "/.well-known/jwks.json",
+        $data = $request->validate([
+            "state"             => "required_with::code|string",
+            "error"             => "nullable|required_without:code|string",
+            "error_description" => "nullable|required_without:code|string",
+            "code"              => "nullable|string",
+        ]);
+        /**
+         * Only Identity Client - Redirects to error page if scope is invalid
+         */
+        if (isset($data['error'])) {
+            return Redirect::route('auth.error', [
+                'error'             => $data['error'],
+                'error_description' => $data['error_description'],
             ]);
         }
-        return $oidc;
+
+        /**
+         * State Verification
+         * Do not delete the default "false" parameter of Session::get
+         * otherwise null === null and it would pass the check falsely.
+         */
+        if ($request->get('state') !== Session::get('web.login.oauth2state', false)) {
+            Session::remove("web.login.oauth2state");
+            return Redirect::route('auth.error', [
+                'error'             => "invalid_state",
+                'error_description' => "We we're unable to verify the state of your client. Please try to go back and login again.",
+            ]);
+        }
+
+        /**
+         * Get Tokens
+         */
+        $provider = $this->openIDService->setupOIDC($request, $this->clientIsAdmin($request));
+        $accessToken = $provider->getAccessToken('authorization_code', [
+            'code' => $data['code'],
+        ]);
+
+        $hydra = new Client();
+        $token = $hydra->getToken($accessToken->getToken(), ['openid', 'profile']);
+        if (!isset($token['sub'])) {
+            throw new UnexpectedValueException("Could not request user id from freshly fetched token.");
+        }
+
+        $guard = ($this->clientIsAdmin($request)) ? "admin" : "web";
+
+        $userid = Hashids::connection('user')->decode($token['sub'])[0];
+        Auth::guard($guard)->loginUsingId($userid);
+        Session::put('token', $accessToken);
+        return $this->redirectDestination($request);
     }
 
-    /**
-     * @throws OpenIDConnectClientException
-     */
     public function login(Request $request): RedirectResponse
     {
-        $oidc = $this->setupOIDC($request);
-        $oidc->authenticate();
-        return response()->redirectTo($oidc->laravelRedirectUrl);
+        $provider = $this->openIDService->setupOIDC($request, $this->clientIsAdmin($request));
+        $authorizationUrl = $provider->getAuthorizationUrl();
+        Session::put('web.login.oauth2state', $provider->getState());
+        return Redirect::to($authorizationUrl);
+    }
+
+    public function clientIsAdmin(Request $request)
+    {
+        return $request->routeIs('filament.*');
+    }
+
+    private function redirectDestination(Request $request)
+    {
+        if ($this->clientIsAdmin($request)) {
+            return Redirect::route('filament.pages.dashboard');
+        }
+        return Redirect::route('dashboard');
     }
 }

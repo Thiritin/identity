@@ -19,14 +19,14 @@ class AppSeeder extends Seeder
         ], [
             'user_id' => User::first()->id,
             'data' => [
-                "client_secret" => "optimus",
-                "client_name" => "Eurofurence IAM",
-                "redirect_uris" => [
-                    route('auth.oidc.callback')
+                "client_secret"              => "optimus",
+                "client_name"                => "Eurofurence IAM",
+                "redirect_uris"              => [
+                    route('auth.oidc.callback'),
                 ],
-                "scopes" => ["openid", "email", "profile", "groups"],
-                "token_endpoint_auth_method" => "client_secret_basic",
-                "frontchannel_logout_uri" => route('auth.frontchannel_logout')
+                "scopes"                     => ["openid", "offline_access", "email", "profile", "groups"],
+                "token_endpoint_auth_method" => "client_secret_post",
+                "frontchannel_logout_uri"    => route('auth.frontchannel_logout'),
             ]
         ]);
 
@@ -35,14 +35,14 @@ class AppSeeder extends Seeder
         ], [
             'user_id' => User::first()->id,
             'data' => [
-                "client_secret" => "optimus",
-                "client_name" => "Eurofurence IAM Admin",
-                "redirect_uris" => [
-                    route('filament.auth.callback')
+                "client_secret"              => "optimus",
+                "client_name"                => "Eurofurence IAM Admin",
+                "redirect_uris"              => [
+                    route('filament.auth.callback'),
                 ],
-                "scopes" => ["openid", "email", "profile", "groups"],
-                "token_endpoint_auth_method" => "client_secret_basic",
-                "frontchannel_logout_uri" => route('filament.auth.frontchannel-logout')
+                "scopes"                     => ["openid", "offline_access", "email", "profile", "groups"],
+                "token_endpoint_auth_method" => "client_secret_post",
+                "frontchannel_logout_uri"    => route('filament.auth.frontchannel-logout'),
             ]
         ]);
     }
