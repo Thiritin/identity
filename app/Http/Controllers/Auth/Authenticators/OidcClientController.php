@@ -36,7 +36,7 @@ class OidcClientController extends Controller
          */
         if (isset($data['error'])) {
             return Redirect::route('auth.error', [
-                'error'             => $data['error'],
+                'error' => $data['error'],
                 'error_description' => $data['error_description'],
             ]);
         }
@@ -46,10 +46,10 @@ class OidcClientController extends Controller
          * Do not delete the default "false" parameter of Session::get
          * otherwise null === null and it would pass the check falsely.
          */
-        if ($request->get('state') !== Session::get('web.login.oauth2state', false)) {
-            Session::remove("web.login.oauth2state");
+        if ($request->get('state') !== Session::get('login.oauth2state', false)) {
+            Session::remove("login.oauth2state");
             return Redirect::route('auth.error', [
-                'error'             => "invalid_state",
+                'error' => "invalid_state",
                 'error_description' => "We we're unable to verify the state of your client. Please try to go back and login again.",
             ]);
         }
@@ -72,7 +72,7 @@ class OidcClientController extends Controller
 
         $userid = Hashids::connection('user')->decode($token['sub'])[0];
         Auth::guard($guard)->loginUsingId($userid);
-        Session::put('token', $accessToken);
+        Session::put($guard . '.token', $accessToken);
         return $this->redirectDestination($request);
     }
 
@@ -80,7 +80,7 @@ class OidcClientController extends Controller
     {
         $provider = $this->openIDService->setupOIDC($request, $this->clientIsAdmin($request));
         $authorizationUrl = $provider->getAuthorizationUrl();
-        Session::put('web.login.oauth2state', $provider->getState());
+        Session::put('login.oauth2state', $provider->getState());
         return Redirect::to($authorizationUrl);
     }
 

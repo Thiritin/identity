@@ -23,7 +23,10 @@ class AccessTokenValidationMiddleware
             return $next($request);
         }
 
-        $token = \Session::get('token');
+        $isAdmin = $request->routeIs('filament.*');
+        $prefix = ($isAdmin) ? "admin" : "web";
+
+        $token = Session::get($prefix . '.token');
 
         /**
          * Logout if token does not exist
@@ -49,7 +52,7 @@ class AccessTokenValidationMiddleware
                 return Redirect::route('auth.oidc.login');
             }
 
-            Session::put('token', $token);
+            Session::put($prefix . '.token', $token);
             return $next($request);
         }
 

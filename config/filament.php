@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Middleware\AccessTokenValidationMiddleware;
-use App\Http\Middleware\TokenIntrospectionCheckMiddleware;
 use Filament\AvatarProviders\UiAvatarsProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -316,7 +315,7 @@ return [
         'auth' => [
             Authenticate::class,
             AccessTokenValidationMiddleware::class,
-            TokenIntrospectionCheckMiddleware::class,
+            //TokenIntrospectionCheckMiddleware::class,
         ],
         'base' => [
             EncryptCookies::class,

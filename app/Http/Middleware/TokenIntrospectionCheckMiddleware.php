@@ -16,8 +16,10 @@ class TokenIntrospectionCheckMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
+        $isAdmin = $request->routeIs('filament.*');
+        $prefix = ($isAdmin) ? "admin" : "web";
         // Get Token that is saved in session.
-        $token = $request->session()->get('token');
+        $token = $request->session()->get($prefix . '.token');
 
         $response = Cache::remember('introspected-token-' . hash('xxh3', $token->getToken()), now()->addSeconds(60), function () use ($token) {
             $hydra = new Client();
