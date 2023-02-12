@@ -2,18 +2,18 @@
 
 namespace App\Listeners;
 
-use Illuminate\Auth\Events\Failed;
+use Illuminate\Auth\Events\Verified;
 
-class LogFailedLoginListener
+class LogUserVerifiedListener
 {
     public function __construct()
     {
     }
 
-    public function handle(Failed $event)
+    public function handle(Verified $event)
     {
         activity()
             ->causedBy($event->user)
-            ->log('login-failed');
+            ->log('verified');
     }
 }

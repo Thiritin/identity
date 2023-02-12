@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\AppLoginEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Services\Hydra\Client;
@@ -36,7 +37,7 @@ class LoginController extends Controller
          * If skip is true do not show UI but simply accept
          */
         if ($loginRequest["skip"] === true) {
-            return Redirect::to($this->acceptLogin($loginRequest['subject'], $loginRequest["challenge"], 0));
+            return Redirect::to($this->acceptLogin($loginRequest['subject'], $loginRequest["challenge"], 0, $loginRequest));
         }
 
         return Inertia::render('Auth/Login');
@@ -62,15 +63,31 @@ class LoginController extends Controller
      * @return Response
      * @throws JsonException
      */
-    private function acceptLogin(string $subject, string $login_challenge, int $remember_seconds = 0): string
+    private function acceptLogin(string $subject, string $login_challenge, int $remember_seconds = 0, array|null $loginRequest = null): string
     {
         $hydra = new Client();
+        // If $loginRequest is not supplied, refetch.
+        if ($loginRequest === null) {
+            $loginRequest = $hydra->getLoginRequest($login_challenge);
+        }
+
+        // redirect_to key is added when login request expired.
+        if (isset($loginRequest['redirect_to'])) {
+            return Redirect::to($loginRequest['redirect_to']);
+        }
+
+        // Accept Login
         $hydraResponse = $hydra->acceptLoginRequest($subject, $login_challenge, $remember_seconds);
 
+        // Send App Login Event
+        event(new AppLoginEvent($loginRequest['client']['client_id'], $subject));
+
+        // Throw error on missing redirect
         if (!isset($hydraResponse["redirect_to"])) {
             throw ValidationException::withMessages(['general' => $hydraResponse['error_description'] ?? "Unknown error"]);
         }
 
+        // Return redirect url given in response
         return $hydraResponse["redirect_to"];
     }
 }
