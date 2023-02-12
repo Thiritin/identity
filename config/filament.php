@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\TokenIntrospectionCheckMiddleware;
+use Filament\AvatarProviders\UiAvatarsProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Http\Middleware\MirrorConfigToSubpackages;
@@ -270,7 +272,7 @@ return [
     |
     */
 
-    'default_avatar_provider' => \Filament\AvatarProviders\UiAvatarsProvider::class,
+    'default_avatar_provider' => UiAvatarsProvider::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -312,6 +314,7 @@ return [
     'middleware' => [
         'auth' => [
             Authenticate::class,
+            TokenIntrospectionCheckMiddleware::class,
         ],
         'base' => [
             EncryptCookies::class,

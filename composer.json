@@ -30,6 +30,7 @@
         "laravel/octane": "^v1.3.6",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.5",
+        "league/oauth2-client": "^2.6",
         "mtvs/eloquent-hashids": "^3.3",
         "ohseesoftware/laravel-vite-manifest": "^1.2",
         "sentry/sentry-laravel": "^2.8",
