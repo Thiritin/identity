@@ -2,18 +2,16 @@
 
 namespace App\Listeners;
 
-use Illuminate\Auth\Events\Failed;
-
-class LogFailedLoginListener
+class LogUserLoginListener
 {
     public function __construct()
     {
     }
 
-    public function handle(Failed $event)
+    public function handle($event)
     {
         activity()
             ->causedBy($event->user)
-            ->log('login-failed');
+            ->log('login');
     }
 }

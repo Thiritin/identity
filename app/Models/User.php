@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 use Mtvs\EloquentHashids\HasHashid;
 use Mtvs\EloquentHashids\HashidRouting;
+use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail, FilamentUser
@@ -24,6 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
     use HasApiTokens;
     use HasHashid;
     use HashidRouting;
+    use CausesActivity;
 
     /**
      * The attributes that are mass assignable.

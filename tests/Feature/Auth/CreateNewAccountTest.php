@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use function Pest\Laravel\post;
+use function PHPUnit\Framework\assertEquals;
 
 uses(RefreshDatabase::class);
 
@@ -18,4 +20,11 @@ test('Create a new Account', function () {
     ]);
     $response->assertRedirect(route('dashboard'));
     Event::assertDispatched(Registered::class);
+});
+
+test('Check logs dispatch - Register', function () {
+    Mail::fake();
+    $user = User::factory()->create();
+    event(new Registered($user));
+    assertEquals("registered", $user->actions->first()->description);
 });

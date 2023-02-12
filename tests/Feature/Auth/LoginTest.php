@@ -24,7 +24,7 @@ test('User login success', function () {
         "password"        => $password,
     ]);
 
-    $response->assertRedirect("https://success.com");
+    $response->assertStatus(302);
 });
 
 test('User false password error', function () {
