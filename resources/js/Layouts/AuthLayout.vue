@@ -20,9 +20,14 @@
         <div class="min-h-screen bg-white flex">
             <!-- Logo -->
             <div class="hidden lg:block relative w-0 flex-auto">
-                <img alt="EF26 Background Image"
-                     class="absolute inset-0 object-right h-full w-full object-cover bg-primary-600"
-                     src="https://www.eurofurence.org/EF27/img/blackmagic_by_kur0.jpg"/>
+                <div
+                    class="absolute inset-0 object-right h-full w-full object-cover bg-primary-600 auth-background">
+                    <div
+                        class="absolute bottom-2 left-2 text-sm text-primary-200 bg-black px-2 py-1 rounded shadow">Image by
+                        <a
+                            class="hover:underline" href="https://twitter.com/ArtYeen">ArtYeen</a>
+                    </div>
+                </div>
             </div>
             <!-- Page Content -->
             <div class="flex-1 flex flex-col items-center p-4 sm:px-6 lg:flex-none lg:px-20 xl:px-12">
@@ -97,6 +102,14 @@ export default {
 }
 </script>
 <style>
+
+.auth-background {
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url('../../assets/blackmagic_by_kur0.jpg');
+}
+
 .page-enter-active {
     transition: opacity .1s ease-in;
     opacity: 0;
