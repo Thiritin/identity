@@ -34,6 +34,7 @@ class ActivityResource extends Resource
                     })
                     ->description(fn(Activity $record): string => ($record->subject_type ?? "")),
 
+                // TextColumn::make('changes'),
                 TextColumn::make('created_at')->label('Date')->dateTime()->description(function (Activity $record) {
                     return $record->created_at->since();
                 })->sortable(),

@@ -55,19 +55,20 @@
                     <div>
                         <SettingsHeader>Contact Information</SettingsHeader>
                         <SettingsSubHeader>How can we reach you?</SettingsSubHeader>
-                        <BaseInput :label="$trans('email')" id='email' v-model='form.email' autocomplete='email'
+                        <BaseInput id='email' v-model='form.email' :error="errors.email" :label="$trans('email')"
+                                   autocomplete='email'
                                    name='email'
                                    type="email"></BaseInput>
 
                         <div v-if="showEmailVerify"
-                             class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start'>
+                             class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start mt-2'>
                             <div class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2">
                                 <BaseAlert message="We have sent you a verification email to confirm your change."
                                            title="Please check your email."></BaseAlert>
                             </div>
                         </div>
                         <div v-else-if="showEmailTooMany"
-                             class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start'>
+                             class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start mt-2'>
                             <div class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2">
                                 <BaseAlert message="Please try again in 15 minutes."
                                            title="Too many requests"></BaseAlert>

@@ -2,7 +2,7 @@
     <auth-layout>
         <Logo></Logo>
         <LoginScreenWelcome :sub-title="$trans('loginscreen_sign_in_to_continue')"
-                            :title="$trans('loginscreen_welcome')" class='mb-10' />
+                            :title="$trans('loginscreen_welcome')" class='mb-10'/>
         <form class='space-y-12' @submit.prevent='submit'>
             <div>
                 <div v-if='status' class='mb-4 font-medium text-sm text-green-600'> {{ status }}</div>
@@ -15,22 +15,24 @@
                     <span>{{ errors.general }}</span></div>
             </div>
             <div class='space-y-4'>
-                <div class='space-y-2'><label class='block text-sm font-medium text-gray-700'
-                                              for='email'>{{ $trans('email') }} </label>
-                    <FormInput id='email' v-model.trim.lazy='form.email'
-                               :class="{ 'border-red-500 focus:ring-red-500':errors?.email != null,}"
-                               :placeholder="$trans('email')" autocomplete='email' class='mb-4' type='email' />
+                <div class='space-y-2'>
+                    <label class='block text-sm font-medium text-gray-700'
+                           for='email'>{{ $trans('email') }} </label>
+                    <FormInput id='email' v-model.trim.lazy='form.email' :error="errors?.email != null"
+                               :placeholder="$trans('email')"
+                               autocomplete='email' autofocus class='mb-4' type='email'/>
                 </div>
                 <div class='space-y-2'><label class='block text-sm font-medium text-gray-700'
                                               for='password'>{{ $trans('password') }} </label>
                     <FormInput id='password' v-model.lazy='form.password'
-                               :class="{'border-red-500 focus:ring-red-500': errors?.password != null,}"
+                               :error="errors?.password != null"
                                :placeholder="$trans('password')" autocomplete='password' class='mb-16'
-                               type='password' />
+                               type='password'/>
                 </div>
                 <div class="relative flex items-start">
                     <div class="flex items-center h-5">
-                        <input id="remember-me" name="remember-me" v-model.lazy='form.remember' type="checkbox" class="focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 rounded">
+                        <input id="remember-me" v-model.lazy='form.remember' class="focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 rounded" name="remember-me"
+                               type="checkbox">
                     </div>
                     <div class="ml-3 text-sm">
                         <label for="remember-me" class="font-medium text-gray-700">{{ $trans('remember_me') }}</label>
@@ -55,11 +57,11 @@ import FormInput from '@/Auth/Form/AuthFormInput.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 
 export default {
-    components: { AuthLayout, Logo, LoginScreenWelcome, FormInput },
-    props: { status: String, errors: Object },
+    components: {AuthLayout, Logo, LoginScreenWelcome, FormInput},
+    props: {status: String, errors: Object},
     data() {
         return {
-            form: this.$inertia.form({ email: null, password: null, login_challenge: null, remember: false }),
+            form: this.$inertia.form({email: null, password: null, login_challenge: null, remember: false}),
             show: true,
         }
     },

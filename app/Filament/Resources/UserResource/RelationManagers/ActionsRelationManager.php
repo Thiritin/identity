@@ -32,6 +32,7 @@ class ActionsRelationManager extends RelationManager
                     })
                     ->description(fn(Activity $record): string => ($record->subject_type ?? $record->causer_type)),
 
+                // TextColumn::make('changes'),
                 Tables\Columns\TextColumn::make('created_at')->label('Date')->dateTime()->description(function (Activity $record) {
                     return $record->created_at->since();
                 })->sortable(),

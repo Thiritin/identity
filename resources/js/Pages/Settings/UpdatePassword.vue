@@ -3,21 +3,28 @@
         <div>
             <SettingsHeader>{{ $trans('update_your_password') }}</SettingsHeader>
             <SettingsSubHeader>{{ $trans('update_your_password') }}</SettingsSubHeader>
-            <BaseInput label="Current password" id='currentPassword' v-model='form.current_password'
-                       autocomplete='password' name='currentPassword'
-                       type="password" :error="errors.current_password"></BaseInput>
-            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-end">
-                <PasswordInfoBox class="sm:col-span-2 sm:col-start-2 mt-2"></PasswordInfoBox>
+            <div v-if="success">
+                <div class="bg-primary-200 px-4 py-2 rounded mt-4 font-semibold">
+                    Your password has been updated.
+                </div>
             </div>
-            <BaseInput label="New password" id='newPassword' v-model='form.password' autocomplete='password'
-                       name='newPassword'
-                       type="password" :error="errors.password"></BaseInput>
-            <BaseInput label="Confirm new password" id='confirmNewPassword' v-model='form.password_confirmation'
-                       autocomplete='password' name='confirmNewPassword'
-                       type="password" :error="errors.password_confirmation"></BaseInput>
-            <div class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-startsm:pt-5 pt-5'>
-                <div class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2">
-                    <PrimaryButton class="" @click="submitForm()">Change password</PrimaryButton>
+            <div v-else>
+                <BaseInput id='currentPassword' v-model='form.current_password' :error="errors.current_password" autocomplete='password'
+                           autofocus label="Current password"
+                           name='currentPassword' type="password"></BaseInput>
+                <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-end">
+                    <PasswordInfoBox class="sm:col-span-2 sm:col-start-2 mt-2"></PasswordInfoBox>
+                </div>
+                <BaseInput id='newPassword' v-model='form.password' :error="errors.password" autocomplete='password'
+                           label="New password"
+                           name='newPassword' type="password"></BaseInput>
+                <BaseInput id='confirmNewPassword' v-model='form.password_confirmation' :error="errors.password_confirmation"
+                           autocomplete='password' label="Confirm new password"
+                           name='confirmNewPassword' type="password"></BaseInput>
+                <div class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-startsm:pt-5 pt-5'>
+                    <div class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2">
+                        <PrimaryButton class="" @click="submitForm()">Change password</PrimaryButton>
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,7 +47,8 @@ export default {
         PasswordInfoBox, SettingsSubHeader, SettingsHeader, SettingsLayout, BaseInput, PrimaryButton
     },
     props: {
-        errors: Object
+        errors: Object,
+        success: Boolean
     },
     data() {
         return {

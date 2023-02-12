@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 use Mtvs\EloquentHashids\HasHashid;
 use Mtvs\EloquentHashids\HashidRouting;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\CausesActivity;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail, FilamentUser
@@ -26,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
     use HasHashid;
     use HashidRouting;
     use CausesActivity;
+    use LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -121,6 +124,11 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
     public function canAccessFilament(): bool
     {
         return $this->hasRole('superadmin');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->logOnly(['name', 'email', 'profile_photo_path']);
     }
 
     public function getHashidsConnection(): string

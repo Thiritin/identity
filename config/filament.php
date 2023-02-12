@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AccessTokenValidationMiddleware;
 use App\Http\Middleware\TokenIntrospectionCheckMiddleware;
 use Filament\AvatarProviders\UiAvatarsProvider;
 use Filament\Http\Middleware\Authenticate;
@@ -314,6 +315,7 @@ return [
     'middleware' => [
         'auth' => [
             Authenticate::class,
+            AccessTokenValidationMiddleware::class,
             TokenIntrospectionCheckMiddleware::class,
         ],
         'base' => [

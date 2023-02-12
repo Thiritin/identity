@@ -24,7 +24,7 @@ class TokenIntrospectionCheckMiddleware
             return $hydra->getToken($token, ['openid']);
         });
 
-        if ($response['active'] === false) {
+        if ($response['active'] !== true) {
             /**
              * Access Token is not active anymore. Security check failed
              * Logout user and reauthenticate.
