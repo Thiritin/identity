@@ -3,11 +3,13 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\AppResource\Pages;
+use App\Filament\Resources\AppResource\RelationManagers\GroupsRelationManager;
 use App\Models\App;
 use App\Services\Hydra\Client;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
@@ -43,17 +45,17 @@ class AppResource extends Resource
                     Tabs::make('Tabs')->tabs([
                         Tabs\Tab::make('Information')->icon('heroicon-o-paper-clip')->schema([
                             TextInput::make('data.client_uri')
-                                     ->url()
-                                     ->helperText('A URL string of a web page providing information about the client'),
+                                ->url()
+                                ->helperText('A URL string of a web page providing information about the client'),
                             TextInput::make('data.logo_uri')
-                                     ->url()
-                                     ->helperText('A URL string that references a logo for the client'),
+                                ->url()
+                                ->helperText('A URL string that references a logo for the client'),
                             TextInput::make('data.policy_uri')
-                                     ->url()
-                                     ->helperText('A URL string that references the privacy policy for the client'),
+                                ->url()
+                                ->helperText('A URL string that references the privacy policy for the client'),
                             TextInput::make('data.tos_uri')
-                                     ->url()
-                                     ->helperText('A URL string that references the terms of service for the client'),
+                                ->url()
+                                ->helperText('A URL string that references the terms of service for the client'),
                         ]),
                         Tabs\Tab::make('Login')->icon('heroicon-o-login')->schema([
                             TagsInput::make('data.redirect_uris')->columnSpan(2),
@@ -81,8 +83,8 @@ class AppResource extends Resource
                                 "none" => "none",
                             ]),
                             TextInput::make('data.jwks_uri')
-                                     ->helperText('When authenticating with a signed jwks key against the token endpoint, you may enter a path to a keys.json containing the public keys of your app here.')
-                                     ->url(),
+                                ->helperText('When authenticating with a signed jwks key against the token endpoint, you may enter a path to a keys.json containing the public keys of your app here.')
+                                ->url(),
 
                             CheckboxList::make('data.scope')->options(static function () {
                                 return collect((new Client())->getScopes())->mapWithKeys(fn($v) => [$v => $v]);
@@ -97,24 +99,24 @@ class AppResource extends Resource
                         Tabs\Tab::make('Logout')->icon('heroicon-o-logout')->schema([
                             TagsInput::make('data.post_logout_redirect_uris')->columnSpan(2),
                             Section::make('Frontchannel Logout')
-                                   ->description('Configure frontchannel logout.')
-                                   ->schema([
-                                       TextInput::make('data.frontchannel_logout_uri')
-                                                ->helperText('Client URL that will cause the client to log itself out when rendered in an iframe by Identity')
-                                                ->url(),
-                                       Checkbox::make('data.frontchannel_logout_session_required')
-                                               ->helperText('Specifying whether the client requires that a sid (session ID) Claim be included in the Logout Token to identify the client session with the OP when the frontchannel logout is used.'),
-                                   ]),
+                                ->description('Configure frontchannel logout.')
+                                ->schema([
+                                    TextInput::make('data.frontchannel_logout_uri')
+                                        ->helperText('Client URL that will cause the client to log itself out when rendered in an iframe by Identity')
+                                        ->url(),
+                                    Checkbox::make('data.frontchannel_logout_session_required')
+                                        ->helperText('Specifying whether the client requires that a sid (session ID) Claim be included in the Logout Token to identify the client session with the OP when the frontchannel logout is used.'),
+                                ]),
                             Section::make('Backchannel Logout')
-                                   ->description('Configure backchannel logout.')
-                                   ->schema([
-                                       TextInput::make('data.backchannel_logout_uri')
-                                                ->helperText('Client URL that will cause the client to log itself out when sent a Logout Token by Identity.')
-                                                ->url(),
-                                       Checkbox::make('data.backchannel_logout_session_required')
-                                               ->helperText('Specifying whether the client requires that a sid (session ID) Claim be included in the Logout Token to identify the client session with the OP when the backchannel logout is used.')
+                                ->description('Configure backchannel logout.')
+                                ->schema([
+                                    TextInput::make('data.backchannel_logout_uri')
+                                        ->helperText('Client URL that will cause the client to log itself out when sent a Logout Token by Identity.')
+                                        ->url(),
+                                    Checkbox::make('data.backchannel_logout_session_required')
+                                        ->helperText('Specifying whether the client requires that a sid (session ID) Claim be included in the Logout Token to identify the client session with the OP when the backchannel logout is used.'),
 
-                                   ]),
+                                ]),
                         ]),
 
                         Tabs\Tab::make('Request')->icon('heroicon-o-status-online')->schema([
@@ -138,21 +140,37 @@ class AppResource extends Resource
 
                 Group::make()->columnSpan(1)->schema([
                     Section::make('Owner')
-                           ->columns(1)
-                           ->schema([
-                               Select::make('user_id')
-                                     ->label('Owner')
-                                     ->relationship('owner', 'name')->required(),
-                           ]),
+                        ->columns(1)
+                        ->schema([
+                            Select::make('user_id')
+                                ->label('Owner')
+                                ->relationship('owner', 'name')->required(),
+                        ]),
+                    Section::make('Dashboard Settings')
+                        ->description('These settings control the visibility of the app on the dashboard. This is NOT access control in any way.')
+                        ->columns(1)
+                        ->schema([
+                            DateTimePicker::make('starts_at')->hint('UTC')->nullable(),
+                            DateTimePicker::make('ends_at')->hint('UTC')->nullable(),
+                            TextInput::make('priority')->numeric()->minValue('1')->maxValue('10000')->hint('Sets order of dashboard apps'),
+                            Checkbox::make('public')->hint('App is publicly visible (ignoring group selection)'),
+                            TextInput::make('name')->required(),
+                            TextInput::make('description')->required(),
+                            Select::make('icon')->options([
+                                "TicketDuotone" => "TicketDuotone",
+                                "CogsDuotone" => "CogsDuotone",
+                            ])->hint('Request new Icons @ Thiritin')->required(),
+                            TextInput::make('url')->url(),
+                        ]),
                     Card::make()->schema([
                         Placeholder::make('created_at')
-                                   ->label("Created At")
-                                   ->content(fn(?App $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                            ->label("Created At")
+                            ->content(fn(?App $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                         Placeholder::make('updated_at')
-                                   ->label("Updated At")
-                                   ->content(fn(?App $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
-                    ])
+                            ->label("Updated At")
+                            ->content(fn(?App $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ]),
 
                 ]),
             ])->columns(3);
@@ -164,7 +182,7 @@ class AppResource extends Resource
             ->columns([
                 TextColumn::make('client_id'),
                 TextColumn::make('data.client_name')->label('Name'),
-                TextColumn::make('owner.name')
+                TextColumn::make('owner.name'),
             ]);
     }
 
@@ -177,10 +195,17 @@ class AppResource extends Resource
         ];
     }
 
+    public static function getRelations(): array
+    {
+        return [
+            GroupsRelationManager::class,
+        ];
+    }
+
     public static function getGloballySearchableAttributes(): array
     {
         return [
-            "data.client_name"
+            "data.client_name",
         ];
     }
 }

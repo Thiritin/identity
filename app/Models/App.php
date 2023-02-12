@@ -9,11 +9,16 @@ class App extends Model
 {
     protected $guarded = [];
     protected $casts = [
-        "data" => "array"
+        "data" => "array",
     ];
 
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class);
     }
 }

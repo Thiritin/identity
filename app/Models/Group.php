@@ -55,6 +55,11 @@ class Group extends Model
             );
     }
 
+    public function apps()
+    {
+        return $this->belongsToMany(App::class);
+    }
+
     public function getHashidsConnection()
     {
         return 'group';
