@@ -2,11 +2,15 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\Hydra\Client;
+use App\Services\OpenIDService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use Redirect;
+use UnexpectedValueException;
 
 class AccessTokenValidationMiddleware
 {
@@ -18,22 +22,35 @@ class AccessTokenValidationMiddleware
         if (config('app.env') === 'testing') {
             return $next($request);
         }
-        // Get Token that is saved in session.
-        $token = $request->session()->get('web.access_token');
+
+        $token = \Session::get('token');
+
+        /**
+         * Logout if token does not exist
+         */
+
         if ($token === null) {
             Auth::logout();
-            return abort(401, "Unauthorized.");
+            return Redirect::route('auth.oidc.login');
         }
 
-        // No need to call Hydra on every request.
-        if (Cache::missing('accessToken.' . Auth::id() . '.validated')) {
-            $hydra = new Client();
-            $response = $hydra->getToken($token, ['openid']);
-            if ($response['active'] === false) {
+        /**
+         * If token expired, refresh using refresh token.
+         */
+        if (!$token->hasExpired()) {
+            $provider = (new OpenIDService())->setupOIDC($request, Route::is('filament.*'));
+            try {
+                $token = $provider->getAccessToken('refresh_token', [
+                    'refresh_token' => $token->getRefreshToken(),
+                ]);
+            } catch (IdentityProviderException|UnexpectedValueException $exception) {
+                // If refresh fails, try to reauth user.
                 Auth::logout();
-                return abort(401, "Unauthorized.");
+                return Redirect::route('auth.oidc.login');
             }
-            Cache::put('accessToken.' . Auth::id() . '.validated', true, now()->addSeconds(120));
+
+            Session::put('token', $token);
+            return $next($request);
         }
 
         return $next($request);

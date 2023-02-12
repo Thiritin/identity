@@ -46,13 +46,13 @@ class LoginController extends Controller
     {
         $this->request = $request;
         $loginData = [
-            'email' => $request->get('email'),
+            'email'    => $request->get('email'),
             'password' => $request->get('password'),
         ];
-        if (!Auth::once($loginData)) {
-            throw ValidationException::withMessages(['nouser' => 'Wrong details']);
+        if (Auth::attempt($loginData)) {
+            return Inertia::location($this->acceptLogin(Auth::user()?->hashId(), $request->get('login_challenge'), 15552000));
         }
-        return Inertia::location($this->acceptLogin(Auth::user()?->hashId(), $request->get('login_challenge'), 15552000));
+        throw ValidationException::withMessages(['nouser' => 'Wrong details']);
     }
 
     /**
