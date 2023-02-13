@@ -19,7 +19,7 @@ use App\Http\Controllers\Profile\SecurityController;
 use App\Http\Controllers\Profile\Settings\UpdatePasswordController;
 use App\Http\Controllers\Profile\StoreAvatarController;
 use App\Http\Controllers\Profile\UpdateProfileController;
-use App\Http\Controllers\UpdateProfileEmailController;
+use App\Http\Controllers\UpdateEmailController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -77,7 +77,10 @@ Route::prefix('auth')->middleware('auth')->group(function () {
         VerifyEmailController::class,
         'resend',
     ])->middleware(['throttle:6,1'])->name('verification.send');
-    Route::get('verify/{id}/{hash}', [VerifyEmailController::class, 'verify'])->name('verification.verify');
+    Route::get('verify/{id}/{hash}', [
+        VerifyEmailController::class,
+        'verify',
+    ])->middleware('verified')->name('verification.verify');
 });
 
 Route::get('/', function () {
@@ -90,7 +93,7 @@ Route::middleware(['auth', 'verified', 'auth.oidc'])->group(function () {
     Route::inertia('/profile', 'Profile/Show')->name('profile');
     Route::inertia('/settings/profile', 'Settings/Profile')->name('settings.profile');
     Route::post('/settings/profile/update', UpdateProfileController::class)->name('settings.update-profile.update');
-    Route::get('/settings/profile/update/email', UpdateProfileEmailController::class)->name(
+    Route::get('/settings/profile/update/email', UpdateEmailController::class)->name(
         'settings.update-profile.email.update'
     )->middleware('signed');
 
