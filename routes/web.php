@@ -13,7 +13,6 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\ResendVerificationEmailController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Profile\SecurityController;
@@ -72,14 +71,13 @@ Route::prefix('auth')->name('auth.')->group(function () {
 });
 
 // E-Mail First Sign Up
-Route::prefix('auth')->group(function () {
-    Route::inertia('verify', 'Auth/VerifyEmail')->name('verification.notice')->middleware(['auth']);
-    Route::get('verify/{id}/{hash}', VerifyEmailController::class)->middleware(['auth', 'signed'])->name(
-        'verification.verify'
-    );
-    Route::post('resend', ResendVerificationEmailController::class)->middleware(['auth', 'throttle:6,1'])->name(
-        'verification.send'
-    );
+Route::prefix('auth')->middleware('auth')->group(function () {
+    Route::get('verify', [VerifyEmailController::class, 'view'])->name('verification.notice');
+    Route::post('verify', [
+        VerifyEmailController::class,
+        'resend',
+    ])->middleware(['throttle:6,1'])->name('verification.send');
+    Route::get('verify/{id}/{hash}', [VerifyEmailController::class, 'verify'])->name('verification.verify');
 });
 
 Route::get('/', function () {
