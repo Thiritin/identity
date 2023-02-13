@@ -10,7 +10,11 @@ class UpdateEmailController extends Controller
     public function __invoke(Request $request)
     {
         $data = $request->validate([
-            'newEmail' => "required",
+            'newEmail' => [
+                "email",
+                "required",
+                "unique:users,email",
+            ],
         ]);
         Log::info($request->user()->id . " has changed his E-Mail from " . $request->user()->email . " to " . $data['newEmail']);
         $request->user()->update(['email' => $data['newEmail']]);
