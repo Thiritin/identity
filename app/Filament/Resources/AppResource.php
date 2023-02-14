@@ -152,7 +152,7 @@ class AppResource extends Resource
                         ->schema([
                             DateTimePicker::make('starts_at')->hint('UTC')->nullable(),
                             DateTimePicker::make('ends_at')->hint('UTC')->nullable(),
-                            TextInput::make('priority')->numeric()->minValue('1')->maxValue('10000')->hint('Sets order of dashboard apps'),
+                            TextInput::make('priority')->required()->default('1000')->numeric()->minValue('1')->maxValue('10000')->hint('Sets order of dashboard apps'),
                             Checkbox::make('public')->hint('App is publicly visible (ignoring group selection)'),
                             TextInput::make('name')->required(),
                             TextInput::make('description')->required(),

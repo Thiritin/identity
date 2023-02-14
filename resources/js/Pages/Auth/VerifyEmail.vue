@@ -40,7 +40,7 @@
                     </button>
 
                     <inertia-link
-                        :href="route('auth.logout')"
+                        :href="route('frontchannel_logout')"
                         as="button"
                         class="
                             underline

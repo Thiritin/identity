@@ -80,7 +80,7 @@ Route::prefix('auth')->middleware('auth')->group(function () {
     Route::get('verify/{id}/{hash}', [
         VerifyEmailController::class,
         'verify',
-    ])->middleware('verified')->name('verification.verify');
+    ])->name('verification.verify');
 });
 
 Route::get('/', function () {
