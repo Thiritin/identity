@@ -35,7 +35,9 @@
                     {{ errors.password }}
                 </span>
             </div>
-            <PasswordInfoBox/>
+            <PasswordInfoBox :correct-length="correctLength" :correct-lower-upper="correctLowerUpper"
+                             :correct-number="correctNumber"
+                             :correct-symbol="correctSymbol"/>
             <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-700" for="password_confirmation">
                     {{ $trans('password_confirmation') }} </label>
@@ -76,6 +78,32 @@ export default {
         LoginScreenWelcome,
         FormInput,
         Head
+    },
+    /**
+     * This is bad. I know it's replicated but it's 04:10am
+     * If you know vue, feel free to write me on TG @Thiritin
+     */
+    computed: {
+        correctLength() {
+            if (this.form.password)
+                return this.form.password.length >= 10;
+            return true;
+        },
+        correctLowerUpper() {
+            if (this.form.password)
+                return this.form.password.match(/(\p{Ll}+.*\p{Lu})|(\p{Lu}+.*\p{Ll})/u);
+            return true;
+        },
+        correctNumber() {
+            if (this.form.password)
+                return this.form.password.match(/[0-9]/u);
+            return true;
+        },
+        correctSymbol() {
+            if (this.form.password)
+                return this.form.password.match(/\p{Z}|\p{S}|\p{P}/u);
+            return true;
+        },
     },
 
     props: {
