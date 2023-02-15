@@ -6,12 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Services\Hydra\Client;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
+use Redirect;
 
 class LogoutController extends Controller
 {
     public function __invoke(Request $request)
     {
+        if ($request->session()->get('web.token') !== null) {
+            Session::forget('web.token');
+            return Redirect::to(config('app.url') . '/oauth2/sessions/logout');
+        }
+
         if ($request->missing('logout_challenge')) {
             Auth::logout();
             return Inertia::location(route('auth.choose'));

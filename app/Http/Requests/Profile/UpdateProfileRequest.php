@@ -15,7 +15,7 @@ class UpdateProfileRequest extends FormRequest
                 "min:3",
                 "max:39",
                 "required",
-                "string",
+                "alpha_dash",
                 "unique:users,name," . Auth::id(),
             ],*/
             "email" => [

@@ -20,7 +20,7 @@ class UpdatePasswordController extends Controller
             "password" => [
                 "required",
                 "confirmed",
-                Password::min(8)->uncompromised()->mixedCase()->numbers(),
+                Password::min(10)->symbols()->mixedCase()->numbers(),
             ],
         ]);
 

@@ -1,4 +1,3 @@
-
 /*
 |--------------------------------------------------------------------------
 | Generated Laravel translations
@@ -209,11 +208,15 @@ const Matice = {
             "admin": "Admin",
             "apps": "Apps",
             "password_requirements_title": "Your password must meet the following requirements",
-            "password_requirement_1": "Minimum of 8 characters",
-            "password_requirement_2": "Must contain lowercase and uppercase letter",
-            "password_requirement_3": "Must contain numbers",
-            "password_requirement_4": "Must not be listed with",
-            "cookie_notice": "We only use functional cookies that are required for the website to function."
+            "password_requirement_1": "Minimum of 10 characters",
+            "password_requirement_2": "Must contain atleast a lowercase and uppercase letter",
+            "password_requirement_3": "Must contain atleast a number",
+            "password_requirement_4": "Must contain atleast a symbol",
+            "cookie_notice": "We only use functional cookies that are required for the website to function.",
+            "verifysuccess_title": "Verified",
+            "verifysuccess_subtitle": "Your email is now verified.",
+            "login": "Login",
+            "continue_to_login": "Login to your account"
         }, "vendor": {
             "filament-spatie-laravel-translatable-plugin-translations": {
                 "ar": {"actions": {"active_locale": {"label": "\u0627\u0644\u0644\u063a\u0629"}}},

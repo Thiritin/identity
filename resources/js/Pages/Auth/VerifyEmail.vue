@@ -39,8 +39,8 @@
                         {{ $trans('resend_verification_mail') }}
                     </button>
 
-                    <inertia-link
-                        :href="route('auth.frontchannel_logout')"
+                    <a
+                        :href="route('auth.logout')"
                         as="button"
                         class="
                             underline
@@ -48,7 +48,7 @@
                             hover:text-gray-900
                         "
                     >{{ $trans('logout') }}
-                    </inertia-link>
+                    </a>
                 </div>
             </form>
         </div>

@@ -71,12 +71,18 @@ Route::prefix('auth')->name('auth.')->group(function () {
 });
 
 // E-Mail First Sign Up
-Route::prefix('auth')->middleware('auth')->group(function () {
-    Route::get('verify', [VerifyEmailController::class, 'view'])->name('verification.notice');
+Route::prefix('auth')->group(function () {
+
+    Route::get('verify', [VerifyEmailController::class, 'view'])->middleware('auth')->name('verification.notice');
+    Route::get('verify/logout', [
+        VerifyEmailController::class,
+        'logout',
+    ])->middleware('auth')->name('verification.logout');
     Route::post('verify', [
         VerifyEmailController::class,
         'resend',
-    ])->middleware(['throttle:6,1'])->name('verification.send');
+    ])->middleware(['throttle:6,1', 'auth'])->name('verification.send');
+
     Route::get('verify/{id}/{hash}', [
         VerifyEmailController::class,
         'verify',

@@ -2,11 +2,14 @@
 
 namespace App\Services\Hydra;
 
+use App\Events\AppLoginEvent;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class Client
 {
@@ -16,7 +19,7 @@ class Client
     {
         try {
             return Http::hydraAdmin()->get('/admin/oauth2/auth/requests/login', [
-                'challenge' => $loginChallenge
+                'challenge' => $loginChallenge,
             ])->json();
         } catch (Exception $e) {
             if ($e->getCode() === 404) {
@@ -30,6 +33,41 @@ class Client
     public function getScopes()
     {
         return Http::hydraPublic()->get("/.well-known/openid-configuration")->json('scopes_supported');
+    }
+
+    /**
+     * Accept OIDC Login Request
+     *
+     * @param string $login_challenge
+     * @return Response
+     * @throws JsonException
+     */
+    public function acceptLogin(string $subject, string $login_challenge, int $remember_seconds = 0, array|null $loginRequest = null): string
+    {
+        $hydra = new Client();
+        // If $loginRequest is not supplied, refetch.
+        if ($loginRequest === null) {
+            $loginRequest = $hydra->getLoginRequest($login_challenge);
+        }
+
+        // redirect_to key is added when login request expired.
+        if (isset($loginRequest['redirect_to'])) {
+            return $loginRequest['redirect_to'];
+        }
+
+        // Accept Login
+        $hydraResponse = $hydra->acceptLoginRequest($subject, $login_challenge, $remember_seconds);
+
+        // Send App Login Event
+        event(new AppLoginEvent($loginRequest['client']['client_id'], $subject));
+
+        // Throw error on missing redirect
+        if (!isset($hydraResponse["redirect_to"])) {
+            throw ValidationException::withMessages(['general' => $hydraResponse['error_description'] ?? "Unknown error"]);
+        }
+
+        // Return redirect url given in response
+        return $hydraResponse['redirect_to'];
     }
 
     public function acceptLoginRequest(string $userId, string $loginChallenge, int $remember = 0)
@@ -84,7 +122,7 @@ class Client
     {
         try {
             return Http::hydraAdmin()->get('/admin/oauth2/auth/requests/consent', [
-                'challenge' => $consentChallenge
+                'challenge' => $consentChallenge,
             ])->json();
         } catch (Exception $e) {
             if ($e->getCode() === 404) {
@@ -99,7 +137,7 @@ class Client
     {
         try {
             return Http::hydraAdmin()->get('/admin/oauth2/auth/requests/logout', [
-                'challenge' => $loginChallenge
+                'challenge' => $loginChallenge,
             ])->json();
         } catch (Exception $e) {
             if ($e->getCode() === 404) {
@@ -130,7 +168,7 @@ class Client
         try {
             return Http::hydraAdmin()->delete('/admin/oauth2/auth/sessions/login', [
                 'query' => [
-                    "subject" => $subject
+                    "subject" => $subject,
                 ],
             ])->successful();
         } catch (Exception $e) {
@@ -147,7 +185,7 @@ class Client
         try {
             return Http::hydraAdmin()->asForm()->post('/admin/oauth2/introspect', [
                 'token' => $token,
-                'scopes' => implode(' ', $scopes)
+                'scopes' => implode(' ', $scopes),
             ])->json();
         } catch (Exception $e) {
             if ($e->getCode() === 404) {
@@ -163,7 +201,7 @@ class Client
         try {
             return Http::hydraAdmin()->post('/admin/oauth2/introspect', [
                 'token' => $token,
-                'scopes' => implode(' ', $scopes)
+                'scopes' => implode(' ', $scopes),
             ])->json();
         } catch (Exception $e) {
             if ($e->getCode() === 404) {
