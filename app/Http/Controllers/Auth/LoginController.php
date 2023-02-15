@@ -14,11 +14,8 @@ use Inertia\Inertia;
 
 class LoginController extends Controller
 {
-    private Request $request;
-
     public function view(Request $request)
     {
-        $this->request = $request;
         if ($request->missing('login_challenge')) {
             return Redirect::route('auth.choose');
         }
@@ -35,7 +32,7 @@ class LoginController extends Controller
          * If skip is true do not show UI but simply accept
          */
         if ($loginRequest["skip"] === true) {
-            return Redirect::to($this->acceptLogin($loginRequest['subject'], $loginRequest["challenge"], 0, $loginRequest));
+            return Redirect::to($hydra->acceptLogin($loginRequest['subject'], $loginRequest["challenge"], 0, $loginRequest));
         }
 
         return Inertia::render('Auth/Login');
@@ -43,7 +40,6 @@ class LoginController extends Controller
 
     public function submit(LoginRequest $request)
     {
-        $this->request = $request;
         $loginData = [
             'email' => $request->get('email'),
             'password' => $request->get('password'),
