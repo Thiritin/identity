@@ -18,7 +18,7 @@
         "filament/notifications": "^2.16",
         "filament/spatie-laravel-translatable-plugin": "^2.0",
         "filament/tables": "^2.16",
-        "firebase/php-jwt": "^5.4",
+        "firebase/php-jwt": "^6.0",
         "fruitcake/laravel-cors": "^2.0",
         "genl/matice": "^1.1",
         "guzzlehttp/guzzle": "^7.5",
