@@ -88,6 +88,15 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /**
+     * Global Reply To Address
+     */
+
+    'reply_to' => [
+        'address' => env('MAIL_REPLY_TO_ADDRESS', 'identity@eurofurence.org'),
+        'name' => env('MAIL_REPLY_TO_NAME', 'Eurofurence Identity'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Markdown Mail Settings
