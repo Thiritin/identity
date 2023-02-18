@@ -216,7 +216,9 @@ const Matice = {
             "verifysuccess_title": "Verified",
             "verifysuccess_subtitle": "Your email is now verified.",
             "login": "Login",
-            "continue_to_login": "Login to your account"
+            "continue_to_login": "Login to your account",
+            "profile_username_notice": "This is NOT your badge name. Changes will be possible at a later point.",
+            "profile_avatar_notice": "This is NOT your badge avatar."
         }, "vendor": {
             "filament-spatie-laravel-translatable-plugin-translations": {
                 "ar": {"actions": {"active_locale": {"label": "\u0627\u0644\u0644\u063a\u0629"}}},
