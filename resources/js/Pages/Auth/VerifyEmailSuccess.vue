@@ -6,14 +6,8 @@
             :title="$trans('verifysuccess_title')"
             class="mb-6"
         />
-        <div class="space-y-12">
-            <div class="rounded border-primary-200 border px-6 py-6 flex justify-left items-center gap-4">
-                <CircleUser class="fill-current text-primary-500 w-14"></CircleUser>
-                <div>
-                    <div class="font-bold">{{ user.name }}</div>
-                    <div class="text-primary-800 font-light">{{ user.email }}</div>
-                </div>
-            </div>
+        <div class="space-y-8">
+            <UserBox :user="user"/>
             <div class="flex items-center justify-between">
                 <InertiaLink
                     :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
@@ -41,11 +35,11 @@
 import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
-import CircleUser from "@/Components/Icons/CircleUser.vue";
+import UserBox from "@/Pages/Auth/UserBox.vue";
 
 export default {
     components: {
-        CircleUser,
+        UserBox,
         AuthLayout,
         Logo,
         LoginScreenWelcome,

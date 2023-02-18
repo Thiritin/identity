@@ -6,7 +6,9 @@
             :title="$trans('verify_title')"
             class="mb-10"
         />
-        <div class="space-y-12">
+        <div class="space-y-8">
+
+            <UserBox :user="user"/>
             <div
                 class="text-sm shadow-md p-2 border-l-[4px] border-primary-600"
             >
@@ -59,9 +61,11 @@
 import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
+import UserBox from "@/Pages/Auth/UserBox.vue";
 
 export default {
     components: {
+        UserBox,
         AuthLayout,
         Logo,
         LoginScreenWelcome,
@@ -69,6 +73,7 @@ export default {
 
     props: {
         status: String,
+        user: Object
     },
 
     data() {

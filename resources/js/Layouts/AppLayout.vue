@@ -172,7 +172,7 @@
                                         font-medium
                                     " href="#">{{ $trans(item.name) }}</a>
                             </template>
-                            <a v-else class="
+                            <a v-else :href="item.route" class="
                                     text-primary-300
                                     hover:bg-primary-700 hover:text-white
                                     block
@@ -181,7 +181,7 @@
                                     rounded-md
                                     text-base
                                     font-medium
-                                " href="#">{{ $trans(item.name) }}</a>
+                                ">{{ $trans(item.name) }}</a>
                         </template>
                     </div>
                     <div class="pt-4 pb-3 border-t border-primary-700">

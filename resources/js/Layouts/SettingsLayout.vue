@@ -5,7 +5,8 @@
                 <h1 class='text-3xl font-bold text-white'>{{ $trans('settings') }}</h1>
             </div>
         </template>
-        <div class='bg-white rounded-lg shadow divide-y divide-gray-200 lg:grid lg:grid-cols-12 lg:divide-y-0 lg:divide-x'>
+        <div
+            class='bg-white rounded-lg shadow divide-y divide-gray-200 lg:grid lg:grid-cols-12 lg:divide-y-0 lg:divide-x'>
             <SettingsSidebarMenu :menu-items='settingsMenu'></SettingsSidebarMenu>
             <SettingsContent>
                 <slot></slot>
@@ -37,14 +38,10 @@ export default {
                     name: 'two_factor',
                     route: 'two-factor',
                 },
-                {
-                    name: 'sessions',
-                    route: 'sessions',
-                },
             ],
-            }
-        },
-    }
+        }
+    },
+}
 </script>
 
 <style scoped>
