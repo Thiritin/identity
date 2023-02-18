@@ -30,7 +30,7 @@
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
-        "@headlessui/vue": "^1.7.7",
+        "@headlessui/vue": "^1.7.8",
         "@heroicons/vue": "^1.0.4",
         "matice": "^1.1.4",
         "vue-cookie-accept-decline": "^6.1.0",
