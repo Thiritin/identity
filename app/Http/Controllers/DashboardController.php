@@ -12,7 +12,6 @@ class DashboardController extends Controller
     public function __invoke()
     {
         $apps = App::where(function (Builder $q) {
-
             $q->where('public', '=', true)->orWhereHas('groups', function (Builder $q) {
                 $q->whereIn('id', Auth::user()->groups->pluck('id'));
             });

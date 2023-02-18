@@ -1,5 +1,6 @@
 <?php
 
+use App\Filament\Widgets\RegisteredUsers;
 use App\Http\Middleware\AccessTokenValidationMiddleware;
 use Filament\AvatarProviders\UiAvatarsProvider;
 use Filament\Http\Middleware\Authenticate;
@@ -87,7 +88,7 @@ return [
     */
 
     'auth' => [
-        'guard' => 'admin'
+        'guard' => 'admin',
     ],
 
     /*
@@ -139,6 +140,7 @@ return [
         'path' => app_path('Filament/Widgets'),
         'register' => [
             Widgets\AccountWidget::class,
+            RegisteredUsers::class,
         ],
     ],
 
