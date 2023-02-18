@@ -29,30 +29,31 @@ class UserResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
-                         ->required(),
+                    ->required(),
 
                 TextInput::make('email')
-                         ->email()
-                         ->required(),
+                    ->email()
+                    ->required(),
 
                 DatePicker::make('email_verified_at')
-                          ->label('Email Verified Date'),
+                    ->disabled()
+                    ->label('Verified At'),
 
                 FileUpload::make('profile_photo_path')
-                          ->image()
-                          ->disk('avatars')
-                          ->label('Profile Photo')
-                          ->imageResizeTargetWidth('512')
-                          ->imageResizeTargetHeight('512')
-                          ->imagePreviewHeight('256'),
+                    ->image()
+                    ->disk('avatars')
+                    ->label('Profile Photo')
+                    ->imageResizeTargetWidth('512')
+                    ->imageResizeTargetHeight('512')
+                    ->imagePreviewHeight('256'),
 
                 Placeholder::make('created_at')
-                           ->label('Created Date')
-                           ->content(fn(?User $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                    ->label('Created Date')
+                    ->content(fn(?User $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                 Placeholder::make('updated_at')
-                           ->label('Last Modified Date')
-                           ->content(fn(?User $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->label('Last Modified Date')
+                    ->content(fn(?User $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
             ]);
     }
 
@@ -61,12 +62,12 @@ class UserResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                          ->searchable()
-                          ->sortable(),
+                    ->searchable()
+                    ->sortable(),
 
                 TextColumn::make('email')
-                          ->searchable()
-                          ->sortable(),
+                    ->searchable()
+                    ->sortable(),
 
             ]);
     }

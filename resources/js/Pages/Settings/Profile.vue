@@ -22,6 +22,7 @@
                                            class='form-input flex-1 bg-gray-100 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300'
                                            name='username' type='text' disabled/>
                                 </div>
+                                <span class="text-gray-600 text-xs">{{ $trans('profile_username_notice') }}</span>
                             </div>
                         </div>
 
@@ -45,6 +46,7 @@
                                                                                                    @change='onFileChange($event)'/>
                                     </div>
                                 </div>
+                                <div class="text-gray-600 text-xs">{{ $trans('profile_avatar_notice') }}</div>
                                 <span v-show='errors.image' class='text-xs text-red-600'>{{ errors.image }}</span>
                             </div>
                         </div>

@@ -24,12 +24,13 @@ class RegisterRequest extends FormRequest
             "email" => [
                 "email",
                 "required",
+                'max:255',
                 "unique:users,email",
             ],
             'password' => [
                 'required',
                 'confirmed',
-                'max:200',
+                'max:255',
                 Password::min(10)->symbols()->mixedCase()->numbers(),
             ],
         ];
