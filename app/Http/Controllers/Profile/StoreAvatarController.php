@@ -19,7 +19,7 @@ class StoreAvatarController extends Controller
             'image' => [
                 'image',
                 'mimes:jpg,jpeg,png',
-                'max:20000',
+                'max:10240',
             ],
             'crop.height' => 'integer|required',
             'crop.width' => 'integer|required',
