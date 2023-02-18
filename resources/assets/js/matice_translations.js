@@ -14,6 +14,7 @@ const Matice = {
     translations: {
         "de": {"loginscreen_sign_in_to_continue": "test"}, "en": {
             "activity": {
+                "updated": "Updated Resource",
                 "login": "Successful login",
                 "login-app": "Accessed App",
                 "login-failed": "Failed login",
@@ -179,7 +180,7 @@ const Matice = {
             "verify_subtitle": "Please verify your email",
             "verify_title": "One more step",
             "verify_helptext": "Thanks for signing up! Before getting started, could you verify your email address by clicking on the\n                link we just emailed to you? If you didn't receive the email, we will gladly send you another.",
-            "verify_text_sent_to_your_mail": "A new verification link has been sent to the email address you provided during registration.",
+            "verify_text_sent_to_your_mail": "A new verification link has been sent to the email address you provided during registration. Please note that accounts that are not verified within 24 hours will be deleted.",
             "resend_verification_mail": "Resend Verification Email",
             "logout": "Logout",
             "dashboard": "Dashboard",
