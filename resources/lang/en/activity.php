@@ -1,5 +1,6 @@
 <?php
 return [
+    "updated" => "Updated Resource",
     "login" => "Successful login",
     "login-app" => "Accessed App",
     "login-failed" => "Failed login",
