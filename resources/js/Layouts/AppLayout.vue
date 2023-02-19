@@ -277,6 +277,11 @@ var navigation = [
         inertia: true
     },
     {
+        name: 'groups',
+        route: route('group.index'),
+        inertia: true
+    },
+    {
         name: 'admin',
         route: "/admin",
         inertia: false

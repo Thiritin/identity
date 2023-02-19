@@ -3,7 +3,6 @@
 
 /** @noinspection PhpVoidFunctionResultUsedInspection */
 
-use App\Http\Controllers\AppsController;
 use App\Http\Controllers\Auth\Authenticators\OidcClientController;
 use App\Http\Controllers\Auth\ChooseController;
 use App\Http\Controllers\Auth\ConsentController;
@@ -15,6 +14,7 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\Profile\SecurityController;
 use App\Http\Controllers\Profile\Settings\UpdatePasswordController;
 use App\Http\Controllers\Profile\StoreAvatarController;
@@ -113,7 +113,7 @@ Route::middleware(['auth', 'verified', 'auth.oidc'])->group(function () {
 
     Route::post('/profile/avatar/store', StoreAvatarController::class)->name('profile.avatar.store');
 
-    Route::resource('apps', AppsController::class);
+    Route::resource('group', GroupController::class);
 });
 
 /**

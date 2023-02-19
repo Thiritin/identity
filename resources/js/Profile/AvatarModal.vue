@@ -20,7 +20,9 @@
                                         Crop Avatar
                                     </DialogTitle>
                                     <div class="mt-2">
-                                        <vue-cropper v-if="url != null" ref="cropper" :aspectRatio="1" :guides="false"
+                                        <vue-cropper v-if="url != null" ref="cropper"
+                                                     :aspectRatio="1" :guides="false"
+                                                     :toggleDragModeOnDblclick="false"
                                                      :rotatable="false" :scalable="false" :src="url" :zoomable="false"
                                                      alt="Source Image"
                                                      @cropend="avatarform.crop = $event.target.cropper.getData()"
