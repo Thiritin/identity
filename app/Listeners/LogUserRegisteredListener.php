@@ -13,7 +13,10 @@ class LogUserRegisteredListener
     public function handle(Registered $event)
     {
         activity()
-            ->causedBy($event->user)
+            ->by($event->user)
             ->log('registered');
+        activity()
+            ->by($event->user)
+            ->log('mail-verify-email');
     }
 }
