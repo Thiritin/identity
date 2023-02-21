@@ -42,6 +42,8 @@ class Group extends Model
 
     public $translatable = ['name', 'description'];
 
+    protected $appends = ['hashid'];
+
     protected $guarded = [];
 
     public function users()
@@ -51,6 +53,7 @@ class Group extends Model
             ->withPivot(
                 [
                     'level',
+                    'title'
                 ]
             );
     }

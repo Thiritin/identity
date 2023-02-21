@@ -11,7 +11,7 @@ module.exports = {
         './resources/js/**/*.vue',
     ],
 
-    darkMode: 'class',
+    darkMode: 'media',
 
     theme: {
         extend: {

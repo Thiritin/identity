@@ -118,6 +118,25 @@ class Client
         }
     }
 
+    public function rejectConsentRequest(array $consentChallenge, string $errorCode, string $errorDescription, string $errorHint, string $errorDebug, int $statusCode)
+    {
+        try {
+            $requestData = [
+                "error" => $errorCode,
+                "error_description" => $errorDescription,
+                "error_hint" => $errorHint,
+                "error_debug" => $errorDebug,
+                "status_code" => $statusCode,
+            ];
+            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/consent/reject?challenge=' . $consentChallenge['challenge'], $requestData)->json();
+        } catch (Exception $e) {
+            if ($e->getCode() === 404) {
+                throw new ModelNotFoundException('The requested Resource does not exist.');
+            }
+            throw $e;
+        }
+    }
+
     public function getConsentRequest(string $consentChallenge)
     {
         try {

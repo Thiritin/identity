@@ -4,9 +4,9 @@
         <LoginScreenWelcome :sub-title="$trans('choose_sub_title')" :title="$trans('choose_title')" class="mb-10"/>
         <a :href="route('auth.oidc.login')"
            class="block bg-primary-600 text-gray-100 px-4 py-4 rounded font-medium text-center transition duration-75 hover:bg-primary-500 cursor-pointer mb-4">
-            {{ $trans('choose_login_with_existing_account') }} </a> <a :href="route('auth.register.view')"
-                                                                       class="block bg-gray-200 text-gray-800 px-4 py-4 rounded font-medium text-center transition duration-75 hover:bg-gray-300 cursor-pointer">
-        {{ $trans('choose_create_new_account') }} </a>
+            {{ $trans('choose_login_with_existing_account') }} </a> <InertiaLink :href="route('auth.register.view')"
+                                                                       class="block dark:bg-primary-800 bg-gray-200 text-gray-800 dark:text-gray-200 dark:hover:bg-primary-700 px-4 py-4 rounded font-medium text-center transition duration-75 hover:bg-gray-300 cursor-pointer">
+        {{ $trans('choose_create_new_account') }} </InertiaLink>
 
     </auth-layout>
 </template>

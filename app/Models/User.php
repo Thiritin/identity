@@ -72,6 +72,20 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         'hashid'
     ];
 
+    public function inGroup(int $id): bool
+    {
+        return $this->groups()->where('level','!=','invited')->where('id', $id)->exists();
+    }
+
+    public function isStaff(): bool
+    {
+        if(empty(config('groups.staff'))) {
+            return false;
+        }
+
+        return $this->inGroup(config('groups.staff'));
+    }
+
     public function sendEmailVerificationNotification(): void
     {
         $this->notify(new VerifyEmailQueuedNotification());

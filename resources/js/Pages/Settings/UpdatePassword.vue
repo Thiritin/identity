@@ -13,7 +13,7 @@
                            autofocus label="Current password"
                            name='currentPassword' type="password"></BaseInput>
                 <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-end">
-                    <PasswordInfoBox class="sm:col-span-2 sm:col-start-2 mt-2"></PasswordInfoBox>
+                    <PasswordInfoBox :correct-length='true' :correct-number='true' :correct-symbol='true' :correct-lower-upper='true' class="sm:col-span-2 sm:col-start-2 mt-2"></PasswordInfoBox>
                 </div>
                 <BaseInput id='newPassword' v-model='form.password' :error="errors.password" autocomplete='password'
                            label="New password"

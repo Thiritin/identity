@@ -113,7 +113,7 @@ Route::middleware(['auth', 'verified', 'auth.oidc'])->group(function () {
 
     Route::post('/profile/avatar/store', StoreAvatarController::class)->name('profile.avatar.store');
 
-    Route::resource('group', GroupController::class);
+    Route::resource('groups', GroupController::class);
 });
 
 /**

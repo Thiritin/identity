@@ -46,6 +46,7 @@
         "itsgoingd/clockwork": "^5.1",
         "jasonmccreary/laravel-test-assertions": "^1.0",
         "laracasts/generators": "^2.0",
+        "laravel/dusk": "^7.6",
         "laravel/pint": "^1.0",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
