@@ -13,11 +13,6 @@ class PasswordResetQueuedNotification extends ResetPassword implements ShouldQue
 
     public function via($notifiable): array
     {
-        return ['mail','log'];
-    }
-
-    public function toLog(User $notifiable)
-    {
-        activity()->by($notifiable)->log('mail.password-reset');
+        return ['mail'];
     }
 }

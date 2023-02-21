@@ -22,7 +22,7 @@ class VerifyEmailQueuedNotification extends VerifyEmail implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail','log'];
+        return ['mail'];
     }
 
     protected function verificationUrl($notifiable)
@@ -39,10 +39,5 @@ class VerifyEmailQueuedNotification extends VerifyEmail implements ShouldQueue
                 'hash' => sha1($notifiable->getEmailForVerification()),
             ]
         );
-    }
-
-    public function toLog(User $notifiable)
-    {
-        activity()->by($notifiable)->log('mail.verify-email');
     }
 }
