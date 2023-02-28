@@ -24,7 +24,7 @@ class AppSeeder extends Seeder
                 "redirect_uris"              => [
                     route('auth.oidc.callback'),
                 ],
-                "scopes"                     => ["openid", "offline_access", "email", "profile", "groups"],
+                "scope"                     => ["openid", "offline_access", "email", "profile", "groups"],
                 "token_endpoint_auth_method" => "client_secret_post",
                 "frontchannel_logout_uri"    => route('auth.frontchannel_logout'),
             ]
@@ -40,7 +40,7 @@ class AppSeeder extends Seeder
                 "redirect_uris"              => [
                     route('filament.auth.callback'),
                 ],
-                "scopes"                     => ["openid", "offline_access", "email", "profile", "groups"],
+                "scope"                     => ["openid", "offline_access", "email", "profile", "groups"],
                 "token_endpoint_auth_method" => "client_secret_post",
                 "frontchannel_logout_uri"    => route('filament.auth.frontchannel-logout'),
             ]

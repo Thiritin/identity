@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\GroupTypeEnum;
 use App\Filament\Resources\GroupResource\Pages;
 use App\Filament\Resources\GroupResource\RelationManagers\UsersRelationManager;
 use App\Models\Group;
@@ -9,6 +10,7 @@ use Filament\Forms\Components\Card;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group as FilamentGroup;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Concerns\Translatable;
@@ -40,6 +42,14 @@ class GroupResource extends Resource
             ->schema([
                 FilamentGroup::make()->columnSpan(2)->schema([
                     Card::make()->schema([
+                        \Filament\Forms\Components\Group::make()->columns()->schema([
+                            Placeholder::make('id')
+                                ->label('Internal ID')
+                                ->content(fn(?Group $record): string => $record?->id ?? '-'),
+                            Placeholder::make('hashid')
+                                ->label('Public ID')
+                                ->content(fn(?Group $record): string => $record?->hashid() ?? '-'),
+                        ]),
                         TextInput::make('name')
                             ->hint('Translatable')
                             ->hintIcon('heroicon-s-translate')
@@ -50,6 +60,8 @@ class GroupResource extends Resource
 
                 FilamentGroup::make()->columnSpan(1)->schema([
                     Card::make()->schema([
+
+                        Select::make('Type')->options(GroupTypeEnum::class),
 
                         FileUpload::make('logo')
                             ->image()

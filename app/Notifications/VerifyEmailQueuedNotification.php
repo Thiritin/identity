@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,6 +13,17 @@ use Illuminate\Support\Facades\URL;
 class VerifyEmailQueuedNotification extends VerifyEmail implements ShouldQueue
 {
     use Queueable;
+
+    /**
+     * Get the notification's channels.
+     *
+     * @param  mixed  $notifiable
+     * @return array|string
+     */
+    public function via($notifiable)
+    {
+        return ['mail'];
+    }
 
     protected function verificationUrl($notifiable)
     {

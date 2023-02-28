@@ -72,31 +72,54 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         'hashid'
     ];
 
+    public function inGroup(int $id): bool
+    {
+        return $this->groups()->where('level', '!=', 'invited')->where('id', $id)->exists();
+    }
+
+    public function isStaff(): bool
+    {
+        if (empty(config('groups.staff'))) {
+            return false;
+        }
+
+        return $this->inGroup(config('groups.staff'));
+    }
+
     public function sendEmailVerificationNotification(): void
     {
+        activity()
+            ->by($this)
+            ->log('mail-verify-email');
         $this->notify(new VerifyEmailQueuedNotification());
     }
 
     public function sendPasswordResetNotification($token): void
     {
+        activity()
+            ->by($this)
+            ->log('mail-password-reset');
         $this->notify(new PasswordResetQueuedNotification($token));
     }
 
     public function changeMail(string $newEmail)
     {
         $this->email = $newEmail;
+        activity()
+            ->by($this)
+            ->log('mail-change-mail');
         $this->notify(new UpdateEmailNotification($newEmail));
     }
 
     public function groups()
     {
         return $this->belongsToMany(Group::class)
-                    ->using('App\Models\GroupUser')
-                    ->withPivot(
-                        [
-                            'level',
-                        ]
-                    );
+            ->using('App\Models\GroupUser')
+            ->withPivot(
+                [
+                    'level',
+                ]
+            );
     }
 
     public function appCan(string $scope)
@@ -110,7 +133,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 
     public function permCheck(string $ability)
     {
-        $adminCheck = $this->can('admin.'.$ability);
+        $adminCheck = $this->can('admin.' . $ability);
         return $adminCheck || $this->scopeCheck($ability);
     }
 

@@ -6,7 +6,7 @@
             </div>
         </template>
         <div
-            class='bg-white rounded-lg shadow divide-y divide-gray-200 lg:grid lg:grid-cols-12 lg:divide-y-0 lg:divide-x'>
+            class='bg-white dark:bg-primary-600 rounded-lg shadow divide-y divide-primary-200 lg:grid lg:grid-cols-12 lg:divide-y-0 lg:divide-x'>
             <SettingsSidebarMenu :menu-items='settingsMenu'></SettingsSidebarMenu>
             <SettingsContent>
                 <slot></slot>

@@ -17,7 +17,7 @@
             <!-- Optional -->
             <template #acceptContent>OK</template>
         </VueCookieAcceptDecline>
-        <div class="min-h-screen bg-white flex">
+        <div class="min-h-screen bg-white flex page" :class="{ dark: darkMode }">
             <!-- Logo -->
             <div class="hidden lg:block relative w-0 flex-auto">
                 <div
@@ -30,7 +30,7 @@
                 </div>
             </div>
             <!-- Page Content -->
-            <div class="flex-1 flex flex-col items-center p-4 sm:px-6 lg:flex-none lg:px-20 xl:px-12">
+            <div class="flex-1 flex flex-col dark:bg-primary-900 items-center p-4 sm:px-6 lg:flex-none lg:px-20 xl:px-12">
                 <!-- Spacer -->
                 <div class="h-[25%]"></div>
                 <!-- Slot Content -->
@@ -43,15 +43,16 @@
                 </div>
                 <!-- Footer Content -->
                 <div class="pt-8">
-                    <nav aria-label="Footer" class="-mx-5 -my-2 flex flex-wrap justify-center">
+                    <nav aria-label="Footer" class="-mx-5 -my-2 flex flex-wrap items-center justify-center">
                         <div v-for="item in navigation.main" :key="item.name" class="px-5 py-2">
                             <InertiaLink v-if="item.href == null" :href="item.link"
                                          :target="[item.newTab ? '_blank' : '_top']"
-                                         class="text-base text-gray-500 hover:text-gray-900"> {{ item.name }}
+                                         class="text-base text-gray-500 hover:text-gray-900 dark:hover:text-gray-400"> {{ item.name }}
                             </InertiaLink>
                             <a v-else :href="item.href" :target="[item.newTab ? '_blank' : '_top']"
-                               class="text-base text-gray-500 hover:text-gray-900"> {{ item.name }} </a>
+                               class="text-base text-gray-500 hover:text-gray-900 dark:hover:text-gray-400"> {{ item.name }} </a>
                         </div>
+                        <toogleDarkMode :dark-mode='darkMode' :toggle-dark-mode='toggleDarkMode' />
                     </nav>
                 </div>
             </div>
@@ -59,14 +60,16 @@
     </div>
 </template>
 <script>
-import VueCookieAcceptDecline from "vue-cookie-accept-decline";
-import 'vue-cookie-accept-decline/dist/vue-cookie-accept-decline.css';
+    import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
+    import 'vue-cookie-accept-decline/dist/vue-cookie-accept-decline.css'
+    import ToogleDarkMode from '@/Layouts/ToogleDarkMode.vue'
 
-export default {
-    components: {VueCookieAcceptDecline},
+    export default {
+    components: { ToogleDarkMode, VueCookieAcceptDecline},
     data() {
         return {
             animated: false,
+            darkMode: this.$cookies.isKey('darkMode'),
             navigation: {
                 main: [
                     {
@@ -96,6 +99,19 @@ export default {
             },
         }
     },
+    methods: {
+        toggleDarkMode() {
+            if(this.darkMode === false) {
+                this.$cookies.set('darkMode','true',2147483647);
+            }
+
+            if(this.darkMode === true) {
+                this.$cookies.remove('darkMode');
+            }
+
+            this.darkMode = !this.darkMode;
+        },
+    },
     mounted() {
         this.animated = true;
     }
@@ -121,6 +137,10 @@ export default {
 
 .page-enter-to {
     opacity: 1;
+}
+
+.page * {
+    @apply transition-colors
 }
 
 </style>

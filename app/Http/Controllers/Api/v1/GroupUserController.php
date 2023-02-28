@@ -32,9 +32,6 @@ class GroupUserController extends Controller
     public function destroy(Group $group, User $user, Request $request)
     {
         $pivot = $group->users()->find($request->user()->id)->pivot;
-        if ($pivot->level === GroupUserLevel::Owner) {
-            abort(403, "Owners cannot be removed from group.");
-        }
         $this->authorize('delete', [$pivot]);
         $group->users()->detach($user);
     }

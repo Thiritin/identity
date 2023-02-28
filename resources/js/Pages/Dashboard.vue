@@ -15,10 +15,10 @@
                     items-start
                     lg:grid-cols-3 lg:gap-8
                 '>
-                <a v-for="app in apps" :href='app.url' class='block bg-white rounded-lg shadow py-8 text-center'>
-                    <component :is="app.icon" class='mx-auto w-24 fill-current text-primary-600'/>
-                    <h2 class='font-medium text-xl pt-4'>{{ app.name }}</h2>
-                    <p>{{ app.description }}</p>
+                <a v-for="app in apps" :href='app.url' class='block bg-white dark:bg-primary-600 rounded-lg shadow py-8 text-center'>
+                    <component :is="app.icon" class='mx-auto w-24 fill-current text-primary-600 dark:text-primary-300'/>
+                    <h2 class='font-medium text-xl pt-4 dark:text-primary-300'>{{ app.name }}</h2>
+                    <p class='dark:text-primary-300'>{{ app.description }}</p>
                 </a>
             </div>
         </div>

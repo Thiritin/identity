@@ -13,6 +13,7 @@ use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -37,7 +38,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::before(function ($user, $ability) {
-            return $user->hasRole('superadmin') ? true : null;
+            return ($user->hasRole('superadmin') && Str::startsWith($ability, "admin.")) ? true : null;
         });
 
         Auth::extend('admin', function ($app, $name, array $config) {

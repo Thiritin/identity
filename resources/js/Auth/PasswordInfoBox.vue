@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class='dark:text-primary-100'>
         <span
             class="block mb-2 text-xs">{{ $trans('password_requirements_title') }}</span>
         <ul class="text-xs list-disc ml-4">

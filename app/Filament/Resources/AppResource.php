@@ -205,7 +205,7 @@ class AppResource extends Resource
     public static function getGloballySearchableAttributes(): array
     {
         return [
-            "data.client_name",
+            "name",
         ];
     }
 }

@@ -8,25 +8,22 @@
         />
         <form class="space-y-12" @submit.prevent="submit" v-if="!status">
             <div class="space-y-6">
-                <div class="text-sm shadow-md p-2 border-l-[4px] border-primary-600">
+                <div class="text-sm shadow-md p-2 border-l-[4px] border-primary-600 dark:border-primary-300 dark:text-primary-300">
                     {{ $trans("forgot_password_helptext") }}
                 </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700" for="email">
-                        {{ $trans("email") }}
-                    </label>
                     <FormInput
                         id="email"
+                        :label='$trans("email")'
                         v-model.trim.lazy="form.email"
                         :class="{ 'border-red-500 focus:border-red-500': errors?.email != null }"
                         autocomplete="email"
+                        :error='errors.email'
                         placeholder="me@example.com"
                         type="email"
                     />
                     <span v-show="errors.email" class="w-full text-red-600 text-xs rounded">
 						{{ errors.email }}
 					</span>
-                </div>
             </div>
             <div class="flex flex-col">
                 <button
@@ -50,9 +47,9 @@
                 >
                     {{ $trans("send_reset_mail") }}
                 </button>
-                <a :href="route('auth.login.view')" class="ml-auto text-gray-700">
+                <InertiaLink :href="route('auth.login.view')" class="ml-auto text-gray-700 dark:text-primary-300">
                     {{ $trans("back_to_login") }}
-                </a>
+                </InertiaLink>
             </div>
         </form>
         <div v-else>
