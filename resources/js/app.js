@@ -9,6 +9,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m'
 import { __, getLocale, locales, setLocale, trans, transChoice } from 'matice'
 import transProp from './Utils/trans.js'
+import VueCookies from 'vue-cookies'
 
 import.meta.glob([
     '../assets/**',
@@ -23,6 +24,7 @@ createInertiaApp({
         return createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(ZiggyVue, Ziggy)
+            .use(VueCookies,{})
             .mixin({ methods: { route } })
             .mixin({ methods: { transProp } })
             .mixin({
