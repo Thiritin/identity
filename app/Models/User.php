@@ -39,7 +39,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         'name',
         'email',
         'password',
-        'profile_photo_path'
+        'profile_photo_path',
     ];
 
     /**
@@ -51,7 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         'password',
         'two_factor_recovery_codes',
         'two_factor_secret',
-        'remember_token'
+        'remember_token',
     ];
 
     /**
@@ -69,7 +69,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
      * @var array
      */
     protected $appends = [
-        'hashid'
+        'hashid',
     ];
 
     public function inGroup(int $id): bool
@@ -124,9 +124,6 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 
     public function appCan(string $scope)
     {
-        if (!Auth::guard('api')->check()) {
-            return true;
-        }
         $auth = Auth::guard('api');
         return in_array($scope, $auth->getScopes(), true);
     }
@@ -139,6 +136,9 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 
     public function scopeCheck(string $ability)
     {
+        if (Auth::guard('web')->check()) {
+            return true;
+        }
         $sanctumCheck = $this->tokenCan($ability);
         $appCheck = $this->appCan($ability);
         return ($sanctumCheck && $appCheck);

@@ -42,7 +42,7 @@ class GroupResource extends Resource
             ->schema([
                 FilamentGroup::make()->columnSpan(2)->schema([
                     Card::make()->schema([
-                        \Filament\Forms\Components\Group::make()->columns()->schema([
+                        FilamentGroup::make()->columns()->schema([
                             Placeholder::make('id')
                                 ->label('Internal ID')
                                 ->content(fn(?Group $record): string => $record?->id ?? '-'),
@@ -61,7 +61,11 @@ class GroupResource extends Resource
                 FilamentGroup::make()->columnSpan(1)->schema([
                     Card::make()->schema([
 
-                        Select::make('Type')->options(GroupTypeEnum::class),
+                        Select::make('type')->options([
+                            GroupTypeEnum::Default->value => "Default",
+                            GroupTypeEnum::Automated->value => "Automated",
+                            GroupTypeEnum::Department->value => "Department",
+                        ]),
 
                         FileUpload::make('logo')
                             ->image()
@@ -105,7 +109,7 @@ class GroupResource extends Resource
     public static function getRelations(): array
     {
         return [
-            UsersRelationManager::class
+            UsersRelationManager::class,
         ];
     }
 

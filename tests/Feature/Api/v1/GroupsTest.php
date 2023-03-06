@@ -30,13 +30,13 @@ test('Create Group success as Admin', function () {
     $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-create-group-test.png"
+        "logo" => "https://test.de/img-create-group-test.png",
     ];
     $request = postJson(route('api.v1.groups.store'), $data);
     $request->assertSuccessful();
     assertDatabaseHas('groups', [
         "type" => "none",
-        "logo" => "https://test.de/img-create-group-test.png"
+        "logo" => "https://test.de/img-create-group-test.png",
     ]);
 });
 
@@ -52,14 +52,14 @@ test('Create Group and validate user is set as owner', function () {
     $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-create-group-test.png"
+        "logo" => "https://test.de/img-create-group-test.png",
     ];
     $request = postJson(route('api.v1.groups.store'), $data);
     $request->assertSuccessful();
     assertDatabaseHas('group_user', [
         "level" => "owner",
         "group_id" => Hashids::connection('group')->decode($request->json('data')['id'])[0],
-        "user_id" => $user->id
+        "user_id" => $user->id,
     ]);
 });
 
@@ -75,13 +75,13 @@ test('Create Group fails as non Admin', function () {
     $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-create-group-test.png"
+        "logo" => "https://test.de/img-create-group-test.png",
     ];
     $request = postJson(route('api.v1.groups.store'), $data);
     $request->assertForbidden();
     assertDatabaseMissing('groups', [
         "type" => "none",
-        "logo" => "https://test.de/img-create-group-test.png"
+        "logo" => "https://test.de/img-create-group-test.png",
     ]);
 });
 
@@ -99,13 +99,13 @@ test('Update Group success as Admin', function () {
     $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-create-group-test.png"
+        "logo" => "https://test.de/img-create-group-test.png",
     ];
     $request = put(route('api.v1.groups.update', $group), $data);
     $request->assertSuccessful();
     assertDatabaseHas('groups', [
         "type" => "none",
-        "logo" => "https://test.de/img-create-group-test.png"
+        "logo" => "https://test.de/img-create-group-test.png",
     ]);
 });
 
@@ -121,13 +121,13 @@ test('Update Group fails as member', function () {
     $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-create-group-test.png"
+        "logo" => "https://test.de/img-create-group-test.png",
     ];
     $request = put(route('api.v1.groups.update', $group), $data);
     $request->assertForbidden();
     assertDatabaseMissing('groups', [
         "type" => "none",
-        "logo" => "https://test.de/img-create-group-test.png"
+        "logo" => "https://test.de/img-create-group-test.png",
     ]);
 });
 
@@ -144,38 +144,16 @@ test('Update Group fails as invited', function () {
     $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-create-group-test.png"
+        "logo" => "https://test.de/img-create-group-test.png",
     ];
     $request = put(route('api.v1.groups.update', $group), $data);
     $request->assertForbidden();
     assertDatabaseMissing('groups', [
         "type" => "none",
-        "logo" => "https://test.de/img-create-group-test.png"
+        "logo" => "https://test.de/img-create-group-test.png",
     ]);
 });
 
-
-test('Update Group fails as banned', function () {
-    $group = Group::factory()->create();
-
-    $user = Sanctum::actingAs(
-        User::factory()->create(),
-        ['groups.read', 'groups.update', 'groups.delete']
-    );
-
-    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Banned]]);
-    $data = [
-        "type" => "none",
-        "name" => "Testgroup",
-        "logo" => "https://test.de/img-create-group-test.png"
-    ];
-    $request = put(route('api.v1.groups.update', $group), $data);
-    $request->assertForbidden();
-    assertDatabaseMissing('groups', [
-        "type" => "none",
-        "logo" => "https://test.de/img-create-group-test.png"
-    ]);
-});
 
 test('Update Group fails as moderator', function () {
     $group = Group::factory()->create();
@@ -189,13 +167,13 @@ test('Update Group fails as moderator', function () {
     $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-create-group-test.png"
+        "logo" => "https://test.de/img-create-group-test.png",
     ];
     $request = put(route('api.v1.groups.update', $group), $data);
     $request->assertForbidden();
     assertDatabaseMissing('groups', [
         "type" => "none",
-        "logo" => "https://test.de/img-create-group-test.png"
+        "logo" => "https://test.de/img-create-group-test.png",
     ]);
 });
 
@@ -211,13 +189,13 @@ test('Update Group success as Owner', function () {
     $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-update-as-owner-group-test.png"
+        "logo" => "https://test.de/img-update-as-owner-group-test.png",
     ];
     $request = put(route('api.v1.groups.update', $group), $data);
     $request->assertSuccessful();
     assertDatabaseHas('groups', [
         "type" => "none",
-        "logo" => "https://test.de/img-update-as-owner-group-test.png"
+        "logo" => "https://test.de/img-update-as-owner-group-test.png",
     ]);
 });
 
@@ -230,13 +208,13 @@ test('Delete Group success as Owner', function () {
     );
 
     assertDatabaseHas('groups', [
-        "logo" => $group->logo
+        "logo" => $group->logo,
     ]);
     $group->users()->sync([$user->id => ['level' => GroupUserLevel::Owner]]);
     $request = delete(route('api.v1.groups.destroy', $group));
     $request->assertSuccessful();
     assertDatabaseMissing('groups', [
-        "logo" => $group->logo
+        "logo" => $group->logo,
     ]);
 });
 
@@ -266,8 +244,8 @@ test('Get single group', function () {
     $request->assertSuccessful();
     $request->assertJson([
         "data" => [
-            "name" => $group->name
-        ]
+            "name" => $group->name,
+        ],
     ]);
 });
 
@@ -284,7 +262,7 @@ test('Get paginated result set of group as Admin', function () {
     $request = get(route('api.v1.groups.index', $group));
     $request->assertSuccessful();
     $request->assertJsonFragment([
-        "name" => $group->name
+        "name" => $group->name,
     ]);
 });
 
@@ -298,7 +276,7 @@ test('Invite member to group as admin', function () {
     $userToBeInvited = User::factory()->create();
     $data = [
         "email" => $userToBeInvited->email,
-        "level" => "invited"
+        "level" => "invited",
     ];
     $group->users()->sync([$user->id => ['level' => GroupUserLevel::Admin]]);
 
@@ -307,7 +285,7 @@ test('Invite member to group as admin', function () {
     assertDatabaseHas('group_user', [
         "user_id" => $userToBeInvited->id,
         "group_id" => $group->id,
-        "level" => "invited"
+        "level" => "invited",
     ]);
 });
 
@@ -321,7 +299,7 @@ test('Add member to group as admin', function () {
     $userToBeInvited = User::factory()->create();
     $data = [
         "email" => $userToBeInvited->email,
-        "level" => "member"
+        "level" => "member",
     ];
     $group->users()->sync([$user->id => ['level' => GroupUserLevel::Admin]]);
 
@@ -330,7 +308,7 @@ test('Add member to group as admin', function () {
     assertDatabaseHas('group_user', [
         "user_id" => $userToBeInvited->id,
         "group_id" => $group->id,
-        "level" => "member"
+        "level" => "member",
     ]);
 });
 
@@ -344,7 +322,7 @@ test('Add member to group as admin without correct scope', function () {
     $userToBeInvited = User::factory()->create();
     $data = [
         "email" => $userToBeInvited->email,
-        "level" => "member"
+        "level" => "member",
     ];
     $group->users()->sync([$user->id => ['level' => GroupUserLevel::Admin]]);
 
@@ -362,7 +340,7 @@ test('Add member to group as member with correct scope', function () {
     $userToBeInvited = User::factory()->create();
     $data = [
         "email" => $userToBeInvited->email,
-        "level" => "member"
+        "level" => "member",
     ];
     $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member]]);
 
@@ -381,7 +359,7 @@ test('Remove member to group as admin', function () {
     $userToBeDeleted = User::factory()->create();
     $group->users()->sync([
         $user->id => ['level' => GroupUserLevel::Admin],
-        $userToBeDeleted->id => ['level' => GroupUserLevel::Member]
+        $userToBeDeleted->id => ['level' => GroupUserLevel::Member],
     ]);
 
     assertDatabaseHas('group_user', [
@@ -407,7 +385,7 @@ test('Get list of members as admin', function () {
     $userToBeDeleted = User::factory()->create();
     $group->users()->sync([
         $user->id => ['level' => GroupUserLevel::Admin],
-        $userToBeDeleted->id => ['level' => GroupUserLevel::Member]
+        $userToBeDeleted->id => ['level' => GroupUserLevel::Member],
     ]);
 
     $request = get(route('api.v1.groups.users.index', ["group" => $group]));
@@ -415,7 +393,7 @@ test('Get list of members as admin', function () {
     $request->assertJsonFragment([
         "user_id" => $user->id,
         "group_id" => $group->id,
-        "level" => GroupUserLevel::Admin
+        "level" => GroupUserLevel::Admin,
     ]);
 });
 

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers\ActionsRelationManager;
 use App\Filament\Resources\UserResource\RelationManagers\GroupsRelationManager;
+use App\Filament\Resources\UserResource\RelationManagers\TokensRelationManager;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -77,6 +78,7 @@ class UserResource extends Resource
         return [
             GroupsRelationManager::class,
             ActionsRelationManager::class,
+            TokensRelationManager::class,
         ];
     }
 

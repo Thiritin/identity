@@ -4,18 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
-use App\Models\App;
 use App\Models\Group;
-use App\Models\User;
-use App\Policies\GroupPolicy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class GroupController extends Controller
 {
     /**
-     * @return \Inertia\Response
+     * @return Response
      * Shows the user a list the groups that he is part of.
      * It will also show other departments if the user is within the automated Staff Group.
      */
@@ -25,13 +24,25 @@ class GroupController extends Controller
         // Check if user belongs to Staff
         if (Auth::user()->isStaff()) {
             $departments = Group::where('type', GroupTypeEnum::Department)->withCount('users')->get();
+            $departments->map(function (Group $group) {
+                if ($group->logo) {
+                    $group->logo = Storage::url('avatars/' . $group->logo);
+                }
+                return $group;
+            });
         }
 
         $myGroups = Auth::user()->groups()->where('level', '!=', GroupUserLevel::Invited)->withCount('users')->get();
+        $myGroups->map(function (Group $group) {
+            if ($group->logo) {
+                $group->logo = Storage::url('avatars/' . $group->logo);
+            }
+            return $group;
+        });
 
         return Inertia::render('Groups/Index', [
             "myGroups" => $myGroups,
-            "departments" => $departments
+            "departments" => $departments,
         ]);
     }
 
@@ -51,7 +62,7 @@ class GroupController extends Controller
         $this->authorize('view', $group);
 
         return Inertia::render('Groups/View', [
-            'group' => $group
+            'group' => $group,
         ]);
     }
 

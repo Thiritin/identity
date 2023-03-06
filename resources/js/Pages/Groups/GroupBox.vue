@@ -1,6 +1,6 @@
 <template>
     <div class='bg-white dark:bg-primary-600 rounded shadow h-full flex flex-col'>
-        <img class='rounded-t' v-if='group.logo' :src='group.logo' alt=''>
+        <img v-if='group.logo' :src='group.logo' alt='' class='rounded-t max-h-[300px] max-w-[600px]'>
         <img class='rounded-t' v-else src='../../../assets/fallback-group-image.png' alt=''>
         <div class='p-4 flex flex-col flex-1 justify-start'>
             <div class='flex justify-between pb-2'>
@@ -34,23 +34,23 @@
     </div>
 </template>
 <script>
-    import CircleUser from '@/Components/Icons/CircleUser.vue'
-    import CogsDuotone from '@/Components/Icons/CogsDuotone.vue'
+import CircleUser from '@/Components/Icons/CircleUser.vue'
+import CogsDuotone from '@/Components/Icons/CogsDuotone.vue'
 
-    export default {
-        props: {
-            group: Object,
+export default {
+    props: {
+        group: Object,
+    },
+    computed: {
+        description() {
+            let description = this.transProp(this.group.description)
+            if (description.length > 95) {
+                description = description.substring(0, 95) + "...";
+            }
+            return description;
         },
-        computed: {
-            description() {
-                let description = this.transProp(this.group.description)
-                if (description.length > 95) {
-                    description = description.substring(0,95) + "...";
-                }
-                return description;
-            },
-        },
-        name: 'GroupBox',
-        components: { CircleUser, CogsDuotone },
-    }
+    },
+    name: 'GroupBox',
+    components: {CircleUser, CogsDuotone},
+}
 </script>

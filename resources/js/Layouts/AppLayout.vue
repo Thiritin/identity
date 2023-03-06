@@ -87,7 +87,7 @@
                                                     focus:ring-white
                                                 '>
                                                     <span class='sr-only'>Open user menu</span>
-                                                    <AvatarImage class='h-8 w-8 rounded-full' />
+                                                    <AvatarImage class='h-8 w-8 rounded-full'/>
                                                 </MenuButton>
                                             </div>
                                             <transition enter-active-class='transition ease-out duration-100'
@@ -150,8 +150,8 @@
                                         focus:ring-white
                                     '>
                                         <span class='sr-only'>Open main menu</span>
-                                        <MenuIcon v-if='!open' aria-hidden='true' class='block h-6 w-6' />
-                                        <XIcon v-else aria-hidden='true' class='block h-6 w-6' />
+                                        <MenuIcon v-if='!open' aria-hidden='true' class='block h-6 w-6'/>
+                                        <XIcon v-else aria-hidden='true' class='block h-6 w-6'/>
                                     </DisclosureButton>
                                 </div>
                             </div>
@@ -189,7 +189,7 @@
                         <div class='pt-4 pb-3 border-t border-primary-700'>
                             <div class='flex items-center px-5'>
                                 <div class='flex-shrink-0'>
-                                    <AvatarImage class='h-10 w-10 rounded-full' />
+                                    <AvatarImage class='h-10 w-10 rounded-full'/>
                                 </div>
                                 <div class='ml-3'>
                                     <div class='
@@ -247,37 +247,75 @@
             </div>
 
             <main class='-mt-32'>
-                <div class='max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8'>
+                <div class='max-w-7xl min-h-[8rem] mx-auto pb-12 px-4 sm:px-6 lg:px-8'>
                     <transition name='page'>
                         <div v-if='animated' :key='$page.url'>
                             <slot></slot>
                         </div>
                     </transition>
-                    <footer>
-                        <div class='mt-7 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-7'>
-                            <div v-for='item in footer.nav' :key='item.name'>
-                                <InertiaLink v-if='item.href === null' :href='item.link'
-                                             :target="[item.newTab ? '_blank' : '_top']"
-                                             class='text-base text-gray-500 hover:text-gray-900 dark:hover:text-gray-400'>
-                                    {{ item.name }}
-                                </InertiaLink>
-                                <a v-else :href='item.href' :target="[item.newTab ? '_blank' : '_top']"
-                                   class='text-base text-gray-500 hover:text-gray-900 dark:hover:text-gray-400qq'>
-                                    {{ item.name }} </a>
-                            </div>W
-                        </div>
-                        <div class='flex justify-center mt-3'>
-                            <toogleDarkMode :dark-mode='darkMode' :toggle-dark-mode='toggleDarkMode' />
-                        </div>
-                    </footer>
                 </div>
             </main>
+            
+            <footer>
+                <div class='mt-7 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-7'>
+                    <div v-for='item in footer.nav' :key='item.name'>
+                        <InertiaLink v-if='item.href === null' :href='item.link'
+                                     :target="[item.newTab ? '_blank' : '_top']"
+                                     class='text-base text-gray-500 hover:text-gray-900 dark:hover:text-gray-400'>
+                            {{ item.name }}
+                        </InertiaLink>
+                        <a v-else :href='item.href' :target="[item.newTab ? '_blank' : '_top']"
+                           class='text-base text-gray-500 hover:text-gray-900 dark:hover:text-gray-400qq'>
+                            {{ item.name }} </a>
+                    </div>
+                </div>
+                <span class='flex justify-center mt-3'>
+                    <toogleDarkMode :dark-mode='darkMode' :toggle-dark-mode='toggleDarkMode'/>
+                </span>
+            </footer>
         </div>
     </div>
 </template>
 
 <script>
-    import {
+import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems,} from '@headlessui/vue'
+import {BellIcon, MenuIcon, XIcon} from '@heroicons/vue/outline'
+import Logo from '@/Auth/Logo.vue'
+import {usePage} from '@inertiajs/inertia-vue3'
+import {computed} from 'vue'
+import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
+import ToogleDarkMode from '@/Layouts/ToogleDarkMode.vue'
+
+const profile = [
+    {
+        name: 'profile',
+        route: route('settings.profile'),
+    },
+]
+
+var navigation = [
+    {
+        name: 'dashboard',
+        route: route('dashboard'),
+        inertia: true,
+    },
+    {
+        name: 'groups',
+        route: route('groups.index'),
+        inertia: true,
+    },
+    {
+        name: 'admin',
+        route: '/admin',
+        inertia: false,
+    },
+]
+
+export default {
+    components: {
+        ToogleDarkMode,
+        AvatarImage,
+        Logo,
         Disclosure,
         DisclosureButton,
         DisclosurePanel,
@@ -285,133 +323,88 @@
         MenuButton,
         MenuItem,
         MenuItems,
-    } from '@headlessui/vue'
-    import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
-    import Logo from '@/Auth/Logo.vue'
-    import { usePage } from '@inertiajs/inertia-vue3'
-    import { computed } from 'vue'
-    import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
-    import ToogleDarkMode from '@/Layouts/ToogleDarkMode.vue'
+        BellIcon,
+        MenuIcon,
+        XIcon,
+    },
 
-    const profile = [
-        {
-            name: 'profile',
-            route: route('settings.profile'),
-        },
-    ]
+    props: {
+        title: String,
+        description: String,
+    },
 
-    var navigation = [
-        {
-            name: 'dashboard',
-            route: route('dashboard'),
-            inertia: true,
-        },
-        {
-            name: 'groups',
-            route: route('groups.index'),
-            inertia: true,
-        },
-        {
-            name: 'admin',
-            route: '/admin',
-            inertia: false,
-        },
-    ]
+    data() {
+        return {
+            animated: false,
+            darkMode: this.$cookies.isKey('darkMode'),
+            footer: {
+                nav: [
 
-    export default {
-        components: {
-            ToogleDarkMode,
-            AvatarImage,
-            Logo,
-            Disclosure,
-            DisclosureButton,
-            DisclosurePanel,
-            Menu,
-            MenuButton,
-            MenuItem,
-            MenuItems,
-            BellIcon,
-            MenuIcon,
-            XIcon,
-        },
+                    {
+                        name: 'Support',
+                        href: 'https://help.eurofurence.org/contact/',
+                        newTab: true,
+                    },
 
-        props: {
-            title: String,
-            description: String,
-        },
+                    {
+                        name: 'Imprint',
+                        href: 'https://help.eurofurence.org/legal/imprint',
+                        newTab: true,
+                    },
 
-        data() {
-            return {
-                animated: false,
-                darkMode: this.$cookies.isKey('darkMode'),
-                footer: {
-                    nav: [
+                    {
+                        name: 'Privacy',
+                        href: 'https://help.eurofurence.org/legal/privacy',
+                        newTab: true,
+                    },
 
-                        {
-                            name: 'Support',
-                            href: 'https://help.eurofurence.org/contact/',
-                            newTab: true,
-                        },
-
-                        {
-                            name: 'Imprint',
-                            href: 'https://help.eurofurence.org/legal/imprint',
-                            newTab: true,
-                        },
-
-                        {
-                            name: 'Privacy',
-                            href: 'https://help.eurofurence.org/legal/privacy',
-                            newTab: true,
-                        },
-
-                        {
-                            name: 'We are looking for help!',
-                            href: 'https://www.eurofurence.org/EF27/jobs/',
-                            newTab: true,
-                        },
-                    ],
-                },
-            }
-        },
-
-        setup() {
-            const user = computed(() => usePage().props.value.user)
-            navigation = navigation.filter(function(value) {
-                return (value.name === 'admin' && user.value.isAdmin === true) || value.name !== 'admin'
-            })
-            return {
-                navigation,
-                user,
-                profile,
-            }
-        },
-
-        mounted() {
-            this.animated = true
-        },
-
-        methods: {
-            logout() {
-                window.location.href = '/oauth2/sessions/logout'
+                    {
+                        name: 'We are looking for help!',
+                        href: 'https://www.eurofurence.org/EF27/jobs/',
+                        newTab: true,
+                    },
+                ],
             },
-            toggleDarkMode() {
-                if (this.darkMode === false) {
-                    this.$cookies.set('darkMode', 'true', 2147483647)
-                }
+        }
+    },
 
-                if (this.darkMode === true) {
-                    this.$cookies.remove('darkMode')
-                }
+    setup() {
+        const user = computed(() => usePage().props.value.user)
+        navigation = navigation.filter(function (value) {
+            return (value.name === 'admin' && user.value.isAdmin === true) || value.name !== 'admin'
+        })
+        return {
+            navigation,
+            user,
+            profile,
+        }
+    },
 
-                this.darkMode = !this.darkMode
-            },
+    mounted() {
+        this.animated = true
+    },
+
+    methods: {
+        logout() {
+            window.location.href = '/oauth2/sessions/logout'
         },
-    }
+        toggleDarkMode() {
+            if (this.darkMode === false) {
+                this.$cookies.set('darkMode', 'true', 2147483647)
+            }
+
+            if (this.darkMode === true) {
+                this.$cookies.remove('darkMode')
+            }
+
+            this.darkMode = !this.darkMode
+        },
+    },
+}
 </script>
 
 <style>
-    .page * {
-        @apply transition-colors ease-in
-    }
+.page * {
+    @apply transition-colors ease-in
+}
 </style>

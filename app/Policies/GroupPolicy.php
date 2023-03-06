@@ -24,8 +24,8 @@ class GroupPolicy
         $staffException = $group->type === GroupTypeEnum::Department && $user->isStaff();
         $userPermission = $user->scopeCheck('groups.read');
 
-        if($inGroup || $staffException) {
-            if($userPermission === false) {
+        if ($inGroup || $staffException) {
+            if ($userPermission === false) {
                 return Response::deny('Insufficient permissions, groups.read is missing');
             }
             return Response::allow();
@@ -42,7 +42,7 @@ class GroupPolicy
     {
         $userAdminInGroup = $user->whereHas('groups', function ($q) use ($group) {
             $q->whereIn('level', [GroupUserLevel::Admin->value, GroupUserLevel::Owner->value])
-              ->where('group_id', $group->id);
+                ->where('group_id', $group->id);
         })->exists();
         return ($user->can('admin.groups.update') || ($userAdminInGroup && $user->scopeCheck('groups.update')));
     }
@@ -51,7 +51,7 @@ class GroupPolicy
     {
         $userOwnerInGroup = $user->whereHas('groups', function ($q) use ($group) {
             $q->where('level', GroupUserLevel::Owner->value)
-              ->where('group_id', $group->id);
+                ->where('group_id', $group->id);
         })->exists();
         return ($user->can('admin.groups.delete') || ($userOwnerInGroup && $user->scopeCheck('groups.delete')));
     }

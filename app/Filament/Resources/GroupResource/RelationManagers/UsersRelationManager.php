@@ -24,6 +24,7 @@ class UsersRelationManager extends RelationManager
                 Tables\Columns\SelectColumn::make('level')
                     ->options(GroupUserLevel::class)
                     ->rules(['required']),
+                Tables\Columns\TextInputColumn::make('title'),
             ])
             ->filters([
                 //
@@ -32,8 +33,8 @@ class UsersRelationManager extends RelationManager
                 AttachAction::make()->form(fn(AttachAction $action): array => [
                     $action->getRecordSelect(),
                     Forms\Components\Select::make('level')->required()
-                        ->options(GroupUserLevel::class)
-                ])
+                        ->options(GroupUserLevel::class),
+                ]),
             ])
             ->actions([
                 Tables\Actions\DetachAction::make(),
@@ -51,7 +52,7 @@ class UsersRelationManager extends RelationManager
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Select::make('level')->required()
-                    ->options(GroupUserLevel::class)
+                    ->options(GroupUserLevel::class),
             ]);
     }
 }
