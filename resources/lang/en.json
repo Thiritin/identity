@@ -75,5 +75,7 @@
     "groups_page_staff_notice": "If you are part of Eurofurence Staff, please ask your director for an invite.",
     "departments": "Departments",
     "staff_members_can_see_departments": "As a staff member you are able to view the following departments.",
-    "group_members": "Group members"
+    "group_members": "Group members",
+    "developers": "Developers",
+    "developers_note": "You can code? Get in touch!"
 }

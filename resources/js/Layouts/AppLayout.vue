@@ -87,7 +87,8 @@
                                                     focus:ring-white
                                                 '>
                                                     <span class='sr-only'>Open user menu</span>
-                                                    <AvatarImage class='h-8 w-8 rounded-full'/>
+                                                    <AvatarImage :avatar="$page.props.user.avatar"
+                                                                 class='h-8 w-8 rounded-full'/>
                                                 </MenuButton>
                                             </div>
                                             <transition enter-active-class='transition ease-out duration-100'
@@ -255,7 +256,7 @@
                     </transition>
                 </div>
             </main>
-            
+
             <footer>
                 <div class='mt-7 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-7'>
                     <div v-for='item in footer.nav' :key='item.name'>
@@ -302,6 +303,11 @@ var navigation = [
     {
         name: 'groups',
         route: route('groups.index'),
+        inertia: true,
+    },
+    {
+        name: 'developers',
+        route: route('developers'),
         inertia: true,
     },
     {

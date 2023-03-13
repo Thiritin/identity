@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Resources\UserinfoResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\UserinfoResource;
 use Illuminate\Http\Request;
 
 class UserinfoController extends Controller

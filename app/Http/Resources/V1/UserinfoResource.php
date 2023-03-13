@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\V1;
 
+use App\Enums\GroupUserLevel;
+use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -11,13 +13,15 @@ class UserinfoResource extends JsonResource
 {
     private $user;
 
+    public static $wrap = null;
+
     public function __construct($resource)
     {
         parent::__construct($resource);
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return array
      */
     public function toArray($request)
@@ -34,7 +38,7 @@ class UserinfoResource extends JsonResource
             $data['avatar'] = $this->profile_photo_path;
         }
         if ($this->whenLoaded('groups') && $this->scopeCheck('groups')) {
-            $data['groups'] = $this->groups->pluck('hashid');
+            $data['groups'] = $this->groups->filter(fn(Group $group) => $group->pivot->level !== GroupUserLevel::Invited)->pluck('hashid');
         }
 
         return $data;

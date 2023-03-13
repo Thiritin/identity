@@ -62,14 +62,14 @@ Route::prefix('auth')->name('auth.')->group(function () {
         Route::post('password-reset', [PasswordResetController::class, 'store'])->name('password-reset.store');
     });
 
-    // Error
-    Route::get('error', App\Http\Controllers\Auth\ErrorController::class)->name('error');
-
     // OIDC Frontchannel Logout
     Route::get('frontchannel-logout', FrontChannelLogoutController::class)->middleware(['auth'])->name(
         'frontchannel_logout'
     );
 });
+
+// Error
+Route::get('error', App\Http\Controllers\Auth\ErrorController::class)->name('error');
 
 // E-Mail First Sign Up
 Route::prefix('auth')->group(function () {
@@ -103,6 +103,9 @@ Route::middleware(['auth', 'verified', 'auth.oidc'])->group(function () {
     Route::get('/settings/profile/update/email', UpdateEmailController::class)->name(
         'settings.update-profile.email.update'
     )->middleware('signed');
+
+    // About
+    Route::inertia('developers', 'Developers')->name('developers');
 
     Route::inertia('/settings/update-password', 'Settings/UpdatePassword')->name('settings.update-password');
     Route::post('/settings/update-password', UpdatePasswordController::class)->name('settings.update-password.store');

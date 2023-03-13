@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
 use App\Models\Group;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -60,9 +61,22 @@ class GroupController extends Controller
          * Only allowed to view if is member of that group
          */
         $this->authorize('view', $group);
-
         return Inertia::render('Groups/View', [
-            'group' => $group,
+            'group' => $group->only(['name', 'description', 'type']),
+            'members' => $group->users()->get()
+                ->map(fn(User $user) => [
+                    "hashid" => $user->hashid,
+                    "name" => $user->name,
+                    "title" => $user->pivot->title,
+                    "level" => $user->pivot->level,
+                    "avatar" => (is_null($user->profile_photo_path)) ? null : Storage::url('avatars/' . $user->profile_photo_path),
+                ])->sortByDesc(fn($data) => match ($data['level']->value) {
+                    GroupUserLevel::Invited->value => 1,
+                    GroupUserLevel::Member->value => 2,
+                    GroupUserLevel::Moderator->value => 3,
+                    GroupUserLevel::Admin->value => 4,
+                    GroupUserLevel::Owner->value => 5
+                })->values()->all(),
         ]);
     }
 

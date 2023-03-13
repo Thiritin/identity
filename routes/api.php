@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\Api\v1\GroupController;
 use App\Http\Controllers\Api\v1\GroupUserController;
-use App\Http\Controllers\UserinfoController;
+use App\Http\Controllers\Api\v1\IntrospectionController;
+use App\Http\Controllers\Api\v1\UserinfoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,9 +18,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('api')->prefix('v1/')->name('api.v1.')->group(function () {
-    Route::get('userinfo', UserinfoController::class)->name('userinfo');
-    Route::apiResource("groups", GroupController::class);
-    Route::apiResource("groups.users", GroupUserController::class, [
-        "only" => ["index", "store", "destroy"]
-    ]);
+    /**
+     * Authed
+     */
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('userinfo', UserinfoController::class)->name('userinfo');
+        Route::apiResource("groups", GroupController::class);
+        Route::apiResource("groups.users", GroupUserController::class, [
+            "only" => ["index", "store", "destroy"],
+        ]);
+    });
+    /**
+     * Routes not requiring authentication/doing their own authentication
+     */
+    // Introspect requires auth via client id + secret
+    Route::post('introspect', IntrospectionController::class)->name('introspect');
 });

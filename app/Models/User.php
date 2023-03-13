@@ -141,7 +141,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         }
         $sanctumCheck = $this->tokenCan($ability);
         $appCheck = $this->appCan($ability);
-        return ($sanctumCheck && $appCheck);
+        return ($sanctumCheck || $appCheck);
     }
 
     public function canAccessFilament(): bool
