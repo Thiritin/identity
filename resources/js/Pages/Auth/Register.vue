@@ -45,7 +45,7 @@ import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import FormInput from '@/Auth/Form/AuthFormInput.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
-import Head from '@inertiajs/vue3'
+import {Head} from '@inertiajs/vue3'
 import PasswordInfoBox from '@/Auth/PasswordInfoBox.vue'
 
 export default {
