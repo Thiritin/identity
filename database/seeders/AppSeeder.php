@@ -14,7 +14,7 @@ class AppSeeder extends Seeder
      */
     public function run()
     {
-        App::firstOrCreate([
+        $app = App::firstOrCreate([
             "id" => 1,
         ], [
             "id" => 1,
@@ -31,7 +31,9 @@ class AppSeeder extends Seeder
             ]
         ]);
 
-        App::firstOrCreate([
+        $this->command->info($app->data['client_name']." :".$app->data['client_id']);
+
+        $app = App::firstOrCreate([
             "id" => 2,
         ], [
             "id" => 2,
@@ -47,5 +49,7 @@ class AppSeeder extends Seeder
                 "frontchannel_logout_uri" => route('filament.auth.frontchannel-logout'),
             ]
         ]);
+
+        $this->command->info($app->data['client_name']." :".$app->data['client_id']);
     }
 }
