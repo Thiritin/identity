@@ -15,9 +15,9 @@ class OpenIDService
     public function setupOIDC(Request $request, bool $clientIsAdmin): GenericProvider
     {
         $config = Cache::remember('openid-configuration', now()->addHour(), function () {
-            return Http::get(config('services.hydra.public') . "/.well-known/openid-configuration")->json();
+            return Http::get(config('services.hydra.public')."/.well-known/openid-configuration")->json();
         });
-
+        
         if ($clientIsAdmin) {
             $clientId = config('services.oidc.admin.client_id');
             $clientSecret = config('services.oidc.admin.secret');
@@ -33,8 +33,8 @@ class OpenIDService
                 'clientId' => $clientId,
                 'clientSecret' => $clientSecret,
                 'redirectUri' => $clientCallback,
-                'urlAuthorize' => config('services.hydra.local_public') . "/oauth2/auth",
-                'urlAccessToken' => config('services.hydra.public') . "/oauth2/token",
+                'urlAuthorize' => config('services.hydra.local_public')."/oauth2/auth",
+                'urlAccessToken' => config('services.hydra.public')."/oauth2/token",
                 'urlResourceOwnerDetails' => $config['userinfo_endpoint'],
                 'accessTokenMethod' => AbstractProvider::METHOD_POST,
                 'scopeSeparator' => ' ',

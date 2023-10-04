@@ -5,9 +5,6 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "@inertiajs/inertia": "^0.9.1",
-        "@inertiajs/inertia-vue3": "^0.4.2",
-        "@inertiajs/progress": "^0.2.6",
         "@tailwindcss/forms": "^0.3.4",
         "@tailwindcss/typography": "^0.3.1",
         "@vitejs/plugin-vue": "^3.2.0",
@@ -32,6 +29,7 @@
     "dependencies": {
         "@headlessui/vue": "^1.7.7",
         "@heroicons/vue": "^1.0.4",
+        "@inertiajs/vue3": "^1.0.2",
         "matice": "^1.1.0",
         "vue-cookie-accept-decline": "^6.1.0",
         "vue-cookies": "^1.8.2",

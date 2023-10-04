@@ -9,7 +9,7 @@
         <div class="space-y-8">
             <UserBox :user="user"/>
             <div class="flex items-center justify-between">
-                <InertiaLink
+                <Link
                     :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
                     :disabled="form.processing"
                     :href="route('auth.oidc.login')"
@@ -25,7 +25,7 @@
                         "
                 >
                     {{ $trans('continue_to_login') }}
-                </InertiaLink>
+                </Link>
             </div>
         </div>
     </auth-layout>
@@ -36,6 +36,7 @@ import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import UserBox from "@/Pages/Auth/UserBox.vue";
+import {Link} from "@inertiajs/vue3";
 
 export default {
     components: {
@@ -43,6 +44,7 @@ export default {
         AuthLayout,
         Logo,
         LoginScreenWelcome,
+        Link,
     },
 
     props: {

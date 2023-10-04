@@ -31,7 +31,7 @@
                                                 item, itemIdx
                                             ) in navigation' :key='item'>
                                                 <template v-if='item.route === $page.url'>
-                                                    <InertiaLink class='
+                                                    <Link class='
                                                         bg-primary-800
                                                         text-white
                                                         px-3
@@ -40,9 +40,9 @@
                                                         text-sm
                                                         font-medium
                                                     ' href='#'>{{ $trans(item.name) }}
-                                                    </InertiaLink>
+                                                    </Link>
                                                 </template>
-                                                <InertiaLink v-else-if='item.inertia' :href='item.route' class='
+                                                <Link v-else-if='item.inertia' :href='item.route' class='
                                                     text-primary-300
                                                     hover:bg-primary-700
                                                     hover:text-white
@@ -52,7 +52,7 @@
                                                     text-sm
                                                     font-medium
                                                 '>{{ $trans(item.name) }}
-                                                </InertiaLink>
+                                                </Link>
                                                 <a v-else :href='item.route' class='
                                                     text-primary-300
                                                     hover:bg-primary-700
@@ -114,13 +114,13 @@
                                                     focus:outline-none
                                                 '>
                                                     <MenuItem v-for='item in profile' :key='item' v-slot='{ active }'>
-                                                        <InertiaLink :class="[
+                                                        <Link :class="[
                                                             active
                                                                 ? 'bg-primary-800'
                                                                 : '',
                                                             'block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300',
                                                         ]" :href='item.route'>{{ $trans(item.name) }}
-                                                        </InertiaLink>
+                                                        </Link>
                                                     </MenuItem>
                                                     <MenuItem>
                                                         <a class='block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300'
@@ -212,7 +212,7 @@
                                 </div>
                             </div>
                             <div class='mt-3 px-2 space-y-1'>
-                                <InertiaLink v-for='item in profile' :key='item' :href='item.route' class='
+                                <Link v-for='item in profile' :key='item' :href='item.route' class='
                                     block
                                     px-3
                                     py-2
@@ -222,7 +222,7 @@
                                     text-primary-400
                                     hover:text-white hover:bg-primary-700
                                 '>{{ $trans(item.name) }}
-                                </InertiaLink>
+                                </Link>
                                 <a class='block
                                     px-3
                                     py-2
@@ -260,11 +260,11 @@
             <footer>
                 <div class='mt-7 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-7'>
                     <div v-for='item in footer.nav' :key='item.name'>
-                        <InertiaLink v-if='item.href === null' :href='item.link'
-                                     :target="[item.newTab ? '_blank' : '_top']"
-                                     class='text-base text-gray-500 hover:text-gray-900 dark:hover:text-gray-400'>
+                        <Link v-if='item.href === null' :href='item.link'
+                              :target="[item.newTab ? '_blank' : '_top']"
+                              class='text-base text-gray-500 hover:text-gray-900 dark:hover:text-gray-400'>
                             {{ item.name }}
-                        </InertiaLink>
+                        </Link>
                         <a v-else :href='item.href' :target="[item.newTab ? '_blank' : '_top']"
                            class='text-base text-gray-500 hover:text-gray-900 dark:hover:text-gray-400qq'>
                             {{ item.name }} </a>
@@ -279,13 +279,14 @@
 </template>
 
 <script>
-import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems,} from '@headlessui/vue'
+import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
 import {BellIcon, MenuIcon, XIcon} from '@heroicons/vue/outline'
 import Logo from '@/Auth/Logo.vue'
-import {usePage} from '@inertiajs/inertia-vue3'
+import {Link, usePage} from '@inertiajs/vue3'
 import {computed} from 'vue'
 import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
 import ToogleDarkMode from '@/Layouts/ToogleDarkMode.vue'
+
 
 const profile = [
     {
@@ -332,6 +333,7 @@ export default {
         BellIcon,
         MenuIcon,
         XIcon,
+        Link,
     },
 
     props: {
@@ -375,7 +377,7 @@ export default {
     },
 
     setup() {
-        const user = computed(() => usePage().props.value.user)
+        const user = computed(() => usePage().props.user)
         navigation = navigation.filter(function (value) {
             return (value.name === 'admin' && user.value.isAdmin === true) || value.name !== 'admin'
         })

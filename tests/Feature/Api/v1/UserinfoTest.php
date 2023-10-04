@@ -81,3 +81,5 @@ test('Userinfo Authenticated - Show groups that user is member', function () {
         ],
     ]);
 });
+
+# echo hello

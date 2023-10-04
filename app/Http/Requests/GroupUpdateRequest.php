@@ -2,19 +2,16 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\GroupTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class GroupUpdateRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            "type" => Rule::enum(GroupTypeEnum::class),
-            "name" => "string|required|max:255",
-            "description" => "string|nullable",
-            "logo" => "string|nullable",
+            "name.*" => "string|required|max:255",
+            "description.*" => "string|nullable",
+            "logo" => "file|image|nullable|mimes:jpeg,png,jpg|max:2048",
         ];
     }
 }

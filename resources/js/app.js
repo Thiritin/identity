@@ -2,12 +2,11 @@ import './bootstrap'
 import '../css/app.css'
 
 // Import modules...
-import { createApp, h } from 'vue'
-import { createInertiaApp } from '@inertiajs/inertia-vue3'
-import { InertiaProgress } from '@inertiajs/progress'
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
-import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m'
-import { __, getLocale, locales, setLocale, trans, transChoice } from 'matice'
+import {createApp, h} from 'vue'
+import {createInertiaApp} from '@inertiajs/vue3'
+import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers'
+import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m'
+import {__, getLocale, locales, setLocale, trans, transChoice} from 'matice'
 import transProp from './Utils/trans.js'
 import VueCookies from 'vue-cookies'
 
@@ -20,13 +19,16 @@ const appName = window.document.getElementsByTagName('title')[0]?.innerText || '
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
-    setup({ el, app, props, plugin }) {
-        return createApp({ render: () => h(app, props) })
+    progress: {
+        color: '#4B5563',
+    },
+    setup({el, App, props, plugin}) {
+        return createApp({render: () => h(App, props)})
             .use(plugin)
             .use(ZiggyVue, Ziggy)
-            .use(VueCookies,{})
-            .mixin({ methods: { route } })
-            .mixin({ methods: { transProp } })
+            .use(VueCookies, {})
+            .mixin({methods: {route}})
+            .mixin({methods: {transProp}})
             .mixin({
                 methods: {
                     $trans: trans,
@@ -49,6 +51,4 @@ createInertiaApp({
             .mount(el)
     },
 })
-
-InertiaProgress.init({ color: '#4B5563' })
 

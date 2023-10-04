@@ -14,20 +14,20 @@
             <!-- Links -->
             <div class='flex justify-around mt-3'>
                 <div>
-                    <InertiaLink
+                    <Link
                         class='text-primary-500 dark:text-primary-200 font-semibold hover:text-primary-800 dark:hover:text-primary-100 flex justify-center items-center gap-1'
                         :href='route("groups.show",{group: group.hashid})'>
                         <CircleUser class='h-3.5 inline fill-current'></CircleUser>
                         <span>{{ $trans('view') }}</span>
-                    </InertiaLink>
+                    </Link>
                 </div>
                 <div>
-                    <InertiaLink
+                    <Link
                         class='text-primary-500 dark:text-primary-200 font-semibold hover:text-primary-800 dark:hover:text-primary-100 flex justify-center items-baseline gap-1'
                         :href='route("groups.edit",{group: group.hashid})'>
                         <CogsDuotone class='h-3.5 inline'></CogsDuotone>
                         <span>{{ $trans('settings') }}</span>
-                    </InertiaLink>
+                    </Link>
                 </div>
             </div>
         </div>
@@ -36,6 +36,7 @@
 <script>
 import CircleUser from '@/Components/Icons/CircleUser.vue'
 import CogsDuotone from '@/Components/Icons/CogsDuotone.vue'
+import {Link} from "@inertiajs/vue3";
 
 export default {
     props: {
@@ -51,6 +52,6 @@ export default {
         },
     },
     name: 'GroupBox',
-    components: {CircleUser, CogsDuotone},
+    components: {CircleUser, CogsDuotone, Link},
 }
 </script>

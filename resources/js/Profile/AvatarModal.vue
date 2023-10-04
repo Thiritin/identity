@@ -62,7 +62,7 @@ import {Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot} fro
 import {CheckIcon} from '@heroicons/vue/outline'
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
-import {useForm} from "@inertiajs/inertia-vue3";
+import {useForm} from "@inertiajs/vue3";
 
 export default {
     components: {

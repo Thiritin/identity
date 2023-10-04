@@ -16,6 +16,7 @@ class IntrospectionRequest extends FormRequest
         return [
             "client_id" => "required|string",
             "scope" => "nullable|string",
+            "token" => "required|string",
         ];
     }
 

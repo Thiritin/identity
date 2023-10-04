@@ -10,7 +10,9 @@
                     <div class='mt-6 sm:mt-5 space-y-6 sm:space-y-5'>
                         <div
                             class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5'>
-                            <label class='block text-sm font-medium text-gray-700 dark:text-primary-200 sm:mt-px sm:pt-2' for='username'>
+                            <label
+                                class='block text-sm font-medium text-gray-700 dark:text-primary-200 sm:mt-px sm:pt-2'
+                                for='username'>
                                 Username </label>
                             <div class='mt-1 sm:mt-0 sm:col-span-2'>
                                 <div class='max-w-lg flex rounded-md shadow-sm'>
@@ -22,17 +24,21 @@
                                            class='form-input flex-1 bg-gray-100 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300'
                                            name='username' type='text' disabled/>
                                 </div>
-                                <span class="text-gray-600 dark:text-primary-200 text-xs">{{ $trans('profile_username_notice') }}</span>
+                                <span
+                                    class="text-gray-600 dark:text-primary-200 text-xs">{{
+                                        $trans('profile_username_notice')
+                                    }}</span>
                             </div>
                         </div>
 
                         <div
                             class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:pt-5'>
-                            <label class='block text-sm font-medium text-gray-700 dark:text-primary-200' for='avatar'> Avatar </label>
+                            <label class='block text-sm font-medium text-gray-700 dark:text-primary-200'
+                                   for='avatar'> Avatar </label>
                             <div class='mt-1 sm:mt-0 sm:col-span-2'>
                                 <div class='flex items-center'>
                                     <span class='h-12 w-12 rounded-full overflow-hidden bg-gray-100'>
-                                      <AvatarImage/>
+                                      <AvatarImage :avatar="$page.props.user.avatar"/>
                                         </span>
                                     <div
                                         class='relative ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'>
@@ -46,7 +52,10 @@
                                                                                                    @change='onFileChange($event)'/>
                                     </div>
                                 </div>
-                                <div class="text-gray-600 dark:text-primary-200 text-xs">{{ $trans('profile_avatar_notice') }}</div>
+                                <div
+                                    class="text-gray-600 dark:text-primary-200 text-xs">
+                                    {{ $trans('profile_avatar_notice') }}
+                                </div>
                                 <span v-show='errors.image' class='text-xs text-red-600'>{{ errors.image }}</span>
                             </div>
                         </div>
@@ -96,7 +105,7 @@
 </template>
 
 <script>
-import {useForm} from '@inertiajs/inertia-vue3'
+import {useForm} from '@inertiajs/vue3'
 import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
 import SettingsLayout from '@/Layouts/SettingsLayout.vue'
 import SettingsHeader from '@/Components/Settings/SettingsHeader.vue'
