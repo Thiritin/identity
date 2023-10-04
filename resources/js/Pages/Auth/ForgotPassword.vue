@@ -65,7 +65,7 @@ import Logo from "@/Auth/Logo.vue";
 import LoginScreenWelcome from "@/Auth/LoginScreenWelcome.vue";
 import FormInput from "@/Auth/Form/AuthFormInput.vue";
 import AuthLayout from "@/Layouts/AuthLayout.vue";
-import {Link} from "@inertiajs/inertia-vue3";
+import {Link} from "@inertiajs/vue3";
 
 export default {
     components: {AuthLayout, Logo, LoginScreenWelcome, FormInput, Link},
