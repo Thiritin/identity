@@ -72,7 +72,6 @@ Route::get('auth/error', App\Http\Controllers\Auth\ErrorController::class)->name
 
 // E-Mail First Sign Up
 Route::prefix('auth')->group(function () {
-
     Route::get('verify', [VerifyEmailController::class, 'view'])->middleware('auth')->name('verification.notice');
     Route::get('verify/logout', [
         VerifyEmailController::class,
