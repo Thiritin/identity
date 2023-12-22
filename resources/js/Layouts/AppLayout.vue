@@ -387,7 +387,7 @@ export default {
 
     methods: {
         logout() {
-            window.location.href = '/oauth2/sessions/logout'
+            window.location.href = '/auth/logout'
         },
         toggleDarkMode() {
             if (this.darkMode === false) {

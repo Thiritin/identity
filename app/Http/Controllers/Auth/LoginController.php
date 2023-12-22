@@ -32,7 +32,8 @@ class LoginController extends Controller
          * If skip is true do not show UI but simply accept
          */
         if ($loginRequest["skip"] === true) {
-            return Redirect::to($hydra->acceptLogin($loginRequest['subject'], $loginRequest["challenge"], 0, $loginRequest));
+            return Redirect::to($hydra->acceptLogin($loginRequest['subject'], $loginRequest["challenge"], 0,
+                $loginRequest));
         }
 
         return Inertia::render('Auth/Login');
@@ -48,12 +49,13 @@ class LoginController extends Controller
         if (Auth::attempt($loginData)) {
             $user = Auth::user();
             if ($user->hasVerifiedEmail() === false) {
-                Cache::put("web." . $user->id . ".loginChallenge", $request->get('login_challenge'), now()->addMinutes(10));
+                Cache::put("web.".$user->id.".loginChallenge", $request->get('login_challenge'), now()->addMinutes(10));
                 return Redirect::route('verification.notice');
             }
 
 
-            $url = (new Client())->acceptLogin($user->hashId(), $request->get('login_challenge'), $request->get('remember') ? "2592000" : "0");
+            $url = (new Client())->acceptLogin($user->hashId(), $request->get('login_challenge'),
+                $request->get('remember') ? "2592000" : "0");
             return Inertia::location($url);
         }
 
