@@ -78,5 +78,6 @@
     "group_members": "Group members",
     "developers": "Developers",
     "developers_note": "You can code? Get in touch!",
-    "edit_group": "Edit Group"
+    "edit_group": "Edit Group",
+    "too_many_attempts_email_verification": "You can resend the verification email every 30 seconds."
 }

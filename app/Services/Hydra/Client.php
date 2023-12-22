@@ -38,12 +38,16 @@ class Client
     /**
      * Accept OIDC Login Request
      *
-     * @param string $login_challenge
+     * @param  string  $login_challenge
      * @return Response
      * @throws JsonException
      */
-    public function acceptLogin(string $subject, string $login_challenge, int $remember_seconds = 0, array|null $loginRequest = null): string
-    {
+    public function acceptLogin(
+        string $subject,
+        string $login_challenge,
+        int $remember_seconds = 0,
+        array|null $loginRequest = null
+    ): string {
         $hydra = new Client();
         // If $loginRequest is not supplied, refetch.
         if ($loginRequest === null) {
@@ -73,7 +77,7 @@ class Client
     public function acceptLoginRequest(string $userId, string $loginChallenge, int $remember = 0)
     {
         try {
-            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/login/accept?challenge=' . $loginChallenge, [
+            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/login/accept?challenge='.$loginChallenge, [
                 'subject' => $userId,
                 'remember' => ($remember === 0) ? false : true,
                 'remember_for' => $remember,
@@ -109,7 +113,8 @@ class Client
                 $requestData['session']['id_token']['groups'] = $user->groups->pluck('hashid');
             }
 
-            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/consent/accept?challenge=' . $consentChallenge['challenge'], $requestData)->json();
+            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/consent/accept?challenge='.$consentChallenge['challenge'],
+                $requestData)->json();
         } catch (Exception $e) {
             if ($e->getCode() === 404) {
                 throw new ModelNotFoundException('The requested Resource does not exist.');
@@ -118,8 +123,14 @@ class Client
         }
     }
 
-    public function rejectConsentRequest(array $consentChallenge, string $errorCode, string $errorDescription, string $errorHint, string $errorDebug, int $statusCode)
-    {
+    public function rejectConsentRequest(
+        array $consentChallenge,
+        string $errorCode,
+        string $errorDescription,
+        string $errorHint,
+        string $errorDebug,
+        int $statusCode
+    ) {
         try {
             $requestData = [
                 "error" => $errorCode,
@@ -128,7 +139,8 @@ class Client
                 "error_debug" => $errorDebug,
                 "status_code" => $statusCode,
             ];
-            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/consent/reject?challenge=' . $consentChallenge['challenge'], $requestData)->json();
+            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/consent/reject?challenge='.$consentChallenge['challenge'],
+                $requestData)->json();
         } catch (Exception $e) {
             if ($e->getCode() === 404) {
                 throw new ModelNotFoundException('The requested Resource does not exist.');
@@ -171,7 +183,7 @@ class Client
     {
         try {
             return Http::hydraAdmin()->put(
-                '/admin/oauth2/auth/requests/logout/accept?challenge=' . $logoutChallenge
+                '/admin/oauth2/auth/requests/logout/accept?challenge='.$logoutChallenge
             )->json();
         } catch (Exception $e) {
             if ($e->getCode() === 404) {

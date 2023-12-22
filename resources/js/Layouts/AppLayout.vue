@@ -1,6 +1,6 @@
 <template>
     <div class='page' :class='{dark: darkMode}'>
-        <div class='min-h-screen bg-gray-100 dark:bg-primary-800'>
+        <div class='min-h-screen bg-gray-100 dark:bg-primary-800 dark:text-primary-100'>
             <div class='bg-primary-600 dark:bg-primary-900 pb-32'>
                 <Disclosure v-slot='{ open }' as='nav'>
                     <div class='max-w-7xl mx-auto sm:px-6 lg:px-8'>
@@ -15,23 +15,22 @@
                             '>
                                 <div class='flex items-center'>
                                     <div class='flex-shrink-0'>
-                                        <Logo class='w-14'></Logo>
+                                        <Logo class='h-14'></Logo>
                                     </div>
-                                    <div class='text-white font-bold ml-2'>
-                                        EF Identity
-                                    </div>
-                                    <div class='hidden md:block'>
-                                        <div class='
+                                </div>
+                                <div class='hidden md:block'>
+                                    <div class='
                                             ml-10
                                             flex
+                                            justify-between
                                             items-baseline
                                             space-x-4
                                         '>
-                                            <template v-for='(
+                                        <template v-for='(
                                                 item, itemIdx
                                             ) in navigation' :key='item'>
-                                                <template v-if='item.route === $page.url'>
-                                                    <Link class='
+                                            <template v-if='item.route === $page.url'>
+                                                <Link class='
                                                         bg-primary-800
                                                         text-white
                                                         px-3
@@ -40,20 +39,9 @@
                                                         text-sm
                                                         font-medium
                                                     ' href='#'>{{ $trans(item.name) }}
-                                                    </Link>
-                                                </template>
-                                                <Link v-else-if='item.inertia' :href='item.route' class='
-                                                    text-primary-300
-                                                    hover:bg-primary-700
-                                                    hover:text-white
-                                                    px-3
-                                                    py-2
-                                                    rounded-md
-                                                    text-sm
-                                                    font-medium
-                                                '>{{ $trans(item.name) }}
                                                 </Link>
-                                                <a v-else :href='item.route' class='
+                                            </template>
+                                            <Link v-else-if='item.inertia' :href='item.route' class='
                                                     text-primary-300
                                                     hover:bg-primary-700
                                                     hover:text-white
@@ -63,9 +51,19 @@
                                                     text-sm
                                                     font-medium
                                                 '>{{ $trans(item.name) }}
-                                                </a>
-                                            </template>
-                                        </div>
+                                            </Link>
+                                            <a v-else :href='item.route' class='
+                                                    text-primary-300
+                                                    hover:bg-primary-700
+                                                    hover:text-white
+                                                    px-3
+                                                    py-2
+                                                    rounded-md
+                                                    text-sm
+                                                    font-medium
+                                                '>{{ $trans(item.name) }}
+                                            </a>
+                                        </template>
                                     </div>
                                 </div>
                                 <div class='hidden md:block'>
@@ -281,7 +279,7 @@
 <script>
 import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
 import {BellIcon, MenuIcon, XIcon} from '@heroicons/vue/outline'
-import Logo from '@/Auth/Logo.vue'
+import Logo from '../Auth/Logo.vue'
 import {Link, usePage} from '@inertiajs/vue3'
 import {computed} from 'vue'
 import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
@@ -299,11 +297,6 @@ var navigation = [
     {
         name: 'dashboard',
         route: route('dashboard'),
-        inertia: true,
-    },
-    {
-        name: 'groups',
-        route: route('groups.index'),
         inertia: true,
     },
     {

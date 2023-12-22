@@ -1,10 +1,8 @@
 <template>
     <div class='bg-white dark:bg-primary-600 rounded shadow h-full flex flex-col'>
-        <img v-if='group.logo' :src='group.logo' alt='' class='rounded-t max-h-[300px] max-w-[600px]'>
-        <img class='rounded-t' v-else src='../../../assets/fallback-group-image.png' alt=''>
         <div class='p-4 flex flex-col flex-1 justify-start'>
             <div class='flex justify-between pb-2'>
-                <h1 class='font-semibold text-xl dark:text-primary-200'>{{ transProp(group.name) }}</h1>
+                <h1 class='font-semibold text-xl dark:text-primary-200'>{{ group.name }}</h1>
                 <div class='flex items-center gap-1 text-primary-400 dark:text-primary-200'>
                     <CircleUser class='fill-current w-4'></CircleUser>
                     <div class='text-sm font-semibold'>{{ group.users_count }}</div>
@@ -44,7 +42,10 @@ export default {
     },
     computed: {
         description() {
-            let description = this.transProp(this.group.description)
+            let description = this.group.description;
+            if (!description) {
+                return "";
+            }
             if (description.length > 95) {
                 description = description.substring(0, 95) + "...";
             }

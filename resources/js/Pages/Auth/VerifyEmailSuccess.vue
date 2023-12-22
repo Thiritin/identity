@@ -1,19 +1,18 @@
 <template>
-    <auth-layout>
-        <Logo></Logo>
-        <LoginScreenWelcome
-            :sub-title="$trans('verifysuccess_subtitle')"
-            :title="$trans('verifysuccess_title')"
-            class="mb-6"
-        />
-        <div class="space-y-8">
-            <UserBox :user="user"/>
-            <div class="flex items-center justify-between">
-                <Link
-                    :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
-                    :disabled="form.processing"
-                    :href="route('auth.oidc.login')"
-                    class="
+    <Logo></Logo>
+    <LoginScreenWelcome
+        :sub-title="$trans('verifysuccess_subtitle')"
+        :title="$trans('verifysuccess_title')"
+        class="mb-6"
+    />
+    <div class="space-y-8">
+        <UserBox :user="user"/>
+        <div class="flex items-center justify-between">
+            <Link
+                :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
+                :disabled="form.processing"
+                :href="route('auth.oidc.login')"
+                class="
                             py-3
                             rounded-lg
                             px-8
@@ -23,12 +22,11 @@
                             font-semibold
                             focus:outline-none
                         "
-                >
-                    {{ $trans('continue_to_login') }}
-                </Link>
-            </div>
+            >
+                {{ $trans('continue_to_login') }}
+            </Link>
         </div>
-    </auth-layout>
+    </div>
 </template>
 
 <script>
@@ -46,6 +44,7 @@ export default {
         LoginScreenWelcome,
         Link,
     },
+    layout: AuthLayout,
 
     props: {
         user: Object,

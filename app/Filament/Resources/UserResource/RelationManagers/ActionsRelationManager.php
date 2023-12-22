@@ -4,26 +4,25 @@ namespace App\Filament\Resources\UserResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Table;
 use Spatie\Activitylog\Models\Activity;
 
 class ActionsRelationManager extends RelationManager
 {
     protected static string $relationship = 'actions';
     protected static ?string $recordTitleAttribute = 'description';
-    public $tableSortColumn = "created_at";
-    public $tableSortDirection = "desc";
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('description')->formatStateUsing(fn(string $state) => __("activity." . $state)),
+                Tables\Columns\TextColumn::make('description')->formatStateUsing(fn(string $state
+                ) => __("activity.".$state)),
                 Tables\Columns\TextColumn::make('subject.name')
                     ->formatStateUsing(static function (Column $column, $state): ?string {
                         $record = $column->getRecord();
@@ -33,7 +32,9 @@ class ActionsRelationManager extends RelationManager
                     ->description(fn(Activity $record): string => ($record->subject_type ?? $record->causer_type)),
 
                 // TextColumn::make('changes'),
-                Tables\Columns\TextColumn::make('created_at')->label('Date')->dateTime()->description(function (Activity $record) {
+                Tables\Columns\TextColumn::make('created_at')->label('Date')->dateTime()->description(function (
+                    Activity $record
+                ) {
                     return $record->created_at->since();
                 })->sortable(),
             ])
@@ -48,11 +49,11 @@ class ActionsRelationManager extends RelationManager
                         $indicators = [];
 
                         if ($data['from'] ?? null) {
-                            $indicators['from'] = 'Created from ' . Carbon::parse($data['from'])->toFormattedDateString();
+                            $indicators['from'] = 'Created from '.Carbon::parse($data['from'])->toFormattedDateString();
                         }
 
                         if ($data['until'] ?? null) {
-                            $indicators['until'] = 'Created until ' . Carbon::parse($data['until'])->toFormattedDateString();
+                            $indicators['until'] = 'Created until '.Carbon::parse($data['until'])->toFormattedDateString();
                         }
 
                         return $indicators;
@@ -60,7 +61,7 @@ class ActionsRelationManager extends RelationManager
             ]);
     }
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([

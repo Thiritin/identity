@@ -130,7 +130,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 
     public function permCheck(string $ability)
     {
-        $adminCheck = $this->can('admin.' . $ability);
+        $adminCheck = $this->can('admin.'.$ability);
         return $adminCheck || $this->scopeCheck($ability);
     }
 
@@ -144,7 +144,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         return ($sanctumCheck || $appCheck);
     }
 
-    public function canAccessFilament(): bool
+    public function canAccessPanel($panel): bool
     {
         return $this->hasRole('superadmin');
     }

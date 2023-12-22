@@ -5,8 +5,6 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "@tailwindcss/forms": "^0.3.4",
-        "@tailwindcss/typography": "^0.3.1",
         "@vitejs/plugin-vue": "^3.2.0",
         "@vue/compiler-sfc": "^3.2.45",
         "autoprefixer": "^10.4.13",
@@ -20,7 +18,7 @@
         "postcss": "^8.4.4",
         "postcss-import": "^12.0.1",
         "prettier": "2.3.2",
-        "tailwindcss": "^2.2.19",
+        "tailwindcss": "^3.0",
         "tippy.js": "^6.3.7",
         "vite": "^3.2.3",
         "vue": "^3.2.23",
@@ -30,7 +28,10 @@
         "@headlessui/vue": "^1.7.7",
         "@heroicons/vue": "^1.0.4",
         "@inertiajs/vue3": "^1.0.2",
+        "@tailwindcss/forms": "^0.5.7",
+        "@tailwindcss/typography": "^0.5.10",
         "matice": "^1.1.0",
+        "primevue": "^3.44.0",
         "vue-cookie-accept-decline": "^6.1.0",
         "vue-cookies": "^1.8.2",
         "vue-cropperjs": "^5.0.0"

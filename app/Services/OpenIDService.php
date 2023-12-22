@@ -17,7 +17,7 @@ class OpenIDService
         $config = Cache::remember('openid-configuration', now()->addHour(), function () {
             return Http::get(config('services.hydra.public')."/.well-known/openid-configuration")->json();
         });
-        
+
         if ($clientIsAdmin) {
             $clientId = config('services.oidc.admin.client_id');
             $clientSecret = config('services.oidc.admin.secret');
@@ -43,9 +43,6 @@ class OpenIDService
                     'offline_access',
                     'email',
                     'profile',
-                    'groups',
-                    'groups',
-                    'groups',
                     'groups',
                     'groups.read',
                     'groups.write',

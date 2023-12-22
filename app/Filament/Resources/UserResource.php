@@ -11,10 +11,10 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class UserResource extends Resource
 {
@@ -42,7 +42,7 @@ class UserResource extends Resource
 
                 FileUpload::make('profile_photo_path')
                     ->image()
-                    ->disk('avatars')
+                    ->disk('s3-avatars')
                     ->label('Profile Photo')
                     ->imageResizeTargetWidth('512')
                     ->imageResizeTargetHeight('512')

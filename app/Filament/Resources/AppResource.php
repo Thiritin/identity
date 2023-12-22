@@ -17,10 +17,10 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class AppResource extends Resource
 {
@@ -30,7 +30,7 @@ class AppResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'client_id';
 
-    protected static ?string $navigationIcon = "heroicon-o-collection";
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -57,7 +57,7 @@ class AppResource extends Resource
                                 ->url()
                                 ->helperText('A URL string that references the terms of service for the client'),
                         ]),
-                        Tabs\Tab::make('Login')->icon('heroicon-o-login')->schema([
+                        Tabs\Tab::make('Login')->icon('heroicon-o-arrow-left-on-rectangle')->schema([
                             TagsInput::make('data.redirect_uris')->columnSpan(2),
                             Select::make('data.subject_type')->options([
                                 "public" => "public",
@@ -96,7 +96,7 @@ class AppResource extends Resource
                             }),
 
                         ]),
-                        Tabs\Tab::make('Logout')->icon('heroicon-o-logout')->schema([
+                        Tabs\Tab::make('Logout')->icon('heroicon-o-arrow-right-on-rectangle')->schema([
                             TagsInput::make('data.post_logout_redirect_uris')->columnSpan(2),
                             Section::make('Frontchannel Logout')
                                 ->description('Configure frontchannel logout.')
@@ -119,7 +119,7 @@ class AppResource extends Resource
                                 ]),
                         ]),
 
-                        Tabs\Tab::make('Request')->icon('heroicon-o-status-online')->schema([
+                        Tabs\Tab::make('Request')->icon('heroicon-o-signal')->schema([
                             TagsInput::make('data.request_uris')->columnSpan(2),
                             Select::make('data.request_object_signing_alg')->options([
                                 "none" => "none",
@@ -144,7 +144,9 @@ class AppResource extends Resource
                         ->schema([
                             Select::make('user_id')
                                 ->label('Owner')
-                                ->relationship('owner', 'name')->required(),
+                                ->relationship('owner', 'name')
+                                ->searchable()
+                                ->required(),
                         ]),
                     Section::make('Dashboard Settings')
                         ->description('These settings control the visibility of the app on the dashboard. This is NOT access control in any way.')

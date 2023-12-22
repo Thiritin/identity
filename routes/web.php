@@ -14,7 +14,6 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\GroupController;
 use App\Http\Controllers\Profile\SecurityController;
 use App\Http\Controllers\Profile\Settings\UpdatePasswordController;
 use App\Http\Controllers\Profile\StoreAvatarController;
@@ -69,7 +68,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
 });
 
 // Error
-Route::get('error', App\Http\Controllers\Auth\ErrorController::class)->name('error');
+Route::get('auth/error', App\Http\Controllers\Auth\ErrorController::class)->name('auth.error');
 
 // E-Mail First Sign Up
 Route::prefix('auth')->group(function () {
@@ -82,7 +81,7 @@ Route::prefix('auth')->group(function () {
     Route::post('verify', [
         VerifyEmailController::class,
         'resend',
-    ])->middleware(['throttle:6,1', 'auth'])->name('verification.send');
+    ])->middleware(['auth'])->name('verification.send');
 
     Route::get('verify/{id}/{hash}', [
         VerifyEmailController::class,
@@ -117,14 +116,14 @@ Route::middleware(['auth', 'verified', 'auth.oidc'])->group(function () {
 
     Route::post('/profile/avatar/store', StoreAvatarController::class)->name('profile.avatar.store');
 
-    Route::resource('groups', GroupController::class);
+    // Route::resource('groups', GroupController::class);
 });
 
 /**
  * Admin
  */
 Route::middleware('guest:admin')->group(function () {
-    Route::get('/admin/login', [OidcClientController::class, 'login'])->name('filament.auth.login');
+    Route::get('/admin/login', [OidcClientController::class, 'login'])->name('filament.admin.auth.login');
     Route::get('/admin/callback', [OidcClientController::class, 'callback'])->name('filament.auth.callback');
 });
 

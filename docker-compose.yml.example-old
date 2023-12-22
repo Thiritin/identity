@@ -131,7 +131,7 @@ services:
     command: serve all --dangerous-force-http
     labels:
       - traefik.enable=true
-      - traefik.http.routers.hydra.rule=Host(`auth.eurofurence.localhost`)
+      - traefik.http.routers.hydra.rule=Host(`identity.eurofurence.localhost`) && PathPrefix(`/.well-known`,`/oauth2`,`/health`,`/userinfo`)
       - traefik.http.services.hydra.loadbalancer.server.port=4444
       - traefik.http.routers.hydra.entrypoints=web
   hydra-migrate:

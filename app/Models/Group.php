@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Mtvs\EloquentHashids\HasHashid;
 use Mtvs\EloquentHashids\HashidRouting;
-use Spatie\Translatable\HasTranslations;
 
 /**
  * App\Models\Group.
@@ -38,11 +37,8 @@ use Spatie\Translatable\HasTranslations;
 class Group extends Model
 {
     use HasFactory;
-    use HasTranslations;
     use HasHashid;
     use HashidRouting;
-
-    public $translatable = ['name', 'description'];
 
     protected $appends = ['hashid', 'logo_url'];
 

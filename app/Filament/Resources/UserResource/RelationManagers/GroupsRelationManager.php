@@ -6,9 +6,9 @@ use App\Models\Group;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 
 class GroupsRelationManager extends RelationManager
@@ -17,7 +17,7 @@ class GroupsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -45,7 +45,7 @@ class GroupsRelationManager extends RelationManager
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([

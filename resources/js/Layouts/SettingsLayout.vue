@@ -1,18 +1,14 @@
 <template>
-    <app-layout>
-        <template #header>
-            <div class='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-                <h1 class='text-3xl font-bold text-white'>{{ $trans('settings') }}</h1>
-            </div>
-        </template>
-        <div
-            class='bg-white dark:bg-primary-600 rounded-lg shadow divide-y divide-primary-200 lg:grid lg:grid-cols-12 lg:divide-y-0 lg:divide-x'>
-            <SettingsSidebarMenu :menu-items='settingsMenu'></SettingsSidebarMenu>
-            <SettingsContent>
-                <slot></slot>
-            </SettingsContent>
-        </div>
-    </app-layout>
+    <div class='max-w-7xl mx-auto px-4 sm:px-6 mb-8'>
+        <h1 class='text-3xl font-bold text-white'>{{ $trans('settings') }}</h1>
+    </div>
+    <div
+        class='bg-white dark:bg-primary-600 rounded-lg shadow divide-y divide-primary-200 lg:grid lg:grid-cols-12 lg:divide-y-0 lg:divide-x'>
+        <SettingsSidebarMenu :menu-items='settingsMenu'></SettingsSidebarMenu>
+        <SettingsContent>
+            <slot></slot>
+        </SettingsContent>
+    </div>
 </template>
 
 <script>
