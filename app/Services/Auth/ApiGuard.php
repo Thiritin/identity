@@ -9,6 +9,18 @@ use Illuminate\Auth\TokenGuard;
 class ApiGuard extends TokenGuard
 {
     private array $scopes = [];
+    private array $audiences = [];
+
+    private string $client_id = "";
+
+    private string $exp = "";
+
+    private string $iat = "";
+
+    private string $nbf = "";
+    private string $iss = "";
+    private string $token_type = "";
+    private string $token_use = "";
 
     public function user()
     {
@@ -27,9 +39,17 @@ class ApiGuard extends TokenGuard
             $response = $hydra->getToken($token);
 
             if ($response['active'] === true) {
+                $this->audiences = $response['aud'];
+                $this->client_id = $response['client_id'];
+                $this->exp = $response['exp'];
+                $this->iat = $response['iat'];
+                $this->nbf = $response['nbf'];
+                $this->iss = $response['iss'];
+                $this->token_type = $response['token_type'];
+                $this->token_use = $response['token_use'];
                 $this->scopes = explode(" ", $response['scope']);
                 $user = $this->provider->retrieveByCredentials([
-                    'id' => Hashids::connection('user')->decode($response['sub'])
+                    'id' => Hashids::connection('user')->decode($response['sub']),
                 ]);
             }
         }
@@ -51,5 +71,10 @@ class ApiGuard extends TokenGuard
     public function getScopes()
     {
         return $this->scopes;
+    }
+
+    public function getAudiences()
+    {
+        return $this->audiences;
     }
 }

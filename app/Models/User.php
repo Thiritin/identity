@@ -39,7 +39,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         'name',
         'email',
         'password',
-        'profile_photo_path'
+        'profile_photo_path',
     ];
 
     /**
@@ -51,7 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         'password',
         'two_factor_recovery_codes',
         'two_factor_secret',
-        'remember_token'
+        'remember_token',
     ];
 
     /**
@@ -69,41 +69,61 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
      * @var array
      */
     protected $appends = [
-        'hashid'
+        'hashid',
     ];
+
+    public function inGroup(int $id): bool
+    {
+        return $this->groups()->where('level', '!=', 'invited')->where('id', $id)->exists();
+    }
+
+    public function isStaff(): bool
+    {
+        if (empty(config('groups.staff'))) {
+            return false;
+        }
+
+        return $this->inGroup(config('groups.staff'));
+    }
 
     public function sendEmailVerificationNotification(): void
     {
+        activity()
+            ->by($this)
+            ->log('mail-verify-email');
         $this->notify(new VerifyEmailQueuedNotification());
     }
 
     public function sendPasswordResetNotification($token): void
     {
+        activity()
+            ->by($this)
+            ->log('mail-password-reset');
         $this->notify(new PasswordResetQueuedNotification($token));
     }
 
     public function changeMail(string $newEmail)
     {
         $this->email = $newEmail;
+        activity()
+            ->by($this)
+            ->log('mail-change-mail');
         $this->notify(new UpdateEmailNotification($newEmail));
     }
 
     public function groups()
     {
         return $this->belongsToMany(Group::class)
-                    ->using('App\Models\GroupUser')
-                    ->withPivot(
-                        [
-                            'level',
-                        ]
-                    );
+            ->using('App\Models\GroupUser')
+            ->withPivot(
+                [
+                    'level',
+                ]
+            );
     }
 
     public function appCan(string $scope)
     {
-        if (!Auth::guard('api')->check()) {
-            return true;
-        }
         $auth = Auth::guard('api');
         return in_array($scope, $auth->getScopes(), true);
     }
@@ -116,12 +136,15 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 
     public function scopeCheck(string $ability)
     {
+        if (Auth::guard('web')->check()) {
+            return true;
+        }
         $sanctumCheck = $this->tokenCan($ability);
         $appCheck = $this->appCan($ability);
-        return ($sanctumCheck && $appCheck);
+        return ($sanctumCheck || $appCheck);
     }
 
-    public function canAccessFilament(): bool
+    public function canAccessPanel($panel): bool
     {
         return $this->hasRole('superadmin');
     }

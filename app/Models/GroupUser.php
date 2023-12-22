@@ -41,16 +41,11 @@ class GroupUser extends Pivot
 
     public function isMember(): bool
     {
-        return ($this->isAdmin() || $this->level === GroupUserLevel::Member);
+        return ($this->isModerator() || $this->level === GroupUserLevel::Member);
     }
 
     public function isInvited(): bool
     {
         return ($this->level === GroupUserLevel::Invited);
-    }
-
-    public function isBanned(): bool
-    {
-        return ($this->level === GroupUserLevel::Banned);
     }
 }

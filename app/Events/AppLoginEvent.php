@@ -8,13 +8,8 @@ class AppLoginEvent
 {
     use Dispatchable;
 
-    public string $clientId;
-    public string $userId;
-
-    public function __construct(string $clientId, string $userId)
+    public function __construct(readonly public string $clientId, readonly public string $userId)
     {
 
-        $this->clientId = $clientId;
-        $this->userId = $userId;
     }
 }

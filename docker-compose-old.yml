@@ -1,0 +1,278 @@
+version: '3.7'
+########################################################################################################################
+# Variables
+########################################################################################################################
+x-variables:
+  database:
+    USER: &idp-db-username "idp"
+    PASSWORD: &idp-db-password "idp"
+    DATABASE: &idp-db-database "idp"
+  laravel-general:
+    &laravel-general
+    APP_KEY: base64:8EuWVWRVLiQcKZV7RIKhnqvBg1QUts1yg8VN6jeCQbI=
+    APP_ENV: "local"
+    APP_DEBUG: "true"
+    DB_CONNECTION: mysql
+    DB_HOST: database
+    DB_DATABASE: *idp-db-database
+    DB_USERNAME: *idp-db-username
+    DB_PASSWORD: *idp-db-password
+    DB_PORT: 3306
+    BROADCAST_DRIVER: log
+    REDIS_HOST: redis
+    CACHE_DRIVER: redis
+    QUEUE_CONNECTION: redis
+    SESSION_DRIVER: redis
+    SESSION_LIFETIME: 43200
+    OIDC_ADMIN_CLIENT_ID: 05e92e80-24be-4f4f-a081-0af3d572ea50
+    OIDC_ADMIN_SECRET: IyXHaTqIskSbPMSw_AXxhdQ_8S
+    OIDC_MAIN_CLIENT_ID: 05e92e80-24be-4f4f-a081-0af3d572ea50
+    OIDC_MAIN_SECRET: BYOrcv1H3vhfMV_w.EOz3Dbs6V
+    GROUP_STAFF_ID: "1"
+    GROUP_DIRECTORS_ID: "1"
+    # Mail
+    MAIL_MAILER: smtp
+    MAIL_HOST: sandbox.smtp.mailtrap.io
+    MAIL_PORT: 2525
+    MAIL_USERNAME: e089aaf397ea5d
+    MAIL_PASSWORD: cf62acb3b401bb
+    MAIL_ENCRYPTION: tls
+    MAIL_FROM_ADDRESS: noreply-identity@eurofurence.org
+    MAIL_FROM_NAME: "Eurofurence Identity"
+    MAIL_REPLY_TO_ADDRESS: identity@eurofurence.org
+    MAIL_REPLY_TO_NAME: "Eurofurence Identity"
+    # IMAP
+    IMAP_HOST: mail.tigress.com
+    IMAP_PORT: 993
+    IMAP_ENCRYPTION: ssl
+    IMAP_USERNAME: noreply-identity
+    IMAP_PASSWORD: vaar4Looc2Lia4N
+    SENTRY_ENVIRONMENT: local
+    SENTRY_LARAVEL_DSN: ""
+    SENTRY_TRACES_SAMPLE_RATE: 1
+    HASHIDS_SALT: "ZXv0i@anR#YPKTx@Ly&BK@mhDhT"
+    HASHIDS_USER_SALT: "Fc79Rhek*9%UH0N^IOLwXag8#x4"
+    HASHIDS_GROUP_SALT: "u3g91H^ldXsJQ2WdAtt7XV8w27d"
+    CLOCKWORK_DATABASE_COLLECT_MODELS_RETRIEVED: "true"
+    CLOCKWORK_DATABASE_DETECT_DUPLICATE_QUERIES: "true"
+  laravel-urls:
+    &laravel-urls
+    HYDRA_PUBLIC_URL: "http://hydra:4444"
+    HYDRA_ADMIN_URL: "http://hydra:4445"
+    HYDRA_LOCAL_PUBLIC: "http://identity.eurofurence.localhost"
+    APP_URL: "http://identity.eurofurence.localhost"
+    ASSET_URL: "http://identity.eurofurence.localhost"
+    ROUTER_API_DOMAIN: identity.eurofurence.localhost
+  hydra:
+    &hydra
+    DEV: "true"
+    DSN: &hydra-dsn "mysql://hydra:hydra@tcp(hydra-database:3306)/hydra?parseTime=true&tls=skip-verify&max_conns=20&max_idle_conns=4"
+    SECRETS_SYSTEM: 3zmBik#H7g9LKT?Fb9FnbGxytAc49yn9@sKiYhY8
+    URLS_SELF_ISSUER: http://identity.eurofurence.localhost/
+    URLS_CONSENT: http://identity.eurofurence.localhost/auth/consent
+    URLS_LOGIN: http://identity.eurofurence.localhost/auth/login
+    URLS_LOGOUT: http://identity.eurofurence.localhost/auth/logout
+    URLS_ERROR: http://identity.eurofurence.localhost/auth/error
+    URLS_POST_LOGOUT_REDIRECT: http://identity.eurofurence.localhost/auth/logout
+    SERVE_COOKIES_SAME_SITE_MODE: Lax
+    HYDRA_ADMIN_URL: http://127.0.0.1:4445
+    #OIDC_SUBJECT_IDENTIFIERS_SUPPORTED_TYPES: pairwise
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_CLAIMS_0: email
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_CLAIMS_1: name
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_CLAIMS_2: email
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_CLAIMS_3: email_verified
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_CLAIMS_4: avatar
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_CLAIMS_5: groups
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_0: profile
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_1: email
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_2: groups
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_3: groups.read
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_4: groups.write
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_5: groups.delete
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_6: registration.reg.test
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_7: registration.reg.live
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_8: registration.room.test
+    WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_9: registration.room.live
+    LOG_LEAK_SENSITIVE_VALUES: "true"
+    OAUTH2_EXPOSE_INTERNAL_ERRORS: "true"
+    # TRACING_PROVIDER: zipkin
+    # TRACING_PROVIDERS_ZIPKIN_SERVER_URL: http://zipkin:9411/api/v2/spans
+  hydra-database:
+    USER: &hydra-db-user "hydra"
+    PASSWORD: &hydra-db-password "hydra"
+    DATABASE: &hydra-db-database "hydra"
+########################################################################################################################
+# Services
+########################################################################################################################
+services:
+  ######################################################################################################################
+  # Identity Main | Laravel
+  ######################################################################################################################
+  api:
+    image: eurofurence/identity:local
+    restart: on-failure
+    environment:
+      <<: [ *laravel-general,  *laravel-urls ]
+    volumes:
+      - './:/app/'
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.app.rule=Host(`identity.eurofurence.localhost`)
+      - traefik.http.services.app.loadbalancer.server.port=80
+      - traefik.http.routers.app.entrypoints=web
+    command:
+      - php
+      - artisan
+      - serve
+      - --port=80
+      - --host=0.0.0.0
+  worker:
+    image: eurofurence/identity:local
+    restart: on-failure
+    environment:
+      <<: [ *laravel-general,  *laravel-urls ]
+    volumes:
+      - './:/app/'
+    command:
+      - php
+      - artisan
+      - horizon
+  vite:
+    image: eurofurence/identity:local
+    restart: on-failure
+    environment:
+      <<: [ *laravel-general,  *laravel-urls ]
+    ports:
+      - 5173:5173
+    command:
+      - bash
+      - -c
+      - "npm run dev --host"
+    volumes:
+      - './:/app/'
+  storage:
+    image: caddy:latest
+    restart: on-failure
+    command:
+      - caddy
+      - file-server
+      - --root
+      - /usr/srv/content
+    volumes:
+      - './storage/app/public:/usr/srv/content/storage'
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.storage.rule=Host(`identity.eurofurence.localhost`) && PathPrefix(`/storage`)
+      - traefik.http.services.storage.loadbalancer.server.port=80
+      - traefik.http.routers.storage.entrypoints=web
+  ######################################################################################################################
+  # Other
+  ######################################################################################################################
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+  database:
+    image: 'mysql:8.0'
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_USER: *idp-db-username
+      MYSQL_ROOT_PASSWORD: *idp-db-password
+      MYSQL_PASSWORD: *idp-db-password
+      MYSQL_DATABASE: *idp-db-database
+    volumes:
+      - 'database:/var/lib/mysql'
+  ######################################################################################################################
+  # Hydra
+  ######################################################################################################################
+  hydra:
+    image: 'oryd/hydra:v2.0.1'
+    environment:
+      <<: *hydra
+    ports:
+      - '4444:4444'
+      - '4445:4445' # NEVER EXPOSE PUBLICLY ON PROD, ADMIN ENDPONT!!!
+      - '5555:5555'
+    command: serve all
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.hydra.rule=Host(`identity.eurofurence.localhost`) && PathPrefix(`/.well-known`,`/oauth2`,`/health`,`/userinfo`)
+      - traefik.http.services.hydra.loadbalancer.server.port=4444
+      - traefik.http.routers.hydra.entrypoints=web
+  hydra-migrate:
+    image: 'oryd/hydra:v2.0.1'
+    environment:
+      DSN: *hydra-dsn
+    command: migrate sql -e --yes
+    restart: on-failure
+  hydra-database:
+    image: 'mysql:8'
+    ports:
+      - '3307:3306'
+    environment:
+      MYSQL_USER: *hydra-db-user
+      MYSQL_PASSWORD: *hydra-db-password
+      MYSQL_ROOT_PASSWORD: *hydra-db-password
+      MYSQL_DATABASE: *hydra-db-database
+    volumes:
+      - 'hydra-database:/var/lib/mysql'
+  ######################################################################################################################
+  # Reverse Proxy | Traefik
+  ######################################################################################################################
+  traefik:
+    image: 'traefik:v2.3'
+    command:
+      - '--api=true'
+      - '--api.insecure=true'
+      - '--providers.docker=true'
+      - '--providers.docker.exposedbydefault=false'
+      - '--entrypoints.web.address=:80'
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8080:8080'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+  ######################################################################################################################
+  # Logging/Tracing | Prometheus & Zipkin
+  ######################################################################################################################
+  #prometheus-main:
+  #  image: prom/prometheus:v2.12.0
+  #  ports:
+  #    - "9090:9090"
+  #  depends_on:
+  #    - hydra
+  #  command:
+  #    --config.file=/etc/prometheus/prometheus.yml
+  #  volumes:
+  #    - ./prometheus/config.yml:/etc/prometheus/prometheus.yml
+  #zipkin:
+  #  image: openzipkin/zipkin:2
+  #  environment:
+  #    - STORAGE_TYPE=mem
+  #  ports:
+  #    - "9411:9411" # The UI/API port
+  ######################################################################################################################
+  # Documentation
+  ######################################################################################################################
+  redoc:
+    image: 'redocly/redoc:latest'
+    environment:
+      SPEC_URL: 'openapi.yml'
+      PAGE_TITLE: API Docs - Identity
+      REDOC_OPTIONS: >-
+        hide-download-button=true
+        disable-search=true
+        theme='{\"logo\": {\"maxWidth\": \"100px\"}}'
+        expandResponses=200
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.redoc.rule=Host(`docs.identity.eurofurence.localhost`)
+      - traefik.http.services.redoc.loadbalancer.server.port=80
+      - traefik.http.routers.redoc.entrypoints=web
+    volumes:
+      - ./openapi.yml:/usr/share/nginx/html/openapi.yml
+volumes:
+  hydra-database:
+  database:

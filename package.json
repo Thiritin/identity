@@ -5,16 +5,11 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "@inertiajs/inertia": "^0.9.1",
-        "@inertiajs/inertia-vue3": "^0.4.2",
-        "@inertiajs/progress": "^0.2.6",
-        "@tailwindcss/forms": "^0.3.4",
-        "@tailwindcss/typography": "^0.3.1",
         "@vitejs/plugin-vue": "^3.2.0",
         "@vue/compiler-sfc": "^3.2.45",
         "autoprefixer": "^10.4.13",
         "axios": "^1.1.2",
-        "browser-sync": "^2.27.11",
+        "browser-sync": "^2.27.5",
         "browser-sync-webpack-plugin": "^2.3.0",
         "chokidar": "^3.5.2",
         "dotenv": "^16.0.3",
@@ -23,7 +18,7 @@
         "postcss": "^8.4.4",
         "postcss-import": "^12.0.1",
         "prettier": "2.3.2",
-        "tailwindcss": "^2.2.19",
+        "tailwindcss": "^3.0",
         "tippy.js": "^6.3.7",
         "vite": "^3.2.3",
         "vue": "^3.2.23",
@@ -32,8 +27,13 @@
     "dependencies": {
         "@headlessui/vue": "^1.7.7",
         "@heroicons/vue": "^1.0.4",
-        "matice": "^1.1.4",
+        "@inertiajs/vue3": "^1.0.2",
+        "@tailwindcss/forms": "^0.5.7",
+        "@tailwindcss/typography": "^0.5.10",
+        "matice": "^1.1.0",
+        "primevue": "^3.44.0",
         "vue-cookie-accept-decline": "^6.1.0",
+        "vue-cookies": "^1.8.2",
         "vue-cropperjs": "^5.0.0"
     }
 }

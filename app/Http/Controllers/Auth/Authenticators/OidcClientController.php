@@ -26,10 +26,10 @@ class OidcClientController extends Controller
     public function callback(Request $request)
     {
         $data = $request->validate([
-            "state"             => "required_with::code|string",
-            "error"             => "nullable|required_without:code|string",
+            "state" => "required_with::code|string",
+            "error" => "nullable|required_without:code|string",
             "error_description" => "nullable|required_without:code|string",
-            "code"              => "nullable|string",
+            "code" => "nullable|string",
         ]);
         /**
          * Only Identity Client - Redirects to error page if scope is invalid
@@ -72,7 +72,7 @@ class OidcClientController extends Controller
 
         $userid = Hashids::connection('user')->decode($token['sub'])[0];
         Auth::guard($guard)->loginUsingId($userid);
-        Session::put($guard . '.token', $accessToken);
+        Session::put($guard.'.token', $accessToken);
         return $this->redirectDestination($request);
     }
 
@@ -92,7 +92,7 @@ class OidcClientController extends Controller
     private function redirectDestination(Request $request)
     {
         if ($this->clientIsAdmin($request)) {
-            return Redirect::route('filament.pages.dashboard');
+            return Redirect::route('filament.admin.pages.dashboard');
         }
         return Redirect::route('dashboard');
     }

@@ -1,19 +1,18 @@
 <template>
-    <auth-layout>
-        <Logo></Logo>
-        <LoginScreenWelcome
-            :sub-title="$trans('verifysuccess_subtitle')"
-            :title="$trans('verifysuccess_title')"
-            class="mb-6"
-        />
-        <div class="space-y-8">
-            <UserBox :user="user"/>
-            <div class="flex items-center justify-between">
-                <InertiaLink
-                    :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
-                    :disabled="form.processing"
-                    :href="route('auth.oidc.login')"
-                    class="
+    <Logo></Logo>
+    <LoginScreenWelcome
+        :sub-title="$trans('verifysuccess_subtitle')"
+        :title="$trans('verifysuccess_title')"
+        class="mb-6"
+    />
+    <div class="space-y-8">
+        <UserBox :user="user"/>
+        <div class="flex items-center justify-between">
+            <Link
+                :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
+                :disabled="form.processing"
+                :href="route('auth.oidc.login')"
+                class="
                             py-3
                             rounded-lg
                             px-8
@@ -23,12 +22,11 @@
                             font-semibold
                             focus:outline-none
                         "
-                >
-                    {{ $trans('continue_to_login') }}
-                </InertiaLink>
-            </div>
+            >
+                {{ $trans('continue_to_login') }}
+            </Link>
         </div>
-    </auth-layout>
+    </div>
 </template>
 
 <script>
@@ -36,6 +34,7 @@ import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import UserBox from "@/Pages/Auth/UserBox.vue";
+import {Link} from "@inertiajs/vue3";
 
 export default {
     components: {
@@ -43,7 +42,9 @@ export default {
         AuthLayout,
         Logo,
         LoginScreenWelcome,
+        Link,
     },
+    layout: AuthLayout,
 
     props: {
         user: Object,

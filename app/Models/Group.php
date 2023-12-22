@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use App\Enums\GroupTypeEnum;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Mtvs\EloquentHashids\HasHashid;
 use Mtvs\EloquentHashids\HashidRouting;
-use Spatie\Translatable\HasTranslations;
 
 /**
  * App\Models\Group.
@@ -36,13 +37,16 @@ use Spatie\Translatable\HasTranslations;
 class Group extends Model
 {
     use HasFactory;
-    use HasTranslations;
     use HasHashid;
     use HashidRouting;
 
-    public $translatable = ['name', 'description'];
+    protected $appends = ['hashid', 'logo_url'];
 
     protected $guarded = [];
+
+    protected $casts = [
+        "type" => GroupTypeEnum::class,
+    ];
 
     public function users()
     {
@@ -51,6 +55,7 @@ class Group extends Model
             ->withPivot(
                 [
                     'level',
+                    'title',
                 ]
             );
     }
@@ -69,5 +74,10 @@ class Group extends Model
     {
         $this->attributes['name'] = $value;
         $this->attributes['slug'] = Str::slug($value);
+    }
+
+    public function getLogoUrlAttribute()
+    {
+        return (is_null($this->logo)) ? null : Storage::url('avatars/'.$this->logo);
     }
 }

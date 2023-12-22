@@ -53,7 +53,7 @@ class AppServiceProvider extends ServiceProvider
         Filament::serving(function () {
             Filament::registerUserMenuItems([
                 'logout-everywhere' => UserMenuItem::make()
-                                                   ->icon('heroicon-o-arrow-circle-right')
+                                                   ->icon('heroicon-o-arrow-right-circle')
                                                    ->url(route('dashboard'))
                                                    ->label('To User Interface'),
                 'logout' => UserMenuItem::make()->url('/oauth2/sessions/logout')->label('Log out'),

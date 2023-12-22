@@ -4,9 +4,9 @@ namespace App\Filament\Resources\GroupResource\RelationManagers;
 
 use App\Enums\GroupUserLevel;
 use Filament\Forms;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Actions\AttachAction;
 
@@ -16,7 +16,7 @@ class UsersRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([
@@ -24,6 +24,7 @@ class UsersRelationManager extends RelationManager
                 Tables\Columns\SelectColumn::make('level')
                     ->options(GroupUserLevel::class)
                     ->rules(['required']),
+                Tables\Columns\TextInputColumn::make('title'),
             ])
             ->filters([
                 //
@@ -32,8 +33,8 @@ class UsersRelationManager extends RelationManager
                 AttachAction::make()->form(fn(AttachAction $action): array => [
                     $action->getRecordSelect(),
                     Forms\Components\Select::make('level')->required()
-                        ->options(GroupUserLevel::class)
-                ])
+                        ->options(GroupUserLevel::class),
+                ]),
             ])
             ->actions([
                 Tables\Actions\DetachAction::make(),
@@ -43,7 +44,7 @@ class UsersRelationManager extends RelationManager
             ]);
     }
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -51,7 +52,7 @@ class UsersRelationManager extends RelationManager
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Select::make('level')->required()
-                    ->options(GroupUserLevel::class)
+                    ->options(GroupUserLevel::class),
             ]);
     }
 }

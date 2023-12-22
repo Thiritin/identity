@@ -48,8 +48,7 @@ security:
 paths:
   /userinfo:
     get:
-      summary: Gets userinfo for the user
-      description: This is an example operation to show how security is applied to the call.
+      summary: Get userinfo of the user
       security:
         - OpenID:
             - openid
@@ -62,6 +61,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Userinfo'
+          description: OK
+      tags:
+        - Open ID Connect
+      operationId: getUserinfo
+  /introspect:
+    post:
+      summary: Introspect Token
+      description: >-
+        The introspection endpoint allows to check if a token (both refresh and
+        access) is active or not. An active token is neither expired nor revoked.
+
+        If a token is active, additional information on the token will be included.
+
+        Please note that this endpoint does require authorization by a client_id and client_secret combination.
+        The client_secret must be submitted as a Bearer token.
+      security:
+        - ClientSecret: [ ]
+      requestBody:
+        description: "Introspect a token"
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenIntrospection'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenIntrospection'
           description: OK
       tags:
         - Open ID Connect
@@ -308,8 +337,8 @@ paths:
       operationId: deleteGroup
   '/groups/{group}/members':
     get:
-      summary: Shows user memberships of group
-      description: Show members of the groups, please keep in mind that unless filtered banned and invited membes will be also shown.
+      summary: List members
+      description: Show members of the groups. Please note that invited members will be omitted by default.
       security:
         - OpenID:
             - groups.update
@@ -331,9 +360,6 @@ paths:
             invited:
               value: invited
               description: Shows any member that is invited to a group but has not accepted the invitation.
-            banned:
-              value: banned
-              description: Shows any member that is banned from a group.
             member:
               value: member
               description: Shows any member that has the member level.
@@ -349,7 +375,7 @@ paths:
             only_members:
               value: 'member,moderator,admin,owner'
               description: 'Shows only members that are either a member, moderator admin or owner.'
-          description: Filter results by user level
+          description: Filter results by user level (By default, all members are shown, except invited)
           required: true
       responses:
         '200':
@@ -409,7 +435,7 @@ paths:
         - Group Memberships
       operationId: getGroupMembers
     post:
-      summary: Add a new user to a group
+      summary: Add member
       description: Add a new user to the group, use status "invited" to send an invitation to the user.
       security:
         - OpenID:
@@ -454,7 +480,7 @@ paths:
       operationId: createGroupMember
   '/groups/{group}/members/{user}':
     delete:
-      summary: Removes user membership from group
+      summary: Remove member
       description: Remove a user account from the group
       security:
         - OpenID:
@@ -515,6 +541,106 @@ components:
           readOnly: true
           items:
             type: string
+    TokenIntrospection:
+      type: object
+      properties:
+        token:
+          required: true
+          writeOnly: true
+          type: string
+          description: The string value of the token. For access tokens, this is the "access_token" value returned from the token endpoint defined in OAuth 2.0. For refresh tokens, this is the "refresh_token" value returned.
+        active:
+          description: |-
+            Active is a boolean indicator of whether or not the presented token
+            is currently active.  The specifics of a token's "active" state
+            will vary depending on the implementation of the authorization
+            server and the information it keeps about its tokens, but a "true"
+            value return for the "active" property will generally indicate
+            that a given token has been issued by this authorization server,
+            has not been revoked by the resource owner, and is within its
+            given time window of validity (e.g., after its issuance time and
+            before its expiration time).
+          type: boolean
+          readOnly: true
+        aud:
+          description: Audience contains a list of the token's intended audiences.
+          type: array
+          readOnly: true
+          items:
+            type: string
+        client_id:
+          required: true
+          description: |-
+            ID is a client identifier for an OAuth 2.0 client.
+          type: string
+        exp:
+          description: |-
+            Expires at is an integer timestamp, measured in the number of seconds
+            since January 1 1970 UTC, indicating when this token will expire.
+          readOnly: true
+          type: integer
+          format: int64
+        ext:
+          description: Extra is arbitrary data set by the session.
+          readOnly: true
+          type: object
+          additionalProperties: { }
+        iat:
+          description: |-
+            Issued at is an integer timestamp, measured in the number of seconds
+            since January 1 1970 UTC, indicating when this token was
+            originally issued.
+          readOnly: true
+          type: integer
+          format: int64
+        iss:
+          description: IssuerURL is a string representing the issuer of this token
+          readOnly: true
+          type: string
+        nbf:
+          description: |-
+            NotBefore is an integer timestamp, measured in the number of seconds
+            since January 1 1970 UTC, indicating when this token is not to be
+            used before.
+          readOnly: true
+          type: integer
+          format: int64
+        obfuscated_subject:
+          description: >-
+            ObfuscatedSubject is set when the subject identifier algorithm was set
+            to "pairwise" during authorization.
+
+            It is the `sub` value of the ID Token that was issued.
+          readOnly: true
+          type: string
+        scope:
+          description: |-
+            Scope is a JSON string containing a space-separated list of
+            scopes associated with this token.
+          type: string
+        sub:
+          description: |-
+            Subject of the token, as defined in JWT [RFC7519].
+            Usually a machine-readable identifier of the resource owner who
+            authorized this token.
+          readOnly: true
+          type: string
+        token_type:
+          description: TokenType is the introspected token's type, typically `Bearer`.
+          readOnly: true
+          type: string
+        token_use:
+          description: >-
+            TokenUse is the introspected token's use, for example `access_token`
+            or `refresh_token`.
+          readOnly: true
+          type: string
+        username:
+          description: |-
+            Username is a human-readable identifier for the resource owner who
+            authorized this token.
+          readOnly: true
+          type: string
     GroupMembership:
       type: object
       properties:
@@ -623,5 +749,8 @@ components:
       openIdConnectUrl: 'https://identity.eurofurence.org/.well-known/openid-configuration'
       description: OpenID Connect
     AccessToken:
+      type: http
+      scheme: bearer
+    ClientSecret:
       type: http
       scheme: bearer

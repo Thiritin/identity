@@ -10,14 +10,12 @@ use Filament\Resources\Pages\EditRecord\Concerns\Translatable;
 
 class EditGroup extends EditRecord
 {
-    use Translatable;
     protected static string $resource = GroupResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             DeleteAction::make(),
-            LocaleSwitcher::make(),
         ];
     }
 }

@@ -20,7 +20,9 @@
                                         Crop Avatar
                                     </DialogTitle>
                                     <div class="mt-2">
-                                        <vue-cropper v-if="url != null" ref="cropper" :aspectRatio="1" :guides="false"
+                                        <vue-cropper v-if="url != null" ref="cropper"
+                                                     :aspectRatio="1" :guides="false"
+                                                     :toggleDragModeOnDblclick="false"
                                                      :rotatable="false" :scalable="false" :src="url" :zoomable="false"
                                                      alt="Source Image"
                                                      @cropend="avatarform.crop = $event.target.cropper.getData()"
@@ -60,7 +62,7 @@ import {Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot} fro
 import {CheckIcon} from '@heroicons/vue/outline'
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
-import {useForm} from "@inertiajs/inertia-vue3";
+import {useForm} from "@inertiajs/vue3";
 
 export default {
     components: {

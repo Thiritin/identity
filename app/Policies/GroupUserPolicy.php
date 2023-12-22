@@ -2,9 +2,11 @@
 
 namespace App\Policies;
 
+use App\Enums\GroupUserLevel;
 use App\Models\GroupUser;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class GroupUserPolicy
 {
@@ -12,16 +14,22 @@ class GroupUserPolicy
 
     public function view(User $user, GroupUser $groupUser): bool
     {
-        return ($user->permCheck('groups.read') && $groupUser->isMember());
+        return ($user->scopeCheck('groups.read') && $groupUser->isMember());
     }
 
     public function create(User $user, GroupUser $groupUser): bool
     {
-        return $user->permCheck('groups.update') && $groupUser->isAdmin();
+        return $user->scopeCheck('groups.update') && $groupUser->isAdmin();
     }
 
-    public function delete(User $user, GroupUser $groupUser): bool
+    public function delete(User $user, GroupUser $groupUser): Response
     {
-        return $user->permCheck('groups.update') && $groupUser->isAdmin();
+        if ($groupUser->level === GroupUserLevel::Owner) {
+            return Response::deny("Owners cannot be removed from group.");
+        }
+        if($user->scopeCheck('groups.update') && $groupUser->isAdmin()) {
+            return Response::allow();
+        }
+        return Response::deny('Insufficient permissions, you cannot delete users.');
     }
 }

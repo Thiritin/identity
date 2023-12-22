@@ -30,12 +30,12 @@ class VerifyEmailController extends Controller
             event(new Verified($user));
 
             // If there is a cached login session for the user, use it.
-            $loginChallenge = Cache::get("web." . $user->id . ".loginChallenge");
+            $loginChallenge = Cache::get("web.".$user->id.".loginChallenge");
 
             // If this is anything else than null, then accept the prevalidated request once
             if (!is_null($loginChallenge)) {
                 $hydra = new Client();
-                Cache::delete("web." . $user->id . ".loginChallenge");
+                Cache::delete("web.".$user->id.".loginChallenge");
                 return Inertia::location($hydra->acceptLogin($user->hashid(), $loginChallenge));
             }
         }
@@ -45,10 +45,18 @@ class VerifyEmailController extends Controller
 
     public function resend(Request $request)
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return Redirect::route('dashboard');
+        $success = \Illuminate\Support\Facades\RateLimiter::attempt($request->user()->id.':resend-verification-email',
+            1,
+            function () use ($request) {
+                if ($request->user()->hasVerifiedEmail()) {
+                    return Redirect::route('dashboard');
+                }
+                $request->user()->sendEmailVerificationNotification();
+                return true;
+            }, 30);
+        if (!$success) {
+            return Inertia::render('Auth/VerifyEmail')->with('status', 'throttled');
         }
-        $request->user()->sendEmailVerificationNotification();
 
         return Inertia::render('Auth/VerifyEmail')->with('status', 'verification-link-sent');
     }

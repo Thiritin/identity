@@ -2,62 +2,62 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\GroupTypeEnum;
 use App\Filament\Resources\GroupResource\Pages;
 use App\Filament\Resources\GroupResource\RelationManagers\UsersRelationManager;
 use App\Models\Group;
-use Filament\Forms\Components\Card;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group as FilamentGroup;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
 use Filament\Resources\Concerns\Translatable;
-use Filament\Resources\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class GroupResource extends Resource
 {
-    use Translatable;
 
     protected static ?string $model = Group::class;
 
     protected static ?string $slug = 'groups';
-
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationIcon = "heroicon-o-users";
-
-    public static function getTranslatableLocales(): array
-    {
-        return ['en', 'de'];
-    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 FilamentGroup::make()->columnSpan(2)->schema([
-                    Card::make()->schema([
+                    Section::make()->schema([
+                        FilamentGroup::make()->columns()->schema([
+                            Placeholder::make('id')
+                                ->label('Internal ID')
+                                ->content(fn(?Group $record): string => $record?->id ?? '-'),
+                            Placeholder::make('hashid')
+                                ->label('Public ID')
+                                ->content(fn(?Group $record): string => $record?->hashid() ?? '-'),
+                        ]),
                         TextInput::make('name')
                             ->hint('Translatable')
-                            ->hintIcon('heroicon-s-translate')
+                            ->hintIcon('heroicon-m-language')
                             ->required(),
                         Textarea::make('description')->rows(5),
                     ]),
                 ]),
 
                 FilamentGroup::make()->columnSpan(1)->schema([
-                    Card::make()->schema([
+                    Section::make()->schema([
 
-                        FileUpload::make('logo')
-                            ->image()
-                            ->disk('avatars')
-                            ->label('Group Photo')
-                            ->imageResizeTargetWidth('512')
-                            ->imageResizeTargetHeight('512')
-                            ->imagePreviewHeight('256'),
+                        Select::make('type')->options([
+                            GroupTypeEnum::Default->value => "Default",
+                            GroupTypeEnum::Automated->value => "Automated",
+                            GroupTypeEnum::Department->value => "Department",
+                        ]),
                     ]),
 
                     Placeholder::make('created_at')
@@ -93,7 +93,7 @@ class GroupResource extends Resource
     public static function getRelations(): array
     {
         return [
-            UsersRelationManager::class
+            UsersRelationManager::class,
         ];
     }
 

@@ -52,7 +52,8 @@ class LoginController extends Controller
                 return Redirect::route('verification.notice');
             }
 
-            $url = (new Client())->acceptLogin($user->hashId(), $request->get('login_challenge'), 15552000);
+
+            $url = (new Client())->acceptLogin($user->hashId(), $request->get('login_challenge'), $request->get('remember') ? "2592000" : "0");
             return Inertia::location($url);
         }
 

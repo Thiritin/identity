@@ -219,7 +219,14 @@ const Matice = {
             "login": "Login",
             "continue_to_login": "Login to your account",
             "profile_username_notice": "This is NOT your badge name. Changes will be possible at a later point.",
-            "profile_avatar_notice": "This is NOT your badge avatar."
+            "profile_avatar_notice": "This is NOT your badge avatar.",
+            "your_groups": "Your groups",
+            "view": "View",
+            "not_a_member_of_any_groups": "No groups found.",
+            "groups_page_staff_notice": "If you are part of Eurofurence Staff, please ask your director for an invite.",
+            "departments": "Departments",
+            "staff_members_can_see_departments": "As a staff member you are able to view the following departments.",
+            "group_members": "Group members"
         }, "vendor": {
             "filament-spatie-laravel-translatable-plugin-translations": {
                 "ar": {"actions": {"active_locale": {"label": "\u0627\u0644\u0644\u063a\u0629"}}},

@@ -12,7 +12,6 @@ use App\Http\Middleware\TokenIntrospectionCheckMiddleware;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
 use App\Http\Middleware\VerifyCsrfToken;
-use Fruitcake\Cors\HandleCors;
 use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
@@ -21,6 +20,7 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
+use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Http\Middleware\SetCacheHeaders;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Middleware\ThrottleRequests;
@@ -65,7 +65,6 @@ class Kernel extends HttpKernel
 
         'api' => [
             'throttle:api',
-            'auth:sanctum',
             SubstituteBindings::class,
         ],
     ];
@@ -78,16 +77,16 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth'               => Authenticate::class,
-        'auth.basic'         => AuthenticateWithBasicAuth::class,
-        'auth.oidc'          => AccessTokenValidationMiddleware::class,
+        'auth' => Authenticate::class,
+        'auth.basic' => AuthenticateWithBasicAuth::class,
+        'auth.oidc' => AccessTokenValidationMiddleware::class,
         'auth.introspection' => TokenIntrospectionCheckMiddleware::class,
-        'cache.headers'      => SetCacheHeaders::class,
-        'can'                => Authorize::class,
-        'guest'              => RedirectIfAuthenticated::class,
-        'password.confirm'   => RequirePassword::class,
-        'signed'             => ValidateSignature::class,
-        'throttle'           => ThrottleRequests::class,
-        'verified'           => EnsureEmailIsVerified::class,
+        'cache.headers' => SetCacheHeaders::class,
+        'can' => Authorize::class,
+        'guest' => RedirectIfAuthenticated::class,
+        'password.confirm' => RequirePassword::class,
+        'signed' => ValidateSignature::class,
+        'throttle' => ThrottleRequests::class,
+        'verified' => EnsureEmailIsVerified::class,
     ];
 }

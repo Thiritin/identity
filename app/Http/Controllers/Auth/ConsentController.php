@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ConsentRequest;
 use App\Models\User;
 use App\Services\Hydra\Client;
+use Illuminate\Support\Facades\Cookie;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ConsentController extends Controller
@@ -17,7 +18,11 @@ class ConsentController extends Controller
         if (isset($consentRequest['redirect_to'])) {
             return redirect($consentRequest['redirect_to']);
         }
-        $user = User::where('id', '=', Hashids::connection('user')->decode($consentRequest["subject"]))->firstOrFail();
+        $user = User::findByHashid($consentRequest["subject"]);
+        if ($user === null) {
+            $response = $hydra->rejectConsentRequest($consentRequest, "login_required", "The account of the user does not exist.", "Your user account does not exist anymore. It may have been deleted due to not being verified for over 24 hours.", "The account of the user does not exist.", "401");
+            return redirect($response['redirect_to']);
+        }
         $response = $hydra->acceptConsentRequest($consentRequest, $user);
         return redirect($response['redirect_to']);
     }

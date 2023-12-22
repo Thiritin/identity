@@ -15,7 +15,7 @@ class OpenIDService
     public function setupOIDC(Request $request, bool $clientIsAdmin): GenericProvider
     {
         $config = Cache::remember('openid-configuration', now()->addHour(), function () {
-            return Http::get(config('services.hydra.public') . "/.well-known/openid-configuration")->json();
+            return Http::get(config('services.hydra.public')."/.well-known/openid-configuration")->json();
         });
 
         if ($clientIsAdmin) {
@@ -30,28 +30,46 @@ class OpenIDService
 
         if (App::isLocal()) {
             return new GenericProvider([
-                'clientId'                => $clientId,
-                'clientSecret'            => $clientSecret,
-                'redirectUri'             => $clientCallback,
-                'urlAuthorize'            => config('services.hydra.local_public') . "/oauth2/auth",
-                'urlAccessToken'          => config('services.hydra.public') . "/oauth2/token",
+                'clientId' => $clientId,
+                'clientSecret' => $clientSecret,
+                'redirectUri' => $clientCallback,
+                'urlAuthorize' => config('services.hydra.local_public')."/oauth2/auth",
+                'urlAccessToken' => config('services.hydra.public')."/oauth2/token",
                 'urlResourceOwnerDetails' => $config['userinfo_endpoint'],
-                'accessTokenMethod'       => AbstractProvider::METHOD_POST,
-                'scopeSeparator'          => ' ',
-                'scopes'                  => ['openid', 'offline_access', 'email', 'profile', 'groups'],
+                'accessTokenMethod' => AbstractProvider::METHOD_POST,
+                'scopeSeparator' => ' ',
+                'scopes' => [
+                    'openid',
+                    'offline_access',
+                    'email',
+                    'profile',
+                    'groups',
+                    'groups.read',
+                    'groups.write',
+                    'groups.delete',
+                ],
             ]);
         }
 
         return new GenericProvider([
-            'clientId'                => $clientId,
-            'clientSecret'            => $clientSecret,
-            'redirectUri'             => $clientCallback,
-            'urlAuthorize'            => $config['authorization_endpoint'],
-            'urlAccessToken'          => $config['token_endpoint'],
+            'clientId' => $clientId,
+            'clientSecret' => $clientSecret,
+            'redirectUri' => $clientCallback,
+            'urlAuthorize' => $config['authorization_endpoint'],
+            'urlAccessToken' => $config['token_endpoint'],
             'urlResourceOwnerDetails' => $config['userinfo_endpoint'],
-            'accessTokenMethod'       => AbstractProvider::METHOD_POST,
-            'scopeSeparator'          => ' ',
-            'scopes'                  => ['openid', 'offline_access', 'email', 'profile', 'groups'],
+            'accessTokenMethod' => AbstractProvider::METHOD_POST,
+            'scopeSeparator' => ' ',
+            'scopes' => [
+                'openid',
+                'offline_access',
+                'email',
+                'profile',
+                'groups',
+                'groups.read',
+                'groups.write',
+                'groups.delete',
+            ],
         ]);
     }
 }

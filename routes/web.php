@@ -3,7 +3,6 @@
 
 /** @noinspection PhpVoidFunctionResultUsedInspection */
 
-use App\Http\Controllers\AppsController;
 use App\Http\Controllers\Auth\Authenticators\OidcClientController;
 use App\Http\Controllers\Auth\ChooseController;
 use App\Http\Controllers\Auth\ConsentController;
@@ -60,8 +59,6 @@ Route::prefix('auth')->name('auth.')->group(function () {
         // Set new Password
         Route::get('password-reset', [PasswordResetController::class, 'view'])->name('password-reset.view');
         Route::post('password-reset', [PasswordResetController::class, 'store'])->name('password-reset.store');
-        // Auth
-        Route::get('error', App\Http\Controllers\Auth\ErrorController::class)->name('error');
     });
 
     // OIDC Frontchannel Logout
@@ -69,6 +66,9 @@ Route::prefix('auth')->name('auth.')->group(function () {
         'frontchannel_logout'
     );
 });
+
+// Error
+Route::get('auth/error', App\Http\Controllers\Auth\ErrorController::class)->name('auth.error');
 
 // E-Mail First Sign Up
 Route::prefix('auth')->group(function () {
@@ -81,7 +81,7 @@ Route::prefix('auth')->group(function () {
     Route::post('verify', [
         VerifyEmailController::class,
         'resend',
-    ])->middleware(['throttle:6,1', 'auth'])->name('verification.send');
+    ])->middleware(['auth'])->name('verification.send');
 
     Route::get('verify/{id}/{hash}', [
         VerifyEmailController::class,
@@ -103,6 +103,9 @@ Route::middleware(['auth', 'verified', 'auth.oidc'])->group(function () {
         'settings.update-profile.email.update'
     )->middleware('signed');
 
+    // About
+    Route::inertia('developers', 'Developers')->name('developers');
+
     Route::inertia('/settings/update-password', 'Settings/UpdatePassword')->name('settings.update-password');
     Route::post('/settings/update-password', UpdatePasswordController::class)->name('settings.update-password.store');
 
@@ -113,14 +116,14 @@ Route::middleware(['auth', 'verified', 'auth.oidc'])->group(function () {
 
     Route::post('/profile/avatar/store', StoreAvatarController::class)->name('profile.avatar.store');
 
-    Route::resource('apps', AppsController::class);
+    // Route::resource('groups', GroupController::class);
 });
 
 /**
  * Admin
  */
 Route::middleware('guest:admin')->group(function () {
-    Route::get('/admin/login', [OidcClientController::class, 'login'])->name('filament.auth.login');
+    Route::get('/admin/login', [OidcClientController::class, 'login'])->name('filament.admin.auth.login');
     Route::get('/admin/callback', [OidcClientController::class, 'callback'])->name('filament.auth.callback');
 });
 

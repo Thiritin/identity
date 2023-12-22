@@ -1,12 +1,10 @@
 <template>
-    <auth-layout>
-        <Logo></Logo>
-        <LoginScreenWelcome
-            :title="title"
-            class="mb-10"
-        />
-        <div>{{ description }}</div>
-    </auth-layout>
+    <Logo></Logo>
+    <LoginScreenWelcome
+        :title="title"
+        class="mb-10"
+    />
+    <div>{{ description }}</div>
 </template>
 
 <script>
@@ -20,6 +18,7 @@ export default {
         Logo,
         LoginScreenWelcome,
     },
+    layout: AuthLayout,
 
     props: {
         title: String,

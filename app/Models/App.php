@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class App extends Model
 {
-    protected $guarded = [];
+    protected $guarded = ["client_secret"];
     protected $casts = [
         "data" => "array",
     ];
