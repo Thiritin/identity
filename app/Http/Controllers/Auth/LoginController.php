@@ -55,7 +55,7 @@ class LoginController extends Controller
 
 
             $url = (new Client())->acceptLogin($user->hashId(), $request->get('login_challenge'),
-                $request->get('remember') ? "2592000" : "0");
+                $request->get('remember') ? "2592000" : "3600");
             return Inertia::location($url);
         }
 
