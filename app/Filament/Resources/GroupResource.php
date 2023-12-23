@@ -57,7 +57,7 @@ class GroupResource extends Resource
                             GroupTypeEnum::Default->value => "Default",
                             GroupTypeEnum::Automated->value => "Automated",
                             GroupTypeEnum::Department->value => "Department",
-                        ]),
+                        ])->required(),
                     ]),
 
                     Placeholder::make('created_at')
