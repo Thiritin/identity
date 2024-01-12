@@ -31,7 +31,7 @@
         "@tailwindcss/forms": "^0.5.7",
         "@tailwindcss/typography": "^0.5.10",
         "matice": "^1.1.0",
-        "primevue": "^3.44.0",
+        "primevue": "^3.45.0",
         "vue-cookie-accept-decline": "^6.1.0",
         "vue-cookies": "^1.8.2",
         "vue-cropperjs": "^5.0.0"
