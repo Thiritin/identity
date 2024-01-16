@@ -11,7 +11,7 @@
     "password_reset_sub_title": "Set a new Password",
     "password_reset_title": "Hallo,",
     "email": "Email",
-    "wrong_login_details_message": "These credentials do not match our records.",
+    "wrong_login_details_message": "The credentials you provided do not match our records.",
     "username": "Username",
     "roles": "Roles",
     "created at": "Created at",

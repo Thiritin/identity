@@ -6,11 +6,11 @@
         <div>
             <div v-if='status' class='mb-4 font-medium text-sm text-green-600'> {{ status }}</div>
             <div v-show='errors.nouser'
-                 class='w-full mb-8 bg-white shadow-md py-4 px-3 border-l-[4px] border-red-600'>
+                 class='w-full mb-8 bg-white dark:bg-primary-500 shadow-md py-4 px-3 border-l-[4px] border-red-600'>
                 <span>{{ $trans('wrong_login_details_message') }}</span></div>
 
             <div v-show='errors.general'
-                 class='w-full mb-8 bg-white shadow-md py-4 px-3 border-l-[4px] border-red-600'>
+                 class='w-full mb-8 bg-white dark:bg-primary-500 shadow-md py-4 px-3 border-l-[4px] border-red-600'>
                 <span>{{ errors.general }}</span></div>
         </div>
         <div class='space-y-4'>
