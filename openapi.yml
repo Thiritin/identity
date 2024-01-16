@@ -335,7 +335,7 @@ paths:
       tags:
         - Groups
       operationId: deleteGroup
-  '/groups/{group}/members':
+  '/groups/{group}/users':
     get:
       summary: List members
       description: Show members of the groups. Please note that invited members will be omitted by default.
@@ -388,17 +388,17 @@ paths:
                     type: array
                     items:
                       oneOf:
-                        - $ref: '#/components/schemas/GroupMembership'
+                        - $ref: '#/components/schemas/GroupUser'
                   links:
                     type: object
                     properties:
                       first:
                         type: string
-                        example: 'https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/members?page=1'
+                        example: 'https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/users?page=1'
                       last:
                         type: string
                         nullable: true
-                        example: 'https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/members?page=10'
+                        example: 'https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/users?page=10'
                       prev:
                         type: string
                         nullable: true
@@ -406,7 +406,7 @@ paths:
                       next:
                         type: string
                         nullable: true
-                        example: 'https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/members?page=2'
+                        example: 'https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/users?page=2'
                   meta:
                     type: object
                     properties:
@@ -433,7 +433,7 @@ paths:
           description: Not Found
       tags:
         - Group Memberships
-      operationId: getGroupMembers
+      operationId: getGroupUsers
     post:
       summary: Add member
       description: Add a new user to the group, use status "invited" to send an invitation to the user.
@@ -456,16 +456,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GroupMembershipForm'
+              $ref: '#/components/schemas/GroupUserForm'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/GroupMembershipForm'
+              $ref: '#/components/schemas/GroupUserForm'
       responses:
         '201':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GroupMembership'
+                $ref: '#/components/schemas/GroupUser'
           description: OK
         '404':
           content:
@@ -477,8 +477,8 @@ paths:
           description: Not Found
       tags:
         - Group Memberships
-      operationId: createGroupMember
-  '/groups/{group}/members/{user}':
+      operationId: createGroupUser
+  '/groups/{group}/users/{user}':
     delete:
       summary: Remove member
       description: Remove a user account from the group
@@ -509,7 +509,7 @@ paths:
               example: ''
       tags:
         - Group Memberships
-      operationId: deleteGroupMember
+      operationId: deleteGroupUser
 components:
   schemas:
     Userinfo:
@@ -641,7 +641,7 @@ components:
             authorized this token.
           readOnly: true
           type: string
-    GroupMembership:
+    GroupUser:
       type: object
       properties:
         group_id:
@@ -658,7 +658,7 @@ components:
             - moderator
             - admin
             - owner
-    GroupMembershipForm:
+    GroupUserForm:
       type: object
       properties:
         email:
