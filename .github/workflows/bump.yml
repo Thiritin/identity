@@ -22,7 +22,7 @@ jobs:
       - name: Deploy API documentation
         uses: bump-sh/github-action@v1
         with:
-          doc: DOCUMENTATION_SLUG_OR_ID
+          doc: addde5ba-6454-49ad-a591-c5d0c4cf456f
           token: ${{secrets.BUMP_SH_TOKEN}}
           file: openapi.yml
   api-diff:
@@ -35,7 +35,7 @@ jobs:
       - name: Comment pull request with API diff
         uses: bump-sh/github-action@v1
         with:
-          doc: DOCUMENTATION_SLUG_OR_ID
+          doc: addde5ba-6454-49ad-a591-c5d0c4cf456f
           token: ${{secrets.BUMP_SH_TOKEN}}
           file: openapi.yml
           command: diff
