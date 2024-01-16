@@ -24,15 +24,15 @@
                     class="absolute inset-0 object-right h-full w-full object-cover bg-primary-600 auth-background">
                     <div
                         class="absolute bottom-2 left-2 text-sm text-primary-200 bg-black px-2 py-1 rounded shadow">
-                        Image by
+                        Artwork by
                         <a
-                            class="hover:underline" href="https://twitter.com/ArtYeen">ArtYeen</a>
+                            class="hover:underline" href="https://rudzik.art">Rudzik</a>
                     </div>
                 </div>
             </div>
             <!-- Page Content -->
             <div
-                class="flex-1 flex flex-col dark:bg-primary-900 items-center p-4 sm:px-6 lg:flex-none lg:px-20 xl:px-12">
+                class="flex-1 flex flex-col dark:text-primary-300 dark:bg-primary-900 items-center p-4 sm:px-6 lg:flex-none lg:px-20 xl:px-12">
                 <!-- Spacer -->
                 <div class="h-[25%]"></div>
                 <!-- Slot Content -->
@@ -128,7 +128,7 @@ export default {
     background-position: right;
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url('../../assets/blackmagic_by_kur0.jpg');
+    background-image: url('../../assets/cyberpunk_rudzik.jpg');
 }
 
 .page-enter-active {
