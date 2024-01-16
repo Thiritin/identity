@@ -94,7 +94,7 @@ paths:
           description: OK
       tags:
         - Open ID Connect
-      operationId: getUserinfo
+      operationId: introspectToken
   /groups:
     get:
       summary: Get all groups
