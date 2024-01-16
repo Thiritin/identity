@@ -654,8 +654,6 @@ components:
         level:
           type: string
           enum:
-            - invited
-            - banned
             - member
             - moderator
             - admin
@@ -669,8 +667,6 @@ components:
         level:
           type: string
           enum:
-            - invited
-            - banned
             - member
             - moderator
             - admin
