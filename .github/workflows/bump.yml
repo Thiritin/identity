@@ -23,7 +23,7 @@ jobs:
         uses: bump-sh/github-action@v1
         with:
           doc: DOCUMENTATION_SLUG_OR_ID
-          token: ${BUMP_SH_TOKEN}
+          token: ${{secrets.BUMP_SH_TOKEN}}
           file: openapi.yml
   api-diff:
     if: ${{ github.event_name == 'pull_request' }}
@@ -36,7 +36,7 @@ jobs:
         uses: bump-sh/github-action@v1
         with:
           doc: DOCUMENTATION_SLUG_OR_ID
-          token: ${BUMP_SH_TOKEN}
+          token: ${{secrets.BUMP_SH_TOKEN}}
           file: openapi.yml
           command: diff
         env:
