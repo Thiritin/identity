@@ -1,10 +1,1 @@
-/*
-*
-* Backpack Crud / Edit
-*
-*/
-
-jQuery(function($){
-
-    'use strict';
-});
+/* * * Backpack Crud / Edit * */ jQuery(function($){ 'use strict'; });

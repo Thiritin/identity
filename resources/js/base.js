@@ -13,20 +13,6 @@ module.exports = {
             });
 
             return translation
-        },
-
-        /**
-         * Translate the given key with basic pluralization.
-         */
-        __n(key, number, replace = {}) {
-            var options = key.split('|');
-
-            key = options[1];
-            if(number == 1) {
-                key = options[0];
-            }
-
-            return tt(key, replace);
-        },
+        }
     },
 }
