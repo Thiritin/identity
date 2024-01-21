@@ -6,22 +6,13 @@
         class="mb-6"
     />
     <div class="space-y-8">
-        <UserBox :user="user"/>
+        <UserBox :user="user" />
         <div class="flex items-center justify-between">
             <Link
                 :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
                 :disabled="form.processing"
                 :href="route('auth.oidc.login')"
-                class="
-                            py-3
-                            rounded-lg
-                            px-8
-                            mr-auto
-                            text-white text-sm
-                            mb-4
-                            font-semibold
-                            focus:outline-none
-                        "
+                class="py-3 rounded-lg px-8 mr-auto text-white text-sm mb-4 font-semibold focus:outline-none"
             >
                 {{ $trans('continue_to_login') }}
             </Link>
@@ -30,42 +21,42 @@
 </template>
 
 <script>
-import Logo from '@/Auth/Logo.vue'
-import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
-import AuthLayout from '@/Layouts/AuthLayout.vue'
-import UserBox from "@/Pages/Auth/UserBox.vue";
-import {Link} from "@inertiajs/vue3";
+    import Logo from '@/Auth/Logo.vue'
+    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
+    import AuthLayout from '@/Layouts/AuthLayout.vue'
+    import UserBox from '@/Pages/Auth/UserBox.vue'
+    import { Link } from '@inertiajs/vue3'
 
-export default {
-    components: {
-        UserBox,
-        AuthLayout,
-        Logo,
-        LoginScreenWelcome,
-        Link,
-    },
-    layout: AuthLayout,
-
-    props: {
-        user: Object,
-    },
-
-    data() {
-        return {
-            form: this.$inertia.form(),
-        }
-    },
-
-    computed: {
-        verificationLinkSent() {
-            return this.status === 'verification-link-sent'
+    export default {
+        components: {
+            UserBox,
+            AuthLayout,
+            Logo,
+            LoginScreenWelcome,
+            Link,
         },
-    },
+        layout: AuthLayout,
 
-    methods: {
-        submit() {
-            this.form.post(this.route('verification.send'))
+        props: {
+            user: Object,
         },
-    },
-}
+
+        data() {
+            return {
+                form: this.$inertia.form(),
+            }
+        },
+
+        computed: {
+            verificationLinkSent() {
+                return this.status === 'verification-link-sent'
+            },
+        },
+
+        methods: {
+            submit() {
+                this.form.post(this.route('verification.send'))
+            },
+        },
+    }
 </script>

@@ -6,8 +6,7 @@
         class="mb-10"
     />
     <div class="space-y-8">
-
-        <UserBox :user="user"/>
+        <UserBox :user="user" />
         <div
             class="text-sm shadow-md p-2 border-l-[4px] border-primary-600 dark:border-primary-300 dark:text-primary-300"
         >
@@ -31,18 +30,11 @@
         <form @submit.prevent="submit">
             <div class="mt-4 flex items-center justify-between">
                 <button
-                    :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
+                    :class="
+                        form.processing ? 'bg-primary-400' : 'bg-primary-500'
+                    "
                     :disabled="form.processing || buttonDisabled"
-                    class="
-                            py-3
-                            rounded-lg
-                            px-8
-                            mr-auto
-                            text-white text-sm
-                            mb-4
-                            font-semibold
-                            focus:outline-none
-                        "
+                    class="py-3 rounded-lg px-8 mr-auto text-white text-sm mb-4 font-semibold focus:outline-none"
                 >
                     {{ $trans('resend_verification_mail') }}
                 </button>
@@ -50,12 +42,8 @@
                 <a
                     :href="route('auth.logout')"
                     as="button"
-                    class="
-                            underline
-                            text-sm text-gray-600
-                            hover:text-gray-900
-                        "
-                >{{ $trans('logout') }}
+                    class="underline text-sm text-gray-600 hover:text-gray-900"
+                    >{{ $trans('logout') }}
                 </a>
             </div>
         </form>
@@ -63,47 +51,47 @@
 </template>
 
 <script setup>
-import Logo from '@/Auth/Logo.vue'
-import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
-import UserBox from "@/Pages/Auth/UserBox.vue";
-import {useForm} from "@inertiajs/vue3";
-import {computed} from "vue";
+    import Logo from '@/Auth/Logo.vue'
+    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
+    import UserBox from '@/Pages/Auth/UserBox.vue'
+    import { useForm } from '@inertiajs/vue3'
+    import { computed } from 'vue'
 
-const props = defineProps({
-    user: Object,
-    status: String,
-})
-
-const form = useForm({
-    email: props.user.email,
-})
-
-const buttonDisabled = ref(false)
-
-const submit = () => {
-    form.post(route('verification.send'), {
-        preserveScroll: true,
-        onSuccess: () => {
-            buttonDisabled.value = true;
-            setTimeout(() => {
-                buttonDisabled.value = false;
-            }, 30000)
-        },
-        onError: () => {
-            form.reset()
-        },
+    const props = defineProps({
+        user: Object,
+        status: String,
     })
-}
 
-const verificationLinkSent = computed(() => {
-    return props.status === 'verification-link-sent'
-})
+    const form = useForm({
+        email: props.user.email,
+    })
+
+    const buttonDisabled = ref(false)
+
+    const submit = () => {
+        form.post(route('verification.send'), {
+            preserveScroll: true,
+            onSuccess: () => {
+                buttonDisabled.value = true
+                setTimeout(() => {
+                    buttonDisabled.value = false
+                }, 30000)
+            },
+            onError: () => {
+                form.reset()
+            },
+        })
+    }
+
+    const verificationLinkSent = computed(() => {
+        return props.status === 'verification-link-sent'
+    })
 </script>
 
 <script>
-import AuthLayout from '@/Layouts/AuthLayout.vue'
+    import AuthLayout from '@/Layouts/AuthLayout.vue'
 
-export default {
-    layout: AuthLayout,
-}
+    export default {
+        layout: AuthLayout,
+    }
 </script>

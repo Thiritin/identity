@@ -18,9 +18,9 @@
                     id="email"
                     v-model.trim.lazy="form.email"
                     :class="{
-                            'border-red-500 focus:border-red-500':
-                                errors?.email != null,
-                        }"
+                        'border-red-500 focus:border-red-500':
+                            errors?.email != null,
+                    }"
                     autocomplete="email"
                     placeholder="me@example.com"
                     readonly=""
@@ -30,10 +30,10 @@
                     v-if="errors.email"
                     class="w-full text-red-600 text-xs rounded"
                 >
-                        {{ errors.email }}
-                    </span>
+                    {{ errors.email }}
+                </span>
             </div>
-            <PasswordInfoBox/>
+            <PasswordInfoBox />
             <div class="space-y-2">
                 <label
                     class="block text-sm font-medium text-gray-700"
@@ -45,19 +45,20 @@
                     id="password"
                     v-model.trim.lazy="form.password"
                     :class="{
-                            'border-red-500 focus:border-red-500':
-                                errors?.email != null,
-                        }"
+                        'border-red-500 focus:border-red-500':
+                            errors?.email != null,
+                    }"
                     autocomplete="email"
                     placeholder=""
                     type="password"
                 />
                 <span
-v-for="error in errors.password" v-show="errors.password"
-                      class="w-full text-red-600 text-xs rounded"
+                    v-for="error in errors.password"
+                    v-show="errors.password"
+                    class="w-full text-red-600 text-xs rounded"
                 >
-                        {{ error }}
-                    </span>
+                    {{ error }}
+                </span>
             </div>
             <div class="space-y-2">
                 <label
@@ -70,9 +71,9 @@ v-for="error in errors.password" v-show="errors.password"
                     id="password_confirmation"
                     v-model.trim.lazy="form.password_confirmation"
                     :class="{
-                            'border-red-500 focus:border-red-500':
-                                errors?.email != null,
-                        }"
+                        'border-red-500 focus:border-red-500':
+                            errors?.email != null,
+                    }"
                     autocomplete="email"
                     placeholder=""
                     type="password"
@@ -81,26 +82,15 @@ v-for="error in errors.password" v-show="errors.password"
                     v-show="errors.password_confirmation"
                     class="w-full text-red-600 text-xs rounded"
                 >
-                        {{ errors.password_confirmation }}
-                    </span>
+                    {{ errors.password_confirmation }}
+                </span>
             </div>
         </div>
         <div class="flex flex-col">
             <button
-                :class="
-                        form.processing ? 'bg-primary-400' : 'bg-primary-500'
-                    "
+                :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
                 :disabled="form.processing"
-                class="
-                        py-3
-                        rounded-lg
-                        px-12
-                        ml-auto
-                        text-white text-2xl
-                        mb-4
-                        font-semibold
-                        focus:outline-none
-                    "
+                class="py-3 rounded-lg px-12 ml-auto text-white text-2xl mb-4 font-semibold focus:outline-none"
                 type="submit"
             >
                 {{ $trans('reset_password') }}
@@ -116,48 +106,48 @@ v-for="error in errors.password" v-show="errors.password"
 </template>
 
 <script>
-import Logo from '@/Auth/Logo.vue'
-import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
-import FormInput from '@/Auth/Form/AuthFormInput.vue'
-import AuthLayout from '@/Layouts/AuthLayout.vue'
-import PasswordInfoBox from "@/Auth/PasswordInfoBox.vue";
-import {Link} from "@inertiajs/vue3";
+    import Logo from '@/Auth/Logo.vue'
+    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
+    import FormInput from '@/Auth/Form/AuthFormInput.vue'
+    import AuthLayout from '@/Layouts/AuthLayout.vue'
+    import PasswordInfoBox from '@/Auth/PasswordInfoBox.vue'
+    import { Link } from '@inertiajs/vue3'
 
-export default {
-    components: {
-        PasswordInfoBox,
-        AuthLayout,
-        Logo,
-        LoginScreenWelcome,
-        FormInput,
-        Link
-    },
-    layout: AuthLayout,
-
-    props: {
-        email: String,
-        token: String,
-        errors: Object,
-    },
-
-    data() {
-        return {
-            form: this.$inertia.form({
-                token: this.token,
-                email: this.email,
-                password: '',
-                password_confirmation: '',
-            }),
-        }
-    },
-
-    methods: {
-        submit() {
-            this.form.post(this.route('auth.password-reset.store'), {
-                onFinish: () =>
-                    this.form.reset('password', 'password_confirmation'),
-            })
+    export default {
+        components: {
+            PasswordInfoBox,
+            AuthLayout,
+            Logo,
+            LoginScreenWelcome,
+            FormInput,
+            Link,
         },
-    },
-}
+        layout: AuthLayout,
+
+        props: {
+            email: String,
+            token: String,
+            errors: Object,
+        },
+
+        data() {
+            return {
+                form: this.$inertia.form({
+                    token: this.token,
+                    email: this.email,
+                    password: '',
+                    password_confirmation: '',
+                }),
+            }
+        },
+
+        methods: {
+            submit() {
+                this.form.post(this.route('auth.password-reset.store'), {
+                    onFinish: () =>
+                        this.form.reset('password', 'password_confirmation'),
+                })
+            },
+        },
+    }
 </script>

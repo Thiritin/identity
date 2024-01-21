@@ -5,40 +5,39 @@
 </template>
 
 <script>
-export default {
-    name: "FieldError",
-    props: {
-        value: {
-            type: [String, null],
-            required: false,
-        }
+    export default {
+        name: 'FieldError',
+        props: {
+            value: {
+                type: [String, null],
+                required: false,
+            },
+        },
     }
-}
 </script>
 
-
 <style scoped>
-.error-enter-from {
-    opacity: 0;
-}
+    .error-enter-from {
+        opacity: 0;
+    }
 
-.error-enter-active {
-    transition: all 0.2s ease;
-}
+    .error-enter-active {
+        transition: all 0.2s ease;
+    }
 
-.error-enter-to {
-    opacity: 1;
-}
+    .error-enter-to {
+        opacity: 1;
+    }
 
-.error-leave-from {
-    opacity: 1;
-}
+    .error-leave-from {
+        opacity: 1;
+    }
 
-.error-leave-active {
-    transition-duration: 200ms;
-}
+    .error-leave-active {
+        transition-duration: 200ms;
+    }
 
-.error-leave-to {
-    opacity: 0;
-}
+    .error-leave-to {
+        opacity: 0;
+    }
 </style>

@@ -1,13 +1,9 @@
-<template>
-
-</template>
+<template></template>
 
 <script>
-export default {
-    name: "SelectInput"
-}
+    export default {
+        name: 'SelectInput',
+    }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

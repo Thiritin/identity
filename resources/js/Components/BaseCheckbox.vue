@@ -15,27 +15,29 @@
 </template>
 
 <script>
-export default {
-    name: "BaseCheckbox",
-    props: {
-        label: {
-            type: String,
-            default: ''
+    export default {
+        name: 'BaseCheckbox',
+        props: {
+            label: {
+                type: String,
+                default: '',
+            },
+            modelValue: {
+                type: Boolean,
+                default: false,
+            },
         },
-        modelValue: {
-            type: Boolean,
-            default: false
-        }
-    },
-    setup(props) {
-        const fieldId = "checkbox-" + props.label.trim().replace(/\W/g, '').toLowerCase() + "-" + Math.random().toString(36).slice(2);
-        return {
-            fieldId
-        };
+        setup(props) {
+            const fieldId =
+                'checkbox-' +
+                props.label.trim().replace(/\W/g, '').toLowerCase() +
+                '-' +
+                Math.random().toString(36).slice(2)
+            return {
+                fieldId,
+            }
+        },
     }
-}
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

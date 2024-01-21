@@ -1,15 +1,11 @@
 <template>
-    <AppLayout>
-
-    </AppLayout>
+    <AppLayout> </AppLayout>
 </template>
 
 <script>
-export default {
-    name: "Index"
-}
+    export default {
+        name: 'Index',
+    }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

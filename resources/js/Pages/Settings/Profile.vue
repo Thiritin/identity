@@ -1,110 +1,169 @@
 <template>
     <settings-layout>
-        <AvatarModal ref='avatarmodal' :file='file' :url='previewUrl'></AvatarModal>
+        <AvatarModal
+            ref="avatarmodal"
+            :file="file"
+            :url="previewUrl"
+        ></AvatarModal>
         <form @submit.prevent>
-            <div class='space-y-8 divide-y divide-gray-200 sm:space-y-5'>
+            <div class="space-y-8 divide-y divide-gray-200 sm:space-y-5">
                 <div>
                     <SettingsHeader>Public Profile</SettingsHeader>
-                    <SettingsSubHeader>This information will be used across services.</SettingsSubHeader>
+                    <SettingsSubHeader
+                        >This information will be used across
+                        services.</SettingsSubHeader
+                    >
 
-                    <div class='mt-6 sm:mt-5 space-y-6 sm:space-y-5'>
+                    <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
                         <div
-                            class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5'>
+                            class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5"
+                        >
                             <label
-                                class='block text-sm font-medium text-gray-700 dark:text-primary-200 sm:mt-px sm:pt-2'
-                                for='username'>
-                                Username </label>
-                            <div class='mt-1 sm:mt-0 sm:col-span-2'>
-                                <div class='max-w-lg flex rounded-md shadow-sm'>
+                                class="block text-sm font-medium text-gray-700 dark:text-primary-200 sm:mt-px sm:pt-2"
+                                for="username"
+                            >
+                                Username
+                            </label>
+                            <div class="mt-1 sm:mt-0 sm:col-span-2">
+                                <div class="max-w-lg flex rounded-md shadow-sm">
                                     <span
-                                        class='inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm'>
-                                      @
+                                        class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm"
+                                    >
+                                        @
                                     </span>
                                     <input
-id='username' v-model='form.name' autocomplete='username'
-                                           class='form-input flex-1 bg-gray-100 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300'
-                                           name='username' type='text' disabled/>
+                                        id="username"
+                                        v-model="form.name"
+                                        autocomplete="username"
+                                        class="form-input flex-1 bg-gray-100 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300"
+                                        name="username"
+                                        type="text"
+                                        disabled
+                                    />
                                 </div>
                                 <span
-                                    class="text-gray-600 dark:text-primary-200 text-xs">{{
+                                    class="text-gray-600 dark:text-primary-200 text-xs"
+                                    >{{
                                         $trans('profile_username_notice')
-                                    }}</span>
+                                    }}</span
+                                >
                             </div>
                         </div>
 
                         <div
-                            class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:pt-5'>
+                            class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:pt-5"
+                        >
                             <label
-class='block text-sm font-medium text-gray-700 dark:text-primary-200'
-                                   for='avatar'> Avatar </label>
-                            <div class='mt-1 sm:mt-0 sm:col-span-2'>
-                                <div class='flex items-center'>
-                                    <span class='h-12 w-12 rounded-full overflow-hidden bg-gray-100'>
-                                      <AvatarImage :avatar="$page.props.user.avatar"/>
-                                        </span>
+                                class="block text-sm font-medium text-gray-700 dark:text-primary-200"
+                                for="avatar"
+                            >
+                                Avatar
+                            </label>
+                            <div class="mt-1 sm:mt-0 sm:col-span-2">
+                                <div class="flex items-center">
+                                    <span
+                                        class="h-12 w-12 rounded-full overflow-hidden bg-gray-100"
+                                    >
+                                        <AvatarImage
+                                            :avatar="$page.props.user.avatar"
+                                        />
+                                    </span>
                                     <div
-                                        class='relative ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'>
-                                        <label class='relative' for='avatar' type='button'> <span>Change</span>
-                                            <span
-                                                class='sr-only'> user photo</span> </label> <input
-id='avatar'
-                                                                                                   class='absolute inset-0 w-full h-full opacity-0 cursor-pointer border-gray-300 rounded-md'
-                                                                                                   name='avatar'
-                                                                                                   type='file'
-                                                                                                   accept='image/png,image/jpeg,image/jpg'
-                                                                                                   @change='onFileChange($event)'/>
+                                        class="relative ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                                    >
+                                        <label
+                                            class="relative"
+                                            for="avatar"
+                                            type="button"
+                                        >
+                                            <span>Change</span>
+                                            <span class="sr-only">
+                                                user photo</span
+                                            >
+                                        </label>
+                                        <input
+                                            id="avatar"
+                                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer border-gray-300 rounded-md"
+                                            name="avatar"
+                                            type="file"
+                                            accept="image/png,image/jpeg,image/jpg"
+                                            @change="onFileChange($event)"
+                                        />
                                     </div>
                                 </div>
                                 <div
-                                    class="text-gray-600 dark:text-primary-200 text-xs">
+                                    class="text-gray-600 dark:text-primary-200 text-xs"
+                                >
                                     {{ $trans('profile_avatar_notice') }}
                                 </div>
-                                <span v-show='errors.image' class='text-xs text-red-600'>{{ errors.image }}</span>
+                                <span
+                                    v-show="errors.image"
+                                    class="text-xs text-red-600"
+                                    >{{ errors.image }}</span
+                                >
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class='pt-4 pb-5 space-y-6 sm:pt-6 sm:space-y-5'>
+                <div class="pt-4 pb-5 space-y-6 sm:pt-6 sm:space-y-5">
                     <div>
                         <SettingsHeader>Contact Information</SettingsHeader>
-                        <SettingsSubHeader>How can we reach you?</SettingsSubHeader>
+                        <SettingsSubHeader
+                            >How can we reach you?</SettingsSubHeader
+                        >
                         <BaseInput
-id='email' v-model='form.email' :error="errors.email" :label="$trans('email')"
-                                   autocomplete='email'
-                                   name='email'
-                                   type="email"></BaseInput>
+                            id="email"
+                            v-model="form.email"
+                            :error="errors.email"
+                            :label="$trans('email')"
+                            autocomplete="email"
+                            name="email"
+                            type="email"
+                        ></BaseInput>
 
                         <div
-v-if="showEmailVerify"
-                             class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start mt-2'>
-                            <div class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2">
+                            v-if="showEmailVerify"
+                            class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start mt-2"
+                        >
+                            <div
+                                class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2"
+                            >
                                 <BaseAlert
-message="We have sent you a verification email to confirm your change."
-                                           title="Please check your email."></BaseAlert>
+                                    message="We have sent you a verification email to confirm your change."
+                                    title="Please check your email."
+                                ></BaseAlert>
                             </div>
                         </div>
                         <div
-v-else-if="showEmailTooMany"
-                             class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start mt-2'>
-                            <div class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2">
+                            v-else-if="showEmailTooMany"
+                            class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start mt-2"
+                        >
+                            <div
+                                class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2"
+                            >
                                 <BaseAlert
-message="Please try again in 15 minutes."
-                                           title="Too many requests"></BaseAlert>
+                                    message="Please try again in 15 minutes."
+                                    title="Too many requests"
+                                ></BaseAlert>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-startsm:pt-5 pt-5'>
-                    <div class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2">
+                <div
+                    class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-startsm:pt-5 pt-5"
+                >
+                    <div
+                        class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2"
+                    >
                         <InertiaLink :href="route('profile')">
-                            <BaseButton type='button'>
-                                Cancel
-                            </BaseButton>
+                            <BaseButton type="button"> Cancel </BaseButton>
                         </InertiaLink>
 
-                        <PrimaryButton class="ml-3" @click="submitForm">Save</PrimaryButton>
+                        <PrimaryButton class="ml-3" @click="submitForm"
+                            >Save</PrimaryButton
+                        >
                     </div>
                 </div>
             </div>
@@ -113,67 +172,68 @@ message="Please try again in 15 minutes."
 </template>
 
 <script>
-import {useForm} from '@inertiajs/vue3'
-import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
-import SettingsLayout from '@/Layouts/SettingsLayout.vue'
-import SettingsHeader from '@/Components/Settings/SettingsHeader.vue'
-import SettingsSubHeader from '@/Components/Settings/SettingsSubHeader.vue'
-import BaseInput from "@/Components/BaseInput.vue";
-import BaseButton from "@/Components/BaseButton.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import BaseAlert from "@/Components/BaseAlert.vue";
-import AvatarModal from "@/Profile/AvatarModal.vue";
+    import { useForm } from '@inertiajs/vue3'
+    import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
+    import SettingsLayout from '@/Layouts/SettingsLayout.vue'
+    import SettingsHeader from '@/Components/Settings/SettingsHeader.vue'
+    import SettingsSubHeader from '@/Components/Settings/SettingsSubHeader.vue'
+    import BaseInput from '@/Components/BaseInput.vue'
+    import BaseButton from '@/Components/BaseButton.vue'
+    import PrimaryButton from '@/Components/PrimaryButton.vue'
+    import BaseAlert from '@/Components/BaseAlert.vue'
+    import AvatarModal from '@/Profile/AvatarModal.vue'
 
-export default {
-
-    components: {
-        AvatarModal,
-        BaseAlert,
-        PrimaryButton,
-        BaseButton,
-        SettingsSubHeader,
-        SettingsHeader,
-        SettingsLayout,
-        AvatarImage,
-        BaseInput
-    },
-    props: {
-        errors: Object,
-        flash: Object
-    },
-
-    data() {
-        return {
-            previewUrl: null,
-            file: null,
-            form: useForm({
-                name: this.$page.props.user.name,
-                email: this.$page.props.user.email,
-            }),
-        }
-    },
-
-    computed: {
-        showEmailVerify() {
-            return this.flash.message === "emailVerify";
+    export default {
+        components: {
+            AvatarModal,
+            BaseAlert,
+            PrimaryButton,
+            BaseButton,
+            SettingsSubHeader,
+            SettingsHeader,
+            SettingsLayout,
+            AvatarImage,
+            BaseInput,
         },
-        showEmailTooMany() {
-            return this.flash.message === "emailTooMany";
-        }
-    },
-
-    methods: {
-        onFileChange(e) {
-            const file = e.target.files[0]
-            this.file = file
-            this.previewUrl = URL.createObjectURL(file)
-            this.$refs.avatarmodal.open = true
-            URL.revokeObjectURL(file)
+        props: {
+            errors: Object,
+            flash: Object,
         },
-        submitForm() {
-            this.form.post(route('settings.update-profile.update'), this.form)
 
-        }
-    },
-}
+        data() {
+            return {
+                previewUrl: null,
+                file: null,
+                form: useForm({
+                    name: this.$page.props.user.name,
+                    email: this.$page.props.user.email,
+                }),
+            }
+        },
+
+        computed: {
+            showEmailVerify() {
+                return this.flash.message === 'emailVerify'
+            },
+            showEmailTooMany() {
+                return this.flash.message === 'emailTooMany'
+            },
+        },
+
+        methods: {
+            onFileChange(e) {
+                const file = e.target.files[0]
+                this.file = file
+                this.previewUrl = URL.createObjectURL(file)
+                this.$refs.avatarmodal.open = true
+                URL.revokeObjectURL(file)
+            },
+            submitForm() {
+                this.form.post(
+                    route('settings.update-profile.update'),
+                    this.form
+                )
+            },
+        },
+    }
 </script>
