@@ -7,6 +7,7 @@ use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 /** @mixin User */
 class UserinfoResource extends JsonResource
@@ -21,7 +22,7 @@ class UserinfoResource extends JsonResource
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)
@@ -35,10 +36,11 @@ class UserinfoResource extends JsonResource
         }
         if ($this->scopeCheck('profile')) {
             $data['name'] = $this->name;
-            $data['avatar'] = $this->profile_photo_path;
+            $data['avatar'] = ($request->user()->profile_photo_path) ? Storage::disk('s3-avatars')->url($request->user()->profile_photo_path) : null;
         }
         if ($this->whenLoaded('groups') && $this->scopeCheck('groups')) {
-            $data['groups'] = $this->groups->filter(fn(Group $group) => $group->pivot->level !== GroupUserLevel::Invited)->pluck('hashid');
+            $data['groups'] = $this->groups->filter(fn(Group $group
+            ) => $group->pivot->level !== GroupUserLevel::Invited)->pluck('hashid');
         }
 
         return $data;
