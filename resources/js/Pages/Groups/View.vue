@@ -31,12 +31,12 @@ import GroupHorizontalBox from "@/Components/GroupHorizontalBox.vue";
 
 export default {
     name: 'View',
+    components: {GroupHorizontalBox, UserLevelBadge, AvatarImage, Card, AppLayout},
     props: {
         group: Object,
         members: Object,
         canSeeSettings: Boolean
     },
-    components: {GroupHorizontalBox, UserLevelBadge, AvatarImage, Card, AppLayout},
 }
 </script>
 

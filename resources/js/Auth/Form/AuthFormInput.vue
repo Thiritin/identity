@@ -1,9 +1,11 @@
 <template>
 
     <div class='space-y-2'>
-        <label class='block text-sm font-medium text-gray-700 dark:text-primary-200'
+        <label
+class='block text-sm font-medium text-gray-700 dark:text-primary-200'
                :for='id'>{{ label }} </label>
-        <input ref='input' :id='id' :value='modelValue' :class="{'border-red-500 focus:ring-red-500': error}"
+        <input
+:id='id' ref='input' :value='modelValue' :class="{'border-red-500 focus:ring-red-500': error}"
                :type='type'
                :autocomplete='autocomplete'
                :placeholder='placeholder'

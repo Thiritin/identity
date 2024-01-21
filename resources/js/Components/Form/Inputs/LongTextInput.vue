@@ -10,13 +10,13 @@
 <script>
 export default {
     name: "LongTextInput",
-    emits: ['update:modelValue'],
     props: {
         modelValue: {
             type: [String, null],
             required: false,
         },
     },
+    emits: ['update:modelValue'],
     data() {
         return {
             value: this.modelValue

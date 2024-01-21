@@ -52,7 +52,8 @@
                     placeholder=""
                     type="password"
                 />
-                <span v-show="errors.password" v-for="error in errors.password"
+                <span
+v-for="error in errors.password" v-show="errors.password"
                       class="w-full text-red-600 text-xs rounded"
                 >
                         {{ error }}

@@ -1,5 +1,6 @@
 <template>
-    <svg viewBox="0 0 640 512"
+    <svg
+viewBox="0 0 640 512"
          xmlns="http://www.w3.org/2000/svg"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) -->
         <path
             class="fa-secondary"

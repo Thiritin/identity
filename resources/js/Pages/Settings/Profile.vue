@@ -20,7 +20,8 @@
                                         class='inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm'>
                                       @
                                     </span>
-                                    <input id='username' v-model='form.name' autocomplete='username'
+                                    <input
+id='username' v-model='form.name' autocomplete='username'
                                            class='form-input flex-1 bg-gray-100 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300'
                                            name='username' type='text' disabled/>
                                 </div>
@@ -33,7 +34,8 @@
 
                         <div
                             class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-center sm:pt-5'>
-                            <label class='block text-sm font-medium text-gray-700 dark:text-primary-200'
+                            <label
+class='block text-sm font-medium text-gray-700 dark:text-primary-200'
                                    for='avatar'> Avatar </label>
                             <div class='mt-1 sm:mt-0 sm:col-span-2'>
                                 <div class='flex items-center'>
@@ -44,7 +46,8 @@
                                         class='relative ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'>
                                         <label class='relative' for='avatar' type='button'> <span>Change</span>
                                             <span
-                                                class='sr-only'> user photo</span> </label> <input id='avatar'
+                                                class='sr-only'> user photo</span> </label> <input
+id='avatar'
                                                                                                    class='absolute inset-0 w-full h-full opacity-0 cursor-pointer border-gray-300 rounded-md'
                                                                                                    name='avatar'
                                                                                                    type='file'
@@ -66,22 +69,27 @@
                     <div>
                         <SettingsHeader>Contact Information</SettingsHeader>
                         <SettingsSubHeader>How can we reach you?</SettingsSubHeader>
-                        <BaseInput id='email' v-model='form.email' :error="errors.email" :label="$trans('email')"
+                        <BaseInput
+id='email' v-model='form.email' :error="errors.email" :label="$trans('email')"
                                    autocomplete='email'
                                    name='email'
                                    type="email"></BaseInput>
 
-                        <div v-if="showEmailVerify"
+                        <div
+v-if="showEmailVerify"
                              class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start mt-2'>
                             <div class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2">
-                                <BaseAlert message="We have sent you a verification email to confirm your change."
+                                <BaseAlert
+message="We have sent you a verification email to confirm your change."
                                            title="Please check your email."></BaseAlert>
                             </div>
                         </div>
-                        <div v-else-if="showEmailTooMany"
+                        <div
+v-else-if="showEmailTooMany"
                              class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start mt-2'>
                             <div class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2">
-                                <BaseAlert message="Please try again in 15 minutes."
+                                <BaseAlert
+message="Please try again in 15 minutes."
                                            title="Too many requests"></BaseAlert>
                             </div>
                         </div>
@@ -117,10 +125,6 @@ import BaseAlert from "@/Components/BaseAlert.vue";
 import AvatarModal from "@/Profile/AvatarModal.vue";
 
 export default {
-    props: {
-        errors: Object,
-        flash: Object
-    },
 
     components: {
         AvatarModal,
@@ -133,14 +137,9 @@ export default {
         AvatarImage,
         BaseInput
     },
-
-    computed: {
-        showEmailVerify() {
-            return this.flash.message === "emailVerify";
-        },
-        showEmailTooMany() {
-            return this.flash.message === "emailTooMany";
-        }
+    props: {
+        errors: Object,
+        flash: Object
     },
 
     data() {
@@ -151,6 +150,15 @@ export default {
                 name: this.$page.props.user.name,
                 email: this.$page.props.user.email,
             }),
+        }
+    },
+
+    computed: {
+        showEmailVerify() {
+            return this.flash.message === "emailVerify";
+        },
+        showEmailTooMany() {
+            return this.flash.message === "emailTooMany";
         }
     },
 

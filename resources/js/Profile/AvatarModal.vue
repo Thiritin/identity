@@ -6,7 +6,8 @@
                 class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 bg-gray-200 bg-opacity-75">
                 <!-- This element is to trick the browser into centering the modal contents. -->
                 <span aria-hidden="true" class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
-                <TransitionChild as="template" enter="ease-out duration-300"
+                <TransitionChild
+as="template" enter="ease-out duration-300"
                                  enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                                  enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200"
                                  leave-from="opacity-100 translate-y-0 sm:scale-100"
@@ -20,9 +21,10 @@
                                         Crop Avatar
                                     </DialogTitle>
                                     <div class="mt-2">
-                                        <vue-cropper v-if="url != null" ref="cropper"
-                                                     :aspectRatio="1" :guides="false"
-                                                     :toggleDragModeOnDblclick="false"
+                                        <vue-cropper
+v-if="url != null" ref="cropper"
+                                                     :aspect-ratio="1" :guides="false"
+                                                     :toggle-drag-mode-on-dblclick="false"
                                                      :rotatable="false" :scalable="false" :src="url" :zoomable="false"
                                                      alt="Source Image"
                                                      @cropend="avatarform.crop = $event.target.cropper.getData()"
@@ -31,13 +33,15 @@
                                 </div>
                             </div>
 
-                            <progress v-if="avatarform.progress" :value="avatarform.progress.percentage" class="w-full"
+                            <progress
+v-if="avatarform.progress" :value="avatarform.progress.percentage" class="w-full"
                                       max="100">
                                 {{ avatarform.progress.percentage }}%
                             </progress>
 
                             <div class="mt-5 sm:mt-6 flex flex-row justify-end">
-                                <button autofocus
+                                <button
+autofocus
                                         class="bg-primary-600 mr-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-100 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                         type="submit">
                                     Submit
@@ -78,6 +82,14 @@ export default {
         url: String,
         file: File
     },
+    setup() {
+        const open = ref(false)
+
+
+        return {
+            open
+        }
+    },
     data() {
         return {
             avatarform: useForm({
@@ -101,14 +113,6 @@ export default {
                 onSuccess: () => (this.open = false),
                 onError: () => (this.open = false),
             })
-        }
-    },
-    setup() {
-        const open = ref(false)
-
-
-        return {
-            open
         }
     },
 }

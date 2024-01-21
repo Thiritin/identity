@@ -9,16 +9,19 @@
                 </div>
             </div>
             <div v-else>
-                <BaseInput id='currentPassword' v-model='form.current_password' :error="errors.current_password" autocomplete='password'
+                <BaseInput
+id='currentPassword' v-model='form.current_password' :error="errors.current_password" autocomplete='password'
                            autofocus label="Current password"
                            name='currentPassword' type="password"></BaseInput>
                 <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-end">
                     <PasswordInfoBox :correct-length='true' :correct-number='true' :correct-symbol='true' :correct-lower-upper='true' class="sm:col-span-2 sm:col-start-2 mt-2"></PasswordInfoBox>
                 </div>
-                <BaseInput id='newPassword' v-model='form.password' :error="errors.password" autocomplete='password'
+                <BaseInput
+id='newPassword' v-model='form.password' :error="errors.password" autocomplete='password'
                            label="New password"
                            name='newPassword' type="password"></BaseInput>
-                <BaseInput id='confirmNewPassword' v-model='form.password_confirmation' :error="errors.password_confirmation"
+                <BaseInput
+id='confirmNewPassword' v-model='form.password_confirmation' :error="errors.password_confirmation"
                            autocomplete='password' label="Confirm new password"
                            name='confirmNewPassword' type="password"></BaseInput>
                 <div class='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-startsm:pt-5 pt-5'>

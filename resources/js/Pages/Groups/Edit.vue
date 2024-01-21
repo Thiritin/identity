@@ -15,18 +15,21 @@
                                 </div>
 
                                 <div class="space-y-6 sm:space-y-5">
-                                    <BaseField v-model="form.logo"
+                                    <BaseField
+v-model="form.logo"
                                                :error="form.errors.logo"
                                                label="Cover"
                                                type="file"
                                     ></BaseField>
-                                    <BaseField v-model="form.name"
+                                    <BaseField
+v-model="form.name"
                                                :error="form.errors.name"
                                                label="Name"
                                                language="en"
                                                type="text"
                                     ></BaseField>
-                                    <BaseField v-model="form.description"
+                                    <BaseField
+v-model="form.description"
                                                :error="form.errors.description"
                                                label="Description"
                                                language="en"
@@ -62,9 +65,6 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 export default {
     name: 'View',
-    props: {
-        group: Object
-    },
     components: {
         PrimaryButton,
         BaseField,
@@ -73,6 +73,9 @@ export default {
         TwoColumnInputLayout,
         SettingsSubHeader,
         SettingsHeader, CardBody, GroupHorizontalBox, UserLevelBadge, AvatarImage, Card, AppLayout
+    },
+    props: {
+        group: Object
     },
     data() {
         return {

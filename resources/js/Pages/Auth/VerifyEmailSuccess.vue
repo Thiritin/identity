@@ -56,15 +56,15 @@ export default {
         }
     },
 
-    methods: {
-        submit() {
-            this.form.post(this.route('verification.send'))
-        },
-    },
-
     computed: {
         verificationLinkSent() {
             return this.status === 'verification-link-sent'
+        },
+    },
+
+    methods: {
+        submit() {
+            this.form.post(this.route('verification.send'))
         },
     },
 }

@@ -2,9 +2,11 @@
     <Card class="p-4 mb-6">
         <div class="flex gap-6">
             <div>
-                <img v-if='group.logo_url' :src='group.logo_url' alt=''
+                <img
+v-if='group.logo_url' :src='group.logo_url' alt=''
                      class='rounded max-h-[300px] max-w-[600px] shadow'>
-                <img v-else alt=''
+                <img
+v-else alt=''
                      class='rounded max-h-[300px] max-w-[600px] shadow'
                      src='../../assets/fallback-group-image.png'>
             </div>

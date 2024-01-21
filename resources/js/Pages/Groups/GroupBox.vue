@@ -37,6 +37,8 @@ import CogsDuotone from '@/Components/Icons/CogsDuotone.vue'
 import {Link} from "@inertiajs/vue3";
 
 export default {
+    name: 'GroupBox',
+    components: {CircleUser, CogsDuotone, Link},
     props: {
         group: Object,
     },
@@ -52,7 +54,5 @@ export default {
             return description;
         },
     },
-    name: 'GroupBox',
-    components: {CircleUser, CogsDuotone, Link},
 }
 </script>

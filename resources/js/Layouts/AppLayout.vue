@@ -5,7 +5,8 @@
                 <Disclosure v-slot='{ open }' as='nav'>
                     <div class='max-w-7xl mx-auto sm:px-6 lg:px-8'>
                         <div class='pt-2'>
-                            <div class='
+                            <div
+class='
                                 flex
                                 items-center
                                 justify-between
@@ -19,18 +20,21 @@
                                     </div>
                                 </div>
                                 <div class='hidden md:block'>
-                                    <div class='
+                                    <div
+class='
                                             ml-10
                                             flex
                                             justify-between
                                             items-baseline
                                             space-x-4
                                         '>
-                                        <template v-for='(
+                                        <template
+v-for='(
                                                 item, itemIdx
                                             ) in navigation' :key='item'>
                                             <template v-if='item.route === $page.url'>
-                                                <Link class='
+                                                <Link
+class='
                                                         bg-primary-800
                                                         text-white
                                                         px-3
@@ -41,7 +45,8 @@
                                                     ' href='#'>{{ $trans(item.name) }}
                                                 </Link>
                                             </template>
-                                            <Link v-else-if='item.inertia' :href='item.route' class='
+                                            <Link
+v-else-if='item.inertia' :href='item.route' class='
                                                     text-primary-300
                                                     hover:bg-primary-700
                                                     hover:text-white
@@ -52,7 +57,8 @@
                                                     font-medium
                                                 '>{{ $trans(item.name) }}
                                             </Link>
-                                            <a v-else :href='item.route' class='
+                                            <a
+v-else :href='item.route' class='
                                                     text-primary-300
                                                     hover:bg-primary-700
                                                     hover:text-white
@@ -71,7 +77,8 @@
                                         <!-- Profile dropdown -->
                                         <Menu as='div' class='ml-3 relative'>
                                             <div>
-                                                <MenuButton class='
+                                                <MenuButton
+class='
                                                     max-w-xs
                                                     bg-primary-800
                                                     rounded-full
@@ -85,17 +92,20 @@
                                                     focus:ring-white
                                                 '>
                                                     <span class='sr-only'>Open user menu</span>
-                                                    <AvatarImage :avatar="$page.props.user.avatar"
+                                                    <AvatarImage
+:avatar="$page.props.user.avatar"
                                                                  class='h-8 w-8 rounded-full'/>
                                                 </MenuButton>
                                             </div>
-                                            <transition enter-active-class='transition ease-out duration-100'
+                                            <transition
+enter-active-class='transition ease-out duration-100'
                                                         enter-from-class='transform opacity-0 scale-95'
                                                         enter-to-class='transform opacity-100 scale-100'
                                                         leave-active-class='transition ease-in duration-75'
                                                         leave-from-class='transform opacity-100 scale-100'
                                                         leave-to-class='transform opacity-0 scale-95'>
-                                                <MenuItems class='
+                                                <MenuItems
+class='
                                                     origin-top-right
                                                     absolute
                                                     right-0
@@ -112,7 +122,8 @@
                                                     focus:outline-none
                                                 '>
                                                     <MenuItem v-for='item in profile' :key='item' v-slot='{ active }'>
-                                                        <Link :class="[
+                                                        <Link
+:class="[
                                                             active
                                                                 ? 'bg-primary-800'
                                                                 : '',
@@ -121,7 +132,8 @@
                                                         </Link>
                                                     </MenuItem>
                                                     <MenuItem>
-                                                        <a class='block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300'
+                                                        <a
+class='block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300'
                                                            href='#' @click='logout'>{{
                                                                 $trans('logout')
                                                             }} </a>
@@ -133,7 +145,8 @@
                                 </div>
                                 <div class='-mr-2 flex md:hidden'>
                                     <!-- Mobile menu button -->
-                                    <DisclosureButton class='
+                                    <DisclosureButton
+class='
                                         bg-primary-800
                                         inline-flex
                                         items-center
@@ -162,7 +175,8 @@
                             <template v-for='(item, itemIdx) in navigation' :key='item'>
                                 <template v-if='item.route === $page.url'>
                                     <!-- Current: "bg-primary-900 text-white", Default: "text-primary-300 hover:bg-primary-700 hover:text-white" -->
-                                    <a class='
+                                    <a
+class='
                                         bg-primary-900
                                         text-white
                                         block
@@ -173,7 +187,8 @@
                                         font-medium
                                     ' href='#'>{{ $trans(item.name) }}</a>
                                 </template>
-                                <a v-else :href='item.route' class='
+                                <a
+v-else :href='item.route' class='
                                     text-primary-300
                                     hover:bg-primary-700 hover:text-white
                                     block
@@ -191,7 +206,8 @@
                                     <AvatarImage class='h-10 w-10 rounded-full'/>
                                 </div>
                                 <div class='ml-3'>
-                                    <div class='
+                                    <div
+class='
                                         text-base
                                         font-medium
                                         leading-none
@@ -199,7 +215,8 @@
                                     '>
                                         {{ user.name }}
                                     </div>
-                                    <div class='
+                                    <div
+class='
                                         text-sm
                                         font-medium
                                         leading-none
@@ -210,7 +227,8 @@
                                 </div>
                             </div>
                             <div class='mt-3 px-2 space-y-1'>
-                                <Link v-for='item in profile' :key='item' :href='item.route' class='
+                                <Link
+v-for='item in profile' :key='item' :href='item.route' class='
                                     block
                                     px-3
                                     py-2
@@ -221,7 +239,8 @@
                                     hover:text-white hover:bg-primary-700
                                 '>{{ $trans(item.name) }}
                                 </Link>
-                                <a class='block
+                                <a
+class='block
                                     px-3
                                     py-2
                                     rounded-md
@@ -258,12 +277,14 @@
             <footer>
                 <div class='mt-7 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-7'>
                     <div v-for='item in footer.nav' :key='item.name'>
-                        <Link v-if='item.href === null' :href='item.link'
+                        <Link
+v-if='item.href === null' :href='item.link'
                               :target="[item.newTab ? '_blank' : '_top']"
                               class='text-base text-gray-500 hover:text-gray-900 dark:hover:text-gray-400'>
                             {{ item.name }}
                         </Link>
-                        <a v-else :href='item.href' :target="[item.newTab ? '_blank' : '_top']"
+                        <a
+v-else :href='item.href' :target="[item.newTab ? '_blank' : '_top']"
                            class='text-base text-gray-500 hover:text-gray-900 dark:hover:text-gray-400qq'>
                             {{ item.name }} </a>
                     </div>
@@ -334,6 +355,18 @@ export default {
         description: String,
     },
 
+    setup() {
+        const user = computed(() => usePage().props.user)
+        navigation = navigation.filter(function (value) {
+            return (value.name === 'admin' && user.value.isAdmin === true) || value.name !== 'admin'
+        })
+        return {
+            navigation,
+            user,
+            profile,
+        }
+    },
+
     data() {
         return {
             animated: false,
@@ -366,18 +399,6 @@ export default {
                     },
                 ],
             },
-        }
-    },
-
-    setup() {
-        const user = computed(() => usePage().props.user)
-        navigation = navigation.filter(function (value) {
-            return (value.name === 'admin' && user.value.isAdmin === true) || value.name !== 'admin'
-        })
-        return {
-            navigation,
-            user,
-            profile,
         }
     },
 

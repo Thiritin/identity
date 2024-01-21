@@ -28,12 +28,12 @@ import Card from '@/Components/Card.vue'
 
 export default {
     name: 'Index',
+    components: {Card, GroupBox, AppLayout},
     layout: AppLayout,
     props: {
         myGroups: Array,
         departments: Array,
     },
-    components: {Card, GroupBox, AppLayout},
 }
 </script>
 

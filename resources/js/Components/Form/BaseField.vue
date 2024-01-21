@@ -4,7 +4,8 @@
         <div v-else></div>
 
         <div class='mt-1 sm:mt-0 sm:col-span-2'>
-            <component :is="component"
+            <component
+:is="component"
                        :id="fieldId"
                        v-model="value"
                        :class="[error ? 'border-red-600' : 'border-gray-300']"
@@ -32,7 +33,6 @@ import CheckboxInput from "@/Components/Form/Inputs/CheckboxInput.vue";
 
 export default {
     name: "BaseField",
-    emits: ['update:modelValue'],
     components: {
         CheckboxInput,
         FileInput,
@@ -80,6 +80,13 @@ export default {
             required: true
         }
     },
+    emits: ['update:modelValue'],
+    setup(props) {
+        const fieldId = "input-" + props.label.trim().replace(/\W/g, '').toLowerCase() + "-" + Math.random().toString(36).slice(2);
+        return {
+            fieldId
+        };
+    },
     computed: {
         component() {
             if (["text", "password", "email"].includes(this.type)) {
@@ -117,12 +124,6 @@ export default {
             }
         }
 
-    },
-    setup(props) {
-        const fieldId = "input-" + props.label.trim().replace(/\W/g, '').toLowerCase() + "-" + Math.random().toString(36).slice(2);
-        return {
-            fieldId
-        };
     },
 }
 </script>
