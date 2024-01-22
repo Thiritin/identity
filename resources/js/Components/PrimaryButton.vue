@@ -1,12 +1,13 @@
 <template>
-    <button
-        class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 dark:bg-primary-700 dark:hover:bg-primary-800 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-    >
+    <BaseButton primary>
         <slot></slot>
-    </button>
+    </BaseButton>
 </template>
 <script>
-    export default {
-        name: 'PrimaryButton',
-    }
+import BaseButton from "@/Components/BaseButton.vue";
+
+export default {
+    name: 'PrimaryButton',
+    components: {BaseButton},
+}
 </script>

@@ -25,7 +25,7 @@ class PasswordResetController extends Controller
             'password' => [
                 'required',
                 'confirmed',
-                \Illuminate\Validation\Rules\Password::min(8)->uncompromised()->mixedCase()->numbers()
+                \Illuminate\Validation\Rules\Password::min(8)->mixedCase()->numbers()
             ],
         ]);
 

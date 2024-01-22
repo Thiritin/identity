@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Profile\Settings;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 
 class UpdatePasswordController extends Controller
@@ -20,7 +19,7 @@ class UpdatePasswordController extends Controller
             "password" => [
                 "required",
                 "confirmed",
-                Password::min(10)->symbols()->mixedCase()->numbers(),
+                \Illuminate\Validation\Rules\Password::min(8)->mixedCase()->numbers(),
             ],
         ]);
 

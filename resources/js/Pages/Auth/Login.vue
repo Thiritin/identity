@@ -6,6 +6,7 @@
         class="mb-10"
     />
     <form class="space-y-12" @submit.prevent="submit">
+        <!-- Login Form -->
         <div>
             <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
                 {{ status }}
@@ -60,7 +61,7 @@
                     <label
                         class="font-medium text-gray-700 dark:text-primary-300"
                         for="remember"
-                        >{{ $trans('remember_me') }}</label
+                    >{{ $trans('remember_me') }}</label
                     >
                 </div>
             </div>
@@ -84,37 +85,37 @@
     </form>
 </template>
 <script>
-    import Logo from '@/Auth/Logo.vue'
-    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
-    import FormInput from '@/Auth/Form/AuthFormInput.vue'
-    import AuthLayout from '@/Layouts/AuthLayout.vue'
-    import { Link } from '@inertiajs/vue3'
+import Logo from '@/Auth/Logo.vue'
+import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
+import FormInput from '@/Auth/Form/AuthFormInput.vue'
+import AuthLayout from '@/Layouts/AuthLayout.vue'
+import {Link} from '@inertiajs/vue3'
 
-    export default {
-        components: { AuthLayout, Logo, LoginScreenWelcome, FormInput, Link },
-        layout: AuthLayout,
-        props: { status: String, errors: Object },
-        data() {
-            return {
-                form: this.$inertia.form({
-                    email: null,
-                    password: null,
-                    login_challenge: null,
-                    remember: false,
-                }),
-                show: true,
-            }
+export default {
+    components: {AuthLayout, Logo, LoginScreenWelcome, FormInput, Link},
+    layout: AuthLayout,
+    props: {status: String, errors: Object},
+    data() {
+        return {
+            form: this.$inertia.form({
+                email: null,
+                password: null,
+                login_challenge: null,
+                remember: false,
+            }),
+            show: true,
+        }
+    },
+    methods: {
+        submit() {
+            const urlParams = new URLSearchParams(window.location.search)
+            this.form
+                .transform((data) => ({
+                    ...data,
+                    login_challenge: urlParams.get('login_challenge'),
+                }))
+                .post(this.route('auth.login.submit'))
         },
-        methods: {
-            submit() {
-                const urlParams = new URLSearchParams(window.location.search)
-                this.form
-                    .transform((data) => ({
-                        ...data,
-                        login_challenge: urlParams.get('login_challenge'),
-                    }))
-                    .post(this.route('auth.login.submit'))
-            },
-        },
-    }
+    },
+}
 </script>

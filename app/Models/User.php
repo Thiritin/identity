@@ -122,6 +122,11 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
             );
     }
 
+    public function twoFactors(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(TwoFactor::class);
+    }
+
     public function appCan(string $scope)
     {
         $auth = Auth::guard('api');

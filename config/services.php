@@ -48,5 +48,10 @@ return [
         'public' => env('HYDRA_PUBLIC_URL'),
         'local_public' => env('HYDRA_LOCAL_PUBLIC'), # For Dev purposes
         'admin' => env('HYDRA_ADMIN_URL')
+    ],
+    // Yubikey
+    'yubikey' => [
+        'client_id' => env('YUBICO_CLIENT_ID'),
+        'secret_key' => env('YUBICO_SECRET_KEY'),
     ]
 ];

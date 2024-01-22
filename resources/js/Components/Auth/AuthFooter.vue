@@ -1,12 +1,17 @@
 <script setup>
-    import ToogleDarkMode from '../../Layouts/ToogleDarkMode.vue'
-    import { Link } from '@inertiajs/vue3'
+import ToogleDarkMode from '../../Layouts/ToogleDarkMode.vue'
+import {Link} from '@inertiajs/vue3'
+import {computed} from "vue";
 
-    const props = defineProps({
-        navigation: Object,
-        darkMode: Boolean,
-        toggleDarkMode: Function,
-    })
+const props = defineProps({
+    navigation: Object,
+    darkMode: Boolean,
+    toggleDarkMode: Function,
+})
+
+const visibleNavigation = computed(() => {
+    return props.navigation.main.filter(item => item.visible())
+})
 </script>
 
 <template>
@@ -14,7 +19,7 @@
         aria-label="Footer"
         class="-mx-5 -my-2 flex flex-wrap items-center justify-center"
     >
-        <div v-for="item in navigation.main" :key="item.name" class="px-5 py-2">
+        <div v-for="item in visibleNavigation" :key="item.name" class="px-5 py-2">
             <Link
                 v-if="item.href == null"
                 :href="item.link"

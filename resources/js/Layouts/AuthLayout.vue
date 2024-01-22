@@ -22,35 +22,41 @@
             <ArtistNotice url="https://rudzik.art" name="Rudzik"/>
             <!-- Page Content -->
             <div
-                class="flex-1 flex flex-col dark:text-primary-300 dark:bg-primary-900 items-center p-4 sm:px-6 lg:flex-none lg:px-20 xl:px-12">
+                class="flex-1 flex flex-col dark:text-primary-300 dark:bg-primary-900 items-center p-2 sm:px-6 lg:flex-none lg:px-20 xl:px-12">
                 <!-- Spacer -->
                 <div class="h-[25%]"></div>
                 <!-- Slot Content -->
                 <div class="flex-auto mx-auto w-full max-w-sm lg:w-96">
                     <transition name="page">
                         <div v-if="animated">
-                            <AuthHeader></AuthHeader>
+                            <AuthHeader class="mb-8" v-if="user"></AuthHeader>
                             <slot></slot>
                         </div>
                     </transition>
                 </div>
                 <!-- Footer Content -->
                 <AuthFooter
-class="pt-8"
-                            :navigation="navigation"
-                            :dark-mode="darkMode"
-                            :toggle-dark-mode="toggleDarkMode"
+                    class="pt-8"
+                    :navigation="navigation"
+                    :dark-mode="darkMode"
+                    :toggle-dark-mode="toggleDarkMode"
                 />
             </div>
         </div>
     </div>
 </template>
+<script setup>
+import {usePage} from "@inertiajs/vue3";
+
+const user = usePage().props.user;
+</script>
 <script>
 import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 import 'vue-cookie-accept-decline/dist/vue-cookie-accept-decline.css'
 import AuthFooter from "../Components/Auth/AuthFooter.vue";
 import ArtistNotice from "../Components/Auth/ArtistNotice.vue";
 import AuthHeader from "../Components/Auth/AuthHeader.vue";
+import {usePage} from "@inertiajs/vue3";
 
 export default {
     components: {AuthHeader, ArtistNotice, AuthFooter, VueCookieAcceptDecline},
@@ -64,24 +70,28 @@ export default {
                         name: 'Create Account',
                         link: route('auth.register.view'),
                         newTab: false,
+                        visible: () => usePage().props.user === null,
                     },
 
                     {
                         name: 'Support',
                         href: 'https://help.eurofurence.org/contact/',
                         newTab: true,
+                        visible: () => true,
                     },
 
                     {
                         name: 'Imprint',
                         href: 'https://help.eurofurence.org/legal/imprint',
                         newTab: true,
+                        visible: () => true,
                     },
 
                     {
                         name: 'Privacy',
                         href: 'https://help.eurofurence.org/legal/privacy',
                         newTab: true,
+                        visible: () => true,
                     },
                 ],
             },

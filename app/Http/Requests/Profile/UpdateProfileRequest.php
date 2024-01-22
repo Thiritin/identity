@@ -10,18 +10,17 @@ class UpdateProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            /*
             "name" => [
                 "min:3",
                 "max:39",
                 "required",
                 "alpha_dash",
-                "unique:users,name," . Auth::id(),
-            ],*/
+                "unique:users,name,".Auth::id(),
+            ],
             "email" => [
                 "email",
                 "required",
-                "unique:users,email," . Auth::id(),
+                "unique:users,email,".Auth::id(),
             ],
         ];
     }

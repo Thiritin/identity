@@ -46,13 +46,18 @@ class LoginController extends Controller
             'password' => $request->get('password'),
         ];
 
-        if (Auth::attempt($loginData)) {
+        if (Auth::once($loginData)) {
             $user = Auth::user();
             if ($user->hasVerifiedEmail() === false) {
                 Cache::put("web.".$user->id.".loginChallenge", $request->get('login_challenge'), now()->addMinutes(10));
                 return Redirect::route('verification.notice');
             }
 
+            return Redirect::signedRoute('auth.two-factor', [
+                'login_challenge' => $request->get('login_challenge'),
+                'user' => $user->hashid,
+                'remember' => $request->get('remember') ?? false,
+            ], now()->addMinutes(30));
 
             $url = (new Client())->acceptLogin($user->hashId(), $request->get('login_challenge'),
                 $request->get('remember') ? "2592000" : "3600");

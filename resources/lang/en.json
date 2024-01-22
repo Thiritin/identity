@@ -58,10 +58,9 @@
     "admin": "Admin",
     "apps": "Apps",
     "password_requirements_title": "Your password must meet the following requirements",
-    "password_requirement_1": "Minimum of 10 characters",
+    "password_requirement_1": "Minimum of 8 characters",
     "password_requirement_2": "Must contain atleast a lowercase and uppercase letter",
     "password_requirement_3": "Must contain atleast a number",
-    "password_requirement_4": "Must contain atleast a symbol",
     "cookie_notice": "We only use functional cookies that are required for the website to function.",
     "verifysuccess_title": "Verified",
     "verifysuccess_subtitle": "Your email is now verified.",
@@ -79,5 +78,7 @@
     "developers": "Developers",
     "developers_note": "You can code? Get in touch!",
     "edit_group": "Edit Group",
-    "too_many_attempts_email_verification": "You can resend the verification email every 30 seconds."
+    "too_many_attempts_email_verification": "You can resend the verification email every 30 seconds.",
+    "two_factor_auth": "Two Factor Setup",
+    "change_password": "Change Password"
 }
