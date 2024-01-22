@@ -6,7 +6,6 @@ import {computed} from 'vue'
 import {ChevronDownIcon, ChevronLeftIcon} from "@heroicons/vue/outline"
 
 const props = defineProps({
-    profile: Array,
     logout: Function,
 })
 
