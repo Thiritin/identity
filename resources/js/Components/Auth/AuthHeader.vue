@@ -11,7 +11,7 @@ const props = defineProps({
 
 const user = computed(() => usePage().props.user)
 
-const profile = [
+const profileNavMenu = [
     {
         name: 'profile',
         route: route('settings.profile'),
@@ -77,7 +77,7 @@ function logout() {
                     class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg drop-shadow py-1 bg-white dark:bg-primary-600 ring-1 ring-black ring-opacity-5 focus:outline-none"
                 >
                     <MenuItem
-                        v-for="item in profile"
+                        v-for="item in profileNavMenu"
                         :key="item"
                         v-slot="{ active }"
                     >
