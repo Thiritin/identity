@@ -47,7 +47,7 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 | rm composer.lock composer.json && composer requ
 ######################################################
 # NodeJS Stage
 ######################################################
-FROM node:16-buster as vite
+FROM node:20-buster as vite
 WORKDIR /app
 COPY package.json package-lock.json tailwind.config.js vite.config.js postcss.config.js ./
 RUN npm install
