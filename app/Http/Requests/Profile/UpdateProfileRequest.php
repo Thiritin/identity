@@ -12,7 +12,7 @@ class UpdateProfileRequest extends FormRequest
         return [
             "name" => [
                 "min:3",
-                "max:39",
+                "max:25",
                 "required",
                 "alpha_dash",
                 "unique:users,name,".Auth::id(),
