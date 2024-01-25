@@ -4,7 +4,7 @@
            class="flex cursor-pointer drop-shadow items-center bg-gray-50 hover:bg-gray-100 dark:bg-primary-600 hover:dark:bg-primary-500 rounded-lg shadow p-2 gap-3">
             <div>
                 <component :is="loadIconComponent(app.icon)"
-                           class='mx-auto h-16 min-w-[72px] fill-current text-primary-600 dark:text-primary-300'/>
+                           class='mx-auto h-12 min-w-[72px] fill-current text-primary-600 dark:text-primary-300'/>
             </div>
             <div>
                 <div>

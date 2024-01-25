@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Inertia\Middleware;
 use Storage;
 
@@ -48,7 +49,7 @@ class HandleInertiaRequests extends Middleware
             ], $request->user()->only('name', 'email'));
         }
         return array_merge(parent::share($request), [
-            'user' => $user,
+            'user' => Route::is('auth.login.view') ? null : $user,
             'flash' => [
                 'message' => fn() => $request->session()->get('message')
             ],

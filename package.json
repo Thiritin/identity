@@ -1,44 +1,29 @@
 {
     "private": true,
+    "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
-        "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix resources/js",
-        "format": "prettier .  --write"
+        "build": "vite build"
     },
     "devDependencies": {
-        "@vitejs/plugin-vue": "^4.6",
-        "@vue/compiler-sfc": "^3.2.45",
-        "autoprefixer": "^10.4.13",
-        "axios": "^1.1.2",
-        "browser-sync": "^2.27.5",
-        "browser-sync-webpack-plugin": "^2.3.0",
-        "chokidar": "^3.5.2",
-        "dotenv": "^16.0.3",
-        "eslint": "^8.56.0",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-vue": "^9.20.1",
-        "laravel-vite-plugin": "^0.8.1",
-        "lodash": "^4.17.19",
-        "postcss": "^8.4.4",
-        "postcss-import": "^12.0.1",
-        "prettier": "^2.8",
-        "tailwindcss": "^3.4.1",
-        "tippy.js": "^6.3.7",
-        "vite": "^4.5.1",
-        "vue": "^3.4",
-        "vue-loader": "^16.1.2"
-    },
-    "dependencies": {
         "@headlessui/vue": "^1.7.7",
         "@heroicons/vue": "^1.0.4",
-        "@inertiajs/vue3": "^1.0.2",
+        "@inertiajs/vue3": "^1.0.0",
         "@tailwindcss/forms": "^0.5.7",
         "@tailwindcss/typography": "^0.5.10",
+        "@vitejs/plugin-vue": "^5.0.0",
+        "autoprefixer": "^10.4.12",
+        "axios": "^1.6.4",
+        "dayjs": "^1.11.10",
+        "laravel-vite-plugin": "^1.0.0",
+        "lodash": "^4.17.19",
         "matice": "^1.1.0",
-        "primevue": "^3.44.0",
+        "postcss": "^8.4.31",
+        "tailwindcss": "^3.4",
+        "vite": "^5.0.0",
+        "vue": "^3.4.0",
         "vue-cookie-accept-decline": "^6.1.0",
-        "vue-cookies": "^1.8.2",
-        "vue-cropperjs": "^5.0.0"
+        "vue-cropperjs": "^5.0.0",
+        "vue-cookies": "^1.8.3"
     }
 }

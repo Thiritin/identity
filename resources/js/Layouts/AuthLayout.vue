@@ -1,32 +1,34 @@
 <template>
-    <div>
-        <VueCookieAcceptDecline
-            :disable-decline="true"
-            :show-postpone-button="false"
-            element-id="cookies"
-            position="top"
-            transition-name="slideFromTop"
-            type="bar"
-        >
+    <VueCookieAcceptDecline
+        :disable-decline="true"
+        :show-postpone-button="false"
+        element-id="cookies"
+        position="top"
+        transition-name="slideFromTop"
+        type="bar"
+    >
 
-            <!-- Optional -->
-            <template #message>
-                {{ $trans('cookie_notice') }}
-            </template>
+        <!-- Optional -->
+        <template #message>
+            {{ $trans('cookie_notice') }}
+        </template>
 
-            <!-- Optional -->
-            <template #acceptContent>OK</template>
-        </VueCookieAcceptDecline>
-        <div class="min-h-screen bg-white flex page" :class="{ dark: darkMode }">
+        <!-- Optional -->
+        <template #acceptContent>OK</template>
+    </VueCookieAcceptDecline>
+    <div :class="{ dark: darkMode }">
+        <div class="bg-white flex page dark:text-primary-300 dark:bg-primary-900">
             <!-- Logo -->
             <ArtistNotice url="https://rudzik.art" name="Rudzik"/>
             <!-- Page Content -->
             <div
-                class="flex-1 flex flex-col dark:text-primary-300 dark:bg-primary-900 items-center p-2 sm:px-6 lg:flex-none lg:px-20 xl:px-12">
-                <!-- Spacer -->
-                <div class="h-[25%]"></div>
+                class="!min-h-[calc(100dvh)] min-h-screen
+                mx-auto w-full max-w-md
+                flex-1 flex flex-col items-center justify-center lg:flex-none
+                px-6 sm:px-12
+                pt-8 pb-8">
                 <!-- Slot Content -->
-                <div class="flex-auto mx-auto w-full max-w-sm lg:w-96">
+                <div class="flex-1 w-full lg:mt-[25vh]">
                     <transition name="page">
                         <div v-if="animated">
                             <AuthHeader class="mb-8" v-if="user"></AuthHeader>
@@ -99,6 +101,7 @@ export default {
     },
     mounted() {
         this.animated = true;
+        this.dark = 'dark:text-primary-300 dark:bg-primary-900';
     },
     methods: {
         toggleDarkMode() {

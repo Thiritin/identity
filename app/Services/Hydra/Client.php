@@ -79,7 +79,7 @@ class Client
         try {
             return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/login/accept?challenge='.$loginChallenge, [
                 'subject' => $userId,
-                'remember' => ($remember === 0) ? false : true,
+                'remember' => !($remember === 0),
                 'remember_for' => $remember,
             ])->json();
 

@@ -30,6 +30,11 @@ const goBackOnePage = () => {
     window.history.length > 1 ? router.visit(window.history.go(-1)) : router.visit('/dashboard');
 }
 
+const hideNavigationButtons = () => {
+    // check if current window.location.href contains /dashboard then hide
+    return !window.location.href.includes('/dashboard')
+}
+
 function logout() {
     window.location.href = '/auth/logout'
 }
@@ -41,6 +46,7 @@ function logout() {
         <Menu as="div">
             <div class="flex justify-between items-center gap-3">
                 <div
+                    v-if="hideNavigationButtons()"
                     @click="goBackOnePage"
                     class="flex items-center gap-1 cursor-pointer dark:text-primary-200 dark:hover:text-primary-400 text-primary-600 hover:text-primary-800 rounded">
                     <ChevronLeftIcon class="w-4 pt-1"></ChevronLeftIcon>
@@ -48,6 +54,7 @@ function logout() {
                         Back
                     </div>
                 </div>
+                <div v-else></div>
                 <div class="flex items-center gap-3">
                     <div class="text-gray-800 dark:text-primary-200">{{ user.name }}</div>
                     <MenuButton>

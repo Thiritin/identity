@@ -4,71 +4,73 @@
                 $trans('update_your_password')
             }}
         </SettingsHeader>
-        <div v-if="success">
-            <div
-                class="bg-primary-200 px-4 py-2 rounded mt-4 font-semibold"
-            >
-                Your password has been updated.
+        <form @submit.prevent="submitForm">
+            <div v-if="success">
+                <div
+                    class="bg-primary-200 px-4 py-2 rounded mt-4 font-semibold"
+                >
+                    Your password has been updated.
+                </div>
             </div>
-        </div>
-        <div v-else>
-            <div class="my-4">
-                <div>
-                    <label class="font-semibold text-xs" for="username">Current password</label>
+            <div v-else>
+                <div class="my-4">
+                    <div>
+                        <label class="font-semibold text-xs" for="username">Current password</label>
+                        <BaseInput
+                            id="currentPassword"
+                            v-model="form.current_password"
+                            :error="errors.current_password"
+                            autocomplete="password"
+                            autofocus
+                            name="currentPassword"
+                            type="password"
+                        ></BaseInput>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="font-semibold text-xs" for="username">New password</label>
                     <BaseInput
-                        id="currentPassword"
-                        v-model="form.current_password"
-                        :error="errors.current_password"
+                        id="newPassword"
+                        v-model="form.password"
+                        :error="errors.password"
                         autocomplete="password"
-                        autofocus
-                        name="currentPassword"
+                        name="newPassword"
                         type="password"
                     ></BaseInput>
                 </div>
 
                 <PasswordInfoBox
                     :password="form.password"
-                    class="sm:col-span-2 sm:col-start-2 mt-2"
+                    class="sm:col-span-2 sm:col-start-2 mt-2 mb-2"
                 ></PasswordInfoBox>
-            </div>
 
-            <div class="mb-4">
-                <label class="font-semibold text-xs" for="username">New password</label>
-                <BaseInput
-                    id="newPassword"
-                    v-model="form.password"
-                    :error="errors.password"
-                    autocomplete="password"
-                    name="newPassword"
-                    type="password"
-                ></BaseInput>
-            </div>
+                <div class="mb-4">
+                    <label class="font-semibold text-xs" for="username">Confirm new password</label>
+                    <BaseInput
+                        id="confirmNewPassword"
+                        v-model="form.password_confirmation"
+                        :error="errors.password_confirmation"
+                        autocomplete="password"
+                        name="confirmNewPassword"
+                        type="password"
+                    ></BaseInput>
+                </div>
 
-            <div class="mb-4">
-                <label class="font-semibold text-xs" for="username">Confirm new password</label>
-                <BaseInput
-                    id="confirmNewPassword"
-                    v-model="form.password_confirmation"
-                    :error="errors.password_confirmation"
-                    autocomplete="password"
-                    name="confirmNewPassword"
-                    type="password"
-                ></BaseInput>
-            </div>
-
-            <div
-                class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-startsm:pt-5 pt-5"
-            >
                 <div
-                    class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2"
+                    class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-startsm:pt-5 pt-5"
                 >
-                    <PrimaryButton class="" @click="submitForm()"
-                    >Change password
-                    </PrimaryButton
+                    <div
+                        class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2"
                     >
+                        <PrimaryButton class="" type="submit"
+                        >Change password
+                        </PrimaryButton
+                        >
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </template>
 
@@ -76,8 +78,8 @@
 import {useForm} from "@inertiajs/vue3";
 import SettingsHeader from "@/Components/Settings/SettingsHeader.vue";
 import BaseInput from "@/Components/BaseInput.vue";
-import PasswordInfoBox from "@/Auth/PasswordInfoBox.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import PasswordInfoBox from "../../Auth/PasswordInfoBox.vue";
 
 defineProps({
     errors: Object,

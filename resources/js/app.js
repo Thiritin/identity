@@ -6,10 +6,8 @@ import {createApp, h} from 'vue'
 import {createInertiaApp} from '@inertiajs/vue3'
 import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m'
 import {__, getLocale, locales, setLocale, trans, transChoice} from 'matice'
+import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers";
 import VueCookies from 'vue-cookies'
-import AppLayout from "./Layouts/AppLayout.vue";
-import PrimeVue from "primevue/config";
-import Lara from '../assets/presets/lara'
 
 import.meta.glob([
     '../assets/**',
@@ -19,12 +17,7 @@ const appName = window.document.getElementsByTagName('title')[0]?.innerText || '
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: name => {
-        const pages = import.meta.glob('./Pages/**/*.vue', {eager: true})
-        let page = pages[`./Pages/${name}.vue`]
-        page.default.layout = page.default.layout || AppLayout
-        return page
-    },
+    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     progress: {
         color: '#4B5563',
     },
@@ -33,10 +26,6 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .use(VueCookies, {})
-            .use(PrimeVue, {
-                unstyled: true,
-                pt: Lara
-            })
             .mixin({methods: {route}})
             .mixin({
                 methods: {
