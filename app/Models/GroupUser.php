@@ -9,6 +9,7 @@ class GroupUser extends Pivot
 {
     public $incrementing = false;
     protected $primaryKey = null;
+    public $timestamps = false;
 
     protected $casts = [
         'level' => GroupUserLevel::class
@@ -16,12 +17,12 @@ class GroupUser extends Pivot
 
     public function user()
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
     public function group()
     {
-        return $this->hasOne(Group::class);
+        return $this->hasOne(Group::class, 'id', 'group_id');
     }
 
     public function isOwner(): bool

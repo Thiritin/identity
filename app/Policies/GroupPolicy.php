@@ -42,6 +42,9 @@ class GroupPolicy
 
     public function update(User $user, Group $group): bool
     {
+        if ($group->type === GroupTypeEnum::Automated) {
+            return false;
+        }
         $userAdminInGroup = GroupUser::whereUserId($user->id)->whereGroupId($group->id)->whereLevel(GroupUserLevel::Admin)->exists();
         return ((Auth::guard("admin")->check() && $user->can('admin.groups.update')) || ($userAdminInGroup && $user->scopeCheck('groups.update')));
     }

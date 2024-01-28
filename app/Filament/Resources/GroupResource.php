@@ -15,6 +15,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Concerns\Translatable;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -78,6 +79,12 @@ class GroupResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('type')
+                    ->sortable()
+                    ->formatStateUsing(fn($state) => ucfirst($state->value)),
+            ])
+            ->actions([
+                EditAction::make(),
             ]);
     }
 

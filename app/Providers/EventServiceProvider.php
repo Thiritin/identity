@@ -12,8 +12,10 @@ use App\Listeners\LogUserRegisteredListener;
 use App\Listeners\LogUserVerifiedListener;
 use App\Models\App;
 use App\Models\Group;
+use App\Models\GroupUser;
 use App\Observers\AppObserver;
 use App\Observers\GroupObserver;
+use App\Observers\GroupUserObserver;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Auth\Events\Login;
@@ -64,5 +66,6 @@ class EventServiceProvider extends ServiceProvider
     {
         App::observe(AppObserver::class);
         Group::observe(GroupObserver::class);
+        GroupUser::observe(GroupUserObserver::class);
     }
 }

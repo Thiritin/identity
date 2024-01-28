@@ -2,13 +2,17 @@
 
 namespace App\Observers;
 
+use App\Enums\GroupTypeEnum;
+use App\Jobs\CheckStaffGroupMembershipJob;
 use App\Models\GroupUser;
 
 class GroupUserObserver
 {
     public function created(GroupUser $groupUser): void
     {
-        event(GroupUserInvivted::class);
+        if ($groupUser->group->type === GroupTypeEnum::Department) {
+            CheckStaffGroupMembershipJob::dispatch($groupUser->user);
+        }
     }
 
     public function updated(GroupUser $groupUser): void
@@ -17,6 +21,9 @@ class GroupUserObserver
 
     public function deleted(GroupUser $groupUser): void
     {
+        if ($groupUser->group->type === GroupTypeEnum::Department) {
+            CheckStaffGroupMembershipJob::dispatch($groupUser->user);
+        }
     }
 
     public function restored(GroupUser $groupUser): void
