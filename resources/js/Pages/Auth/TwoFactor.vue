@@ -3,7 +3,7 @@
 import FormInput from '@/Auth/Form/AuthFormInput.vue'
 import {computed, ref} from "vue";
 import LoginScreenWelcome from "@/Auth/LoginScreenWelcome.vue";
-import {useForm} from "@inertiajs/vue3";
+import {Head, useForm} from "@inertiajs/vue3";
 
 const props = defineProps({
     lastUsedMethod: String,
@@ -50,6 +50,7 @@ const selectedMethod = ref(props.lastUsedMethod);
 </script>
 
 <template>
+    <Head title="Enter your Two Factor"></Head>
     <div>
         <LoginScreenWelcome title="Two Factor"
                             sub-title="One more step"></LoginScreenWelcome>

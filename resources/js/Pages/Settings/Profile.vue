@@ -1,4 +1,5 @@
 <template>
+    <Head title="Edit Profile"></Head>
     <AvatarModal
         ref="avatarModal"
         :file="file"
@@ -132,7 +133,7 @@
 </template>
 
 <script setup>
-import {Link, useForm, usePage} from '@inertiajs/vue3'
+import {Head, Link, useForm, usePage} from '@inertiajs/vue3'
 import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
 import SettingsHeader from '@/Components/Settings/SettingsHeader.vue'
 import SettingsSubHeader from '@/Components/Settings/SettingsSubHeader.vue'

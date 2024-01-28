@@ -12,19 +12,28 @@
 <script setup>
 import {computed} from 'vue'
 
-const correctLength = computed(() => {
-    return props.password.length >= 8
-})
 const props = defineProps({
     password: {
         type: String,
         default: '',
     },
 })
+const correctLength = computed(() => {
+    if (props.password === null) {
+        return false;
+    }
+    return props.password.length >= 8
+})
 const correctLowerUpper = computed(() => {
+    if (props.password === null) {
+        return false;
+    }
     return props.password.match(/[a-z]/) && props.password.match(/[A-Z]/)
 })
 const correctNumber = computed(() => {
+    if (props.password === null) {
+        return false;
+    }
     return props.password.match(/[0-9]/)
 })
 

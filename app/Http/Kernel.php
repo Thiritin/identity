@@ -88,5 +88,7 @@ class Kernel extends HttpKernel
         'signed' => ValidateSignature::class,
         'throttle' => ThrottleRequests::class,
         'verified' => EnsureEmailIsVerified::class,
+        'guardswitcher' => \App\Http\Middleware\GuardSwitcher::class,
+        'groupmember' => \App\Http\Middleware\GroupMember::class,
     ];
 }

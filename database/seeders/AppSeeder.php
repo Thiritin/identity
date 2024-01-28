@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\App;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class AppSeeder extends Seeder
 {
@@ -14,68 +15,43 @@ class AppSeeder extends Seeder
      */
     public function run()
     {
+        $this->createApp('portal', 'Eurofurence Portal');
+        $this->createApp('admin', 'Eurofurence Admin');
+        $this->createApp('staff', 'Eurofurence StaffNet');
+    }
+
+    public function createApp(
+        string $systemName,
+        string $clientName
+    ) {
         $app = App::firstOrCreate([
-            "id" => 1,
+            "system_name" => $systemName,
         ], [
-            "id" => 1,
+            "name" => $clientName,
+            'public' => false,
+            'description' => 'This is the official '.$clientName.'.',
+            'icon' => 'CogsDuotone',
+            "system_name" => $systemName,
             'user_id' => User::first()->id,
             'data' => [
-                "client_name" => "Eurofurence IAM",
+                "client_name" => $clientName,
                 "redirect_uris" => [
-                    route('auth.oidc.callback'),
+                    route('login.apps.callback', ['app' => $systemName]),
                 ],
-                "scope" => [
-                    "openid",
-                    "offline_access",
-                    "email",
-                    "profile",
-                    "groups",
-                    'groups.read',
-                    'groups.write',
-                    'groups.delete',
-                ],
+                "scope" => explode(" ", config('services.apps')[$systemName]['scopes']),
                 "token_endpoint_auth_method" => "client_secret_post",
-                "frontchannel_logout_uri" => route('auth.frontchannel_logout'),
+                "frontchannel_logout_uri" => route('login.apps.frontchannel-logout', ['app' => $systemName]),
             ]
         ]);
+        // Check if App was just created
+        if ($app->wasRecentlyCreated && app()->isLocal()) {
+            $app->fresh();
+            $client_id = $app->data['client_id'];
+            $client_secret = $app->data['client_secret'];
 
-        $app->fresh();
-        $client_id = $app->data['client_id'];
-        $client_secret = $app->data['client_secret'];
-
-        shell_exec("sed -i \"s/.*OIDC_MAIN_CLIENT_ID=.*/OIDC_MAIN_CLIENT_ID=$client_id/\" .env");
-        shell_exec("sed -i \"s/.*OIDC_MAIN_SECRET=.*/OIDC_MAIN_SECRET=$client_secret/\" .env");
-
-        $app = App::firstOrCreate([
-            "id" => 2,
-        ], [
-            "id" => 2,
-            'user_id' => User::first()->id,
-            'data' => [
-                "client_name" => "Eurofurence IAM Admin",
-                "redirect_uris" => [
-                    route('filament.auth.callback'),
-                ],
-                "scope" => [
-                    "openid",
-                    "offline_access",
-                    "email",
-                    "profile",
-                    "groups",
-                    'groups.read',
-                    'groups.write',
-                    'groups.delete',
-                ],
-                "token_endpoint_auth_method" => "client_secret_post",
-                "frontchannel_logout_uri" => route('filament.auth.frontchannel-logout'),
-            ]
-        ]);
-
-        $app->fresh();
-        $client_id = $app->data['client_id'];
-        $client_secret = $app->data['client_secret'];
-
-        shell_exec("sed -i \"s/.*OIDC_ADMIN_CLIENT_ID=.*/OIDC_ADMIN_CLIENT_ID=$client_id/\" .env");
-        shell_exec("sed -i \"s/.*OIDC_ADMIN_SECRET=.*/OIDC_ADMIN_SECRET=$client_secret/\" .env");
+            $envName = Str::upper($systemName);
+            shell_exec("sed -i \"s/.*IDENTITY_".$envName."_ID=.*/IDENTITY_".$envName."_ID=$client_id/\" .env");
+            shell_exec("sed -i \"s/.*IDENTITY_".$envName."_SECRET=.*/IDENTITY_".$envName."_SECRET=$client_secret/\" .env");
+        }
     }
 }

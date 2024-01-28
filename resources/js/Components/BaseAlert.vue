@@ -2,7 +2,7 @@
     <div class="rounded-md bg-yellow-50 p-4 w-full">
         <div class="flex">
             <div class="flex-shrink-0">
-                <ExclamationIcon
+                <ExclamationTriangleIcon
                     aria-hidden="true"
                     class="h-5 w-5 text-yellow-400"
                 />
@@ -18,24 +18,24 @@
 </template>
 
 <script>
-    import { ExclamationIcon } from '@heroicons/vue/solid'
+import {ExclamationTriangleIcon} from "@heroicons/vue/24/solid/index.js";
 
-    export default {
-        name: 'BaseAlert',
-        components: {
-            ExclamationIcon,
+export default {
+    name: 'BaseAlert',
+    components: {
+        ExclamationTriangleIcon,
+    },
+    props: {
+        message: {
+            type: String,
+            required: false,
         },
-        props: {
-            message: {
-                type: String,
-                required: false,
-            },
-            title: {
-                type: String,
-                required: true,
-            },
+        title: {
+            type: String,
+            required: true,
         },
-    }
+    },
+}
 </script>
 
 <style scoped></style>

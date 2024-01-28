@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Providers\Socialite\SocialiteIdentityProvider;
 use App\Services\Hydra\Admin;
 use App\Services\Hydra\Client;
 use Filament\Facades\Filament;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Socialite\Contracts\Factory;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -53,9 +55,9 @@ class AppServiceProvider extends ServiceProvider
         Filament::serving(function () {
             Filament::registerUserMenuItems([
                 'logout-everywhere' => UserMenuItem::make()
-                                                   ->icon('heroicon-o-arrow-right-circle')
-                                                   ->url(route('dashboard'))
-                                                   ->label('To User Interface'),
+                    ->icon('heroicon-o-arrow-right-circle')
+                    ->url(route('dashboard'))
+                    ->label('To User Interface'),
                 'logout' => UserMenuItem::make()->url('/oauth2/sessions/logout')->label('Log out'),
             ]);
         });
@@ -66,6 +68,17 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(Client::class, function () {
             return new Client();
+        });
+
+        $socialite = $this->app->make(Factory::class);
+        $socialite->extend('idp-portal', function () use ($socialite) {
+            return $socialite->buildProvider(SocialiteIdentityProvider::class, config('services.apps.portal'));
+        });
+        $socialite->extend('idp-admin', function () use ($socialite) {
+            return $socialite->buildProvider(SocialiteIdentityProvider::class, config('services.apps.admin'));
+        });
+        $socialite->extend('idp-staff', function () use ($socialite) {
+            return $socialite->buildProvider(SocialiteIdentityProvider::class, config('services.apps.staff'));
         });
     }
 }

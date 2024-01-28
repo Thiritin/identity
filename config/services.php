@@ -34,14 +34,30 @@ return [
     | Hydra
     |--------------------------------------------------------------------------
     */
-    'oidc' => [
-        'main' => [
-            'client_id' => env('OIDC_MAIN_CLIENT_ID'),
-            'secret' => env('OIDC_MAIN_SECRET')
-        ],
+    'apps' => [
         'admin' => [
-            'client_id' => env('OIDC_ADMIN_CLIENT_ID'),
-            'secret' => env('OIDC_ADMIN_SECRET')
+            'openid_configuration' => env('IDENTITY_OPENID_CONFIGURATION'),
+            'client_id' => env('IDENTITY_ADMIN_ID'),
+            'client_secret' => env('IDENTITY_ADMIN_SECRET'),
+            'redirect' => env('IDENTITY_ADMIN_CALLBACK_URL'),
+            'scopes' => 'openid offline_access email profile groups',
+            'home_route' => 'filament.admin.pages.dashboard',
+        ],
+        'portal' => [
+            'openid_configuration' => env('IDENTITY_OPENID_CONFIGURATION'),
+            'client_id' => env('IDENTITY_PORTAL_ID'),
+            'client_secret' => env('IDENTITY_PORTAL_SECRET'),
+            'redirect' => env('IDENTITY_PORTAL_CALLBACK_URL'),
+            'scopes' => 'openid offline_access email profile groups',
+            'home_route' => 'dashboard',
+        ],
+        'staff' => [
+            'openid_configuration' => env('IDENTITY_OPENID_CONFIGURATION'),
+            'client_id' => env('IDENTITY_STAFF_ID'),
+            'client_secret' => env('IDENTITY_STAFF_SECRET'),
+            'redirect' => env('IDENTITY_STAFF_CALLBACK_URL'),
+            'scopes' => 'openid offline_access email profile groups',
+            'home_route' => 'staff.dashboard',
         ],
     ],
     'hydra' => [

@@ -1,7 +1,7 @@
 <script setup>
 import SettingsHeader from "@/Components/Settings/SettingsHeader.vue";
 import SettingsSubHeader from "@/Components/Settings/SettingsSubHeader.vue";
-import {useForm} from "@inertiajs/vue3";
+import {Head, useForm} from "@inertiajs/vue3";
 import BaseInput from "@/Components/BaseInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {ref} from "vue";
@@ -40,6 +40,7 @@ function submitDisableForm() {
 </script>
 
 <template>
+    <Head title="Yubikey Setup"></Head>
     <div v-if="props.keys.length === 0 || showCreateField === true">
         <SettingsHeader>Setup Yubikey Authenticator</SettingsHeader>
         <SettingsSubHeader

@@ -1,7 +1,7 @@
 <script setup>
 import SettingsHeader from "@/Components/Settings/SettingsHeader.vue";
 import SettingsSubHeader from "@/Components/Settings/SettingsSubHeader.vue";
-import {useForm} from "@inertiajs/vue3";
+import {Head, useForm} from "@inertiajs/vue3";
 import BaseInput from "@/Components/BaseInput.vue";
 import {ref, watch} from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -53,6 +53,7 @@ watch(code, (value) => {
 </script>
 
 <template>
+    <Head title="Authenticator App Setup"></Head>
     <div v-if="secret">
         <SettingsHeader>Setup Two Factor</SettingsHeader>
         <SettingsSubHeader

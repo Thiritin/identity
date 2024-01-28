@@ -18,7 +18,6 @@
     </VueCookieAcceptDecline>
     <div :class="{ dark: darkMode }">
         <div class="bg-white flex page dark:text-primary-300 dark:bg-primary-900">
-            <!-- Logo -->
             <ArtistNotice url="https://rudzik.art" name="Rudzik"/>
             <!-- Page Content -->
             <div
@@ -28,13 +27,15 @@
                 px-6 sm:px-12
                 pt-8 pb-8">
                 <!-- Slot Content -->
-                <div class="flex-1 w-full lg:mt-[25vh]">
-                    <transition name="page">
-                        <div v-if="animated">
-                            <AuthHeader class="mb-8" v-if="user"></AuthHeader>
+                <div class="flex-1 w-full flex flex-col justify-center">
+                    <Transition mode="out-in" appear>
+                        <div :key="$page.url">
+                            <slot name="header">
+                                <AuthHeader v-if="!$page.props.hideUserInfo && user" class="mb-8"></AuthHeader>
+                            </slot>
                             <slot></slot>
                         </div>
-                    </transition>
+                    </Transition>
                 </div>
                 <!-- Footer Content -->
                 <AuthFooter
@@ -64,7 +65,7 @@ export default {
     components: {AuthHeader, ArtistNotice, AuthFooter, VueCookieAcceptDecline},
     data() {
         return {
-            animated: false,
+            animated: true,
             darkMode: this.$cookies.isKey('darkMode'),
             navigation: {
                 main: [
@@ -120,21 +121,15 @@ export default {
 </script>
 <style>
 
-.page-enter-active {
-    transition: opacity .1s ease-in;
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.2s ease-in-out;
+}
+
+.v-enter-from,
+.v-leave-to {
     opacity: 0;
 }
 
-.page-enter {
-    opacity: 0;
-}
-
-.page-enter-to {
-    opacity: 1;
-}
-
-.page * {
-    @apply transition-colors
-}
 
 </style>

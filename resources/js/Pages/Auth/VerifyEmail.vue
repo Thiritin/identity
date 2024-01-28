@@ -1,4 +1,5 @@
 <template>
+    <Head title="Verfiy Email"></Head>
     <Logo></Logo>
     <LoginScreenWelcome
         :sub-title="$trans('verify_subtitle')"
@@ -6,7 +7,7 @@
         class="mb-10"
     />
     <div class="space-y-8">
-        <UserBox :user="user" />
+        <UserBox :user="user"/>
         <div
             class="text-sm shadow-md p-2 border-l-[4px] border-primary-600 dark:border-primary-300 dark:text-primary-300"
         >
@@ -43,7 +44,7 @@
                     :href="route('auth.logout')"
                     as="button"
                     class="underline text-sm text-gray-600 hover:text-gray-900"
-                    >{{ $trans('logout') }}
+                >{{ $trans('logout') }}
                 </a>
             </div>
         </form>
@@ -51,47 +52,44 @@
 </template>
 
 <script setup>
-    import Logo from '@/Auth/Logo.vue'
-    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
-    import UserBox from '@/Pages/Auth/UserBox.vue'
-    import { useForm } from '@inertiajs/vue3'
-    import { computed } from 'vue'
+import Logo from '@/Auth/Logo.vue'
+import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
+import UserBox from '@/Pages/Auth/UserBox.vue'
+import {Head, useForm} from '@inertiajs/vue3'
+import {computed, ref} from 'vue'
+import AuthLayout from "../../Layouts/AuthLayout.vue";
 
-    const props = defineProps({
-        user: Object,
-        status: String,
+defineOptions({
+    layout: AuthLayout,
+})
+
+const props = defineProps({
+    user: Object,
+    status: String,
+})
+
+const form = useForm({
+    email: props.user.email,
+})
+
+const buttonDisabled = ref(false)
+
+const submit = () => {
+    form.post(route('verification.send'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            buttonDisabled.value = true
+            setTimeout(() => {
+                buttonDisabled.value = false
+            }, 30000)
+        },
+        onError: () => {
+            form.reset()
+        },
     })
+}
 
-    const form = useForm({
-        email: props.user.email,
-    })
-
-    const buttonDisabled = ref(false)
-
-    const submit = () => {
-        form.post(route('verification.send'), {
-            preserveScroll: true,
-            onSuccess: () => {
-                buttonDisabled.value = true
-                setTimeout(() => {
-                    buttonDisabled.value = false
-                }, 30000)
-            },
-            onError: () => {
-                form.reset()
-            },
-        })
-    }
-
-    const verificationLinkSent = computed(() => {
-        return props.status === 'verification-link-sent'
-    })
-</script>
-
-<script>
-    import AuthLayout from '@/Layouts/AuthLayout.vue'
-
-    export default {
-        layout: AuthLayout,
-    }
+const verificationLinkSent = computed(() => {
+    return props.status === 'verification-link-sent'
+})
 </script>

@@ -1,4 +1,5 @@
 <template>
+    <Head title="Dashboard"></Head>
     <div class="flex gap-3 flex-col">
         <a :href='app.url' v-for="app in apps"
            class="flex cursor-pointer drop-shadow items-center bg-gray-50 hover:bg-gray-100 dark:bg-primary-600 hover:dark:bg-primary-500 rounded-lg shadow p-2 gap-3">
@@ -23,8 +24,8 @@
 
 <script setup>
 import {computed, defineProps} from 'vue'
-import {usePage} from '@inertiajs/vue3'
-import {ChevronRightIcon} from "@heroicons/vue/outline";
+import {usePage, Head} from '@inertiajs/vue3'
+import {ChevronRightIcon} from "@heroicons/vue/24/outline";
 
 const props = defineProps({
     apps: Array,

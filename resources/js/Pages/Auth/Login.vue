@@ -1,4 +1,5 @@
 <template>
+    <Head title="Login"></Head>
     <Logo></Logo>
     <LoginScreenWelcome
         :sub-title="$trans('loginscreen_sign_in_to_continue')"
@@ -89,10 +90,10 @@ import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import FormInput from '@/Auth/Form/AuthFormInput.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
-import {Link} from '@inertiajs/vue3'
+import {Head, Link} from '@inertiajs/vue3'
 
 export default {
-    components: {AuthLayout, Logo, LoginScreenWelcome, FormInput, Link},
+    components: {Head, AuthLayout, Logo, LoginScreenWelcome, FormInput, Link},
     layout: AuthLayout,
     props: {status: String, errors: Object},
     data() {

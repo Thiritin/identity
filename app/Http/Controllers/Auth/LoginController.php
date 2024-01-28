@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\App;
+use App\Models\User;
 use App\Services\Hydra\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
@@ -27,12 +29,17 @@ class LoginController extends Controller
         if (isset($loginRequest['redirect_to'])) {
             return Redirect::to($loginRequest['redirect_to']);
         }
+        $subject = $this->shouldSkipLogin($loginRequest);
 
-        /**
-         * If skip is true do not show UI but simply accept
-         */
-        if ($loginRequest["skip"] === true) {
-            return Redirect::to($hydra->acceptLogin($loginRequest['subject'], $loginRequest["challenge"], 0,
+        if ($subject !== null) {
+            $emailVerified = $this->checkEmailVerification($loginRequest, $subject); // Check if user has verified email
+            if ($emailVerified === false) {
+                return Redirect::route('login.apps.redirect', ['app' => 'portal']);
+            }
+        }
+
+        if ($subject !== null) {
+            return Redirect::to($hydra->acceptLogin($subject, $loginRequest["challenge"], 3600,
                 $loginRequest));
         }
 
@@ -46,11 +53,14 @@ class LoginController extends Controller
             'password' => $request->get('password'),
         ];
 
-        if (Auth::once($loginData)) {
+        if (Auth::once($loginData) === true) {
             $user = Auth::user();
-            if ($user->hasVerifiedEmail() === false) {
-                Cache::put("web.".$user->id.".loginChallenge", $request->get('login_challenge'), now()->addMinutes(10));
-                return Redirect::route('verification.notice');
+
+            $hydra = new Client();
+            $loginRequest = $hydra->getLoginRequest($request->get('login_challenge'));
+            $emailVerified = $this->checkEmailVerification($loginRequest, $user); // Check if user has verified email
+            if ($emailVerified === false) {
+                return Redirect::route('login.apps.redirect', ['app' => 'portal']);
             }
 
             if ($user->twoFactors()->exists()) {
@@ -63,9 +73,49 @@ class LoginController extends Controller
 
             $url = (new Client())->acceptLogin($user->hashId(), $request->get('login_challenge'),
                 $request->get('remember') ? "2592000" : "3600");
+
             return Inertia::location($url);
         }
 
         throw ValidationException::withMessages(['nouser' => 'Wrong details']);
+    }
+
+    /**
+     * @param  mixed  $loginRequest
+     * @return string|null Subject of the user to skip login for
+     */
+    private function shouldSkipLogin(mixed $loginRequest): ?string
+    {
+        if ($loginRequest["skip"] === true) {
+            return $loginRequest['subject'];
+        }
+
+        $registerLoginSkipOnceUserId = Session::get('justRegisteredSkipLogin.user_id');
+        if (!is_null($registerLoginSkipOnceUserId)) {
+            $subject = $registerLoginSkipOnceUserId;
+            Session::forget('justRegisteredSkipLogin.user_id');
+            return User::findOrFail($subject)->hashid;
+        }
+
+        return null;
+    }
+
+    private function checkEmailVerification($loginRequest, User|string $user)
+    {
+        // Get App
+        $clientModel = App::where('client_id', $loginRequest['client']['client_id'])->firstOrFail();
+        // Get User
+        if (($user instanceof User) === false) {
+            $user = User::findByHashidOrFail($user);
+        }
+        // Check if user has verified email
+        if ($user->hasVerifiedEmail() === true) {
+            return true;
+        }
+        // If not, check if app system_name is portal then allow users to login
+        if ($clientModel->system_name === 'portal') {
+            return true;
+        }
+        return false;
     }
 }

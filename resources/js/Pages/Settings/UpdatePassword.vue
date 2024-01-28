@@ -1,4 +1,5 @@
 <template>
+    <Head title="Change Password"></Head>
     <div>
         <SettingsHeader>{{
                 $trans('update_your_password')
@@ -75,7 +76,7 @@
 </template>
 
 <script setup>
-import {useForm} from "@inertiajs/vue3";
+import {Head, useForm} from "@inertiajs/vue3";
 import SettingsHeader from "@/Components/Settings/SettingsHeader.vue";
 import BaseInput from "@/Components/BaseInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";

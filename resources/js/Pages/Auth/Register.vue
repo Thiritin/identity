@@ -1,5 +1,5 @@
 <template>
-    <Head title="Home" />
+    <Head title="Register"/>
     <Logo></Logo>
     <LoginScreenWelcome
         :sub-title="$trans('register_subtitle')"
@@ -36,10 +36,7 @@
             type="password"
         />
         <PasswordInfoBox
-            :correct-length="correctLength"
-            :correct-lower-upper="correctLowerUpper"
-            :correct-number="correctNumber"
-            :correct-symbol="correctSymbol"
+            :password="form.password"
         />
         <FormInput
             id="password_confirmation"
@@ -70,71 +67,71 @@
 </template>
 
 <script>
-    import Logo from '@/Auth/Logo.vue'
-    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
-    import FormInput from '@/Auth/Form/AuthFormInput.vue'
-    import AuthLayout from '@/Layouts/AuthLayout.vue'
-    import { Head, Link } from '@inertiajs/vue3'
-    import PasswordInfoBox from '@/Auth/PasswordInfoBox.vue'
+import Logo from '@/Auth/Logo.vue'
+import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
+import FormInput from '@/Auth/Form/AuthFormInput.vue'
+import AuthLayout from '@/Layouts/AuthLayout.vue'
+import {Head, Link} from '@inertiajs/vue3'
+import PasswordInfoBox from '@/Auth/PasswordInfoBox.vue'
 
-    export default {
-        components: {
-            PasswordInfoBox,
-            AuthLayout,
-            Logo,
-            LoginScreenWelcome,
-            FormInput,
-            Head,
-            Link,
-        },
-        layout: AuthLayout,
+export default {
+    components: {
+        PasswordInfoBox,
+        AuthLayout,
+        Logo,
+        LoginScreenWelcome,
+        FormInput,
+        Head,
+        Link,
+    },
+    layout: AuthLayout,
 
-        props: {
-            errors: Object,
-        },
+    props: {
+        errors: Object,
+    },
 
-        data() {
-            return {
-                form: this.$inertia.form({
-                    email: null,
-                    username: null,
-                    password: null,
-                    password_confirmation: null,
-                }),
-            }
+    data() {
+        return {
+            form: this.$inertia.form({
+                email: null,
+                username: null,
+                password: null,
+                password_confirmation: null,
+            }),
+        }
+    },
+    /**
+     * This is bad. I know it's replicated but it's 04:10am
+     * If you know vue, feel free to write me on TG @Thiritin
+     */
+    computed: {
+        correctLength() {
+            if (this.form.password) return this.form.password.length >= 10
+            return true
         },
-        /**
-         * This is bad. I know it's replicated but it's 04:10am
-         * If you know vue, feel free to write me on TG @Thiritin
-         */
-        computed: {
-            correctLength() {
-                if (this.form.password) return this.form.password.length >= 10
-                return true
-            },
-            correctLowerUpper() {
-                if (this.form.password)
-                    return this.form.password.match(
-                        /(\p{Ll}+.*\p{Lu})|(\p{Lu}+.*\p{Ll})/u
-                    )
-                return true
-            },
-            correctNumber() {
-                if (this.form.password)
-                    return this.form.password.match(/[0-9]/u)
-                return true
-            },
-            correctSymbol() {
-                if (this.form.password)
-                    return this.form.password.match(/\p{Z}|\p{S}|\p{P}/u)
-                return true
-            },
+        correctLowerUpper() {
+            if (this.form.password)
+                return this.form.password.match(
+                    /(\p{Ll}+.*\p{Lu})|(\p{Lu}+.*\p{Ll})/u
+                )
+            return true
         },
+        correctNumber() {
+            if (this.form.password)
+                return this.form.password.match(/[0-9]/u)
+            return true
+        },
+        correctSymbol() {
+            if (this.form.password)
+                return this.form.password.match(/\p{Z}|\p{S}|\p{P}/u)
+            return true
+        },
+    },
 
-        methods: {
-            submit() {
-                this.form.post(this.route('auth.register.store'))
-            },
+    methods: {
+        submit() {
+            this.form.post(this.route('auth.register.store'))
         },
-    }
+    },
+}
 </script>

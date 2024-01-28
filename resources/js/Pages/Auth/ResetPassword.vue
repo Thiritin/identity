@@ -1,4 +1,5 @@
 <template>
+    <Head title="Forgot Password"></Head>
     <Logo></Logo>
     <LoginScreenWelcome
         :sub-title="$trans('password_reset_sub_title')"
@@ -33,7 +34,7 @@
                     {{ errors.email }}
                 </span>
             </div>
-            <PasswordInfoBox />
+            <PasswordInfoBox :password="form.password"/>
             <div class="space-y-2">
                 <label
                     class="block text-sm font-medium text-gray-700"
@@ -106,48 +107,49 @@
 </template>
 
 <script>
-    import Logo from '@/Auth/Logo.vue'
-    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
-    import FormInput from '@/Auth/Form/AuthFormInput.vue'
-    import AuthLayout from '@/Layouts/AuthLayout.vue'
-    import PasswordInfoBox from '@/Auth/PasswordInfoBox.vue'
-    import { Link } from '@inertiajs/vue3'
+import Logo from '@/Auth/Logo.vue'
+import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
+import FormInput from '@/Auth/Form/AuthFormInput.vue'
+import AuthLayout from '@/Layouts/AuthLayout.vue'
+import PasswordInfoBox from '@/Auth/PasswordInfoBox.vue'
+import {Head, Link} from '@inertiajs/vue3'
 
-    export default {
-        components: {
-            PasswordInfoBox,
-            AuthLayout,
-            Logo,
-            LoginScreenWelcome,
-            FormInput,
-            Link,
-        },
-        layout: AuthLayout,
+export default {
+    components: {
+        Head,
+        PasswordInfoBox,
+        AuthLayout,
+        Logo,
+        LoginScreenWelcome,
+        FormInput,
+        Link,
+    },
+    layout: AuthLayout,
 
-        props: {
-            email: String,
-            token: String,
-            errors: Object,
-        },
+    props: {
+        email: String,
+        token: String,
+        errors: Object,
+    },
 
-        data() {
-            return {
-                form: this.$inertia.form({
-                    token: this.token,
-                    email: this.email,
-                    password: '',
-                    password_confirmation: '',
-                }),
-            }
-        },
+    data() {
+        return {
+            form: this.$inertia.form({
+                token: this.token,
+                email: this.email,
+                password: '',
+                password_confirmation: '',
+            }),
+        }
+    },
 
-        methods: {
-            submit() {
-                this.form.post(this.route('auth.password-reset.store'), {
-                    onFinish: () =>
-                        this.form.reset('password', 'password_confirmation'),
-                })
-            },
+    methods: {
+        submit() {
+            this.form.post(this.route('auth.password-reset.store'), {
+                onFinish: () =>
+                    this.form.reset('password', 'password_confirmation'),
+            })
         },
-    }
+    },
+}
 </script>

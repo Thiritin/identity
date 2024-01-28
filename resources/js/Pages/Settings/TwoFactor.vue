@@ -1,4 +1,5 @@
 <template>
+    <Head title="Two Factor"></Head>
     <SettingsHeader>{{ $trans('two_factor') }}</SettingsHeader>
     <SettingsSubHeader
         class="mb-4">Enabling two factor authentication secures your account by requiring a 2nd form of authentication for accessing your account.
@@ -25,6 +26,7 @@
 import SettingsHeader from '@/Components/Settings/SettingsHeader.vue'
 import SettingsSubHeader from '@/Components/Settings/SettingsSubHeader.vue'
 import ListItem from "@/Components/ListItem.vue";
+import {Head} from "@inertiajs/vue3";
 
 const props = defineProps({
     twoFactorMethods: {

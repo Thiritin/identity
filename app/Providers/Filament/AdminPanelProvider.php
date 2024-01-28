@@ -3,7 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Http\Middleware\AccessTokenValidationMiddleware;
-use Filament\Http\Middleware\Authenticate;
+use App\Http\Middleware\Admin\AuthenticateMiddleware;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
@@ -27,7 +27,6 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
             ->authGuard('admin')
             ->colors([
                 'primary' => Color::hex('#00504b'),
@@ -54,7 +53,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                Authenticate::class,
+                AuthenticateMiddleware::class,
                 AccessTokenValidationMiddleware::class,
             ]);
     }

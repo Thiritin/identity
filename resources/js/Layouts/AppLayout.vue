@@ -1,424 +1,238 @@
 <template>
-    <div class='page' :class='{dark: darkMode}'>
-        <div class='min-h-screen bg-gray-100 dark:bg-primary-800 dark:text-primary-100'>
-            <div class='bg-primary-600 dark:bg-primary-900 pb-32'>
-                <Disclosure v-slot='{ open }' as='nav'>
-                    <div class='max-w-7xl mx-auto sm:px-6 lg:px-8'>
-                        <div class='pt-2'>
-                            <div
-                                class='
-                                flex
-                                items-center
-                                justify-between
-                                h-16
-                                px-4
-                                sm:px-0
-                            '>
-                                <div class='flex items-center'>
-                                    <div class='flex-shrink-0'>
-                                        <Logo class='h-14'></Logo>
+    <div>
+        <TransitionRoot as="template" :show="sidebarOpen">
+            <Dialog as="div" class="relative z-50 lg:hidden" @close="sidebarOpen = false">
+                <TransitionChild as="template" enter="transition-opacity ease-linear duration-300"
+                                 enter-from="opacity-0" enter-to="opacity-100"
+                                 leave="transition-opacity ease-linear duration-300" leave-from="opacity-100"
+                                 leave-to="opacity-0">
+                    <div class="fixed inset-0 bg-gray-900/80"/>
+                </TransitionChild>
+
+                <div class="fixed inset-0 flex">
+                    <TransitionChild as="template" enter="transition ease-in-out duration-300 transform"
+                                     enter-from="-translate-x-full" enter-to="translate-x-0"
+                                     leave="transition ease-in-out duration-300 transform" leave-from="translate-x-0"
+                                     leave-to="-translate-x-full">
+                        <DialogPanel class="relative mr-16 flex w-full max-w-xs flex-1">
+                            <TransitionChild as="template" enter="ease-in-out duration-300" enter-from="opacity-0"
+                                             enter-to="opacity-100" leave="ease-in-out duration-300"
+                                             leave-from="opacity-100" leave-to="opacity-0">
+                                <div class="absolute left-full top-0 flex w-16 justify-center pt-5">
+                                    <button type="button" class="-m-2.5 p-2.5" @click="sidebarOpen = false">
+                                        <span class="sr-only">Close sidebar</span>
+                                        <XMarkIcon class="h-6 w-6 text-white" aria-hidden="true"/>
+                                    </button>
+                                </div>
+                            </TransitionChild>
+                            <!-- Sidebar component, swap this element with another sidebar if you like -->
+                            <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-primary-600 px-6 pb-2">
+                                <div class="flex h-16 shrink-0 items-center gap-3">
+                                    <img class="h-10 w-auto" src="../../assets/ef.svg"
+                                         alt="Eurofurence"/>
+                                    <div>
+                                        <div class='font-medium font-sm text-primary-100'>StaffNet</div>
                                     </div>
                                 </div>
-                                <div class='hidden md:block'>
-                                    <div
-                                        class='
-                                            ml-10
-                                            flex
-                                            justify-between
-                                            items-baseline
-                                            space-x-4
-                                        '>
-                                        <template
-                                            v-for='(
-                                                item, itemIdx
-                                            ) in navigation' :key='item'>
-                                            <template v-if='item.route === $page.url'>
-                                                <Link
-                                                    class='
-                                                        bg-primary-800
-                                                        text-white
-                                                        px-3
-                                                        py-2
-                                                        rounded-md
-                                                        text-sm
-                                                        font-medium
-                                                    ' href='#'>{{ $trans(item.name) }}
-                                                </Link>
-                                            </template>
+                                <nav class="flex flex-1 flex-col">
+                                    <ul role="list" class="flex flex-1 flex-col gap-y-7">
+                                        <li>
+                                            <ul role="list" class="-mx-2 space-y-1">
+                                                <li>
+                                                    <StaffMainMenu :navigation="navigation"></StaffMainMenu>
+                                                </li>
+                                                <li>
+                                                    <StaffTeamMenu :teams="teams"></StaffTeamMenu>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </DialogPanel>
+                    </TransitionChild>
+                </div>
+            </Dialog>
+        </TransitionRoot>
+
+        <!-- Static sidebar for desktop -->
+        <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+            <!-- Sidebar component, swap this element with another sidebar if you like -->
+            <div
+                class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 text-primary-100 bg-primary-600 px-6">
+                <div class="flex h-16 shrink-0 items-center gap-3">
+                    <img class="h-10 w-auto" src="../../assets/ef.svg"
+                         alt="Eurofurence"/>
+                    <div>
+                        <div class='font-medium font-sm dark:text-primary-300'>StaffNet</div>
+                    </div>
+                </div>
+                <nav class="flex flex-1 flex-col">
+                    <ul role="list" class="flex flex-1 flex-col gap-y-7">
+                        <li>
+                            <StaffMainMenu :navigation="navigation"></StaffMainMenu>
+                        </li>
+                        <li>
+                            <StaffTeamMenu :teams="teams"></StaffTeamMenu>
+                        </li>
+                        <li class="-mx-6 mt-auto">
+                            <Menu as="div">
+                                <MenuButton as="div">
+                                    <a href="#"
+                                       class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-primary-100 duration-200 hover:bg-primary-700">
+                                        <img
+                                            v-if="$page.props.user.avatar"
+                                            class="h-8 w-8 rounded-full bg-gray-50"
+                                            :src="$page.props.user.avatar"
+                                            :alt="$page.props.user.name"/>
+                                        <span class="sr-only">Your profile</span>
+                                        <span aria-hidden="true">{{ $page.props.user.name }}</span>
+                                    </a>
+                                </MenuButton>
+                                <transition
+                                    enter-active-class="transition ease-out duration-100"
+                                    enter-from-class="transform opacity-0 scale-95"
+                                    enter-to-class="transform opacity-100 scale-100"
+                                    leave-active-class="transition ease-in duration-75"
+                                    leave-from-class="transform opacity-100 scale-100"
+                                    leave-to-class="transform opacity-0 scale-95"
+                                >
+                                    <MenuItems
+                                        class="z-50 origin-bottom-right absolute bottom-16 left-4 w-48 rounded-md shadow-lg drop-shadow py-1 bg-white dark:bg-primary-600 ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                    >
+                                        <MenuItem
+                                            v-for="item in profileNavMenu"
+                                            :key="item"
+                                            v-slot="{ active }"
+                                        >
                                             <Link
-                                                v-else-if='item.inertia' :href='item.route' class='
-                                                    text-primary-300
-                                                    hover:bg-primary-700
-                                                    hover:text-white
-                                                    px-3
-                                                    py-2
-                                                    rounded-md
-                                                    text-sm
-                                                    font-medium
-                                                '>{{ $trans(item.name) }}
+                                                :class="[
+                                active ? 'bg-primary-800' : '',
+                                'block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300',
+                            ]"
+                                                :href="item.route"
+                                            >{{ $trans(item.name) }}
                                             </Link>
+                                        </MenuItem>
+                                        <MenuItem>
                                             <a
-                                                v-else :href='item.route' class='
-                                                    text-primary-300
-                                                    hover:bg-primary-700
-                                                    hover:text-white
-                                                    px-3
-                                                    py-2
-                                                    rounded-md
-                                                    text-sm
-                                                    font-medium
-                                                '>{{ $trans(item.name) }}
+                                                class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
+                                                :href="route('login.apps.logout',{app: 'staff'})"
+                                            >{{ $trans('logout') }}
                                             </a>
-                                        </template>
-                                    </div>
-                                </div>
-                                <div class='hidden md:block'>
-                                    <div class='ml-4 flex items-center md:ml-6'>
-                                        <!-- Profile dropdown -->
-                                        <Menu as='div' class='ml-3 relative'>
-                                            <div>
-                                                <MenuButton
-                                                    class='
-                                                    max-w-xs
-                                                    bg-primary-800
-                                                    rounded-full
-                                                    flex
-                                                    items-center
-                                                    text-sm
-                                                    focus:outline-none
-                                                    focus:ring-2
-                                                    focus:ring-offset-2
-                                                    focus:ring-offset-primary-800
-                                                    focus:ring-white
-                                                '>
-                                                    <span class='sr-only'>Open user menu</span>
-                                                    <AvatarImage
-                                                        :avatar="$page.props.user.avatar"
-                                                        class='h-8 w-8 rounded-full'/>
-                                                </MenuButton>
-                                            </div>
-                                            <transition
-                                                enter-active-class='transition ease-out duration-100'
-                                                enter-from-class='transform opacity-0 scale-95'
-                                                enter-to-class='transform opacity-100 scale-100'
-                                                leave-active-class='transition ease-in duration-75'
-                                                leave-from-class='transform opacity-100 scale-100'
-                                                leave-to-class='transform opacity-0 scale-95'>
-                                                <MenuItems
-                                                    class='
-                                                    origin-top-right
-                                                    absolute
-                                                    right-0
-                                                    mt-2
-                                                    w-48
-                                                    rounded-md
-                                                    shadow-lg
-                                                    py-1
-                                                    bg-primary-100
-                                                    dark:bg-primary-600
-                                                    ring-1
-                                                    ring-black
-                                                    ring-opacity-5
-                                                    focus:outline-none
-                                                '>
-                                                    <MenuItem v-for='item in profile' :key='item' v-slot='{ active }'>
-                                                        <Link
-                                                            :class="[
-                                                            active
-                                                                ? 'bg-primary-800'
-                                                                : '',
-                                                            'block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300',
-                                                        ]" :href='item.route'>{{ $trans(item.name) }}
-                                                        </Link>
-                                                    </MenuItem>
-                                                    <MenuItem>
-                                                        <a
-                                                            class='block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300'
-                                                            href='#' @click='logout'>{{
-                                                                $trans('logout')
-                                                            }} </a>
-                                                    </MenuItem>
-                                                </MenuItems>
-                                            </transition>
-                                        </Menu>
-                                    </div>
-                                </div>
-                                <div class='-mr-2 flex md:hidden'>
-                                    <!-- Mobile menu button -->
-                                    <DisclosureButton
-                                        class='
-                                        bg-primary-800
-                                        inline-flex
-                                        items-center
-                                        justify-center
-                                        p-2
-                                        rounded-md
-                                        text-primary-400
-                                        hover:text-white hover:bg-primary-700
-                                        focus:outline-none
-                                        focus:ring-2
-                                        focus:ring-offset-2
-                                        focus:ring-offset-primary-800
-                                        focus:ring-white
-                                    '>
-                                        <span class='sr-only'>Open main menu</span>
-                                        <MenuIcon v-if='!open' aria-hidden='true' class='block h-6 w-6'/>
-                                        <XIcon v-else aria-hidden='true' class='block h-6 w-6'/>
-                                    </DisclosureButton>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <DisclosurePanel class='border-b border-primary-700 md:hidden'>
-                        <div class='px-2 py-3 space-y-1 sm:px-3'>
-                            <template v-for='(item, itemIdx) in navigation' :key='item'>
-                                <template v-if='item.route === $page.url'>
-                                    <!-- Current: "bg-primary-900 text-white", Default: "text-primary-300 hover:bg-primary-700 hover:text-white" -->
-                                    <a
-                                        class='
-                                        bg-primary-900
-                                        text-white
-                                        block
-                                        px-3
-                                        py-2
-                                        rounded-md
-                                        text-base
-                                        font-medium
-                                    ' href='#'>{{ $trans(item.name) }}</a>
-                                </template>
-                                <a
-                                    v-else :href='item.route' class='
-                                    text-primary-300
-                                    hover:bg-primary-700 hover:text-white
-                                    block
-                                    px-3
-                                    py-2
-                                    rounded-md
-                                    text-base
-                                    font-medium
-                                '>{{ $trans(item.name) }}</a>
-                            </template>
-                        </div>
-                        <div class='pt-4 pb-3 border-t border-primary-700'>
-                            <div class='flex items-center px-5'>
-                                <div class='flex-shrink-0'>
-                                    <AvatarImage class='h-10 w-10 rounded-full'/>
-                                </div>
-                                <div class='ml-3'>
-                                    <div
-                                        class='
-                                        text-base
-                                        font-medium
-                                        leading-none
-                                        text-white
-                                    '>
-                                        {{ user.name }}
-                                    </div>
-                                    <div
-                                        class='
-                                        text-sm
-                                        font-medium
-                                        leading-none
-                                        text-primary-400
-                                    '>
-                                        {{ user.email }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class='mt-3 px-2 space-y-1'>
-                                <Link
-                                    v-for='item in profile' :key='item' :href='item.route' class='
-                                    block
-                                    px-3
-                                    py-2
-                                    rounded-md
-                                    text-base
-                                    font-medium
-                                    text-primary-400
-                                    hover:text-white hover:bg-primary-700
-                                '>{{ $trans(item.name) }}
-                                </Link>
-                                <a
-                                    class='block
-                                    px-3
-                                    py-2
-                                    rounded-md
-                                    text-base
-                                    font-medium
-                                    text-primary-400
-                                    hover:text-white hover:bg-primary-700' href='#' @click='logout'>{{
-                                        $trans('logout')
-                                    }} </a>
-                            </div>
-                        </div>
-                    </DisclosurePanel>
-                </Disclosure>
-                <header class='pt-8 pb-6'>
-                    <slot name='header'>
-                        <div v-if='title' class='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-                            <h1 v-if='title' class='text-3xl font-bold text-white'>{{ title }}</h1>
-                            <p v-if='description' class='text-primary-200'>{{ description }}</p>
-                        </div>
-                    </slot>
-                </header>
+                                        </MenuItem>
+                                    </MenuItems>
+                                </transition>
+                            </Menu>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-
-            <main class='-mt-32'>
-                <div class='max-w-7xl min-h-[8rem] mx-auto pb-12 px-4 sm:px-6 lg:px-8'>
-                    <transition name='page'>
-                        <div v-if='animated' :key='$page.url'>
-                            <slot></slot>
-                        </div>
-                    </transition>
-                </div>
-            </main>
-
-            <footer>
-                <div class='mt-7 flex flex-col md:flex-row items-center justify-center gap-1 md:gap-7'>
-                    <div v-for='item in footer.nav' :key='item.name'>
-                        <Link
-                            v-if='item.href === null' :href='item.link'
-                            :target="[item.newTab ? '_blank' : '_top']"
-                            class='text-base text-gray-500 hover:text-gray-900 dark:hover:text-gray-400'>
-                            {{ item.name }}
-                        </Link>
-                        <a
-                            v-else :href='item.href' :target="[item.newTab ? '_blank' : '_top']"
-                            class='text-base text-gray-500 hover:text-gray-900 dark:hover:text-gray-400qq'>
-                            {{ item.name }} </a>
-                    </div>
-                </div>
-                <span class='flex justify-center mt-3'>
-                    <toogleDarkMode :dark-mode='darkMode' :toggle-dark-mode='toggleDarkMode'/>
-                </span>
-            </footer>
         </div>
+
+        <div class="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
+            <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" @click="sidebarOpen = true">
+                <span class="sr-only">Open sidebar</span>
+                <Bars3Icon class="h-6 w-6" aria-hidden="true"/>
+            </button>
+            <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">Dashboard</div>
+            <Menu>
+                <MenuButton>
+                    <a href="#">
+                        <span class="sr-only">Your profile</span>
+                        <img class="h-8 w-8 rounded-full bg-gray-50"
+                             :src="$page.props.user.avatar"
+                             :alt="$page.props.user.name"/>
+                    </a>
+                </MenuButton>
+                <transition
+                    enter-active-class="transition ease-out duration-100"
+                    enter-from-class="transform opacity-0 scale-95"
+                    enter-to-class="transform opacity-100 scale-100"
+                    leave-active-class="transition ease-in duration-75"
+                    leave-from-class="transform opacity-100 scale-100"
+                    leave-to-class="transform opacity-0 scale-95"
+                >
+                    <MenuItems
+                        class="z-50 origin-top-right absolute right-4 mt-48 w-48 rounded-md shadow-lg drop-shadow py-1 bg-white dark:bg-primary-600 ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    >
+                        <MenuItem
+                            v-for="item in profileNavMenu"
+                            :key="item"
+                            v-slot="{ active }"
+                        >
+                            <Link
+                                :class="[
+                                active ? 'bg-primary-800' : '',
+                                'block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300',
+                            ]"
+                                :href="item.route"
+                            >{{ $trans(item.name) }}
+                            </Link>
+                        </MenuItem>
+                        <MenuItem>
+                            <a
+                                class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
+                                href="#"
+                                @click="logout"
+                            >{{ $trans('logout') }}
+                            </a>
+                        </MenuItem>
+                    </MenuItems>
+                </transition>
+            </Menu>
+        </div>
+
+        <main class="py-10 lg:pl-72">
+            <div class="px-4 sm:px-6 lg:px-8">
+                <slot></slot>
+            </div>
+        </main>
     </div>
 </template>
 
-<script>
-import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
-import {BellIcon, MenuIcon, XIcon} from '@heroicons/vue/outline'
-import Logo from '../Auth/Logo.vue'
-import {Link, usePage} from '@inertiajs/vue3'
-import {computed} from 'vue'
-import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
-import ToogleDarkMode from '@/Layouts/ToogleDarkMode.vue'
+<script setup>
+import {ref} from 'vue'
+import {
+    Dialog,
+    DialogPanel,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuItems,
+    TransitionChild,
+    TransitionRoot
+} from '@headlessui/vue'
+import {Bars3Icon, ChatBubbleBottomCenterIcon, HomeIcon, UsersIcon, XMarkIcon,} from '@heroicons/vue/24/outline'
+import {Link} from "@inertiajs/vue3";
+import StaffMainMenu from "../Components/Staff/Menu/StaffMainMenu.vue";
+import StaffTeamMenu from "../Components/Staff/Menu/StaffTeamMenu.vue";
 
-var navigation = [
+const navigation = [
+    {name: 'Dashboard', href: '#', icon: HomeIcon, current: true, soon: false},
+    {name: 'Departments', href: '#', icon: UsersIcon, current: false, soon: true},
+    {name: 'Anonymous Feedback', href: '#', icon: ChatBubbleBottomCenterIcon, current: false, soon: true},
+]
+
+
+const profileNavMenu = [
     {
-        name: 'dashboard',
-        route: route('dashboard'),
-        inertia: true,
+        name: 'profile',
+        route: route('settings.profile'),
     },
     {
-        name: 'developers',
-        route: route('developers'),
-        inertia: true,
+        name: 'change_password',
+        route: route('settings.update-password'),
     },
     {
-        name: 'admin',
-        route: '/admin',
-        inertia: false,
+        name: 'two_factor_auth',
+        route: route('settings.two-factor'),
     },
 ]
 
-export default {
-    components: {
-        ToogleDarkMode,
-        AvatarImage,
-        Logo,
-        Disclosure,
-        DisclosureButton,
-        DisclosurePanel,
-        Menu,
-        MenuButton,
-        MenuItem,
-        MenuItems,
-        BellIcon,
-        MenuIcon,
-        XIcon,
-        Link,
-    },
+const teams = [
+    {id: 1, name: 'Registration', href: '#', initial: 'R', current: false},
+]
 
-    props: {
-        title: String,
-        description: String,
-    },
-
-    setup() {
-        const user = computed(() => usePage().props.user)
-        navigation = navigation.filter(function (value) {
-            return (value.name === 'admin' && user.value.isAdmin === true) || value.name !== 'admin'
-        })
-        return {
-            navigation,
-            user,
-            profile,
-        }
-    },
-
-    data() {
-        return {
-            animated: false,
-            darkMode: this.$cookies.isKey('darkMode'),
-            footer: {
-                nav: [
-
-                    {
-                        name: 'Support',
-                        href: 'https://help.eurofurence.org/contact/',
-                        newTab: true,
-                    },
-
-                    {
-                        name: 'Imprint',
-                        href: 'https://help.eurofurence.org/legal/imprint',
-                        newTab: true,
-                    },
-
-                    {
-                        name: 'Privacy',
-                        href: 'https://help.eurofurence.org/legal/privacy',
-                        newTab: true,
-                    },
-
-                    {
-                        name: 'We are looking for help!',
-                        href: 'https://www.eurofurence.org/EF27/jobs/',
-                        newTab: true,
-                    },
-                ],
-            },
-        }
-    },
-
-    mounted() {
-        this.animated = true
-    },
-
-    methods: {
-        logout() {
-            window.location.href = '/auth/logout'
-        },
-        toggleDarkMode() {
-            if (this.darkMode === false) {
-                this.$cookies.set('darkMode', 'true', 2147483647)
-            }
-
-            if (this.darkMode === true) {
-                this.$cookies.remove('darkMode')
-            }
-
-            this.darkMode = !this.darkMode
-        },
-    },
-}
+const sidebarOpen = ref(false)
 </script>
-
-<style>
-.page * {
-    @apply transition-colors ease-in
-}
-</style>

@@ -3,7 +3,7 @@ import {Link, router, usePage} from '@inertiajs/vue3'
 import {Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
 import AvatarImage from '../../Pages/Profile/AvatarImage.vue'
 import {computed} from 'vue'
-import {ChevronDownIcon, ChevronLeftIcon} from "@heroicons/vue/outline"
+import {ChevronDownIcon, ChevronLeftIcon} from "@heroicons/vue/24/outline"
 
 const props = defineProps({
     logout: Function,

@@ -49,7 +49,8 @@ class HandleInertiaRequests extends Middleware
             ], $request->user()->only('name', 'email'));
         }
         return array_merge(parent::share($request), [
-            'user' => Route::is('auth.login.view') ? null : $user,
+            'user' => Route::is(['auth.login.view']) ? null : $user,
+            'hideUserInfo' => Route::is(['auth.login.view', 'verification.notice']),
             'flash' => [
                 'message' => fn() => $request->session()->get('message')
             ],

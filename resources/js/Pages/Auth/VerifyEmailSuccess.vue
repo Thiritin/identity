@@ -1,4 +1,5 @@
 <template>
+    <Head title="Email Verified"></Head>
     <Logo></Logo>
     <LoginScreenWelcome
         :sub-title="$trans('verifysuccess_subtitle')"
@@ -6,57 +7,23 @@
         class="mb-6"
     />
     <div class="space-y-8">
-        <UserBox :user="user" />
-        <div class="flex items-center justify-between">
-            <Link
-                :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
-                :disabled="form.processing"
-                :href="route('auth.oidc.login')"
-                class="py-3 rounded-lg px-8 mr-auto text-white text-sm mb-4 font-semibold focus:outline-none"
-            >
-                {{ $trans('continue_to_login') }}
-            </Link>
+        <UserBox :user="$page.props.user"/>
+        <div class="flex justify-end">
+            <PrimaryButton class="ml-auto" :href="route('dashboard')">
+                Continue to Dashboard
+            </PrimaryButton>
         </div>
     </div>
 </template>
+<script setup>
 
-<script>
-    import Logo from '@/Auth/Logo.vue'
-    import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
-    import AuthLayout from '@/Layouts/AuthLayout.vue'
-    import UserBox from '@/Pages/Auth/UserBox.vue'
-    import { Link } from '@inertiajs/vue3'
+import Logo from '@/Auth/Logo.vue'
+import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
+import AuthLayout from '@/Layouts/AuthLayout.vue'
+import UserBox from '@/Pages/Auth/UserBox.vue'
+import {Head, Link, useForm} from '@inertiajs/vue3'
+import {computed} from "vue";
+import PrimaryButton from "../../Components/PrimaryButton.vue";
 
-    export default {
-        components: {
-            UserBox,
-            AuthLayout,
-            Logo,
-            LoginScreenWelcome,
-            Link,
-        },
-        layout: AuthLayout,
-
-        props: {
-            user: Object,
-        },
-
-        data() {
-            return {
-                form: this.$inertia.form(),
-            }
-        },
-
-        computed: {
-            verificationLinkSent() {
-                return this.status === 'verification-link-sent'
-            },
-        },
-
-        methods: {
-            submit() {
-                this.form.post(this.route('verification.send'))
-            },
-        },
-    }
+defineOptions({layout: AuthLayout})
 </script>

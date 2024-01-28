@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class, // Relies on Role Seeder
             AppSeeder::class, // Relies on User Seeder
+            GroupSeeder::class,
         ]);
     }
 }

@@ -1,5 +1,5 @@
 <script setup>
-import ToogleDarkMode from '../../Layouts/ToogleDarkMode.vue'
+import ToogleDarkMode from '../ToogleDarkMode.vue'
 import {Link} from '@inertiajs/vue3'
 import {computed} from "vue";
 
