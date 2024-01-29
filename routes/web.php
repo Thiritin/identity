@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\Authenticators\OidcClientController;
 use App\Http\Controllers\Auth\ChooseController;
 use App\Http\Controllers\Auth\ConsentController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -31,7 +30,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
 
     Route::middleware('guest:web')->group(function () {
         Route::get('choose', ChooseController::class)->name('choose');
-        Route::get('choose/login', [OidcClientController::class, 'login'])->name('oidc.login');
+        Route::redirect('choose/login', '/auth/portal/login', 301)->name('oidc.login');
         // Register
         Route::inertia('register', 'Auth/Register')->name('register.view');
         Route::post('register', RegisterController::class)->middleware('guest')->name('register.store');
