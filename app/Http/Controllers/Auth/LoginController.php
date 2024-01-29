@@ -29,6 +29,7 @@ class LoginController extends Controller
         if (isset($loginRequest['redirect_to'])) {
             return Redirect::to($loginRequest['redirect_to']);
         }
+        // Check if user is allowed to skip login
         $subject = $this->shouldSkipLogin($loginRequest);
 
         if ($subject !== null) {
@@ -58,6 +59,12 @@ class LoginController extends Controller
 
             $hydra = new Client();
             $loginRequest = $hydra->getLoginRequest($request->get('login_challenge'));
+
+            // redirect_to key is added when login request expired.
+            if (isset($loginRequest['redirect_to'])) {
+                return Redirect::to($loginRequest['redirect_to']);
+            }
+
             $emailVerified = $this->checkEmailVerification($loginRequest, $user); // Check if user has verified email
             if ($emailVerified === false) {
                 return Redirect::route('login.apps.redirect', ['app' => 'portal']);
@@ -86,7 +93,7 @@ class LoginController extends Controller
      */
     private function shouldSkipLogin(mixed $loginRequest): ?string
     {
-        if ($loginRequest["skip"] === true) {
+        if (isset($loginRequest["skip"]) && $loginRequest["skip"] === true) {
             return $loginRequest['subject'];
         }
 
