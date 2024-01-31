@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 use Vinkla\Hashids\Facades\Hashids;
 
 class AuthController extends Controller
@@ -21,7 +22,11 @@ class AuthController extends Controller
     public function loginCallback($app)
     {
         $this->checkApp($app);
-        $userInfo = Socialite::driver('idp-'.$app)->user();
+        try {
+            $userInfo = Socialite::driver('idp-'.$app)->user();
+        } catch (InvalidStateException $e) {
+            return redirect()->route('login.apps.redirect', ['app' => $app]);
+        }
         $userid = Hashids::connection('user')->decode($userInfo->id)[0];
         Auth::guard($this->getGuard($app))->loginUsingId($userid);
         Socialite::driver('idp-'.$app)->putToken(
