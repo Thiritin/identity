@@ -47,6 +47,9 @@ class TotpSetupController extends Controller
         ]);
         // Verify that data->code is equal to cached value
         $cachedValue = Cache::get('user-'.auth()->user()->id.'-two-factor-user-cache');
+        if (!isset($cachedValue['secret'])) {
+            throw ValidationException::withMessages(['code' => 'Your secret expired, please try again.']);
+        }
         if ($cachedValue['secret'] !== $data['secret']) {
             throw ValidationException::withMessages(['code' => 'Invalid code']);
         }
