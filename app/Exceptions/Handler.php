@@ -66,6 +66,11 @@ class Handler extends ExceptionHandler
             return $response;
         }
 
+
+        if (!in_array($status, [401, 402, 403, 404, 405, 500, 503])) {
+            return $response;
+        }
+
         return inertia('Auth/Error', [
             'title' => "Error $status",
             'description' => $response->exception?->getMessage(),
