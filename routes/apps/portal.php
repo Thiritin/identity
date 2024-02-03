@@ -6,16 +6,12 @@ use App\Http\Controllers\Profile\Settings\TwoFactor\YubikeySetupController;
 use App\Http\Controllers\Profile\Settings\UpdatePasswordController;
 use App\Http\Controllers\Profile\StoreAvatarController;
 use App\Http\Controllers\Profile\UpdateProfileController;
-use App\Http\Controllers\UpdateEmailController;
 use Illuminate\Support\Facades\Route;
 
 // General Routes
 Route::get('/dashboard', DashboardController::class)->name('dashboard');
 Route::inertia('/settings/profile', 'Settings/Profile')->name('settings.profile');
 Route::post('/settings/profile/update', UpdateProfileController::class)->name('settings.update-profile.update');
-Route::get('/settings/profile/update/email', UpdateEmailController::class)->name(
-    'settings.update-profile.email.update'
-)->middleware('signed');
 
 Route::inertia('/settings/update-password', 'Settings/UpdatePassword')->name('settings.update-password');
 Route::post('/settings/update-password', UpdatePasswordController::class)->name('settings.update-password.store');

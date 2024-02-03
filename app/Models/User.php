@@ -10,7 +10,11 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Notification;
 use Laravel\Sanctum\HasApiTokens;
 use Mtvs\EloquentHashids\HasHashid;
 use Mtvs\EloquentHashids\HashidRouting;
@@ -108,7 +112,12 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         activity()
             ->by($this)
             ->log('mail-change-mail');
-        $this->notify(new UpdateEmailNotification($newEmail));
+        Cache::put(
+            'user:'.$this->hashid.':newEmail',
+            $newEmail,
+            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)));
+        Notification::route('mail', $newEmail)
+            ->notify(new UpdateEmailNotification($newEmail, $this->hashid));
     }
 
     public function groups()

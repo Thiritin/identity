@@ -2,22 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class UpdateEmailController extends Controller
 {
     public function __invoke(Request $request)
     {
         $data = $request->validate([
-            'newEmail' => [
-                "email",
+            'id' => [
                 "required",
-                "unique:users,email",
+            ],
+            'newEmail' => [
+                "required",
             ],
         ]);
-        Log::info($request->user()->id . " has changed his E-Mail from " . $request->user()->email . " to " . $data['newEmail']);
-        $request->user()->update(['email' => $data['newEmail']]);
-        return redirect(route('settings.profile'));
+        $user = User::findByHashidOrFail($data['id']);
+        $newMailFromCache = Cache::get('user:'.$data['id'].':newEmail');
+        if (sha1($user->email) === $data['newEmail']) {
+            return Inertia::render('Auth/VerifyEmailSuccess', [
+                'user' => $user->only('name', 'email'),
+                'hideUserInfo' => true,
+            ]);
+        }
+        // Verify Hash of Cache and Request
+        if ($data['newEmail'] !== sha1($newMailFromCache)) {
+            return Inertia::render('Auth/VerifyEmailFailed', [
+                'title' => 'Expired',
+                'message' => 'The verification link you have used is invalid or expired. Please request a new verification link.',
+            ]);
+        }
+
+        Log::info($user->id." has changed his E-Mail from ".$user->email." to ".$newMailFromCache);
+        $user->update(['email' => $newMailFromCache]);
+        return Inertia::render('Auth/VerifyEmailSuccess', [
+            'user' => $user->only('name', 'email'),
+            'hideUserInfo' => true,
+        ]);
     }
 }

@@ -13,6 +13,12 @@ class AuthController extends Controller
     public function login($app)
     {
         $this->checkApp($app);
+        // Redirect to the app if already logged in
+        $guard = $this->getGuard($app);
+        if (Auth::guard($guard)->check()) {
+            return redirect()->route(config('services.apps')[$app]['home_route']);
+        }
+
         $url = Socialite::driver('idp-'.$app)
             ->scopes(config('services.apps')[$app]['scopes'])
             ->redirect();

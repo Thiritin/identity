@@ -13,6 +13,11 @@ class UpdateProfileController extends Controller
     {
         $user = $request->user();
 
+        if ($user->name !== $request->get('name')) {
+            activity()->by($user)->log('name.change');
+            $user->update(['name' => $request->get('name')]);
+        }
+
         if ($user->email !== $request->get('email')) {
             $done = RateLimiter::attempt(
                 'emailVerify:'.$user->id,
@@ -28,11 +33,6 @@ class UpdateProfileController extends Controller
             if (!$done) {
                 return Redirect::route('settings.profile')->with('message', 'emailTooMany');
             }
-        }
-
-        if ($user->name !== $request->get('name')) {
-            activity()->by($user)->log('name.change');
-            $user->update(['name' => $request->get('name')]);
         }
 
         return Redirect::route('settings.profile');

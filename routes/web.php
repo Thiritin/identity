@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\UpdateEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->name('auth.')->group(function () {
@@ -66,8 +67,13 @@ Route::prefix('auth')->group(function () {
     Route::get('verify/{id}/{hash}', [
         VerifyEmailController::class,
         'verify',
-    ])->name('verification.verify');
+    ])->middleware(['signed'])
+        ->name('verification.verify');
 });
+
+Route::get('/settings/profile/update/email', UpdateEmailController::class)->name(
+    'settings.update-profile.email.update'
+)->middleware('signed');
 
 Route::get('/', function () {
     return Redirect::route('dashboard');

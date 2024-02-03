@@ -23,7 +23,7 @@
         "vite": "^5.0.0",
         "vue": "^3.4.0",
         "vue-cookie-accept-decline": "^6.1.0",
-        "vue-cropperjs": "^5.0.0",
-        "vue-cookies": "^1.8.3"
+        "vue-cookies": "^1.8.3",
+        "vue-cropperjs": "^5.0.0"
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\App;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -15,6 +16,12 @@ class Handler extends ExceptionHandler
     protected $dontReport = [
         //
     ];
+
+    /**
+     * A list of the messages for the status codes
+     *
+     * @var string[]
+     */
 
     /**
      * A list of the inputs that are never flashed for validation exceptions.
@@ -46,5 +53,24 @@ class Handler extends ExceptionHandler
         }
 
         parent::report($exception);
+    }
+
+    public function render(
+        $request,
+        Throwable $e
+    ): \Illuminate\Http\Response|\Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response|\Illuminate\Http\RedirectResponse {
+        $response = parent::render($request, $e);
+        $status = $response->getStatusCode();
+
+        if (App::isLocal()) {
+            return $response;
+        }
+
+        return inertia('Auth/Error', [
+            'title' => "Error $status",
+            'description' => $response->exception?->getMessage(),
+        ])
+            ->toResponse($request)
+            ->setStatusCode($status);
     }
 }
