@@ -2,8 +2,8 @@
 import AppLayout from "../../Layouts/AppLayout.vue";
 import {ChevronRightIcon} from "@heroicons/vue/24/outline/index.js";
 import {defineAsyncComponent} from "vue";
-import PageHeadline from "../../Components/Staff/PageHeadline.vue";
 import {Head} from '@inertiajs/vue3'
+import SiteHeader from "../../Components/Staff/SiteHeader.vue";
 
 const loadIconComponent = (name) => defineAsyncComponent(() => import(`../../Components/Icons/${name}.vue`))
 
@@ -15,9 +15,9 @@ defineOptions({layout: AppLayout})
 
 <template>
     <div>
+        <SiteHeader class="mb-4" title="Dashboard"></SiteHeader>
         <Head title="Dashboard"></Head>
-        <PageHeadline>Apps</PageHeadline>
-        <div class="grid lg:grid-cols-2 gap-3">
+        <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-3 px-6">
             <a :href='app.url' v-for="app in apps"
                class="flex cursor-pointer drop-shadow duration-200 items-center bg-white hover:bg-gray-100 dark:bg-primary-600 hover:dark:bg-primary-500 rounded-lg shadow p-2 gap-3">
                 <div>

@@ -8,6 +8,8 @@ import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m'
 import {__, getLocale, locales, setLocale, trans, transChoice} from 'matice'
 import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers";
 import VueCookies from 'vue-cookies'
+import PrimeVue from 'primevue/config';
+import Wind from "./presets/wind/index.js";
 
 import.meta.glob([
     '../assets/**',
@@ -25,6 +27,10 @@ createInertiaApp({
         return createApp({render: () => h(App, props)})
             .use(plugin)
             .use(ZiggyVue)
+            .use(PrimeVue, {
+                unstyled: true,
+                preset: Wind,
+            })
             .use(VueCookies, {})
             .mixin({methods: {route}})
             .mixin({

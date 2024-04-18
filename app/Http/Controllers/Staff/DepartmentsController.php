@@ -13,11 +13,16 @@ class DepartmentsController extends Controller
 {
     public function index(Request $request)
     {
+        $myDepartmentIds = $request->user()->groups()->where('type', GroupTypeEnum::Department)->pluck('id');
+        $departments = Group::where('type', GroupTypeEnum::Department)
+            ->withCount('users')->get();
+        $departmentsSortedByMembershipAndUserCount = $departments->sortByDesc(fn($department) => [
+            $myDepartmentIds->contains($department->id),
+            $department->users_count
+        ]);
+
         return Inertia::render('Staff/Departments/DepartmentsIndex', [
-            'groups' => Group::where('type', GroupTypeEnum::Department)
-                ->withCount('users')->get(),
-            'myGroups' => $request->user()->groups()->where('type', GroupTypeEnum::Department)
-                ->withCount('users')->get(),
+            'groups' => $departmentsSortedByMembershipAndUserCount,
         ]);
     }
 
@@ -27,9 +32,9 @@ class DepartmentsController extends Controller
             'group' => $department->loadCount('users'),
             'users' => $department->users()->withPivot('level')->get(['id', 'name', 'profile_photo_path'])->map(fn($user
             ) => [
-                'id' => $user->id,
+                'id' => $user->hashid,
                 'name' => $user->name,
-                'profile_photo_path' => Storage::drive('s3-avatars')->url($user->profile_photo_path),
+                'profile_photo_path' => (is_null($user->profile_photo_path)) ? null : Storage::drive('s3-avatars')->url($user->profile_photo_path),
                 'level' => $user->pivot->level,
                 'title' => $user->pivot->title,
             ])
@@ -38,6 +43,7 @@ class DepartmentsController extends Controller
 
     public function edit(Group $group)
     {
+
     }
 
     public function update(Request $request, Group $group)

@@ -183,15 +183,8 @@
             </Menu>
         </div>
 
-        <main class="py-10 lg:pl-72">
-            <div class="px-4 sm:px-6 lg:px-8 max-w-screen-lg mx-auto">
-                <div>
-                    <BaseAlert title="This is a WIP Preview!"
-                               message="All things here are subject to change or may not be functional."
-                               class="mb-4"></BaseAlert>
-                </div>
-                <slot></slot>
-            </div>
+        <main class="lg:pl-72">
+            <slot></slot>
         </main>
     </div>
 </template>
@@ -212,7 +205,6 @@ import {Bars3Icon, HomeIcon, UsersIcon, XMarkIcon,} from '@heroicons/vue/24/outl
 import {Link} from "@inertiajs/vue3";
 import StaffMainMenu from "../Components/Staff/Menu/StaffMainMenu.vue";
 import StaffTeamMenu from "../Components/Staff/Menu/StaffTeamMenu.vue";
-import BaseAlert from "../Components/BaseAlert.vue";
 
 const navigation = [
     {name: 'Dashboard', href: route('staff.dashboard'), icon: HomeIcon, current: true, soon: false},

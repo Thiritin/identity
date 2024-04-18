@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Route;
 
 // General Routes
 Route::get('/dashboard', DashboardController::class)->name('dashboard');
+// Forward / to /dashboard
+Route::redirect('/', '/dashboard');
 Route::inertia('/settings/profile', 'Settings/Profile')->name('settings.profile');
 Route::post('/settings/profile/update', UpdateProfileController::class)->name('settings.update-profile.update');
 
