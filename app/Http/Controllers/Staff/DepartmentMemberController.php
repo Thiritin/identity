@@ -43,7 +43,8 @@ class DepartmentMemberController extends Controller
     {
         return Inertia::render('Staff/DepartmentMember/DepartmentMemberEdit', [
             'department' => $department,
-            'user' => $user,
+            // Load pivot data
+            'member' => $department->users()->where('user_id', $user->id)->first()
         ]);
     }
 }

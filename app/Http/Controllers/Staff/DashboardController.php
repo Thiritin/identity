@@ -22,6 +22,7 @@ class DashboardController extends Controller
                 $q->whereDate('ends_at', '>=', now())->orWhereNull('ends_at');
             });
         })->orderBy('priority')->get(['id', 'name', 'description', 'icon', 'url']);
+        
         return inertia('Staff/Dashboard', [
             'apps' => $apps,
         ]);

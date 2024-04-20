@@ -9,7 +9,7 @@ import {__, getLocale, locales, setLocale, trans, transChoice} from 'matice'
 import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers";
 import VueCookies from 'vue-cookies'
 import PrimeVue from 'primevue/config';
-import Wind from "./presets/wind/index.js";
+import Lara from "./presets/lara";
 
 import.meta.glob([
     '../assets/**',
@@ -29,7 +29,7 @@ createInertiaApp({
             .use(ZiggyVue)
             .use(PrimeVue, {
                 unstyled: true,
-                preset: Wind,
+                pt: Lara,
             })
             .use(VueCookies, {})
             .mixin({methods: {route}})
