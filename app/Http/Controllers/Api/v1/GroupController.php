@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Enums\GroupTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GroupStoreRequest;
 use App\Http\Requests\GroupUpdateRequest;
@@ -12,10 +13,22 @@ use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize("viewAny", Group::class);
-        return new GroupCollection(Group::simplePaginate(25));
+
+        $groups = Group::query();
+
+        if ($request->user()->isStaff()) {
+            $groups = $groups->where('type', GroupTypeEnum::Department)
+                ->orWhereHas('users', fn($q) => $q->where('user_id', $request->user()->id));
+        } else {
+            $groups = $groups->whereHas('users', fn($q) => $q->where('user_id', $request->user()->id));
+        }
+
+        $groups = $groups->simplePaginate(25);
+
+        return new GroupCollection($groups);
     }
 
     public function store(GroupStoreRequest $request)

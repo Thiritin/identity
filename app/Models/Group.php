@@ -80,4 +80,15 @@ class Group extends Model
     {
         return (is_null($this->logo)) ? null : Storage::url('avatars/'.$this->logo);
     }
+
+    public function isMember(User $user): bool
+    {
+        return $this->users->contains($user);
+    }
+
+    public function isAdmin(User $user)
+    {
+        return $this->users->contains($user,
+            fn($user) => $user->pivot->level === 'admin' || $user->pivot->level === 'owner');
+    }
 }

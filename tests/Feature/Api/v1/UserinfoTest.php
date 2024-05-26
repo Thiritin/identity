@@ -40,27 +40,6 @@ test('Userinfo Authenticated - Profile Scope', function () {
 });
 
 
-test('Userinfo Authenticated - Exclude groups that user is invited', function () {
-    $user = Sanctum::actingAs(
-        User::factory()->create(),
-        ['profile', 'groups']
-    );
-
-    $group = Group::factory()->createQuietly();
-    /**
-     * @type User $user
-     */
-    $user->groups()->sync([$group->id => ["level" => GroupUserLevel::Invited]]);
-    $response = get(route('api.v1.userinfo'));
-    $response->assertStatus(200);
-    $response->assertJsonMissing([
-        "groups" => [
-            $group->hashid,
-        ],
-    ]);
-});
-
-
 test('Userinfo Authenticated - Show groups that user is member', function () {
     $user = Sanctum::actingAs(
         User::factory()->create(),

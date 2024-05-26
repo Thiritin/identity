@@ -17,9 +17,14 @@ class GroupUserPolicy
         return ($user->scopeCheck('groups.read') && $groupUser->isMember());
     }
 
-    public function create(User $user, GroupUser $groupUser): bool
+    public function update(User $user, GroupUser $groupUser): bool
     {
         return $user->scopeCheck('groups.update') && $groupUser->isAdmin();
+    }
+
+    public function create(User $user, GroupUser $groupUserInitiator): bool
+    {
+        return $user->scopeCheck('groups.update') && $groupUserInitiator->isAdmin();
     }
 
     public function delete(User $user, GroupUser $groupUser): Response
@@ -27,7 +32,7 @@ class GroupUserPolicy
         if ($groupUser->level === GroupUserLevel::Owner) {
             return Response::deny("Owners cannot be removed from group.");
         }
-        if($user->scopeCheck('groups.update') && $groupUser->isAdmin()) {
+        if ($user->scopeCheck('groups.update') && $groupUser->isAdmin()) {
             return Response::allow();
         }
         return Response::deny('Insufficient permissions, you cannot delete users.');

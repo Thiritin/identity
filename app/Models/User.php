@@ -112,6 +112,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         activity()
             ->by($this)
             ->log('mail-change-mail');
+
         Cache::put(
             'user:'.$this->hashid.':newEmail',
             $newEmail,

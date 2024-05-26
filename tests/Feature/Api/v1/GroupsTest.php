@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
 use App\Models\Group;
 use App\Models\Role;
@@ -13,6 +14,7 @@ use function Pest\Laravel\get;
 use function Pest\Laravel\post;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\put;
+use function Pest\Laravel\putJson;
 
 uses(RefreshDatabase::class);
 
@@ -30,13 +32,11 @@ test('Create Group success as Admin', function () {
     $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-create-group-test.png",
     ];
     $request = postJson(route('api.v1.groups.store'), $data);
     $request->assertSuccessful();
     assertDatabaseHas('groups', [
         "type" => "none",
-        "logo" => "https://test.de/img-create-group-test.png",
     ]);
 });
 
@@ -52,7 +52,6 @@ test('Create Group and validate user is set as owner', function () {
     $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-create-group-test.png",
     ];
     $request = postJson(route('api.v1.groups.store'), $data);
     $request->assertSuccessful();
@@ -75,37 +74,39 @@ test('Create Group fails as non Admin', function () {
     $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-create-group-test.png",
     ];
     $request = postJson(route('api.v1.groups.store'), $data);
     $request->assertForbidden();
     assertDatabaseMissing('groups', [
         "type" => "none",
-        "logo" => "https://test.de/img-create-group-test.png",
+        "name" => "Testgroup",
     ]);
 });
 
 test('Update Group success as Admin', function () {
     $group = Group::factory()->create();
-    $role = Role::findOrCreate('superadmin');
 
     $user = Sanctum::actingAs(
         User::factory()->create(),
         ['groups.read', 'groups.update', 'groups.delete']
     );
-    $user->assignRole('superadmin');
 
     $group->users()->sync([$user->id => ['level' => GroupUserLevel::Owner]]);
     $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-create-group-test.png",
     ];
-    $request = put(route('api.v1.groups.update', $group), $data);
+    // Assert $user is level owner in group
+    assertDatabaseHas('group_user', [
+        "level" => "owner",
+        "group_id" => $group->id,
+        "user_id" => $user->id,
+
+    ]);
+    $request = putJson(route('api.v1.groups.update', $group), $data);
     $request->assertSuccessful();
     assertDatabaseHas('groups', [
         "type" => "none",
-        "logo" => "https://test.de/img-create-group-test.png",
     ]);
 });
 
@@ -121,39 +122,14 @@ test('Update Group fails as member', function () {
     $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-create-group-test.png",
     ];
     $request = put(route('api.v1.groups.update', $group), $data);
     $request->assertForbidden();
     assertDatabaseMissing('groups', [
-        "type" => "none",
-        "logo" => "https://test.de/img-create-group-test.png",
-    ]);
-});
-
-
-test('Update Group fails as invited', function () {
-    $group = Group::factory()->create();
-
-    $user = Sanctum::actingAs(
-        User::factory()->create(),
-        ['groups.read', 'groups.update', 'groups.delete']
-    );
-
-    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Invited]]);
-    $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-create-group-test.png",
-    ];
-    $request = put(route('api.v1.groups.update', $group), $data);
-    $request->assertForbidden();
-    assertDatabaseMissing('groups', [
-        "type" => "none",
-        "logo" => "https://test.de/img-create-group-test.png",
     ]);
 });
-
 
 test('Update Group fails as moderator', function () {
     $group = Group::factory()->create();
@@ -167,13 +143,12 @@ test('Update Group fails as moderator', function () {
     $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-create-group-test.png",
     ];
     $request = put(route('api.v1.groups.update', $group), $data);
     $request->assertForbidden();
     assertDatabaseMissing('groups', [
         "type" => "none",
-        "logo" => "https://test.de/img-create-group-test.png",
+        "name" => "Testgroup",
     ]);
 });
 
@@ -189,13 +164,12 @@ test('Update Group success as Owner', function () {
     $data = [
         "type" => "none",
         "name" => "Testgroup",
-        "logo" => "https://test.de/img-update-as-owner-group-test.png",
     ];
     $request = put(route('api.v1.groups.update', $group), $data);
     $request->assertSuccessful();
     assertDatabaseHas('groups', [
         "type" => "none",
-        "logo" => "https://test.de/img-update-as-owner-group-test.png",
+        "name" => "Testgroup",
     ]);
 });
 
@@ -251,13 +225,10 @@ test('Get single group', function () {
 
 test('Get paginated result set of group as Admin', function () {
     $group = Group::factory()->create();
-
-    $role = Role::findOrCreate('superadmin');
     $user = Sanctum::actingAs(
         User::factory()->create(),
         ['groups.read', 'groups.update', 'groups.delete']
     );
-    $user->assignRole('superadmin');
     $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member]]);
     $request = get(route('api.v1.groups.index', $group));
     $request->assertSuccessful();
@@ -266,7 +237,7 @@ test('Get paginated result set of group as Admin', function () {
     ]);
 });
 
-test('Invite member to group as admin', function () {
+test('Add member to group as admin via email', function () {
     $group = Group::factory()->create();
 
     $user = Sanctum::actingAs(
@@ -276,20 +247,26 @@ test('Invite member to group as admin', function () {
     $userToBeInvited = User::factory()->create();
     $data = [
         "email" => $userToBeInvited->email,
-        "level" => "invited",
+        "level" => "member",
     ];
     $group->users()->sync([$user->id => ['level' => GroupUserLevel::Admin]]);
 
     $request = post(route('api.v1.groups.users.store', $group), $data);
     $request->assertSuccessful();
+    // verify response contains user_id, group_id and level
+    $request->assertJsonFragment([
+        "user_id" => $userToBeInvited->id,
+        "group_id" => $group->id,
+        "level" => "member",
+    ]);
     assertDatabaseHas('group_user', [
         "user_id" => $userToBeInvited->id,
         "group_id" => $group->id,
-        "level" => "invited",
+        "level" => "member",
     ]);
 });
 
-test('Add member to group as admin', function () {
+test('Add member to group as admin via id', function () {
     $group = Group::factory()->create();
 
     $user = Sanctum::actingAs(
@@ -298,18 +275,45 @@ test('Add member to group as admin', function () {
     );
     $userToBeInvited = User::factory()->create();
     $data = [
-        "email" => $userToBeInvited->email,
+        "id" => $userToBeInvited->hashid,
         "level" => "member",
     ];
     $group->users()->sync([$user->id => ['level' => GroupUserLevel::Admin]]);
 
     $request = post(route('api.v1.groups.users.store', $group), $data);
+    $request->assertSessionHasNoErrors();
     $request->assertSuccessful();
+    // verify response contains user_id, group_id and level
+    $request->assertJsonFragment([
+        "user_id" => $userToBeInvited->id,
+        "group_id" => $group->id,
+        "level" => "member",
+    ]);
     assertDatabaseHas('group_user', [
         "user_id" => $userToBeInvited->id,
         "group_id" => $group->id,
         "level" => "member",
     ]);
+});
+
+test('Fail add member when specifying both id and email', function () {
+    $group = Group::factory()->create();
+
+    $user = Sanctum::actingAs(
+        User::factory()->create(),
+        ['groups.read', 'groups.update', 'groups.delete']
+    );
+    $userToBeInvited = User::factory()->create();
+    $data = [
+        "id" => $userToBeInvited->hashid,
+        "email" => $userToBeInvited->email,
+        "level" => "member",
+    ];
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Admin]]);
+
+    $request = postJson(route('api.v1.groups.users.store', $group), $data, ['Accept' => 'application/json']);
+    $request->assertJsonValidationErrorFor('id');
+    $request->assertJsonValidationErrorFor('email');
 });
 
 test('Add member to group as admin without correct scope', function () {
@@ -397,3 +401,65 @@ test('Get list of members as admin', function () {
     ]);
 });
 
+test('Ensure normal user can only see their own groups via groups index', function () {
+    $group = Group::factory()->create();
+
+    $user = Sanctum::actingAs(
+        User::factory()->create(),
+        ['groups.read']
+    );
+
+    $request = get(route('api.v1.groups.index', $group));
+    $request->assertSuccessful();
+    $request->assertJsonMissing([
+        "name" => $group->name,
+    ]);
+});
+
+
+test('Ensure that staff user can see all department and own groups', function () {
+    $user = Sanctum::actingAs(
+        User::factory()->create(),
+        ['groups.read']
+    );
+    // Add user to group with system_name staff, create it first
+    $staffGroup = Group::factory()->create([
+        "system_name" => "staff",
+        "type" => GroupTypeEnum::Automated,
+    ]);
+    // Add user to group
+    $staffGroup->users()->sync([$user->id => ['level' => GroupUserLevel::Member]]);
+
+    // Other Group of type none
+    $groupMem = Group::factory()->create([
+        "type" => GroupTypeEnum::Default,
+    ]);
+    // Add user to group
+    $groupMem->users()->sync([$user->id => ['level' => GroupUserLevel::Member]]);
+
+    // Other group where user is not member
+    $group2 = Group::factory()->create([
+        "type" => GroupTypeEnum::Default,
+    ]);
+    // Remove user
+    $group2->users()->detach($user->id);
+
+    $group = Group::factory()->create([
+        "type" => GroupTypeEnum::Department,
+    ]);
+    // Add user to group
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member]]);
+
+    $request = get(route('api.v1.groups.index'));
+    $request->assertSuccessful();
+    $request->assertJsonFragment([
+        "name" => $groupMem->name,
+    ]);
+    $request->assertJsonFragment([
+        "name" => $staffGroup->name,
+    ]);
+    // group2 should be missing
+    $request->assertJsonMissing([
+        "name" => $group2->name,
+    ]);
+});
