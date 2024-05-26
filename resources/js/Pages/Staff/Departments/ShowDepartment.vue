@@ -3,7 +3,7 @@
     import BaseButton from '../../../Components/BaseButton.vue'
     import { Head, useForm } from '@inertiajs/vue3'
     import SiteHeader from '../../../Components/Staff/SiteHeader.vue'
-    import { ref } from 'vue'
+    import { ref, useAttrs } from 'vue'
     import Dialog from 'primevue/dialog'
     import Button from 'primevue/button'
     import PrimaryButton from '../../../Components/PrimaryButton.vue'
@@ -38,8 +38,10 @@
     const props = defineProps({
         group: Object,
         users: Array,
+        canEdit: Boolean,
     })
 
+    const attrs = useAttrs()
     const form = useForm({})
 </script>
 
@@ -48,7 +50,7 @@
         <Head :title="group.name"></Head>
         <SiteHeader :title="group.name">
             <!-- Template Action -->
-            <template v-slot:action>
+            <template v-slot:action v-if="canEdit">
                 <div class="flex gap-2">
                     <BaseButton
                         :href="route('staff.departments.members.create',{department: group.hashid})"
@@ -71,7 +73,7 @@
                             <div class="text-lg font-semibold">{{ user.name }}</div>
                             <div class="text-sm text-gray-600">{{ user.level }}</div>
                         </div>
-                        <div class="flex gap-2">
+                        <div class="flex gap-2" v-if="canEdit && user.id !== attrs.user.id">
                             <BaseButton
                                 :href="route('staff.departments.members.edit', {department: group.hashid, member: user.id})"
                                 class="text-primary-600 font-semibold hover:text-primary-900"

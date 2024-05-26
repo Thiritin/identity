@@ -41,7 +41,8 @@ class DepartmentsController extends Controller
                 'profile_photo_path' => (is_null($user->profile_photo_path)) ? null : Storage::drive('s3-avatars')->url($user->profile_photo_path),
                 'level' => $user->pivot->level,
                 'title' => $user->pivot->title,
-            ])
+            ]),
+            'canEdit' => $department->isAdmin($request->user())
         ]);
     }
 

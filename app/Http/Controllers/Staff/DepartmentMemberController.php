@@ -6,6 +6,7 @@ use App\Enums\GroupUserLevel;
 use App\Http\Controllers\Controller;
 use App\Models\Group;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\ValidationException;
@@ -49,8 +50,16 @@ class DepartmentMemberController extends Controller
         ]);
     }
 
+    /**
+     * @throws AuthorizationException
+     * @throws ValidationException
+     */
     public function update(Group $department, User $member, Request $request)
     {
+        if ($member->id == $request->user()->id) {
+            throw ValidationException::withMessages(["You cannot update your own level."]);
+        }
+
         $data = $request->validate([
             'level' => new Enum(GroupUserLevel::class),
         ]);
@@ -64,8 +73,16 @@ class DepartmentMemberController extends Controller
         return to_route("staff.departments.show", ['department' => $department->hashid()]);
     }
 
+    /**
+     * @throws AuthorizationException
+     * @throws ValidationException
+     */
     public function destroy(Group $department, User $member, Request $request)
     {
+        if ($member->id == $request->user()->id) {
+            throw ValidationException::withMessages(["You cannot remove yourself."]);
+        }
+
         $requestMember = $department->users()->find($request->user())->pivot;
         $this->authorize('delete', $requestMember);
         $department->users()->detach($member);
