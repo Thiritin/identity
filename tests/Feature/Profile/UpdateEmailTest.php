@@ -4,6 +4,7 @@ namespace Tests\Feature\Profile;
 
 use App\Notifications\UpdateEmailNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
@@ -21,12 +22,13 @@ class UpdateEmailTest extends TestCase
         Notification::assertNothingSent();
 
         $user = $this->makeAuthSession();
-        $response = $this->post(route('settings.update-profile.update'), [
-            "name" => $user->name,
+        $response = $this->postJson(route('settings.update-profile.update'), [
+            "name" => 'validname',
             "email" => "test2@email.de"
         ]);
-
-        Notification::assertSentTo($user, UpdateEmailNotification::class);
+        $response->assertRedirect();
+        $response->assertSessionHasNoErrors();
+        Notification::assertSentTimes(UpdateEmailNotification::class, 1);
     }
 
     public function testCanUseSignedRouteToUpdateEmail()
@@ -35,10 +37,17 @@ class UpdateEmailTest extends TestCase
         $oldMail = $user->email;
 
         $this->assertNotEquals($user->email, "test2@email.de");
-        $response = $this->get(URL::signedRoute('settings.update-profile.email.update', ["newEmail" => "test2@email.de"]));
+        Cache::put('user:'.$user->hashid.':newEmail', "test2@email.de");
+        $response = $this->get(URL::signedRoute('settings.update-profile.email.update',
+            [
+                'id' => $user->hashid,
+                "newEmail" => sha1("test2@email.de")
+            ]));
 
-        $response->assertRedirect();
-        $this->assertEquals($user->email, "test2@email.de");
+        $user->refresh();
+        $response->assertInertia(fn($page) => $page->component('Auth/VerifyEmailSuccess'));
+        $response->assertSuccessful();
+        $this->assertEquals("test2@email.de", $user->email);
 
     }
 

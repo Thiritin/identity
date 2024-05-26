@@ -31,7 +31,7 @@ class GroupController extends Controller
             return $group;
         });
 
-        $myGroups = Auth::user()->groups()->where('level', '!=', GroupUserLevel::Invited)->withCount('users')->get();
+        $myGroups = Auth::user()->groups()->withCount('users')->get();
         $myGroups->map(function (Group $group) {
             if ($group->logo) {
                 $group->logo = Storage::url('avatars/'.$group->logo);

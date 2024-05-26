@@ -44,9 +44,4 @@ class GroupUser extends Pivot
     {
         return ($this->isModerator() || $this->level === GroupUserLevel::Member);
     }
-
-    public function isInvited(): bool
-    {
-        return ($this->level === GroupUserLevel::Invited);
-    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GroupUserStoreRequest;
 use App\Http\Resources\V1\GroupUserCollection;
+use App\Http\Resources\V1\GroupUserResource;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -24,8 +25,14 @@ class GroupUserController extends Controller
     public function store(GroupUserStoreRequest $request, Group $group)
     {
         $this->authorize('create', [$group->users()->find($request->user()->id)->pivot]);
-        $user = User::whereEmail($request->validationData()['email'])->firstOrFail();
+
+        $useField = isset($request->validationData()['email']) ? 'email' : 'id';
+        $user = match ($useField) {
+            'email' => User::where('email', $request->validationData()['email'])->firstOrFail(),
+            'id' => User::findByHashidOrFail($request->validationData()['id']),
+        };
         $group->users()->attach($user, ['level' => $request->validationData()['level']]);
+        return new GroupUserResource($group->users()->find($user->id));
     }
 
     public function destroy(Group $group, User $user, Request $request)
@@ -33,5 +40,6 @@ class GroupUserController extends Controller
         $pivot = $group->users()->find($request->user()->id)->pivot;
         $this->authorize('delete', [$pivot]);
         $group->users()->detach($user);
+        return response(null, 204);
     }
 }

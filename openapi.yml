@@ -338,12 +338,11 @@ paths:
   '/groups/{group}/users':
     get:
       summary: List members
-      description: Show members of the groups. Please note that invited members will be omitted by default.
-      security:
-        - OpenID:
-            - groups.update
-        - AccessToken:
-            - groups.update
+      description: Show members of the groups.
+                     - OpenID:
+                     - groups.update
+                     - AccessToken:
+                         - groups.update
       parameters:
         - in: path
           name: group
@@ -357,9 +356,6 @@ paths:
           schema:
             type: string
           examples:
-            invited:
-              value: invited
-              description: Shows any member that is invited to a group but has not accepted the invitation.
             member:
               value: member
               description: Shows any member that has the member level.
@@ -372,10 +368,7 @@ paths:
             owner:
               value: owner
               description: Shows any member that has the owner level.
-            only_members:
-              value: 'member,moderator,admin,owner'
-              description: 'Shows only members that are either a member, moderator admin or owner.'
-          description: Filter results by user level (By default, all members are shown, except invited)
+          description: Filter results by user level (By default, all members are shown)
           required: true
       responses:
         '200':
@@ -436,7 +429,7 @@ paths:
       operationId: getGroupUsers
     post:
       summary: Add member
-      description: Add a new user to the group, use status "invited" to send an invitation to the user.
+      description: Add a new user to the group.
       security:
         - OpenID:
             - groups.update
@@ -661,9 +654,6 @@ components:
     GroupUserForm:
       type: object
       properties:
-        email:
-          type: string
-          example: thiritin@eurofurence.org
         level:
           type: string
           enum:
@@ -671,11 +661,24 @@ components:
             - moderator
             - admin
             - owner
-          default: invited
-          description: 'Please note, adding someone with level "invited" will send an invitation email to the user.'
+          default: member
       required:
-        - email
         - level
+      oneOf:
+        - properties:
+            id:
+              type: string
+              description: The user id, cannot be used with email when adding a user
+              example: 1VJEQAYWW54TZ5VD
+          required:
+            - id
+        - properties:
+            email:
+              type: string
+              description: The email of the user, cannot be used with id when adding a user
+              example: thiritin@eurofurence.org
+          required:
+            - email
     Group:
       type: object
       properties:
