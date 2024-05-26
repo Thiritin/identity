@@ -20,8 +20,7 @@ class GroupObserver
 
     public function updated(Group $group): void
     {
-        NextcloudService::checkUserExists("test22222");
-        if ($group->isDirty('nextcloud_folder_name')) {
+        if ($group->isDirty('nextcloud_folder_name') && !app()->runningUnitTests()) {
             // Update or create the folder via nextcloud
             if ($group->nextcloud_folder_id) {
                 NextcloudService::renameFolder($group->nextcloud_folder_id, $group->nextcloud_folder_name);
@@ -40,7 +39,7 @@ class GroupObserver
 
             }
         }
-        if ($group->isDirty('name')) {
+        if ($group->nextcloud_folder_id && $group->isDirty('name') && !app()->runningUnitTests()) {
             // Update the display name of the group
             NextcloudService::setDisplayName($group->hashid, $group->name);
         }
