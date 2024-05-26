@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Profile\Settings\TwoFactor;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\YubikeyDestroyRequest;
+use App\Http\Requests\YubikeyStoreRequest;
 use App\Services\YubicoService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
@@ -30,12 +31,8 @@ class YubikeySetupController extends Controller
     }
 
     // Add new Yubikey
-    public function store(Request $request)
+    public function store(YubikeyStoreRequest $request)
     {
-        $request->validate([
-            'code' => 'required|string',
-            'name' => 'nullable|string|max:80',
-        ]);
         $limitKey = 'yubikey-setup-'.$request->user()->id;
         // Rate limit this endpoint
         if (RateLimiter::tooManyAttempts($limitKey, 10)) {
@@ -46,25 +43,22 @@ class YubikeySetupController extends Controller
         $yubico->verify($request->input('code'));
 
         // Check if the Yubikey is already registered
-        if ($request->user()->twoFactors()->where('identifier', $identifier)->exists()) {
+        if ($request->user()->twoFactors()->where('identifier', $yubico->identifier)->exists()) {
             throw ValidationException::withMessages(['code' => 'This Yubikey is already registered.']);
         }
         // Create the Yubikey
         $request->user()->twoFactors()->create([
             'name' => $request->input('name'),
-            'identifier' => $identifier,
+            'identifier' => $yubico->identifier,
             'type' => 'yubikey',
         ]);
         return redirect()->route('settings.two-factor.yubikey');
     }
 
     // Delete Yubikey
-    public function destroy(Request $request)
+    public function destroy(YubikeyDestroyRequest $request)
     {
-        $data = $request->validate([
-            'password' => 'required|string',
-            'keyId' => 'required|integer|exists:two_factors,id',
-        ]);
+        $data = $request->validated();
         // Verify that password is correct
         $userPassword = auth()->user()->password;
         if (!Hash::check($data['password'], $userPassword)) {

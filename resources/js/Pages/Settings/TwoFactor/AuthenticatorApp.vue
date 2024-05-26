@@ -1,10 +1,13 @@
 <script setup>
 import SettingsHeader from "@/Components/Settings/SettingsHeader.vue";
 import SettingsSubHeader from "@/Components/Settings/SettingsSubHeader.vue";
-import {Head, useForm} from "@inertiajs/vue3";
-import BaseInput from "@/Components/BaseInput.vue";
-import {ref, watch} from "vue";
+import {Head} from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import {useForm} from 'laravel-precognition-vue-inertia'
+import InputText from "primevue/inputtext";
+import InlineMessage from "primevue/inlinemessage";
+import Button from "primevue/button";
+import {watch} from "vue";
 
 const props = defineProps({
     secret: {
@@ -17,38 +20,36 @@ const props = defineProps({
     }
 })
 
-const code = ref('')
-
-const form = useForm({
+const enableForm = useForm('post', route('settings.two-factor.totp.store'), {
     code: '',
     secret: props.secret
 })
 
-const deleteForm = useForm({
+const deleteForm = useForm('delete', route('settings.two-factor.totp.destroy'), {
     password: ''
 })
 
 function submitForm() {
-    form.code = code.value;
-    form.post(route('settings.two-factor.totp.store'))
+    enableForm.submit()
 }
 
 function deactivateTotp() {
-    deleteForm.delete(route('settings.two-factor.totp.destroy'))
+    deleteForm.submit()
 }
 
 // Ensure that form.code does not extend 6 characters
-watch(code, (value) => {
-    let newValue = value;
-    if (value.length > 6) {
+
+watch(enableForm, (value) => {
+    let newValue = value.code;
+    if (value.code.length > 6) {
         newValue = newValue.substring(0, 6)
     }
     // Only allow numbers
-    if (!value.match(/^[0-9]*$/)) {
-        newValue = newValue.substring(0, value.length - 1)
+    if (!value.code.match(/^[0-9]*$/)) {
+        newValue = newValue.substring(0, value.code.length - 1)
     }
 
-    code.value = newValue;
+    enableForm.code = newValue;
 }, {immediate: true, deep: true, flush: 'post'})
 </script>
 
@@ -59,23 +60,30 @@ watch(code, (value) => {
         <SettingsSubHeader
             class="mb-4">Please scan the QRCode below and enter the code provided by your authenticator app.
         </SettingsSubHeader>
-        <form @submit.prevent="submitForm">
-            <div class="mb-4">
+        <form @submit.prevent="submitForm" class="space-y-6">
+            <div>
                 <img class="mx-auto bg-white" :src="qrCode" alt="QR Code">
                 <small class="text-center w-full block">{{ secret }}</small>
             </div>
-            <div class="mb-4">
-                <label class="font-semibold text-xs" for="code">Code</label>
-                <BaseInput
-                    v-model="code"
-                    type="text"
-                    pattern="[0-9]{6}"
-                    inputmode="numeric"
-                    name="code"
-                    :error="form.errors.code"
-                ></BaseInput>
+            <div class="flex flex-col gap-2">
+                <label for="code">{{ $trans('code') }}</label>
+                <InputText id="code"
+                           type="number"
+                           @change="enableForm.validate('code')"
+                           :invalid="enableForm.invalid('code')"
+                           v-model.trim.lazy="enableForm.code"
+                />
+                <InlineMessage v-if="enableForm.invalid('code')" severity="error">{{ enableForm.errors.code }}
+                </InlineMessage>
             </div>
-            <PrimaryButton type="submit" class="ml-auto block">Submit</PrimaryButton>
+            <div class="flex justify-end">
+                <Button
+                    :loading="enableForm.processing"
+                    type="submit"
+                    class="block"
+                    :label="$trans('submit')"
+                />
+            </div>
         </form>
     </div>
     <div v-else>
@@ -83,16 +91,18 @@ watch(code, (value) => {
         <SettingsSubHeader
             class="mb-4">To disable two factor authentication, please enter your password.
         </SettingsSubHeader>
-        <form @submit.prevent="deactivateTotp">
-            <div class="mb-4">
-                <label class="font-semibold text-xs" for="password">Current Password</label>
-                <BaseInput
-                    v-model="deleteForm.password"
-                    type="password"
-                    id="password"
-                    name="code"
-                    :error="deleteForm.errors.password"
-                ></BaseInput>
+        <form @submit.prevent="deactivateTotp" class="space-y-6">
+            <div class="flex flex-col gap-2">
+                <label for="password">{{ $trans('password') }}</label>
+                <InputText id="password"
+                           type="password"
+                           autocomplete="password"
+                           @change="deleteForm.validate('password')"
+                           :invalid="deleteForm.invalid('password')"
+                           v-model.trim.lazy="deleteForm.password"
+                />
+                <InlineMessage v-if="deleteForm.invalid('password')" severity="error">{{ deleteForm.errors.password }}
+                </InlineMessage>
             </div>
             <PrimaryButton @click="deactivateTotp" class="ml-auto block">Disable</PrimaryButton>
         </form>

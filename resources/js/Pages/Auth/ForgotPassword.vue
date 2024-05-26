@@ -13,39 +13,29 @@
             >
                 {{ $trans('forgot_password_helptext') }}
             </div>
-            <FormInput
-                id="email"
-                v-model.trim.lazy="form.email"
-                :class="{
-                    'border-red-500 focus:border-red-500':
-                        errors?.email != null,
-                }"
-                :error="errors.email"
-                :label="$trans('email')"
-                autocomplete="email"
-                placeholder="me@example.com"
-                type="email"
-            />
+
+            <div class="flex flex-col gap-2">
+                <label for="email">{{ $trans('email') }}</label>
+                <InputText id="email"
+                           :invalid="errors?.email"
+                           @change="form.validate('email')"
+                           v-model.trim.lazy="form.email"
+                />
+                <InlineMessage v-if="form.invalid('email')" severity="error">{{ form.errors.email }}</InlineMessage>
+            </div>
         </div>
-        <div class="flex flex-col">
-            <button
-                :class="
-                    form.processing || status !== undefined
-                        ? 'bg-primary-400'
-                        : 'bg-primary-500'
-                "
-                :disabled="form.processing || status !== undefined"
-                class="py-3 rounded-lg px-12 ml-auto text-white text-2xl mb-4 font-semibold focus:outline-none"
-                type="submit"
-            >
-                {{ $trans('send_reset_mail') }}
-            </button>
+        <div class="flex flex-row justify-between">
             <Link
                 :href="route('auth.login.view')"
-                class="ml-auto text-gray-700 dark:text-primary-300"
+                class="text-gray-700 dark:text-primary-300"
             >
                 {{ $trans('back_to_login') }}
             </Link>
+            <Button
+                :loading="form.processing"
+                type="submit"
+                :label="$trans('send_reset_mail')"
+            />
         </div>
     </form>
     <div v-else>
@@ -54,24 +44,29 @@
         </div>
     </div>
 </template>
-<script>
+<script setup>
 import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import FormInput from '@/Auth/Form/AuthFormInput.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import {Head, Link} from '@inertiajs/vue3'
+import InputText from "primevue/inputtext";
+import InlineMessage from "primevue/inlinemessage";
+import Button from "primevue/button";
+import {useForm} from 'laravel-precognition-vue-inertia';
 
-export default {
-    components: {Head, AuthLayout, Logo, LoginScreenWelcome, FormInput, Link},
-    layout: AuthLayout,
-    props: {status: String, errors: Object, canSeeLogin: Boolean},
-    data() {
-        return {form: this.$inertia.form({email: null}), show: true}
-    },
-    methods: {
-        submit() {
-            this.form.post(this.route('auth.forgot-password.store'))
-        },
-    },
+defineOptions({layout: AuthLayout});
+const props = defineProps({
+    status: String,
+    errors: Object,
+    canSeeLogin: Boolean,
+});
+
+const form = useForm('post', route('auth.forgot-password.store'), {
+    email: null,
+});
+
+function submit() {
+    form.submit();
 }
 </script>

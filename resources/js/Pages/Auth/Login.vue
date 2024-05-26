@@ -27,36 +27,29 @@
             </div>
         </div>
         <div class="space-y-4">
-            <FormInput
-                id="email"
-                v-model.trim.lazy="form.email"
-                :error="errors?.email"
-                :placeholder="$trans('email')"
-                :label="$trans('email')"
-                autocomplete="email"
-                autofocus
-                class="mb-4"
-                type="email"
-            />
-            <FormInput
-                id="password"
-                v-model.lazy="form.password"
-                :error="errors?.password"
-                :label="$trans('password')"
-                :placeholder="$trans('password')"
-                autocomplete="password"
-                class="mb-16"
-                type="password"
-            />
+            <div class="flex flex-col gap-2">
+                <label for="email">{{ $trans('email') }}</label>
+                <InputText id="email"
+                           @change="form.validate('email')"
+                           :invalid="form.invalid('email') || errors.nouser"
+                           v-model.trim.lazy="form.email"
+                />
+                <InlineMessage v-if="form.invalid('email')" severity="error">{{ form.errors.email }}</InlineMessage>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="password">{{ $trans('password') }}</label>
+                <InputText id="password"
+                           type="password"
+                           @change="form.validate('password')"
+                           :invalid="form.invalid('password') || errors.nouser"
+                           v-model.trim.lazy="form.password"
+                />
+                <InlineMessage v-if="form.invalid('password')" severity="error">{{ form.errors.password }}
+                </InlineMessage>
+            </div>
             <div class="relative flex items-start">
                 <div class="flex items-center h-5">
-                    <input
-                        id="remember"
-                        v-model.lazy="form.remember"
-                        class="form-checkbox focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 rounded"
-                        name="remember"
-                        type="checkbox"
-                    />
+                    <Checkbox id="remember" :binary="true" v-model="form.remember" name="remember"/>
                 </div>
                 <div class="ml-3 text-sm">
                     <label
@@ -67,56 +60,58 @@
                 </div>
             </div>
         </div>
-        <div class="flex flex-col">
-            <button
-                :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
-                :disabled="form.processing"
-                class="py-3 rounded-lg px-12 ml-auto text-white text-2xl mb-4 font-semibold focus:outline-none"
-                type="submit"
-            >
-                {{ $trans('sign_in') }}
-            </button>
+        <div class="flex flex-row justify-between">
             <Link
                 :href="route('auth.forgot-password.view')"
-                class="ml-auto text-gray-700 dark:text-primary-300"
+                class="text-gray-700 dark:text-primary-300 block"
             >
                 {{ $trans('forgot_password_btn') }}
             </Link>
+            <Button
+                :loading="form.processing"
+                type="submit"
+                :label="$trans('sign_in')"
+            />
         </div>
     </form>
 </template>
-<script>
+<script setup>
 import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import FormInput from '@/Auth/Form/AuthFormInput.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import {Head, Link} from '@inertiajs/vue3'
+import {ref} from 'vue'
+import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
+import Checkbox from 'primevue/checkbox';
+import InlineMessage from 'primevue/inlinemessage';
+import {useForm} from 'laravel-precognition-vue-inertia';
 
-export default {
-    components: {Head, AuthLayout, Logo, LoginScreenWelcome, FormInput, Link},
-    layout: AuthLayout,
-    props: {status: String, errors: Object},
-    data() {
-        return {
-            form: this.$inertia.form({
-                email: null,
-                password: null,
-                login_challenge: null,
-                remember: false,
-            }),
-            show: true,
-        }
-    },
-    methods: {
-        submit() {
-            const urlParams = new URLSearchParams(window.location.search)
-            this.form
-                .transform((data) => ({
-                    ...data,
-                    login_challenge: urlParams.get('login_challenge'),
-                }))
-                .post(this.route('auth.login.submit'))
-        },
-    },
+defineOptions({
+    layout: AuthLayout
+})
+
+const props = defineProps({
+    status: String,
+    errors: Object
+})
+
+const show = ref(true);
+const form = useForm('post', route('auth.login.submit'), {
+    email: null,
+    password: null,
+    login_challenge: null,
+    remember: false,
+})
+
+function submit() {
+    const urlParams = new URLSearchParams(window.location.search)
+    form
+        .transform((data) => ({
+            ...data,
+            login_challenge: urlParams.get('login_challenge'),
+        }))
+        .post(route('auth.login.submit'))
 }
 </script>

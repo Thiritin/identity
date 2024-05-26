@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Profile\Settings\TwoFactor;
 
 use App\Enums\TwoFactorTypeEnum;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\TwoFactor\TotpDestroyRequest;
+use App\Http\Requests\TwoFactor\TotpStoreRequest;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -38,13 +39,10 @@ class TotpSetupController extends Controller
     }
 
     // Add new totp device
-    public function store(Request $request)
+    public function store(TotpStoreRequest $request)
     {
         $tfa = $this->createTwoFactorAuth();
-        $data = $request->validate([
-            'code' => 'required|numeric|digits:6',
-            'secret' => 'required|string',
-        ]);
+        $data = $request->validated();
         // Verify that data->code is equal to cached value
         $cachedValue = Cache::get('user-'.auth()->user()->id.'-two-factor-user-cache');
         if (!isset($cachedValue['secret'])) {
@@ -68,11 +66,9 @@ class TotpSetupController extends Controller
     }
 
     // Delete totp device
-    public function destroy(Request $request)
+    public function destroy(TotpDestroyRequest $request)
     {
-        $data = $request->validate([
-            'password' => 'required|string',
-        ]);
+        $data = $request->validated();
         // Verify that password is correct
         $userPassword = auth()->user()->password;
         if (!Hash::check($data['password'], $userPassword)) {

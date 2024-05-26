@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PasswordResetRequest;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -17,18 +18,8 @@ class PasswordResetController extends Controller
         return Inertia::render('Auth/ResetPassword', $request->only(['email', 'token']));
     }
 
-    public function store(Request $request)
+    public function store(PasswordResetRequest $request)
     {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => [
-                'required',
-                'confirmed',
-                \Illuminate\Validation\Rules\Password::min(8)->mixedCase()->numbers()
-            ],
-        ]);
-
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, $password) {

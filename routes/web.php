@@ -10,13 +10,16 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\UpdateEmailController;
+use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('login', [LoginController::class, 'view'])->name(
         'login.view'
     );
-    Route::post('login', [LoginController::class, 'submit'])->name('login.submit');
+    Route::post('login', [LoginController::class, 'submit'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('login.submit');
 
     Route::get('two-factor',
         [\App\Http\Controllers\TwoFactorController::class, 'show'])
@@ -24,7 +27,8 @@ Route::prefix('auth')->name('auth.')->group(function () {
 
     Route::post('two-factor',
         [\App\Http\Controllers\TwoFactorController::class, 'submit'])
-        ->middleware('signed')->name('two-factor.submit');
+        ->middleware(['signed', HandlePrecognitiveRequests::class])
+        ->name('two-factor.submit');
 
     Route::get('consent', ConsentController::class)->name('consent');
     Route::get('logout', LogoutController::class)->name('logout');
@@ -34,13 +38,19 @@ Route::prefix('auth')->name('auth.')->group(function () {
         Route::redirect('choose/login', '/auth/portal/login', 301)->name('oidc.login');
         // Register
         Route::inertia('register', 'Auth/Register')->name('register.view');
-        Route::post('register', RegisterController::class)->middleware('guest')->name('register.store');
+        Route::post('register', RegisterController::class)
+            ->middleware(['guest', HandlePrecognitiveRequests::class])
+            ->name('register.store');
         // Password Reset
         Route::inertia('forgot-password', 'Auth/ForgotPassword')->name('forgot-password.view');
-        Route::post('forgot-password', ForgotPasswordController::class)->name('forgot-password.store');
+        Route::post('forgot-password', ForgotPasswordController::class)
+            ->middleware([HandlePrecognitiveRequests::class])
+            ->name('forgot-password.store');
         // Set new Password
         Route::get('password-reset', [PasswordResetController::class, 'view'])->name('password-reset.view');
-        Route::post('password-reset', [PasswordResetController::class, 'store'])->name('password-reset.store');
+        Route::post('password-reset', [PasswordResetController::class, 'store'])
+            ->middleware([HandlePrecognitiveRequests::class])
+            ->name('password-reset.store');
     });
 
     // OIDC Frontchannel Logout

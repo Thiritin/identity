@@ -27,6 +27,8 @@
         "vue-cropperjs": "^5.0.0"
     },
     "dependencies": {
+        "laravel-precognition-vue-inertia": "^0.5.4",
+        "primeicons": "^7.0.0",
         "primevue": "^3.51.0"
     }
 }
