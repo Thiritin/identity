@@ -16,4 +16,5 @@ If you discover any security related issues, please email me@thiritin.com instea
 ## Credits
 
 - [Thiritin](https://github.com/thiritin)
+- [Invisi](https://github.com/invisi)
 - [All Contributors](../../contributors)
