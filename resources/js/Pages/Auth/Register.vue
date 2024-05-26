@@ -15,7 +15,7 @@
                        :invalid="form.invalid('username')"
                        v-model.trim.lazy="form.username"
             />
-            <InlineMessage v-if="form.invalid('username')" severity="error">{{ form.errors.username }}
+            <InlineMessage v-if="form.invalid('username')" seveGrity="error">{{ form.errors.username }}
             </InlineMessage>
         </div>
         <div class="flex flex-col gap-2">
