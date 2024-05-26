@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
@@ -39,12 +40,32 @@ class DepartmentMemberController extends Controller
         return redirect()->route('staff.departments.show', $department);
     }
 
-    public function edit(Group $department, User $user)
+    public function edit(Group $department, User $member)
     {
         return Inertia::render('Staff/DepartmentMember/DepartmentMemberEdit', [
             'department' => $department,
             // Load pivot data
-            'member' => $department->users()->where('user_id', $user->id)->first()
+            'member' => $department->users()->where('user_id', $member->id)->select(['id', 'name'])->first()
         ]);
+    }
+
+    public function update(Group $department, User $member, Request $request)
+    {
+        $data = $request->validate([
+            'level' => new Enum(GroupUserLevel::class),
+        ]);
+
+        $pivot = $department->users()->find($member->id)->pivot;
+        $this->authorize("update", [$department, $pivot]);
+        $pivot->update($data);
+
+        return to_route("staff.departments.show", ['department' => $department->hashid()]);
+    }
+
+    public function destroy(Group $department, User $member, Request $request)
+    {
+        $pivot = $department->users()->find($member->id)->pivot;
+        $this->authorize('delete', [$pivot]);
+        $department->users()->detach($member);
     }
 }

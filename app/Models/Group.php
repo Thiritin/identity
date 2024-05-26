@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\GroupTypeEnum;
+use App\Enums\GroupUserLevel;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -58,6 +59,13 @@ class Group extends Model
                     'title',
                 ]
             );
+    }
+
+    public function owner()
+    {
+        return $this->hasOneThrough(User::class, GroupUser::class, "group_id", "id", "id", "user_id")
+            ->where('level', GroupUserLevel::Owner)
+            ->select(["name"]);
     }
 
     public function apps()
