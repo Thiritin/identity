@@ -339,10 +339,11 @@ paths:
     get:
       summary: List members
       description: Show members of the groups.
-                     - OpenID:
-                     - groups.update
-                     - AccessToken:
-                         - groups.update
+      security:
+        - OpenID:
+            - groups.update
+        - AccessToken:
+            - groups.update
       parameters:
         - in: path
           name: group
