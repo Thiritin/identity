@@ -43,7 +43,7 @@ CMD sh -c "composer install && php artisan octane:start --watch --host=0.0.0.0 -
 ######################################################
 FROM base as vite-vendor-build
 WORKDIR /app
-RUN COMPOSER_ALLOW_SUPERUSER=1 | rm composer.lock composer.json && composer require tightenco/ziggy --ignore-platform-reqs
+RUN COMPOSER_ALLOW_SUPERUSER=1 | rm composer.lock composer.json && composer require tightenco/ziggy:^1.0 --ignore-platform-reqs
 ######################################################
 # NodeJS Stage
 ######################################################
