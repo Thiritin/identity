@@ -17,9 +17,9 @@ class GroupUserPolicy
         return ($user->scopeCheck('groups.read') && $groupUser->isMember());
     }
 
-    public function update(User $user, GroupUser $groupUser): bool
+    public function update(User $user, GroupUser $groupUserInitiator): bool
     {
-        return $user->scopeCheck('groups.update') && $groupUser->isAdmin();
+        return $user->scopeCheck('groups.update') && $groupUserInitiator->isAdmin();
     }
 
     public function create(User $user, GroupUser $groupUserInitiator): bool

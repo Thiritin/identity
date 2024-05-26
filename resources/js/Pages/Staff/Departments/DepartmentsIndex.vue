@@ -14,19 +14,6 @@
 
 <template>
     <SiteHeader class="mb-4" title="Departments"></SiteHeader>
-    <!--
-    <div class="xl:grid grid-cols-2 gap-4">
-        <div>
-            <Head title="Departments"></Head>
-            <PageHeadline>My Department(s)</PageHeadline>
-            <ListDepartments :departments="myGroups"></ListDepartments>
-        </div>
-        <div>
-            <PageHeadline>All Departments</PageHeadline>
-            <ListDepartments :departments="groups"></ListDepartments>
-        </div>
-    </div>-->
-    <!-- List of Groups -->
     <!-- Department list -->
     <ul role="list" class="divide-y divide-gray-900/5">
         <li v-for="department in groups" :key="department.id"
@@ -49,9 +36,9 @@
             </div>
             <Link :href="route('staff.departments.show',{department: department.hashid})" class="flex items-center ">
                 <div
-                    :class="'rounded-full flex-none py-1 px-2 mr-5 text-xs font-medium ring-1 ring-inset'">
-                    <!-- todo: replace with user's role -->
-                    Member
+                    v-if="myGroups[department.id]"
+                    class="rounded-full flex-none py-1 px-2 mr-5 text-xs font-medium ring-1 ring-inset">
+                    {{ myGroups[department.id] }}
                 </div>
                 <ChevronRightIcon class="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
             </Link>

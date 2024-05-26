@@ -13,16 +13,20 @@ class DepartmentsController extends Controller
 {
     public function index(Request $request)
     {
-        $myDepartmentIds = $request->user()->groups()->where('type', GroupTypeEnum::Department)->pluck('id');
+        $myDepartments = $request->user()->groups()
+            ->where('type', GroupTypeEnum::Department)->select('id', 'level')->get()
+            ->mapWithKeys(fn($role) => [$role->id => ucwords($role->level)]);
+
         $departments = Group::where('type', GroupTypeEnum::Department)
             ->withCount('users')->get();
         $departmentsSortedByMembershipAndUserCount = $departments->sortByDesc(fn($department) => [
-            $myDepartmentIds->contains($department->id),
+            $myDepartments->contains($department->id),
             $department->users_count
         ]);
 
         return Inertia::render('Staff/Departments/DepartmentsIndex', [
             'groups' => $departmentsSortedByMembershipAndUserCount,
+            'myGroups' => $myDepartments,
         ]);
     }
 

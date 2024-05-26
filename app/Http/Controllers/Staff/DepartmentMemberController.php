@@ -55,8 +55,10 @@ class DepartmentMemberController extends Controller
             'level' => new Enum(GroupUserLevel::class),
         ]);
 
+        $requestMember = $department->users()->find($request->user())->pivot;
+        $this->authorize("update", $requestMember);
+
         $pivot = $department->users()->find($member->id)->pivot;
-        $this->authorize("update", [$department, $pivot]);
         $pivot->update($data);
 
         return to_route("staff.departments.show", ['department' => $department->hashid()]);
@@ -64,8 +66,8 @@ class DepartmentMemberController extends Controller
 
     public function destroy(Group $department, User $member, Request $request)
     {
-        $pivot = $department->users()->find($member->id)->pivot;
-        $this->authorize('delete', [$pivot]);
+        $requestMember = $department->users()->find($request->user())->pivot;
+        $this->authorize('delete', $requestMember);
         $department->users()->detach($member);
     }
 }
