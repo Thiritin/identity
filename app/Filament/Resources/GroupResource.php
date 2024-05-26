@@ -43,10 +43,17 @@ class GroupResource extends Resource
                                 ->label('Public ID')
                                 ->content(fn(?Group $record): string => $record?->hashid() ?? '-'),
                         ]),
+                        TextInput::make('system_name')
+                            ->label('System Name')
+                            ->hint('Unique system name, should be left empty in most cases.')
+                            ->unique('groups', 'system_name', ignoreRecord: true)
+                            ->disabled(fn(?Group $record) => $record?->exists),
                         TextInput::make('name')
-                            ->hint('Translatable')
-                            ->hintIcon('heroicon-m-language')
                             ->required(),
+                        TextInput::make('nextcloud_folder_name')
+                            ->label('Nextcloud Folder Name')
+                            ->hint('Leave empty if the group should not be allowed to access Nextcloud.')
+                            ->unique('groups', 'nextcloud_folder_name', ignoreRecord: true),
                         Textarea::make('description')->rows(5),
                     ]),
                 ]),
