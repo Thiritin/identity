@@ -535,6 +535,35 @@ components:
           readOnly: true
           items:
             type: string
+    User:
+      type: object
+      properties:
+        id:
+          readOnly: true
+          type: string
+          description: UUID of the user
+        name:
+          readOnly: true
+          type: string
+          description: Choosen username by the user
+        email:
+          readOnly: true
+          type: string
+          description: Primary email of the user
+        email_verified:
+          readOnly: true
+          type: boolean
+          description: 'Boolean value, true if email is verified. false if email is not verified.'
+        avatar:
+          readOnly: true
+          type: string
+          description: Returns full url of users avatar.
+        groups:
+          type: array
+          uniqueItems: true
+          readOnly: true
+          items:
+            type: string
     TokenIntrospection:
       type: object
       properties:

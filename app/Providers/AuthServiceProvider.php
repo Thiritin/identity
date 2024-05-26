@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Models\Group;
 use App\Models\GroupUser;
+use App\Models\User;
 use App\Policies\GroupPolicy;
 use App\Policies\GroupUserPolicy;
+use App\Policies\UserPolicy;
 use App\Services\Auth\AdminAuth;
 use App\Services\Auth\ApiGuard;
 use App\Services\Auth\TokenAuth;
@@ -26,6 +28,7 @@ class AuthServiceProvider extends ServiceProvider
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
         Group::class => GroupPolicy::class,
         GroupUser::class => GroupUserPolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**

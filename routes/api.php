@@ -23,6 +23,9 @@ Route::middleware('api')->prefix('v1/')->name('api.v1.')->group(function () {
      */
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('userinfo', UserinfoController::class)->name('userinfo');
+        Route::apiResource("users", \App\Http\Controllers\Api\v1\UserController::class, [
+            "only" => ["show"],
+        ]);
         Route::apiResource("groups", GroupController::class);
         Route::apiResource("groups.users", GroupUserController::class, [
             "only" => ["index", "store", "destroy"],
