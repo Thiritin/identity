@@ -96,7 +96,10 @@ class Group extends Model
 
     public function isAdmin(User $user)
     {
-        return $this->users->contains($user,
-            fn($user) => $user->pivot->level === 'admin' || $user->pivot->level === 'owner');
+        $member = $this->users->find($user);
+        if (!$member) {
+            return false;
+        }
+        return $member->pivot->level == GroupUserLevel::Admin || $member->pivot->level == GroupUserLevel::Owner;
     }
 }
