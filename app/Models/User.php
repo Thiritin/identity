@@ -124,7 +124,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
     public function groups()
     {
         return $this->belongsToMany(Group::class)
-            ->using('App\Models\GroupUser')
+            ->using(GroupUser::class)
             ->withPivot(
                 [
                     'level',
