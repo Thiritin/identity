@@ -30,6 +30,7 @@ export default {
                     900: '#001B19',
                 },
                 surface: {
+                    0: '#FFFFFF',
                     50: '#F9FAFB',
                     100: '#F9FAFB',
                     200: '#F4F6F8',

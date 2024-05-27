@@ -41,7 +41,7 @@
                                                 <li>
                                                     <StaffMainMenu :navigation="navigation"></StaffMainMenu>
                                                 </li>
-                                                <li>
+                                                <li v-if="teams.length">
                                                     <StaffTeamMenu :teams="teams"></StaffTeamMenu>
                                                 </li>
                                             </ul>
@@ -73,7 +73,7 @@
                             <StaffMainMenu :navigation="navigation"></StaffMainMenu>
                         </li>
                         <li>
-                            <StaffTeamMenu :teams="teams"></StaffTeamMenu>
+                            <StaffTeamMenu v-if="teams.length" :teams="teams"></StaffTeamMenu>
                         </li>
                         <li class="-mx-6 mt-auto">
                             <Menu as="div">
@@ -228,7 +228,7 @@ const profileNavMenu = [
 ]
 
 const teams = [
-    {id: 1, name: 'Registration', href: '#', initial: 'R', current: false},
+    //  {id: 1, name: 'Registration', href: '#', initial: 'R', current: false},
 ]
 
 const sidebarOpen = ref(false)

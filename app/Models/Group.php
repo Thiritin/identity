@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\GroupTypeEnum;
+use App\Enums\GroupUserLevel;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -60,6 +61,13 @@ class Group extends Model
             );
     }
 
+    public function owner()
+    {
+        return $this->hasOneThrough(User::class, GroupUser::class, "group_id", "id", "id", "user_id")
+            ->where('level', GroupUserLevel::Owner)
+            ->select(["name"]);
+    }
+
     public function apps()
     {
         return $this->belongsToMany(App::class);
@@ -88,7 +96,10 @@ class Group extends Model
 
     public function isAdmin(User $user)
     {
-        return $this->users->contains($user,
-            fn($user) => $user->pivot->level === 'admin' || $user->pivot->level === 'owner');
+        $member = $this->users->find($user);
+        if (!$member) {
+            return false;
+        }
+        return $member->pivot->level == GroupUserLevel::Admin || $member->pivot->level == GroupUserLevel::Owner;
     }
 }
