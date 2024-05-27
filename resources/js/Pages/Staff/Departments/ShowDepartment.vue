@@ -1,48 +1,48 @@
 <script setup>
-    import AppLayout from '../../../Layouts/AppLayout.vue'
-    import BaseButton from '../../../Components/BaseButton.vue'
-    import { Head, useForm } from '@inertiajs/vue3'
-    import SiteHeader from '../../../Components/Staff/SiteHeader.vue'
-    import { ref, useAttrs } from 'vue'
-    import Dialog from 'primevue/dialog'
-    import Button from 'primevue/button'
-    import PrimaryButton from '../../../Components/PrimaryButton.vue'
+import AppLayout from '../../../Layouts/AppLayout.vue'
+import BaseButton from '../../../Components/BaseButton.vue'
+import {Head, useForm} from '@inertiajs/vue3'
+import SiteHeader from '../../../Components/Staff/SiteHeader.vue'
+import {ref, useAttrs} from 'vue'
+import Dialog from 'primevue/dialog'
+import Button from 'primevue/button'
+import PrimaryButton from '../../../Components/PrimaryButton.vue'
 
 
-    const deleteModal = ref({
-        visible: false,
-        user: {
-            id: '',
-            name: '',
-        },
-        groupHash: '',
-    })
+const deleteModal = ref({
+    visible: false,
+    user: {
+        id: '',
+        name: '',
+    },
+    groupHash: '',
+})
 
-    function showDeleteModal(groupHash, user) {
-        deleteModal.value = {
-            groupHash,
-            user,
-            visible: true,
-        }
+function showDeleteModal(groupHash, user) {
+    deleteModal.value = {
+        groupHash,
+        user,
+        visible: true,
     }
+}
 
-    function deleteUser() {
-        form.delete(route('staff.departments.members.destroy', {
-            department: deleteModal.value.groupHash,
-            member: deleteModal.value.user.id,
-        }))
-        deleteModal.value.visible = false
-    }
+function deleteUser() {
+    form.delete(route('staff.departments.members.destroy', {
+        department: deleteModal.value.groupHash,
+        member: deleteModal.value.user.id,
+    }))
+    deleteModal.value.visible = false
+}
 
-    defineOptions({ layout: AppLayout })
-    const props = defineProps({
-        group: Object,
-        users: Array,
-        canEdit: Boolean,
-    })
+defineOptions({layout: AppLayout})
+const props = defineProps({
+    group: Object,
+    users: Array,
+    canEdit: Boolean,
+})
 
-    const attrs = useAttrs()
-    const form = useForm({})
+const attrs = useAttrs()
+const form = useForm({})
 </script>
 
 <template>
@@ -57,10 +57,10 @@
                         small
                         info>Add User
                     </BaseButton>
-                    <!-- @Todo Add Edit Department -->
+                    <!-- @Todo Add Edit Department
                     <BaseButton small primary :href="route('staff.departments.edit',{department: group.id})">Edit<span
                         class="sr-only">, department</span>
-                    </BaseButton>
+                    </BaseButton> -->
                 </div>
             </template>
         </SiteHeader>
@@ -95,7 +95,8 @@
         <Dialog v-model:visible="deleteModal.visible" modal header="Remove user from department"
                 :style="{ width: '25rem' }">
                                 <span class="p-text-secondary block mb-5">Really remove {{
-                                        deleteModal.user.name }}?</span>
+                                        deleteModal.user.name
+                                    }}?</span>
 
 
             <form action="#" method="post"

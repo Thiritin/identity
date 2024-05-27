@@ -1,14 +1,14 @@
 <script setup>
-    import AppLayout from '../../../Layouts/AppLayout.vue'
-    import SiteHeader from '../../../Components/Staff/SiteHeader.vue'
-    import ChevronRightIcon from '../../../Components/Icons/ChevronRightIcon.vue'
-    import { Link } from '@inertiajs/vue3'
+import AppLayout from '../../../Layouts/AppLayout.vue'
+import SiteHeader from '../../../Components/Staff/SiteHeader.vue'
+import ChevronRightIcon from '../../../Components/Icons/ChevronRightIcon.vue'
+import {Link} from '@inertiajs/vue3'
 
-    defineOptions({ layout: AppLayout })
-    const props = defineProps({
-        groups: Array,
-        myGroups: Array,
-    })
+defineOptions({layout: AppLayout})
+const props = defineProps({
+    groups: Array,
+    myGroups: Array,
+})
 
 </script>
 
@@ -28,10 +28,11 @@
                 </div>
                 <div class="mt-3 flex items-center gap-x-2.5 text-xs leading-5 text-gray-400">
                     <p class="truncate">{{ department.users_count }} Members</p>
-                    <svg viewBox="0 0 2 2" class="h-0.5 w-0.5 flex-none fill-gray-300">
-                        <circle cx="1" cy="1" r="1" />
-                    </svg>
-                    <p class="whitespace-nowrap">Lead by xxx</p>
+
+                    <!--<svg viewBox="0 0 2 2" class="h-0.5 w-0.5 flex-none fill-gray-300">
+                            <circle cx="1" cy="1" r="1"/>
+                        </svg>
+                        <p class="whitespace-nowrap">Lead by xxx</p> -->
                 </div>
             </div>
             <Link :href="route('staff.departments.show',{department: department.hashid})" class="flex items-center ">
@@ -40,7 +41,7 @@
                     class="rounded-full flex-none py-1 px-2 mr-5 text-xs font-medium ring-1 ring-inset">
                     {{ myGroups[department.id] }}
                 </div>
-                <ChevronRightIcon class="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
+                <ChevronRightIcon class="h-5 w-5 flex-none text-gray-400" aria-hidden="true"/>
             </Link>
         </li>
     </ul>

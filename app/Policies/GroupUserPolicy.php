@@ -35,6 +35,11 @@ class GroupUserPolicy
         if ($user->scopeCheck('groups.update') && $groupUser->isAdmin()) {
             return Response::allow();
         }
+
+        // check if user is of type admin
+        if ($groupUser->group->isAdmin($user)) {
+            return Response::allow();
+        }
         return Response::deny('Insufficient permissions, you cannot delete users.');
     }
 }

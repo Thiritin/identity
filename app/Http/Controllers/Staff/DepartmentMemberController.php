@@ -79,11 +79,11 @@ class DepartmentMemberController extends Controller
      */
     public function destroy(Group $department, User $member, Request $request)
     {
-        if ($member->id == $request->user()->id) {
+        if ($member->id === $request->user()->id) {
             throw ValidationException::withMessages(["You cannot remove yourself."]);
         }
 
-        $requestMember = $department->users()->find($request->user())->pivot;
+        $requestMember = $department->users()->find($member)->pivot;
         $this->authorize('delete', $requestMember);
         $department->users()->detach($member);
     }
