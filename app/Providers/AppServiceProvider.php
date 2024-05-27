@@ -52,6 +52,12 @@ class AppServiceProvider extends ServiceProvider
             return Http::baseUrl(config('services.hydra.public'));
         });
 
+        Http::macro('nextcloud', function () {
+            return Http::baseUrl(config('services.nextcloud.baseUrl'))
+                ->withHeader('OCS-APIRequest', "true")
+                ->withBasicAuth(config('services.nextcloud.username'), config('services.nextcloud.password'));
+        });
+
         Filament::serving(function () {
             Filament::registerUserMenuItems([
                 'logout-everywhere' => UserMenuItem::make()

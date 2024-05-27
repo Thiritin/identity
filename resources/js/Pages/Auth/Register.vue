@@ -7,131 +7,102 @@
         class="mb-10"
     />
     <form class="space-y-3" @submit.prevent="submit">
-        <FormInput
-            id="username"
-            v-model.trim.lazy="form.username"
-            :placeholder="$trans('username')"
-            autocomplete="username"
-            :error="errors.username"
-            :label="$trans('username')"
-            type="text"
-        />
-        <FormInput
-            id="email"
-            v-model.trim.lazy="form.email"
-            :error="errors.email"
-            :label="$trans('email')"
-            autocomplete="email"
-            class="mb-4"
-            placeholder="me@example.org"
-            type="text"
-        />
-        <FormInput
-            id="password"
-            v-model.trim.lazy="form.password"
-            :error="errors.password"
-            :label="$trans('password')"
-            autocomplete="password"
-            class="mb-4"
-            type="password"
-        />
+        <div class="flex flex-col gap-2">
+            <label for="username">{{ $trans('username') }}</label>
+            <InputText id="username"
+                       type="text"
+                       @change="form.validate('username')"
+                       :invalid="form.invalid('username')"
+                       v-model.trim.lazy="form.username"
+            />
+            <InlineMessage v-if="form.invalid('username')" seveGrity="error">{{ form.errors.username }}
+            </InlineMessage>
+        </div>
+        <div class="flex flex-col gap-2">
+            <label for="email">{{ $trans('email') }}</label>
+            <InputText id="email"
+                       placeholder="me@example.org"
+                       type="email"
+                       autocomplete="email"
+                       @change="form.validate('email')"
+                       :invalid="form.invalid('email')"
+                       v-model.trim.lazy="form.email"
+            />
+            <InlineMessage v-if="form.invalid('email')" severity="error">{{ form.errors.email }}
+            </InlineMessage>
+        </div>
+        <div class="flex flex-col gap-2">
+            <label for="password">{{ $trans('password') }}</label>
+            <InputText id="password"
+                       type="password"
+                       autocomplete="password"
+                       @change="form.validate('password')"
+                       :invalid="form.invalid('password')"
+                       v-model.trim.lazy="form.password"
+            />
+            <InlineMessage v-if="form.invalid('password')" severity="error">{{ form.errors.password }}
+            </InlineMessage>
+        </div>
         <PasswordInfoBox
             :password="form.password"
         />
-        <FormInput
-            id="password_confirmation"
-            v-model.trim.lazy="form.password_confirmation"
-            :label="$trans('password_confirmation')"
-            :error="errors?.password_confirmation"
-            autocomplete="password"
-            class="mb-4"
-            type="password"
-        />
-        <div class="flex flex-col pt-10">
-            <button
-                :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
-                :disabled="form.processing"
-                class="py-3 rounded-lg px-12 ml-auto text-white text-2xl mb-4 font-semibold focus:outline-none"
-                type="submit"
-            >
-                {{ $trans('register_button') }}
-            </button>
+        <div class="flex flex-col gap-2">
+            <label for="password_confirmation">{{ $trans('password_confirmation') }}</label>
+            <InputText id="password_confirmation"
+                       type="password"
+                       autocomplete="password"
+                       @change="form.validate('password_confirmation')"
+                       :invalid="form.invalid('password_confirmation')"
+                       v-model.trim.lazy="form.password_confirmation"
+            />
+            <InlineMessage v-if="form.invalid('password_confirmation')"
+                           severity="error">{{ form.errors.password_confirmation }}
+            </InlineMessage>
+        </div>
+        <div class="flex flex-row justify-between pt-10">
             <Link
                 :href="route('auth.login.view')"
-                class="ml-auto text-gray-700 dark:text-gray-300"
+                class="text-gray-700 dark:text-gray-300"
             >
                 {{ $trans('register_back_to_login') }}
             </Link>
+            <Button
+                :loading="form.processing"
+                type="submit"
+                :label="$trans('register_button')"
+            />
         </div>
     </form>
 </template>
-
-<script>
+<script setup>
 import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import FormInput from '@/Auth/Form/AuthFormInput.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import {Head, Link} from '@inertiajs/vue3'
 import PasswordInfoBox from '@/Auth/PasswordInfoBox.vue'
+import {useForm} from 'laravel-precognition-vue-inertia'
+import InputText from "primevue/inputtext";
+import InlineMessage from "primevue/inlinemessage";
+import Button from "primevue/button";
 
-export default {
-    components: {
-        PasswordInfoBox,
-        AuthLayout,
-        Logo,
-        LoginScreenWelcome,
-        FormInput,
-        Head,
-        Link,
-    },
-    layout: AuthLayout,
+// Convert vue2 to vue3
+defineOptions({
+    layout: AuthLayout
+})
 
-    props: {
-        errors: Object,
-    },
+const props = defineProps({
+    errors: Object
+})
 
-    data() {
-        return {
-            form: this.$inertia.form({
-                email: null,
-                username: null,
-                password: null,
-                password_confirmation: null,
-            }),
-        }
-    },
-    /**
-     * This is bad. I know it's replicated but it's 04:10am
-     * If you know vue, feel free to write me on TG @Thiritin
-     */
-    computed: {
-        correctLength() {
-            if (this.form.password) return this.form.password.length >= 10
-            return true
-        },
-        correctLowerUpper() {
-            if (this.form.password)
-                return this.form.password.match(
-                    /(\p{Ll}+.*\p{Lu})|(\p{Lu}+.*\p{Ll})/u
-                )
-            return true
-        },
-        correctNumber() {
-            if (this.form.password)
-                return this.form.password.match(/[0-9]/u)
-            return true
-        },
-        correctSymbol() {
-            if (this.form.password)
-                return this.form.password.match(/\p{Z}|\p{S}|\p{P}/u)
-            return true
-        },
-    },
+const form = useForm('post', route('auth.register.store'), {
+    email: null,
+    username: null,
+    password: null,
+    password_confirmation: null,
+})
 
-    methods: {
-        submit() {
-            this.form.post(this.route('auth.register.store'))
-        },
-    },
+function submit() {
+    form.submit()
 }
 </script>

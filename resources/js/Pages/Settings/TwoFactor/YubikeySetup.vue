@@ -1,13 +1,14 @@
 <script setup>
 import SettingsHeader from "@/Components/Settings/SettingsHeader.vue";
 import SettingsSubHeader from "@/Components/Settings/SettingsSubHeader.vue";
-import {Head, useForm} from "@inertiajs/vue3";
-import BaseInput from "@/Components/BaseInput.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
+import {Head} from "@inertiajs/vue3";
 import {ref} from "vue";
 import ListItem from "@/Components/ListItem.vue";
-import {XIcon} from "@heroicons/vue/solid";
 import BaseButton from "@/Components/BaseButton.vue";
+import InputText from "primevue/inputtext";
+import InlineMessage from "primevue/inlinemessage";
+import {useForm} from 'laravel-precognition-vue-inertia'
+import Button from "primevue/button";
 
 const disableKeyId = ref(null)
 const showCreateField = ref(false)
@@ -19,23 +20,27 @@ const props = defineProps({
     },
 })
 
-const enableForm = useForm({
+const enableForm = useForm('post', route('settings.two-factor.yubikey.store'), {
     code: '',
     name: '',
 })
 
-const disableForm = useForm({
+const disableForm = useForm('delete', route('settings.two-factor.yubikey.destroy'), {
     keyId: '',
     password: '',
 })
 
 function submitForm() {
-    form.post(route('settings.two-factor.yubikey.store'))
+    enableForm.submit({
+        onSuccess: () => {
+            form.reset()
+        }
+    })
 }
 
 function submitDisableForm() {
     disableForm.keyId = disableKeyId.value;
-    disableForm.delete(route('settings.two-factor.yubikey.destroy'))
+    disableForm.submit()
 }
 </script>
 
@@ -46,27 +51,42 @@ function submitDisableForm() {
         <SettingsSubHeader
             class="mb-4">Please tap your Yubikey to add it as a second factor.
         </SettingsSubHeader>
-        <form @submit.prevent="enableForm.post(route('settings.two-factor.yubikey.store'))">
-            <div class="mb-4">
-                <label class="font-semibold text-xs" for="code">Yubikey OTP</label>
-                <BaseInput
-                    v-model="enableForm.code"
-                    type="text"
-                    name="code"
-                    :error="enableForm.errors.code"
-                ></BaseInput>
+        <form @submit.prevent="submitForm()" class="space-y-4">
+            <div class="flex flex-col gap-2">
+                <label for="code">{{ $trans('yubikey_otp') }}</label>
+                <InputText id="code"
+                           type="text"
+                           @keydown.enter.capture="null"
+                           autocomplete="code"
+                           @change="enableForm.validate('code')"
+                           :invalid="enableForm.invalid('code')"
+                           v-model.trim.lazy="enableForm.code"
+                />
+                <InlineMessage v-if="enableForm.invalid('code')" severity="error">{{ enableForm.errors.code }}
+                </InlineMessage>
             </div>
-            <div class="mb-4">
-                <label class="font-semibold text-xs" for="name">Name / Identifier</label>
-                <BaseInput
-                    v-model="enableForm.name"
-                    placeholder="Work, Home, etc."
-                    type="text"
-                    name="name"
-                    :error="enableForm.errors.name"
-                ></BaseInput>
+            <div class="flex flex-col gap-2">
+                <label for="name">Name / Identifier</label>
+                <InputText id="name"
+                           type="text"
+                           placeholder="Work, Home, etc."
+                           autocomplete="name"
+                           @change="enableForm.validate('name')"
+                           :invalid="enableForm.invalid('name')"
+                           v-model.trim.lazy="enableForm.name"
+                />
+                <InlineMessage v-if="enableForm.invalid('name')" severity="error">{{ enableForm.errors.name }}
+                </InlineMessage>
             </div>
-            <PrimaryButton type="submit" class="ml-auto block">Submit</PrimaryButton>
+
+            <div class="flex justify-end">
+                <Button
+                    :loading="enableForm.processing"
+                    type="submit"
+                    class="block"
+                    :label="$trans('submit')"
+                />
+            </div>
         </form>
     </div>
     <div v-else-if="disableKeyId !== null">
@@ -74,20 +94,22 @@ function submitDisableForm() {
         <SettingsSubHeader
             class="mb-4">To disable two factor authentication, please enter your password.
         </SettingsSubHeader>
-        <form @submit.prevent="submitDisableForm">
-            <div class="mb-4">
-                <label class="font-semibold text-xs" for="password">Current Password</label>
-                <BaseInput
-                    v-model="disableForm.password"
-                    type="password"
-                    id="password"
-                    name="password"
-                    :error="disableForm.errors.password"
-                ></BaseInput>
+        <form @submit.prevent="submitDisableForm" class="space-y-6">
+            <div class="flex flex-col gap-2">
+                <label for="password">Current Password</label>
+                <InputText id="password"
+                           type="password"
+                           autocomplete="password"
+                           @change="disableForm.validate('password')"
+                           :invalid="disableForm.invalid('password')"
+                           v-model.trim.lazy="disableForm.password"
+                />
+                <InlineMessage v-if="disableForm.invalid('password')" severity="error">{{ disableForm.errors.password }}
+                </InlineMessage>
             </div>
             <div class="flex justify-end gap-3">
-                <BaseButton @click="disableKeyId = null" secondary>Cancel</BaseButton>
-                <BaseButton primary>Submit</BaseButton>
+                <Button severity="secondary" size="small" @click="disableKeyId = null" secondary>Cancel</Button>
+                <Button size="small" primary>Submit</Button>
             </div>
         </form>
     </div>
@@ -103,8 +125,7 @@ function submitDisableForm() {
                     <div class="text-sm">{{ key.last_used_at }}</div>
                 </div>
                 <div>
-                    <XIcon class="w-8 p-2 hover:bg-gray-200 rounded cursor-pointer"
-                           @click="disableKeyId = key.id"></XIcon>
+                    <Button link @click="disableKeyId = key.id" size="small" icon="pi pi-trash"/>
                 </div>
             </ListItem>
         </div>

@@ -30,15 +30,12 @@
 
         <form @submit.prevent="submit">
             <div class="mt-4 flex items-center justify-between">
-                <button
-                    :class="
-                        form.processing ? 'bg-primary-400' : 'bg-primary-500'
-                    "
-                    :disabled="form.processing || buttonDisabled"
-                    class="py-3 rounded-lg px-8 mr-auto text-white text-sm mb-4 font-semibold focus:outline-none"
-                >
-                    {{ $trans('resend_verification_mail') }}
-                </button>
+                <Button
+                    :loading="form.processing"
+                    type="submit"
+                    class="block"
+                    :label="$trans('resend_verification_mail')"
+                />
 
                 <a
                     :href="route('auth.logout')"
@@ -58,6 +55,7 @@ import UserBox from '@/Pages/Auth/UserBox.vue'
 import {Head, useForm} from '@inertiajs/vue3'
 import {computed, ref} from 'vue'
 import AuthLayout from "../../Layouts/AuthLayout.vue";
+import Button from "primevue/button";
 
 defineOptions({
     layout: AuthLayout,

@@ -13,32 +13,33 @@
                     Your password has been updated.
                 </div>
             </div>
-            <div v-else>
-                <div class="my-4">
-                    <div>
-                        <label class="font-semibold text-xs" for="username">Current password</label>
-                        <BaseInput
-                            id="currentPassword"
-                            v-model="form.current_password"
-                            :error="errors.current_password"
-                            autocomplete="password"
-                            autofocus
-                            name="currentPassword"
-                            type="password"
-                        ></BaseInput>
-                    </div>
+            <div v-else class="space-y-6">
+                <div class="flex flex-col gap-2 mt-4">
+                    <label for="current_password">{{ $trans('current_password') }}</label>
+                    <InputText id="current_password"
+                               type="password"
+                               autocomplete="password"
+                               autofocus
+                               @change="form.validate('current_password')"
+                               :invalid="form.invalid('current_password')"
+                               v-model.trim.lazy="form.current_password"
+                    />
+                    <InlineMessage v-if="form.invalid('current_password')"
+                                   severity="error">{{ form.errors.current_password }}
+                    </InlineMessage>
                 </div>
 
-                <div class="mb-4">
-                    <label class="font-semibold text-xs" for="username">New password</label>
-                    <BaseInput
-                        id="newPassword"
-                        v-model="form.password"
-                        :error="errors.password"
-                        autocomplete="password"
-                        name="newPassword"
-                        type="password"
-                    ></BaseInput>
+                <div class="flex flex-col gap-2">
+                    <label for="password">{{ $trans('password') }}</label>
+                    <InputText id="password"
+                               type="password"
+                               autocomplete="password"
+                               @change="form.validate('password')"
+                               :invalid="form.invalid('password')"
+                               v-model.trim.lazy="form.password"
+                    />
+                    <InlineMessage v-if="form.invalid('password')" severity="error">{{ form.errors.password }}
+                    </InlineMessage>
                 </div>
 
                 <PasswordInfoBox
@@ -46,29 +47,28 @@
                     class="sm:col-span-2 sm:col-start-2 mt-2 mb-2"
                 ></PasswordInfoBox>
 
-                <div class="mb-4">
-                    <label class="font-semibold text-xs" for="username">Confirm new password</label>
-                    <BaseInput
-                        id="confirmNewPassword"
-                        v-model="form.password_confirmation"
-                        :error="errors.password_confirmation"
-                        autocomplete="password"
-                        name="confirmNewPassword"
-                        type="password"
-                    ></BaseInput>
+                <div class="flex flex-col gap-2">
+                    <label for="password_confirmation">{{ $trans('password_confirmation') }}</label>
+                    <InputText id="password_confirmation"
+                               type="password"
+                               autocomplete="password_confirmation"
+                               @change="form.validate('password_confirmation')"
+                               :invalid="form.invalid('password_confirmation')"
+                               v-model.trim.lazy="form.password_confirmation"
+                    />
+                    <InlineMessage v-if="form.invalid('password_confirmation')"
+                                   severity="error">{{ form.errors.password_confirmation }}
+                    </InlineMessage>
                 </div>
 
-                <div
-                    class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-startsm:pt-5 pt-5"
-                >
-                    <div
-                        class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2"
-                    >
-                        <PrimaryButton class="" type="submit"
-                        >Change password
-                        </PrimaryButton
-                        >
-                    </div>
+
+                <div class="flex justify-end">
+                    <Button
+                        :loading="form.processing"
+                        type="submit"
+                        class="block"
+                        :label="$trans('submit')"
+                    />
                 </div>
             </div>
         </form>
@@ -76,18 +76,22 @@
 </template>
 
 <script setup>
-import {Head, useForm} from "@inertiajs/vue3";
+import {Head} from "@inertiajs/vue3";
 import SettingsHeader from "@/Components/Settings/SettingsHeader.vue";
 import BaseInput from "@/Components/BaseInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import PasswordInfoBox from "../../Auth/PasswordInfoBox.vue";
+import {useForm} from 'laravel-precognition-vue-inertia'
+import InputText from "primevue/inputtext";
+import InlineMessage from "primevue/inlinemessage";
+import Button from "primevue/button";
 
 defineProps({
     errors: Object,
     success: Boolean,
 });
 
-const form = useForm({
+const form = useForm('post', route('settings.update-password.store'), {
     current_password: '',
     password: '',
     password_confirmation: '',
@@ -95,7 +99,7 @@ const form = useForm({
 });
 
 function submitForm() {
-    form.post(route('settings.update-password.store'))
+    form.submit();
 }
 </script>
 <script>

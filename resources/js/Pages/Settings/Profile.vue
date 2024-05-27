@@ -27,33 +27,36 @@
                 <SettingsSubHeader class="mb-4">
                     This information will be used across services.
                 </SettingsSubHeader>
+                <div class="space-y-4">
 
-
-                <div class="mb-4">
-                    <label class="font-semibold text-xs" for="email">Email</label>
-                    <BaseInput
-                        id="email"
-                        v-model="form.email"
-                        :error="errors.email"
-                        autocomplete="email"
-                        name="email"
-                        type="email"
-                    ></BaseInput>
-                </div>
-
-                <div class="mb-4">
-                    <label class="font-semibold text-xs" for="username">Username</label>
-                    <BaseInput
-                        id="newPassword"
-                        v-model="form.name"
-                        :error="errors.name"
-                        autocomplete="username"
-                        name="username"
-                        type="text"
-                    ></BaseInput>
-                    <div class="text-gray-600 dark:text-primary-200 text-xs">
-                        {{ $trans('profile_username_notice') }}
+                    <div class="flex flex-col gap-2">
+                        <label for="email">{{ $trans('email') }}</label>
+                        <InputText id="email"
+                                   placeholder="me@example.org"
+                                   type="email"
+                                   autocomplete="email"
+                                   @change="form.validate('email')"
+                                   :invalid="form.invalid('email')"
+                                   v-model.trim.lazy="form.email"
+                        />
+                        <InlineMessage v-if="form.invalid('email')" severity="error">{{ form.errors.email }}
+                        </InlineMessage>
                     </div>
+                    <div class="flex flex-col gap-2">
+                        <label for="name">{{ $trans('name') }}</label>
+                        <InputText id="name"
+                                   type="text"
+                                   autocomplete="name"
+                                   @change="form.validate('name')"
+                                   :invalid="form.invalid('name')"
+                                   v-model.trim.lazy="form.name"
+                                   aria-describedby="name-help"
+                        />
+                        <small id="name-help">This is not your badge name.</small>
+                        <InlineMessage v-if="form.invalid('name')" severity="error">{{ form.errors.name }}
+                        </InlineMessage>
+                    </div>
+
                 </div>
 
                 <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
@@ -113,27 +116,29 @@
             </div>
 
             <div
-                class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5 pt-5"
+                class="flex justify-end mt-5"
             >
-                <div
-                    class="max-w-lg flex justify-end sm:col-start-2 sm:col-span-2"
-                >
-                    <Link :href="route('dashboard')">
-                        <BaseButton type="button"> Cancel</BaseButton>
-                    </Link>
+                <Link :href="route('dashboard')">
+                    <Button
+                        type="button"
+                        :label="$trans('cancel')"
+                        class="mr-2"
+                    />
+                </Link>
 
-                    <PrimaryButton class="ml-3" @click="submitForm"
-                    >Save
-                    </PrimaryButton
-                    >
-                </div>
+
+                <Button
+                    :loading="form.processing"
+                    type="submit"
+                    :label="$trans('save')"
+                />
             </div>
         </div>
     </form>
 </template>
 
 <script setup>
-import {Head, Link, useForm, usePage} from '@inertiajs/vue3'
+import {Head, Link, usePage} from '@inertiajs/vue3'
 import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
 import SettingsHeader from '@/Components/Settings/SettingsHeader.vue'
 import SettingsSubHeader from '@/Components/Settings/SettingsSubHeader.vue'
@@ -143,12 +148,16 @@ import PrimaryButton from '@/Components/PrimaryButton.vue'
 import AvatarModal from '@/Profile/AvatarModal.vue'
 import {computed, ref} from "vue";
 import BaseAlert from "@/Components/BaseAlert.vue";
+import {useForm} from 'laravel-precognition-vue-inertia';
+import InputText from "primevue/inputtext";
+import InlineMessage from "primevue/inlinemessage";
+import Button from "primevue/button";
 
 const props = defineProps({
     errors: Object,
     flash: Object,
 })
-const form = useForm({
+const form = useForm('post', route('settings.update-profile.update'), {
     name: usePage().props.user.name,
     email: usePage().props.user.email,
 });

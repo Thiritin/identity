@@ -1,9 +1,12 @@
 <script setup>
 
-import FormInput from '@/Auth/Form/AuthFormInput.vue'
 import {computed, ref} from "vue";
 import LoginScreenWelcome from "@/Auth/LoginScreenWelcome.vue";
-import {Head, useForm} from "@inertiajs/vue3";
+import {Head} from "@inertiajs/vue3";
+import {useForm} from 'laravel-precognition-vue-inertia'
+import InputText from "primevue/inputtext";
+import InlineMessage from "primevue/inlinemessage";
+import Button from "primevue/button";
 
 const props = defineProps({
     lastUsedMethod: String,
@@ -11,7 +14,7 @@ const props = defineProps({
     submitFormUrl: String,
 })
 
-const form = useForm({
+const form = useForm('post', props.submitFormUrl, {
     code: '',
     method: props.lastUsedMethod
 })
@@ -55,25 +58,27 @@ const selectedMethod = ref(props.lastUsedMethod);
         <LoginScreenWelcome title="Two Factor"
                             sub-title="One more step"></LoginScreenWelcome>
         <div class="mt-8">
-            <form @submit.prevent="submitForm">
-                <FormInput
-                    v-model="form.code"
-                    :error="form.errors.code"
-                    id="code"
-                    :label="selectedMethodName + ' Code'"
-                    autocomplete="one-time-code"
-                    class="mb-4"
-                    type="text"
-                ></FormInput>
+            <form @submit.prevent="submitForm" class="space-y-6">
+                <div class="flex flex-col gap-2">
+                    <label for="code">{{ selectedMethodName }}</label>
+                    <InputText id="code"
+                               type="text"
+                               :invalid="form.invalid('code')"
+                               v-model.trim.lazy="form.code"
+                    />
+                    <InlineMessage v-if="form.invalid('code')" severity="error">{{ form.errors.code }}
+                    </InlineMessage>
+                </div>
 
-                <button
-                    :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
-                    :disabled="form.processing"
-                    class="py-3 block ml-auto rounded-lg px-12 text-white text-2xl mb-4 font-semibold focus:outline-none"
-                    type="submit"
-                >
-                    {{ $trans('sign_in') }}
-                </button>
+
+                <div class="flex justify-end">
+                    <Button
+                        :loading="form.processing"
+                        type="submit"
+                        class="block"
+                        :label="$trans('login')"
+                    />
+                </div>
                 <div v-if="otherMethodAvailable" @click="toggleMethod"
                      class="flex justify-end hover:underline text-sm cursor-pointer">
                     Switch to {{ otherMethodName }}

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ForgotPasswordRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -12,7 +12,7 @@ use Password;
 
 class ForgotPasswordController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(ForgotPasswordRequest $request)
     {
         $key = 'reset-passwords:'.$request->ip();
         // Throttle requests
@@ -21,10 +21,6 @@ class ForgotPasswordController extends Controller
         }
 
         RateLimiter::hit($key);
-
-        $request->validate([
-            "email" => "email|required|exists:users,email"
-        ]);
 
         $status = Password::sendResetLink(
             $request->only('email')

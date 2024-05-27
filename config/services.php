@@ -69,5 +69,10 @@ return [
     'yubikey' => [
         'client_id' => env('YUBICO_CLIENT_ID'),
         'secret_key' => env('YUBICO_SECRET_KEY'),
+    ],
+    'nextcloud' => [
+        'baseUrl' => env('NEXTCLOUD_BASE_URL'),
+        'username' => env('NEXTCLOUD_USERNAME'),
+        'password' => env('NEXTCLOUD_PASSWORD'),
     ]
 ];
