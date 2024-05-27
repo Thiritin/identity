@@ -52,7 +52,8 @@ class GroupResource extends Resource
                             ->required(),
                         TextInput::make('nextcloud_folder_name')
                             ->label('Nextcloud Folder Name')
-                            ->required(fn(Group $record) => !empty($record->nextcloud_folder_id))
+                            ->required(fn(Group|null $record
+                            ) => $record !== null && !empty($record->nextcloud_folder_id))
                             ->hint('Leave empty if the group should not be allowed to access Nextcloud.')
                             ->unique('groups', 'nextcloud_folder_name', ignoreRecord: true),
                         Textarea::make('description')->rows(5),
