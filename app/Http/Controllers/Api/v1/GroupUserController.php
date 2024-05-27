@@ -9,6 +9,7 @@ use App\Http\Resources\V1\GroupUserResource;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -27,10 +28,22 @@ class GroupUserController extends Controller
         $this->authorize('create', [$group->users()->find($request->user()->id)->pivot]);
 
         $useField = isset($request->validationData()['email']) ? 'email' : 'id';
+
         $user = match ($useField) {
             'email' => User::where('email', $request->validationData()['email'])->firstOrFail(),
             'id' => User::findByHashidOrFail($request->validationData()['id']),
         };
+
+        // validated email
+        if (!$user->hasVerifiedEmail()) {
+            throw ValidationException::withMessages(['email' => 'User has not verified their email']);
+        }
+
+        // ensure user does not already exist, if he does, throw validation error
+        if ($group->users->contains($user)) {
+            throw ValidationException::withMessages([$useField => 'User is already in the group']);
+        }
+
         $group->users()->attach($user, ['level' => $request->validationData()['level']]);
         return new GroupUserResource($group->users()->find($user->id));
     }

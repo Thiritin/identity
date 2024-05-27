@@ -10,14 +10,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class GroupUserResource extends JsonResource
 {
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)
     {
         return [
-            'group_id' => $this->pivot->group_id,
-            'user_id' => $this->pivot->user_id,
+            'group_id' => $this->pivot->group->hashid,
+            'user_id' => $this->pivot->user->hashid,
             'level' => $this->pivot->level,
         ];
     }

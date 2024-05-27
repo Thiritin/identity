@@ -255,8 +255,8 @@ test('Add member to group as admin via email', function () {
     $request->assertSuccessful();
     // verify response contains user_id, group_id and level
     $request->assertJsonFragment([
-        "user_id" => $userToBeInvited->id,
-        "group_id" => $group->id,
+        "user_id" => $userToBeInvited->hashid,
+        "group_id" => $group->hashid,
         "level" => "member",
     ]);
     assertDatabaseHas('group_user', [
@@ -264,6 +264,39 @@ test('Add member to group as admin via email', function () {
         "group_id" => $group->id,
         "level" => "member",
     ]);
+});
+
+// Add member twice should cause error via email
+test('Adding the same email twice should cause an error', function () {
+    $group = Group::factory()->create();
+
+    $user = Sanctum::actingAs(
+        User::factory()->create(),
+        ['groups.read', 'groups.update', 'groups.delete']
+    );
+    $userToBeInvited = User::factory()->create();
+    $data = [
+        "email" => $userToBeInvited->email,
+        "level" => "member",
+    ];
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Admin]]);
+
+    $request = post(route('api.v1.groups.users.store', $group), $data);
+    $request->assertSuccessful();
+    // verify response contains user_id, group_id and level
+    $request->assertJsonFragment([
+        "user_id" => $userToBeInvited->hashid,
+        "group_id" => $group->hashid,
+        "level" => "member",
+    ]);
+    assertDatabaseHas('group_user', [
+        "user_id" => $userToBeInvited->id,
+        "group_id" => $group->id,
+        "level" => "member",
+    ]);
+
+    $request = postJson(route('api.v1.groups.users.store', $group), $data, ['Accept' => 'application/json']);
+    $request->assertJsonValidationErrors(['email']);
 });
 
 test('Add member to group as admin via id', function () {
@@ -285,8 +318,8 @@ test('Add member to group as admin via id', function () {
     $request->assertSuccessful();
     // verify response contains user_id, group_id and level
     $request->assertJsonFragment([
-        "user_id" => $userToBeInvited->id,
-        "group_id" => $group->id,
+        "user_id" => $userToBeInvited->hashid,
+        "group_id" => $group->hashid,
         "level" => "member",
     ]);
     assertDatabaseHas('group_user', [
@@ -395,8 +428,8 @@ test('Get list of members as admin', function () {
     $request = get(route('api.v1.groups.users.index', ["group" => $group]));
     $request->assertSuccessful();
     $request->assertJsonFragment([
-        "user_id" => $user->id,
-        "group_id" => $group->id,
+        "user_id" => $user->hashid,
+        "group_id" => $group->hashid,
         "level" => GroupUserLevel::Admin,
     ]);
 });

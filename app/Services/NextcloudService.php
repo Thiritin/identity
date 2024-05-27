@@ -65,6 +65,17 @@ class NextcloudService
         ])->throwIfServerError();
     }
 
+    public static function getUsers()
+    {
+        $res = Http::nextcloud()->get("ocs/v2.php/cloud/users", [
+            'offset' => 0,
+            'limit' => 1000,
+        ])->throw();
+        // Parse xml
+        $xml = simplexml_load_string($res->body());
+        return (array) $xml->data->users->element;
+    }
+
     public static function createUser(User $user)
     {
         Http::nextcloud()->post("ocs/v2.php/cloud/users", [
