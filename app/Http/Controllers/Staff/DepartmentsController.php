@@ -33,7 +33,7 @@ class DepartmentsController extends Controller
     public function show(Group $department, Request $request)
     {
         return Inertia::render('Staff/Departments/ShowDepartment', [
-            'group' => $department->loadCount('users'),
+            'group' => $department->loadCount('users')->only(['hashid', 'name', 'users_count']),
             'users' => $department->users()->withPivot('level')->get(['id', 'name', 'profile_photo_path'])->map(fn($user
             ) => [
                 'id' => $user->hashid,

@@ -206,9 +206,22 @@ import {Link} from "@inertiajs/vue3";
 import StaffMainMenu from "../Components/Staff/Menu/StaffMainMenu.vue";
 import StaffTeamMenu from "../Components/Staff/Menu/StaffTeamMenu.vue";
 
+
 const navigation = [
-    {name: 'Dashboard', href: route('staff.dashboard'), icon: HomeIcon, current: true, soon: false},
-    {name: 'Departments', href: route('staff.departments.index'), icon: UsersIcon, current: false, soon: true},
+    {
+        name: 'Dashboard',
+        href: route('staff.dashboard'),
+        icon: HomeIcon,
+        current: route().current('staff.dashboard'),
+        soon: false
+    },
+    {
+        name: 'Departments',
+        href: route('staff.departments.index'),
+        icon: UsersIcon,
+        current: route().current('staff.departments.*'),
+        soon: true
+    },
 ]
 
 

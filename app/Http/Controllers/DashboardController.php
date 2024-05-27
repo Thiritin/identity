@@ -32,7 +32,7 @@ class DashboardController extends Controller
         $isStaff = $user->groups->contains('id', $staffGroupId);
         // if staff redirect to staffnet dashboard
         if ($isStaff) {
-            // return redirect()->route('staff.dashboard');
+            return redirect()->route('staff.dashboard');
         }
 
         return Inertia::render('Dashboard', [
