@@ -158,10 +158,14 @@ class AppResource extends Resource
                             Checkbox::make('public')->hint('App is publicly visible (ignoring group selection)'),
                             TextInput::make('name')->required(),
                             TextInput::make('description')->required(),
-                            Select::make('icon')->options([
-                                "TicketDuotone" => "TicketDuotone",
-                                "CogsDuotone" => "CogsDuotone",
-                            ])->hint('Request new Icons @ Thiritin')->required(),
+                            Select::make('icon')->options(function () {
+                                return collect(scandir(resource_path('js/Components/Icons')))
+                                    ->filter(fn($icon) => !in_array($icon, ['.', '..']))
+                                    ->map(fn($icon) => str_replace('.vue', '', $icon))
+                                    ->values()
+                                    ->keyBy(fn($icon) => $icon)
+                                    ->toArray();
+                            })->hint('Request new Icons @ Thiritin')->required(),
                             TextInput::make('url')->url(),
                         ]),
                     Card::make()->schema([
