@@ -29,7 +29,11 @@ class TwoFactorController extends Controller
             'twoFactors' => $twoFactors,
             'lastUsedMethod' => $lastUsed,
             'submitFormUrl' => URL::signedRoute('auth.two-factor.submit',
-                ['login_challenge' => $request->get('login_challenge'), 'user' => $request->get('user')],
+                [
+                    'login_challenge' => $request->get('login_challenge'),
+                    'user' => $request->get('user'),
+                    'remember' => $request->get('remember'),
+                ],
                 now()->addMinutes(30)),
         ]);
     }
