@@ -19,6 +19,13 @@ export default {
         extend: {
             colors: {
                 primary: {
+                    DEFAULT: 'rgb(var(--primary))',
+                    'inverse': 'rgb(var(--primary-inverse))',
+                    'hover': 'rgb(var(--primary-hover))',
+                    'active-color': 'rgb(var(--primary-active-color))',
+                    'highlight': 'rgb(var(--primary)/var(--primary-highlight-opacity))',
+                    'highlight-inverse': 'rgb(var(--primary-highlight-inverse))',
+                    'highlight-hover': 'rgb(var(--primary)/var(--primary-highlight-hover-opacity))',
                     100: '#E6EFEE',
                     200: '#CBDEDD',
                     300: '#AEC6C4',
@@ -56,9 +63,6 @@ export default {
     },
 
     plugins: [
-        require('@tailwindcss/forms')({
-            strategy: 'class',
-        }),
         require('@tailwindcss/typography'),
     ],
 };

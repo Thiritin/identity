@@ -11,8 +11,10 @@
         "php": "^8.2",
         "ext-curl": "*",
         "ext-json": "*",
+        "ext-simplexml": "*",
         "doctrine/dbal": "^3.5",
         "endroid/qr-code": "^5.0",
+        "erusev/parsedown": "^1.7",
         "filament/filament": "^3.1",
         "filament/forms": "^3.1",
         "filament/notifications": "^3.1",
@@ -37,8 +39,8 @@
         "spatie/laravel-activitylog": "^4.7",
         "spatie/laravel-permission": "^6.2.0",
         "spatie/laravel-query-builder": "^5.1",
-        "tightenco/ziggy": "^1.0",
-        "ext-simplexml": "*"
+        "stevebauman/purify": "^6.2",
+        "tightenco/ziggy": "^1.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Middleware;
@@ -53,9 +54,18 @@ class HandleInertiaRequests extends Middleware
                     ->get(['id', 'name'])->values(),
             ], $request->user()->only('name', 'email'));
         }
+
+        $staffMembers = null;
+        // If user has departments
+        if($user && $user['departments']->count() > 0) {
+            $staffMembers = User::whereHas('groups', fn($q) => $q->where('type', 'department'))->get(['id','name']);
+        }
+
+
         return array_merge(parent::share($request), [
             'user' => Route::is(['auth.login.view']) ? null : $user,
             'hideUserInfo' => Route::is(['auth.login.view', 'verification.notice']),
+            'staffMemberList' => $staffMembers,
             'flash' => [
                 'message' => fn() => $request->session()->get('message')
             ],

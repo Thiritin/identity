@@ -5,6 +5,8 @@ namespace App\Http;
 use App\Http\Middleware\AccessTokenValidationMiddleware;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\GroupMember;
+use App\Http\Middleware\GuardSwitcher;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\RedirectIfAuthenticated;
@@ -88,7 +90,7 @@ class Kernel extends HttpKernel
         'signed' => ValidateSignature::class,
         'throttle' => ThrottleRequests::class,
         'verified' => EnsureEmailIsVerified::class,
-        'guardswitcher' => \App\Http\Middleware\GuardSwitcher::class,
-        'groupmember' => \App\Http\Middleware\GroupMember::class,
+        'guardswitcher' => GuardSwitcher::class,
+        'groupmember' => GroupMember::class,
     ];
 }

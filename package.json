@@ -27,8 +27,11 @@
         "vue-cropperjs": "^5.0.0"
     },
     "dependencies": {
+        "github-markdown-css": "^5.6.1",
         "laravel-precognition-vue-inertia": "^0.5.4",
+        "md-editor-v3": "^4.17.3",
         "primeicons": "^7.0.0",
-        "primevue": "^3.51.0"
+        "primevue": "^3.51.0",
+        "quill": "^2.0.2"
     }
 }

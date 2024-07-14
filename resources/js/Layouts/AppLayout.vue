@@ -184,6 +184,7 @@
 
         <main class="lg:pl-72">
             <slot></slot>
+            <Toast />
         </main>
     </div>
 </template>
@@ -204,6 +205,7 @@ import {Bars3Icon, HomeIcon, UsersIcon, XMarkIcon,} from '@heroicons/vue/24/outl
 import {Link, usePage} from "@inertiajs/vue3";
 import StaffMainMenu from "../Components/Staff/Menu/StaffMainMenu.vue";
 import StaffTeamMenu from "../Components/Staff/Menu/StaffTeamMenu.vue";
+import Toast from 'primevue/toast'
 
 function updateNavigation() {
     navigation.forEach(item => {
@@ -221,9 +223,9 @@ let navigationSource = reactive([
     },
     {
         name: 'Departments',
-        href: route('staff.departments.index'),
+        href: route('staff.groups.index'),
         icon: UsersIcon,
-        currentEval: () => route().current('staff.departments.index')
+        currentEval: () => route().current('staff.groups.index')
     },
 ]);
 
@@ -254,11 +256,12 @@ const profileNavMenu = [
 
 const teams = computed(() => {
     const departments = usePage().props.user.departments;
+    const page = usePage();
     return departments.map(department => {
         return {
             name: department.name,
-            href: route('staff.departments.show', {department: department.hashid}),
-            current: route().current('staff.departments.show', {department: department.hashid}),
+            href: route('staff.groups.show', {group: department.hashid}),
+            current: page.url.startsWith('/staff/groups/' + department.hashid),
             initial: department.name.split(' ').map(word => word.charAt(0)).join('')
         }
     })

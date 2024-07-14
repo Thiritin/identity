@@ -7,6 +7,7 @@ import {useForm} from 'laravel-precognition-vue-inertia'
 import InputText from "primevue/inputtext";
 import InlineMessage from "primevue/inlinemessage";
 import Button from "primevue/button";
+import InputOtp from 'primevue/inputotp'
 
 const props = defineProps({
     lastUsedMethod: String,
@@ -61,11 +62,19 @@ const selectedMethod = ref(props.lastUsedMethod);
             <form @submit.prevent="submitForm" class="space-y-6">
                 <div class="flex flex-col gap-2">
                     <label for="code">{{ selectedMethodName }}</label>
-                    <InputText id="code"
+                    <InputText v-if="selectedMethodName !== 'TOTP'" id="code"
                                type="text"
                                :invalid="form.invalid('code')"
                                v-model.trim.lazy="form.code"
                     />
+                    <InputOtp
+                        v-else
+                        :length="6"
+                        class="w-full flex grid-cols-6 justify-between"
+                        :invalid="form.invalid('code')"
+                        v-model.trim.lazy="form.code"
+                    />
+
                     <InlineMessage v-if="form.invalid('code')" severity="error">{{ form.errors.code }}
                     </InlineMessage>
                 </div>
