@@ -34,6 +34,7 @@ class DepartmentsController extends Controller
     {
         return Inertia::render('Staff/Departments/ShowDepartment', [
             'group' => $department->loadCount('users')->only(['hashid', 'name', 'users_count']),
+            // Sort Owner, Admin, Moderator, Member and then by name
             'users' => $department->users()->withPivot('level')->get(['id', 'name', 'profile_photo_path'])->map(fn($user
             ) => [
                 'id' => $user->hashid,
@@ -41,6 +42,11 @@ class DepartmentsController extends Controller
                 'profile_photo_path' => (is_null($user->profile_photo_path)) ? null : Storage::drive('s3-avatars')->url($user->profile_photo_path),
                 'level' => $user->pivot->level,
                 'title' => $user->pivot->title,
+            ])->sortBy(fn($user) => [
+                $user['level'] === 'owner' ? 0 : 1,
+                $user['level'] === 'admin' ? 1 : 2,
+                $user['level'] === 'moderator' ? 2 : 3,
+                $user['name']
             ]),
             'canEdit' => $department->isAdmin($request->user())
         ]);

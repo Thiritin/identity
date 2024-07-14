@@ -1,4 +1,4 @@
-FROM php:8.2-bullseye as base
+FROM php:8.3-alpine as base
 WORKDIR /app
 
 ENV COMPOSER_MEMORY_LIMIT=-1
@@ -7,11 +7,12 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 ######################################################
 COPY .github/docker/install-php-extensions /usr/local/bin/
 
-RUN apt-get update \
+RUN apk update \
     && chmod +x /usr/local/bin/install-php-extensions \
-    && apt-get install -y curl git unzip openssl tar ca-certificates \
+    && apk add --no-cache curl git unzip openssl tar ca-certificates \
     && install-php-extensions gd bcmath pdo_mysql zip intl opcache pcntl redis swoole @composer \
-    && apt-get clean -y
+    && rm -rf /var/cache/apk/*
+
 ######################################################
 # Copy Configuration
 ######################################################
@@ -27,17 +28,6 @@ RUN composer install --no-dev --no-scripts --no-autoloader
 # Local Stage
 ######################################################
 FROM base as local
-RUN addgroup -gid 1024 app \
-  && adduser -uid 1024 --disabled-password --ingroup app app \
-  && adduser www-data app \
-  && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
-  && apt-get update \
-  && apt-get install -y nodejs \
-  && apt-get clean -y \
-  && install-php-extensions xdebug
-USER app
-# yarn install as command
-CMD sh -c "composer install && php artisan octane:start --watch --host=0.0.0.0 --port=80"
 ######################################################
 # Build Ziggy Package - Vite needs ziggy package available
 ######################################################

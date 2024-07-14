@@ -56,7 +56,7 @@ class LoginController extends Controller
 
         if (Auth::once($loginData) === true) {
             $user = Auth::user();
-
+            
             $hydra = new Client();
             $loginRequest = $hydra->getLoginRequest($request->get('login_challenge'));
 

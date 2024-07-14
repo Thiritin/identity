@@ -173,8 +173,7 @@
                         <MenuItem>
                             <a
                                 class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
-                                href="#"
-                                @click="logout"
+                                :href="route('auth.logout')"
                             >{{ $trans('logout') }}
                             </a>
                         </MenuItem>
@@ -190,7 +189,7 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
+import {computed, reactive, ref} from 'vue'
 import {
     Dialog,
     DialogPanel,
@@ -202,28 +201,41 @@ import {
     TransitionRoot
 } from '@headlessui/vue'
 import {Bars3Icon, HomeIcon, UsersIcon, XMarkIcon,} from '@heroicons/vue/24/outline'
-import {Link} from "@inertiajs/vue3";
+import {Link, usePage} from "@inertiajs/vue3";
 import StaffMainMenu from "../Components/Staff/Menu/StaffMainMenu.vue";
 import StaffTeamMenu from "../Components/Staff/Menu/StaffTeamMenu.vue";
 
+function updateNavigation() {
+    navigation.forEach(item => {
+        item.current = route().current(item.href)
+    })
 
-const navigation = [
+}
+
+let navigationSource = reactive([
     {
         name: 'Dashboard',
         href: route('staff.dashboard'),
         icon: HomeIcon,
-        current: route().current('staff.dashboard'),
-        soon: false
+        currentEval: () => route().current('staff.dashboard')
     },
     {
         name: 'Departments',
         href: route('staff.departments.index'),
         icon: UsersIcon,
-        current: route().current('staff.departments.*'),
-        soon: true
+        currentEval: () => route().current('staff.departments.index')
     },
-]
+]);
 
+const navigation = computed(() => {
+    // set current based on currentEval
+    // Current page
+    let page = usePage().url;
+    return navigationSource.map(item => {
+        item.current = item.currentEval()
+        return item
+    })
+})
 
 const profileNavMenu = [
     {
@@ -240,9 +252,17 @@ const profileNavMenu = [
     },
 ]
 
-const teams = [
-    //  {id: 1, name: 'Registration', href: '#', initial: 'R', current: false},
-]
+const teams = computed(() => {
+    const departments = usePage().props.user.departments;
+    return departments.map(department => {
+        return {
+            name: department.name,
+            href: route('staff.departments.show', {department: department.hashid}),
+            current: route().current('staff.departments.show', {department: department.hashid}),
+            initial: department.name.split(' ').map(word => word.charAt(0)).join('')
+        }
+    })
+})
 
 const sidebarOpen = ref(false)
 </script>

@@ -2,7 +2,7 @@
 import AppLayout from '../../../Layouts/AppLayout.vue'
 import SiteHeader from '../../../Components/Staff/SiteHeader.vue'
 import ChevronRightIcon from '../../../Components/Icons/ChevronRightIcon.vue'
-import {Link} from '@inertiajs/vue3'
+import {Link, router} from '@inertiajs/vue3'
 
 defineOptions({layout: AppLayout})
 const props = defineProps({
@@ -17,7 +17,8 @@ const props = defineProps({
     <!-- Department list -->
     <ul role="list" class="divide-y divide-gray-900/5">
         <li v-for="department in groups" :key="department.id"
-            class="relative flex items-center space-x-4 px-4 py-4 sm:px-6 lg:px-8">
+            @click="router.visit(route('staff.departments.show',{department: department.hashid}))"
+            class="relative flex items-center space-x-4 px-4 py-4 sm:px-6 lg:px-8 cursor-pointer hover:bg-gray-50 duration-200">
             <div class="min-w-0 flex-auto">
                 <div class="flex items-center gap-x-3">
                     <h2 class="min-w-0 font-semibold leading-6">
