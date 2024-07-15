@@ -15,7 +15,7 @@
         "doctrine/dbal": "^3.5",
         "endroid/qr-code": "^5.0",
         "erusev/parsedown": "^1.7",
-        "filament/filament": "^3.1",
+        "filament/filament": "^3.2",
         "filament/forms": "^3.1",
         "filament/notifications": "^3.1",
         "filament/tables": "^3.1",
