@@ -30,6 +30,7 @@
             <div class="flex flex-col gap-2">
                 <label for="email">{{ $trans('email') }}</label>
                 <InputText id="email"
+                           autocomplete="email"
                            @change="form.validate('email')"
                            :invalid="form.invalid('email') || errors.nouser"
                            v-model.trim.lazy="form.email"
@@ -40,6 +41,7 @@
                 <label for="password">{{ $trans('password') }}</label>
                 <InputText id="password"
                            type="password"
+                           autocomplete="current-password"
                            @change="form.validate('password')"
                            :invalid="form.invalid('password') || errors.nouser"
                            v-model.trim.lazy="form.password"

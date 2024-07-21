@@ -64,11 +64,13 @@ const selectedMethod = ref(props.lastUsedMethod);
                     <label for="code">{{ selectedMethodName }}</label>
                     <InputText v-if="selectedMethodName !== 'TOTP'" id="code"
                                type="text"
+                               autocomplete="one-time-code"
                                :invalid="form.invalid('code')"
                                v-model.trim.lazy="form.code"
                     />
                     <InputOtp
                         v-else
+                        autocomplete="one-time-code"
                         :length="6"
                         class="w-full flex grid-cols-6 justify-between"
                         :invalid="form.invalid('code')"
