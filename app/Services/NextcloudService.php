@@ -16,6 +16,12 @@ class NextcloudService
         return $groupId;
     }
 
+    // delete group
+    public static function deleteGroup($groupId)
+    {
+        Http::nextcloud()->delete("/ocs/v1.php/cloud/groups/{$groupId}")->throw();
+    }
+
     public static function setDisplayName($groupId, $displayName)
     {
         Http::nextcloud()->put("https://cloud.eurofurence.org/ocs/v2.php/cloud/groups/{$groupId}", [
@@ -41,11 +47,10 @@ class NextcloudService
         // Check user
         if (!self::checkUserExists($user->hashid)) {
             self::createUser($user); // Create user also adds groups so we don't need to add them here
-        } else {
-            Http::nextcloud()->post("ocs/v2.php/cloud/users/{$user->hashid}/groups", [
-                "groupid" => $group->hashid,
-            ])->throw();
         }
+        Http::nextcloud()->post("ocs/v2.php/cloud/users/{$user->hashid}/groups", [
+            "groupid" => $group->hashid,
+        ])->throw();
     }
 
     public static function removeUserFromGroup(Group $group, User $user)
@@ -106,6 +111,14 @@ class NextcloudService
             "group" => $groupId,
         ])->throw();
         return (int) $xml->data->id;
+    }
+
+    // add group to folder
+    public static function addGroupToFolder($folderId, $groupId)
+    {
+        Http::nextcloud()->post("apps/groupfolders/folders/{$folderId}/groups", [
+            "group" => $groupId,
+        ])->throw();
     }
 
     public static function renameFolder(int $folderId, string $folderName): void

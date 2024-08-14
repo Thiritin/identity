@@ -102,4 +102,14 @@ class Group extends Model
         }
         return $member->pivot->level == GroupUserLevel::Admin || $member->pivot->level == GroupUserLevel::Owner;
     }
+
+    public function children()
+    {
+        return $this->hasMany(__CLASS__, 'parent_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(__CLASS__, 'parent_id');
+    }
 }

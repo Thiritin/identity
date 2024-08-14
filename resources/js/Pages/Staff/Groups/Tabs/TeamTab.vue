@@ -1,13 +1,13 @@
 <script setup>
 import AppLayout from '../../../../Layouts/AppLayout.vue'
-import {router, useForm} from '@inertiajs/vue3'
+import {useForm} from '@inertiajs/vue3'
 import {ref, useAttrs} from 'vue'
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
 import TabComponent from "./TabComponent.vue";
 import TabHeader from "./TabHeader.vue";
 import {useToast} from "primevue/usetoast";
-import Tag from "primevue/tag"
+import GroupListItem from "../../../../Components/GroupListItem.vue";
 
 const deleteModal = ref({
     visible: false,
@@ -48,7 +48,8 @@ const props = defineProps({
         type: Object,
         required: false
     },
-    users: Array,
+    teams: Array,
+    myGroups: Array,
     canEdit: Boolean,
 })
 
@@ -61,49 +62,26 @@ const form = useForm({})
         <TabHeader
             :parent="parent"
             :group="group"
-            subtitle="Members"
+            subtitle="Teams"
             :can-edit="canEdit"
         ></TabHeader>
-        <TabComponent  :active-index="1" :group="group"></TabComponent>
-        <!-- User List -->
-        <ul role="list" class="divide-y divide-gray-900/5">
-            <li v-for="user in users">
-                <div class="px-6 py-4">
-                    <div class="flex justify-between items-center align-items-center">
-                        <div>
-                            <div class="text-lg font-semibold">{{ user.name }}</div>
-                            <div class="text-sm text-gray-600 flex">
-                                <div class="w-16">
-                                    {{ user.level }}
-                                </div>
-                                <div>
-                                    <Tag v-for="team in user.teams" severity="secondary">{{ team.name }}</Tag>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex gap-2" v-if="canEdit && (user.id !== attrs.user.id || parent !== null)">
-                            <Button
-                                @click="router.visit(route('staff.groups.members.edit', {group: group.hashid, member: user.id}))"
-                                severity="secondary"
-                                size="small"
-                            >Edit<span class="sr-only">, {{ user.name }}</span></Button>
-
-                            <Button
-                                severity="danger"
-                                size="small"
-                                @click="showDeleteModal(group.hashid, user)"
-                                :aria-controls="deleteModal.visible ? 'dlg' : null"
-                                :aria-expanded="!!deleteModal.visible">Remove<span
-                                class="sr-only">, {{ user.name }}</span>
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </li>
+        <TabComponent :active-index="2" :group="group"></TabComponent>
+        <!-- Department list -->
+        <ul role="list" class="divide-y divide-gray-900/5" v-if="teams.length">
+            <GroupListItem
+                v-for="department in teams"
+                :key="department.id"
+                :department="department"
+                :myGroups="myGroups"
+            />
         </ul>
+        <!-- No Team created info message -->
+        <div v-else class="flex items-center justify-center h-96">
+            <p class="text-gray-400">No teams created yet.</p>
+        </div>
 
         <!-- Delete modal -->
-        <Dialog v-model:visible="deleteModal.visible" modal header="Remove user from group"
+        <Dialog v-model:visible="deleteModal.visible" modal header="Remove user from department"
                 :style="{ width: '25rem' }">
                                 <span class="p-text-secondary block mb-5">Really remove {{
                                         deleteModal.user.name

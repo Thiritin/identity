@@ -19,12 +19,12 @@ class GroupUserPolicy
 
     public function update(User $user, GroupUser $groupUserInitiator): bool
     {
-        return $user->scopeCheck('groups.update') && $groupUserInitiator->isAdmin();
+        return $user->scopeCheck('groups.update') && ($groupUserInitiator->isAdmin() || $groupUserInitiator->group->parent?->isAdmin($user));
     }
 
     public function create(User $user, GroupUser $groupUserInitiator): bool
     {
-        return $user->scopeCheck('groups.update') && $groupUserInitiator->isAdmin();
+        return $user->scopeCheck('groups.update') && ($groupUserInitiator->isAdmin() || $groupUserInitiator->group->parent?->isAdmin($user));
     }
 
     public function delete(User $user, GroupUser $groupUser): Response
@@ -40,6 +40,12 @@ class GroupUserPolicy
         if ($groupUser->group->isAdmin($user)) {
             return Response::allow();
         }
+
+        // check if user is admin of parent group
+        if ($groupUser->group->parent && $groupUser->group->parent->isAdmin($user)) {
+            return Response::allow();
+        }
+
         return Response::deny('Insufficient permissions, you cannot delete users.');
     }
 }

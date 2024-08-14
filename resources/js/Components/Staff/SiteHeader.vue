@@ -8,7 +8,9 @@ const props = defineProps({
 <template>
     <div class="border-b border-b-gray-200 border-solid px-6 py-6 flex flex-col lg:flex-row justify-between items-start gap-4">
         <div>
-            <h1 class="font-semibold text-xl">{{ title }}</h1>
+            <h1 class="font-semibold text-xl">
+                <slot name="title">{{title}}</slot>
+            </h1>
             <p v-if="subtitle">{{subtitle}}</p>
         </div>
         <div>

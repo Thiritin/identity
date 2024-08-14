@@ -29,7 +29,7 @@ class GroupsController extends Controller
         ]);
 
         return Inertia::render('Staff/Groups/GroupsIndex', [
-            'groups' => $departmentsSortedByMembershipAndUserCount,
+            'groups' => $departmentsSortedByMembershipAndUserCount->values(),
             'myGroups' => $myDepartments,
         ]);
     }
@@ -39,9 +39,12 @@ class GroupsController extends Controller
         $Parsedown = new Parsedown();
         $Parsedown->setSafeMode(true);
         return Inertia::render('Staff/Groups/Tabs/GroupInfoTab', [
-            'group' => $group->loadCount('users')->only(['hashid', 'description', 'name', 'users_count']),
+            'group' => $group
+                ->loadCount('users')
+                ->only(['hashid', 'name', 'users_count', 'description','parent_id']),
+            'parent' => $group->parent?->only(['hashid', 'name']),
             'descriptionHtml' => $Parsedown->parse($group->description),
-            'canEdit' => $group->isAdmin($request->user()),
+            'canEdit' => $request->user()->can('update', $group),
         ]);
     }
 
@@ -57,5 +60,14 @@ class GroupsController extends Controller
             ])
         ]);
         return redirect()->back();
+    }
+
+    public function destroy(Group $group)
+    {
+        Gate::authorize('delete', $group);
+        $parent = $group->parent;
+        $group->delete();
+        return redirect()->route('staff.groups.show', $parent);
+
     }
 }

@@ -18,14 +18,23 @@ class GroupMemberController extends Controller
     public function index(Group $group, Request $request)
     {
         return Inertia::render('Staff/Groups/Tabs/MemberTab', [
-            'group' => $group->loadCount('users')->only(['hashid', 'name', 'users_count']),
+            'group' => $group->loadCount('users')->only(['hashid', 'name', 'users_count','parent_id']),
+            'parent' => $group->parent?->only(['hashid', 'name']),
             // Sort Owner, Admin, Moderator, Member and then by name
-            'users' => $group->users()->withPivot('level')->get(['id', 'name', 'profile_photo_path'])->map(fn($user
+            'users' => $group->users()
+                ->with([
+                    'groups' => fn($q) => $q->where('type', 'team')->where('parent_id', $group->id)->get(['id', 'name'])
+                ])
+                ->withPivot('level')->get(['id', 'name', 'profile_photo_path'])->map(fn($user
             ) => [
                 'id' => $user->hashid,
                 'name' => $user->name,
                 'profile_photo_path' => (is_null($user->profile_photo_path)) ? null : Storage::drive('s3-avatars')->url($user->profile_photo_path),
                 'level' => $user->pivot->level,
+                'teams' => $user->groups->map(fn($group) => [
+                    'id' => $group->hashid,
+                    'name' => $group->name,
+                ]),
                 'title' => $user->pivot->title,
             ])->sortBy(fn($user) => [
                 $user['level'] === 'owner' ? 0 : 1,
@@ -33,7 +42,7 @@ class GroupMemberController extends Controller
                 $user['level'] === 'moderator' ? 2 : 3,
                 $user['name']
             ]),
-            'canEdit' => $group->isAdmin($request->user())
+            'canEdit' => $request->user()->can('update', $group),
         ]);
     }
 
@@ -61,10 +70,14 @@ class GroupMemberController extends Controller
         }
         // If user is already in the department throw validationexception
         if ($group->users->contains($user)) {
-            throw ValidationException::withMessages([$field => 'User is already in the department']);
+            throw ValidationException::withMessages([$field => 'User is already in the group']);
         }
         // Attach user to department
         $group->users()->attach($user, ['level' => GroupUserLevel::Member]);
+        // If group has a parent, add them to the parent group
+        if ($group->parent && !$group->parent->users->contains($user)) {
+            $group->parent->users()->syncWithoutDetaching([$user->id => ['level' => GroupUserLevel::Member]]);
+        }
         return redirect()->route('staff.groups.members.index', $group);
     }
 
@@ -83,7 +96,8 @@ class GroupMemberController extends Controller
      */
     public function update(Group $group, User $member, Request $request)
     {
-        if ($member->id == $request->user()->id) {
+        $isAdminOfParentGroup = $group->parent?->isAdmin($request->user());
+        if ($member->id == $request->user()->id && !$isAdminOfParentGroup) {
             throw ValidationException::withMessages(["You cannot update your own level."]);
         }
 
@@ -106,12 +120,16 @@ class GroupMemberController extends Controller
      */
     public function destroy(Group $group, User $member, Request $request)
     {
-        if ($member->id === $request->user()->id) {
+        if ($member->id === $request->user()->id && !$group->parent?->isAdmin($request->user())) {
             throw ValidationException::withMessages(["You cannot remove yourself."]);
         }
 
         $requestMember = $group->users()->find($member)->pivot;
         $this->authorize('delete', $requestMember);
         $group->users()->detach($member);
+        // If group has children, remove them from the children
+        if ($group->children()->exists()) {
+            $group->children->each(fn($child) => $child->users()->detach($member));
+        }
     }
 }

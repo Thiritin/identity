@@ -15,10 +15,10 @@ class GroupUserObserver
         if ($groupUser->group->type === GroupTypeEnum::Department) {
             CheckStaffGroupMembershipJob::dispatch($groupUser->user);
         }
-        if ($groupUser->group->nextcloud_folder_name && !app()->runningUnitTests()) {
+        if (($groupUser->group->nextcloud_folder_name || $groupUser->group->parent?->nextcloud_folder_name) && !app()->runningUnitTests()) {
             NextcloudService::addUserToGroup($groupUser->group, $groupUser->user);
             $allowAclManagement = in_array($groupUser->level, [GroupUserLevel::Admin, GroupUserLevel::Owner]);
-            if ($allowAclManagement) {
+            if ($allowAclManagement && $groupUser->group->type !== GroupTypeEnum::Team) {
                 NextcloudService::setManageAcl($groupUser->group, $groupUser->user, $allowAclManagement);
             }
         }
@@ -26,7 +26,7 @@ class GroupUserObserver
 
     public function updated(GroupUser $groupUser): void
     {
-        if ($groupUser->group->nextcloud_folder_nam && !app()->runningUnitTests()) {
+        if ($groupUser->group->nextcloud_folder_name && !app()->runningUnitTests()) {
             if ($groupUser->isDirty('level')) {
                 $allowAclManagement = in_array($groupUser->level, [GroupUserLevel::Admin, GroupUserLevel::Owner]);
                 NextcloudService::setManageAcl($groupUser->group, $groupUser->user, $allowAclManagement);
@@ -41,15 +41,9 @@ class GroupUserObserver
         }
         if ($groupUser->group->nextcloud_folder_name && !app()->runningUnitTests()) {
             NextcloudService::removeUserFromGroup($groupUser->group, $groupUser->user);
-            NextcloudService::setManageAcl($groupUser->group, $groupUser->user, false);
+            if ($groupUser->group->type !== GroupTypeEnum::Team) {
+                NextcloudService::setManageAcl($groupUser->group, $groupUser->user, false);
+            }
         }
-    }
-
-    public function restored(GroupUser $groupUser): void
-    {
-    }
-
-    public function forceDeleted(GroupUser $groupUser): void
-    {
     }
 }

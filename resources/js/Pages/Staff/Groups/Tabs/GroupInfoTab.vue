@@ -13,13 +13,17 @@ import "md-editor-v3/lib/style.css";
 defineOptions({layout: AppLayout})
 const props = defineProps({
     group: Object,
+    parent: {
+        type: Object,
+        required: false
+    },
     users: Array,
     canEdit: Boolean,
     descriptionHtml: String,
 })
 
 const form = useForm('patch', route('staff.groups.update', {group: props.group.hashid}), {
-    description: props.group.description,
+    description: props.group.description ?? '',
 })
 
 const submit = () => form.submit({
@@ -40,6 +44,7 @@ const showDescriptionLabel = computed(() => {
 
 <template>
     <TabHeader
+        :parent="parent"
         :group="group"
         subtitle="Info"
         :can-edit="canEdit"

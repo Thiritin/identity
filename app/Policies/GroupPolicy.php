@@ -35,7 +35,7 @@ class GroupPolicy
     public function view(User $user, Group $group): Response
     {
         $inGroup = $user->inGroup($group->id);
-        $staffException = $group->type === GroupTypeEnum::Department && $user->isStaff();
+        $staffException = ($group->type === GroupTypeEnum::Department || $group->type === GroupTypeEnum::Team) && $user->isStaff();
         $userPermission = $user->scopeCheck('groups.read');
 
         if ($inGroup || $staffException) {
@@ -61,12 +61,20 @@ class GroupPolicy
             ->whereGroupId($group->id)
             ->where(fn($q) => $q->whereLevel(GroupUserLevel::Admin)->orWhere('level', GroupUserLevel::Owner))
             ->exists();
-        return ((Auth::guard("admin")->check() && $user->can('admin.groups.update')) || ($userAdminInGroup && $user->scopeCheck('groups.update')));
+        $userAdminInParentGroup = GroupUser::whereUserId($user->id)
+            ->whereGroupId($group->parent_id)
+            ->where(fn($q) => $q->whereLevel(GroupUserLevel::Admin)->orWhere('level', GroupUserLevel::Owner))
+            ->exists();
+        return ((Auth::guard("admin")->check() && $user->can('admin.groups.update')) || (($userAdminInGroup || $userAdminInParentGroup) && $user->scopeCheck('groups.update')));
     }
 
     public function delete(User $user, Group $group): bool
     {
+        if($group->type !== GroupTypeEnum::Team) {
+            return false;
+        }
         $userOwnerInGroup = GroupUser::whereUserId($user->id)->whereGroupId($group->id)->whereLevel(GroupUserLevel::Owner)->exists();
-        return ((Auth::guard("admin")->check() && $user->can('admin.groups.delete')) || ($userOwnerInGroup && $user->scopeCheck('groups.delete')));
+        $userOwnerInParentGroup = GroupUser::whereUserId($user->id)->whereGroupId($group->parent_id)->whereLevel(GroupUserLevel::Owner)->exists();
+        return ((Auth::guard("admin")->check() && $user->can('admin.groups.delete')) || (($userOwnerInGroup || $userOwnerInParentGroup) && $user->scopeCheck('groups.delete')));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
 use App\Models\Group;
 use App\Services\NextcloudService;
@@ -11,6 +12,14 @@ class GroupObserver
 {
     public function created(Group $group)
     {
+        if ($group->type === GroupTypeEnum::Team && $group->parent->nextcloud_folder_id) {
+            NextcloudService::createGroup($group->hashid);
+            // Parent->name / Group->name
+            NextcloudService::setDisplayName($group->hashid, $group->parent->name.' / '.$group->name);
+            // Add to parent group folder
+            NextcloudService::addGroupToFolder($group->parent->nextcloud_folder_id, $group->hashid);
+            return;
+        }
         if (Auth::user()) {
             $group->users()->attach(Auth::user(), [
                 "level" => GroupUserLevel::Owner
@@ -43,5 +52,15 @@ class GroupObserver
             // Update the display name of the group
             NextcloudService::setDisplayName($group->hashid, $group->name);
         }
+
+        // Team update nextcloud dipslay name
+        if ($group->type === GroupTypeEnum::Team && $group->isDirty('name') && $group->parent->nextcloud_folder_id) {
+            NextcloudService::setDisplayName($group->hashid, $group->parent->name.' / '.$group->name);
+        }
+    }
+
+    public function deleted(Group $group)
+    {
+        NextcloudService::deleteGroup($group->hashid);
     }
 }
