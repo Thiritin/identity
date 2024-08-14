@@ -105,7 +105,7 @@ class GroupMemberController extends Controller
             'level' => new Enum(GroupUserLevel::class),
         ]);
 
-        $requestMember = $group->users()->find($request->user())->pivot;
+        $requestMember = $group->users()->find($request->user()->id)->pivot;
         $this->authorize("update", $requestMember);
 
         $pivot = $group->users()->find($member->id)->pivot;
