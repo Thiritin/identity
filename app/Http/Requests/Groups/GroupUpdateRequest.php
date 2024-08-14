@@ -10,6 +10,7 @@ class GroupUpdateRequest extends FormRequest
     {
         return [
             'description' => ['nullable','string','max:10000'],
+            'name' => ['required','string','max:255'],
         ];
     }
 

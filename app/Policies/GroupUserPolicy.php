@@ -14,7 +14,7 @@ class GroupUserPolicy
 
     public function view(User $user, GroupUser $groupUser): bool
     {
-        return ($user->scopeCheck('groups.read') && $groupUser->isMember());
+        return ($user->scopeCheck('groups.read') && ($groupUser->isMember() || $groupUser->group->parent?->isMember($user)));
     }
 
     public function update(User $user, GroupUser $groupUserInitiator): bool

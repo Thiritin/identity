@@ -20,6 +20,7 @@ const props = defineProps({
 const showAddMemberDialog = ref(false);
 const showAddTeamDialog = ref(false);
 const confirmDeleteTeamDialog = ref(false);
+const showEditTeamDialog = ref(false);
 const toast = useToast();
 
 function submitUserForm() {
@@ -48,6 +49,16 @@ function submitTeamForm() {
     });
 }
 
+function submitEditTeamForm() {
+    editTeamForm.submit({
+        preserveScroll: true,
+        onSuccess: () => {
+            showEditTeamDialog.value = false;
+            toast.add({severity: 'success', summary: 'Success', detail: 'Team updated'});
+        }
+    });
+}
+
 const staffMemberList = usePage().props.staffMemberList;
 
 const addUserForm = useForm('POST',route('staff.groups.members.store',{group: props.group.hashid}), {
@@ -57,6 +68,10 @@ const addUserForm = useForm('POST',route('staff.groups.members.store',{group: pr
 
 const addTeamForm = useForm('POST',route('staff.groups.teams.store',{group: props.group.hashid}), {
     name: '',
+})
+
+const editTeamForm = useForm('PATCH', route('staff.groups.update', {group: props.group.hashid}), {
+    name: props.group.name,
 })
 
 // watch showAddMemberDialog if closed, reset addUserForm
@@ -90,6 +105,9 @@ const options = ref(['Staff List', 'Email']);
         <!-- Template Action -->
         <template v-slot:action v-if="canEdit">
             <div class="flex gap-2">
+                <Button
+                    size="small"
+                    @click="showEditTeamDialog = true">Edit Team</Button>
                 <Button
                     size="small"
                     @click="showAddMemberDialog = true">Add User
@@ -174,6 +192,18 @@ const options = ref(['Staff List', 'Email']);
                 })">Delete
             </Button>
         </div>
+    </Dialog>
+    <!-- Edit Team Name -->
+    <Dialog v-model:visible="showEditTeamDialog" modal class="max-w-md" header="Edit Team Name">
+        <form @submit.prevent="submitEditTeamForm()" class="space-y-3">
+            <label for="name">Team Name</label>
+            <InputText :invalid="editTeamForm.errors.name" v-model="editTeamForm.name" id="name" class="w-full"/>
+            <small class="text-red-500" v-if="editTeamForm.errors.name">{{ editTeamForm.errors.name }}</small>
+            <!-- Submit Button -->
+            <div class="flex justify-end">
+                <Button type="submit" class="btn btn-primary w-full">Save</Button>
+            </div>
+        </form>
     </Dialog>
 </template>
 
