@@ -81,7 +81,11 @@ class Group extends Model
     public function setNameAttribute($value)
     {
         $this->attributes['name'] = $value;
-        $this->attributes['slug'] = Str::slug($value);
+        $prefix = '';
+        if ($this->parent) {
+            $prefix = $this->parent->name.' / ';
+        }
+        $this->attributes['slug'] = $prefix.Str::slug($value);
     }
 
     public function getLogoUrlAttribute()

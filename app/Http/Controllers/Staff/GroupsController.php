@@ -23,6 +23,7 @@ class GroupsController extends Controller
 
         $departments = Group::where('type', GroupTypeEnum::Department)
             ->withCount('users')->get();
+
         $departmentsSortedByMembershipAndUserCount = $departments->sortByDesc(fn($department) => [
             $myDepartments->contains($department->id),
             $department->users_count
@@ -51,6 +52,12 @@ class GroupsController extends Controller
     public function update(GroupUpdateRequest $request, Group $group)
     {
         Gate::authorize('update', $group);
+        // if name isset then it needs to be not null
+        if (isset($request->validated()['name'])) {
+            $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+            ]);
+        }
         $group->update($request->validated());
         return redirect()->back();
 

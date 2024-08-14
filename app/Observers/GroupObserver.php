@@ -6,12 +6,17 @@ use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
 use App\Models\Group;
 use App\Services\NextcloudService;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
 class GroupObserver
 {
     public function created(Group $group)
     {
+        if (App::isLocal()) {
+            return;
+        }
+
         if ($group->type === GroupTypeEnum::Team && $group->parent->nextcloud_folder_id) {
             NextcloudService::createGroup($group->hashid);
             // Parent->name / Group->name
@@ -29,6 +34,10 @@ class GroupObserver
 
     public function updated(Group $group): void
     {
+        if (App::isLocal()) {
+            return;
+        }
+
         if ($group->isDirty('nextcloud_folder_name') && !app()->runningUnitTests()) {
             // Update or create the folder via nextcloud
             if ($group->nextcloud_folder_id) {
@@ -61,6 +70,10 @@ class GroupObserver
 
     public function deleted(Group $group)
     {
+        if (App::isLocal()) {
+            return;
+        }
+
         NextcloudService::deleteGroup($group->hashid);
     }
 }

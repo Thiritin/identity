@@ -7,6 +7,7 @@ use App\Enums\GroupUserLevel;
 use App\Jobs\CheckStaffGroupMembershipJob;
 use App\Models\GroupUser;
 use App\Services\NextcloudService;
+use Illuminate\Support\Facades\App;
 
 class GroupUserObserver
 {
@@ -14,6 +15,9 @@ class GroupUserObserver
     {
         if ($groupUser->group->type === GroupTypeEnum::Department) {
             CheckStaffGroupMembershipJob::dispatch($groupUser->user);
+        }
+        if (App::isLocal()) {
+            return;
         }
         if (($groupUser->group->nextcloud_folder_name || $groupUser->group->parent?->nextcloud_folder_name) && !app()->runningUnitTests()) {
             NextcloudService::addUserToGroup($groupUser->group, $groupUser->user);
@@ -26,6 +30,9 @@ class GroupUserObserver
 
     public function updated(GroupUser $groupUser): void
     {
+        if (App::isLocal()) {
+            return;
+        }
         if ($groupUser->group->nextcloud_folder_name && !app()->runningUnitTests()) {
             if ($groupUser->isDirty('level')) {
                 $allowAclManagement = in_array($groupUser->level, [GroupUserLevel::Admin, GroupUserLevel::Owner]);
@@ -38,6 +45,9 @@ class GroupUserObserver
     {
         if ($groupUser->group->type === GroupTypeEnum::Department) {
             CheckStaffGroupMembershipJob::dispatch($groupUser->user);
+        }
+        if (App::isLocal()) {
+            return;
         }
         if ($groupUser->group->nextcloud_folder_name && !app()->runningUnitTests()) {
             NextcloudService::removeUserFromGroup($groupUser->group, $groupUser->user);
