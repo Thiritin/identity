@@ -40,8 +40,7 @@ class LoginController extends Controller
         }
 
         if ($subject !== null) {
-            return Redirect::to($hydra->acceptLogin($subject, $loginRequest["challenge"], 3600,
-                $loginRequest));
+            return Redirect::to($hydra->acceptLogin($subject, $loginRequest["challenge"], null, $loginRequest));
         }
 
         return Inertia::render('Auth/Login');
@@ -56,7 +55,7 @@ class LoginController extends Controller
 
         if (Auth::once($loginData) === true) {
             $user = Auth::user();
-            
+
             $hydra = new Client();
             $loginRequest = $hydra->getLoginRequest($request->get('login_challenge'));
 

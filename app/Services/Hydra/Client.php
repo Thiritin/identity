@@ -45,7 +45,7 @@ class Client
     public function acceptLogin(
         string $subject,
         string $login_challenge,
-        int $remember_seconds = 0,
+        int|null $remember_seconds = 0,
         array|null $loginRequest = null
     ): string {
         $hydra = new Client();
@@ -74,14 +74,15 @@ class Client
         return $hydraResponse['redirect_to'];
     }
 
-    public function acceptLoginRequest(string $userId, string $loginChallenge, int $remember = 0)
+    public function acceptLoginRequest(string $userId, string $loginChallenge, int|null $remember = 0)
     {
         try {
-            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/login/accept?challenge='.$loginChallenge, [
-                'subject' => $userId,
-                'remember' => ($remember !== 0),
-                'remember_for' => $remember,
-            ])->json();
+            $loginRequestBody = ['subject' => $userId];
+            if ($remember !== null) {
+                $loginRequestBody['remember'] = ($remember !== 0);
+                $loginRequestBody['remember_for'] = $remember;
+            }
+            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/login/accept?challenge='.$loginChallenge, $loginRequestBody)->json();
 
         } catch (Exception $e) {
             if ($e->getCode() === 404) {

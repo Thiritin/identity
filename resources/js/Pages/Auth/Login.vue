@@ -51,7 +51,7 @@
             </div>
             <div class="relative flex items-start">
                 <div class="flex items-center h-5">
-                    <Checkbox id="remember" :binary="true" v-model="form.remember" name="remember"/>
+                    <Checkbox input-id="remember" :binary="true" v-model="form.remember" name="remember"/>
                 </div>
                 <div class="ml-3 text-sm">
                     <label
