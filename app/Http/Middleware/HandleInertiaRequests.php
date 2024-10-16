@@ -58,7 +58,9 @@ class HandleInertiaRequests extends Middleware
         $staffMembers = null;
         // If user has departments
         if($user && $user['departments']->count() > 0) {
-            $staffMembers = User::whereHas('groups', fn($q) => $q->where('type', 'department'))->get(['id','name']);
+            $staffMembers = User::whereHas('groups', fn($q) => $q->where('type', 'department'))
+                ->orderBy('name')
+                ->get(['id','name']);
         }
 
 
