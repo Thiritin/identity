@@ -63,6 +63,7 @@ services:
     volumes:
       - 'sail-mysql:/var/lib/mysql'
       - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+      - './local-dev/database/create-hydra-database.sh:/docker-entrypoint-initdb.d/10-create-hydra-database.sh'
     networks:
       - sail
     healthcheck:
@@ -116,7 +117,8 @@ services:
       - '4445:4445' # NEVER EXPOSE PUBLICLY ON PROD, ADMIN ENDPONT!!!
       - '5555:5555'
     depends_on:
-      - hydra-migrate
+      hydra-migrate:
+        condition: service_completed_successfully
     command: serve all
   hydra-migrate:
     image: 'oryd/hydra'
@@ -125,6 +127,8 @@ services:
     environment:
       DSN: "mysql://root:${DB_PASSWORD}@tcp(mysql:3306)/hydra?parseTime=true&tls=skip-verify&max_conns=20&max_idle_conns=4"
       SECRETS_SYSTEM: '${HYDRA_SECRET_KEY}'
+    depends_on:
+      - mysql
     command: migrate sql -e --yes
     restart: on-failure
   redis:
