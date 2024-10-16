@@ -1,0 +1,199 @@
+services:
+  laravel.test:
+    build:
+      context: ./docker/8.2
+      dockerfile: Dockerfile
+      args:
+        WWWGROUP: '${WWWGROUP}'
+    image: sail-8.2/app
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    ports:
+      - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+    environment:
+      WWWUSER: '${WWWUSER}'
+      LARAVEL_SAIL: 1
+      XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+      XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+      IGNITION_LOCAL_SITES_PATH: '${PWD}'
+    volumes:
+      - '.:/var/www/html'
+    networks:
+      - sail
+    depends_on:
+      - mysql
+      - redis
+      - soketi
+      - meilisearch
+      - mailpit
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.app.rule=Host(`identity.eurofurence.localhost`)
+      - traefik.http.services.app.loadbalancer.server.port=80
+      - traefik.http.routers.app.entrypoints=web
+  traefik:
+    image: 'traefik:v2.3'
+    command:
+      - '--api=true'
+      - '--api.insecure=true'
+      - '--providers.docker=true'
+      - '--providers.docker.exposedbydefault=false'
+      - '--entrypoints.web.address=:80'
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8080:8080'
+    networks:
+      sail:
+        aliases:
+          - identity.eurofurence.localhost
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+  mysql:
+    image: 'mysql/mysql-server:8.0'
+    ports:
+      - '${FORWARD_DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - 'sail-mysql:/var/lib/mysql'
+      - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+      - './local-dev/database/create-hydra-database.sh:/docker-entrypoint-initdb.d/10-create-hydra-database.sh'
+    networks:
+      - sail
+    healthcheck:
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - '-p${DB_PASSWORD}'
+      retries: 3
+      timeout: 5s
+  hydra:
+    image: 'oryd/hydra'
+    networks:
+      - sail
+    environment:
+      DSN: "mysql://root:${DB_PASSWORD}@tcp(mysql:3306)/hydra?parseTime=true&tls=skip-verify&max_conns=20&max_idle_conns=4"
+      SECRETS_SYSTEM: '${HYDRA_SECRET_KEY}'
+      URLS_SELF_ISSUER: http://identity.eurofurence.localhost/
+      URLS_CONSENT: http://identity.eurofurence.localhost/auth/consent
+      URLS_LOGIN: http://identity.eurofurence.localhost/auth/login
+      URLS_LOGOUT: http://identity.eurofurence.localhost/auth/logout
+      URLS_ERROR: http://identity.eurofurence.localhost/auth/error
+      URLS_POST_LOGOUT_REDIRECT: http://identity.eurofurence.localhost/auth/choose
+      SERVE_COOKIES_SAME_SITE_MODE: Lax
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_CLAIMS_0: email
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_CLAIMS_1: name
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_CLAIMS_2: email
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_CLAIMS_3: email_verified
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_CLAIMS_4: avatar
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_CLAIMS_5: groups
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_0: profile
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_1: email
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_2: groups
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_3: groups.read
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_4: groups.write
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_5: groups.delete
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_6: registration.reg.test
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_7: registration.reg.live
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_8: registration.room.test
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_9: registration.room.live
+      LOG_LEAK_SENSITIVE_VALUES: "true"
+      OAUTH2_EXPOSE_INTERNAL_ERRORS: "true"
+      DEV: "true"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.hydra.rule=Host(`identity.eurofurence.localhost`) && PathPrefix(`/.well-known`,`/oauth2`,`/health`,`/userinfo`)
+      - traefik.http.services.hydra.loadbalancer.server.port=4444
+      - traefik.http.routers.hydra.entrypoints=web
+    ports:
+      - '4444:4444'
+      - '4445:4445' # NEVER EXPOSE PUBLICLY ON PROD, ADMIN ENDPONT!!!
+      - '5555:5555'
+    depends_on:
+      hydra-migrate:
+        condition: service_completed_successfully
+    command: serve all
+  hydra-migrate:
+    image: 'oryd/hydra'
+    networks:
+      - sail
+    environment:
+      DSN: "mysql://root:${DB_PASSWORD}@tcp(mysql:3306)/hydra?parseTime=true&tls=skip-verify&max_conns=20&max_idle_conns=4"
+      SECRETS_SYSTEM: '${HYDRA_SECRET_KEY}'
+    depends_on:
+      - mysql
+    command: migrate sql -e --yes
+    restart: on-failure
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - '${FORWARD_REDIS_PORT:-6379}:6379'
+    volumes:
+      - 'sail-redis:/data'
+    networks:
+      - sail
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      retries: 3
+      timeout: 5s
+  soketi:
+    image: 'quay.io/soketi/soketi:latest-16-alpine'
+    environment:
+      SOKETI_DEBUG: '${SOKETI_DEBUG:-1}'
+      SOKETI_METRICS_SERVER_PORT: '9601'
+      SOKETI_DEFAULT_APP_ID: '${PUSHER_APP_ID}'
+      SOKETI_DEFAULT_APP_KEY: '${PUSHER_APP_KEY}'
+      SOKETI_DEFAULT_APP_SECRET: '${PUSHER_APP_SECRET}'
+    ports:
+      - '${PUSHER_PORT:-6001}:6001'
+      - '${PUSHER_METRICS_PORT:-9601}:9601'
+    networks:
+      - sail
+  meilisearch:
+    image: 'getmeili/meilisearch:latest'
+    ports:
+      - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
+    environment:
+      MEILI_NO_ANALYTICS: '${MEILISEARCH_NO_ANALYTICS:-false}'
+    volumes:
+      - 'sail-meilisearch:/meili_data'
+    networks:
+      - sail
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - '--no-verbose'
+        - '--spider'
+        - 'http://localhost:7700/health'
+      retries: 3
+      timeout: 5s
+  mailpit:
+    image: 'axllent/mailpit:latest'
+    ports:
+      - '${FORWARD_MAILPIT_PORT:-1025}:1025'
+      - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+    networks:
+      - sail
+networks:
+  sail:
+    driver: bridge
+volumes:
+  sail-mysql:
+    driver: local
+  sail-redis:
+    driver: local
+  sail-minio:
+    driver: local
+  sail-meilisearch:
+    driver: local

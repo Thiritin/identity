@@ -1,4 +1,5 @@
 {
+    "name": "identity",
     "private": true,
     "type": "module",
     "scripts": {
