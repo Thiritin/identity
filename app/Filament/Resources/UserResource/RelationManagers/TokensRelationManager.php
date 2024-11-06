@@ -7,8 +7,8 @@ use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
 use Filament\Tables;
+use Filament\Tables\Table;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Sanctum\PersonalAccessToken;
 
@@ -35,7 +35,7 @@ class TokensRelationManager extends RelationManager
                 })->form([
                     Forms\Components\TextInput::make('name'),
                     Forms\Components\Select::make('abilities')->options(static function () {
-                        return collect((new Client())->getScopes())->mapWithKeys(fn($v) => [$v => $v]);
+                        return collect((new Client())->getScopes())->mapWithKeys(fn ($v) => [$v => $v]);
                     })->multiple(),
                     Forms\Components\DateTimePicker::make('expires_at'),
                 ]),
@@ -57,11 +57,11 @@ class TokensRelationManager extends RelationManager
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Select::make('abilities')->options(static function () {
-                    return collect((new Client())->getScopes())->mapWithKeys(fn($v) => [$v => $v]);
+                    return collect((new Client())->getScopes())->mapWithKeys(fn ($v) => [$v => $v]);
                 })->multiple(),
                 Forms\Components\TextInput::make('token')
                     ->disabled()
-                    ->visible(fn(PersonalAccessToken $record) => Cache::has('admin.accessKeyTmp.' . $record->id))
+                    ->visible(fn (PersonalAccessToken $record) => Cache::has('admin.accessKeyTmp.' . $record->id))
                     ->hint('Will be hidden 3 minutes after access token creation.')
                     ->formatStateUsing(function (PersonalAccessToken $record) {
                         return Cache::get('admin.accessKeyTmp.' . $record->id);

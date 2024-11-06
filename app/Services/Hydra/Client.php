@@ -32,7 +32,7 @@ class Client
 
     public function getScopes()
     {
-        return Http::hydraPublic()->get("/.well-known/openid-configuration")->json('scopes_supported');
+        return Http::hydraPublic()->get('/.well-known/openid-configuration')->json('scopes_supported');
     }
 
     /**
@@ -40,13 +40,14 @@ class Client
      *
      * @param  string  $login_challenge
      * @return Response
+     *
      * @throws JsonException
      */
     public function acceptLogin(
         string $subject,
         string $login_challenge,
-        int|null $remember_seconds = 0,
-        array|null $loginRequest = null
+        ?int $remember_seconds = 0,
+        ?array $loginRequest = null
     ): string {
         $hydra = new Client();
         // If $loginRequest is not supplied, refetch.
@@ -66,15 +67,15 @@ class Client
         event(new AppLoginEvent($loginRequest['client']['client_id'], $subject));
 
         // Throw error on missing redirect
-        if (!isset($hydraResponse["redirect_to"])) {
-            throw ValidationException::withMessages(['general' => $hydraResponse['error_description'] ?? "Unknown error"]);
+        if (! isset($hydraResponse['redirect_to'])) {
+            throw ValidationException::withMessages(['general' => $hydraResponse['error_description'] ?? 'Unknown error']);
         }
 
         // Return redirect url given in response
         return $hydraResponse['redirect_to'];
     }
 
-    public function acceptLoginRequest(string $userId, string $loginChallenge, int|null $remember = 0)
+    public function acceptLoginRequest(string $userId, string $loginChallenge, ?int $remember = 0)
     {
         try {
             $loginRequestBody = ['subject' => $userId];
@@ -82,7 +83,8 @@ class Client
                 $loginRequestBody['remember'] = ($remember !== 0);
                 $loginRequestBody['remember_for'] = $remember;
             }
-            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/login/accept?challenge='.$loginChallenge, $loginRequestBody)->json();
+
+            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/login/accept?challenge=' . $loginChallenge, $loginRequestBody)->json();
 
         } catch (Exception $e) {
             if ($e->getCode() === 404) {
@@ -104,7 +106,7 @@ class Client
 
             if (in_array('email', $consentChallenge['requested_scope'])) {
                 $requestData['session']['id_token']['email'] = $user->email;
-                $requestData['session']['id_token']['email_verified'] = !is_null($user->email_verified_at);
+                $requestData['session']['id_token']['email_verified'] = ! is_null($user->email_verified_at);
             }
             if (in_array('profile', $consentChallenge['requested_scope'])) {
                 $requestData['session']['id_token']['name'] = $user->name;
@@ -114,7 +116,7 @@ class Client
                 $requestData['session']['id_token']['groups'] = $user->groups->pluck('hashid');
             }
 
-            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/consent/accept?challenge='.$consentChallenge['challenge'],
+            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/consent/accept?challenge=' . $consentChallenge['challenge'],
                 $requestData)->json();
         } catch (Exception $e) {
             if ($e->getCode() === 404) {
@@ -134,13 +136,14 @@ class Client
     ) {
         try {
             $requestData = [
-                "error" => $errorCode,
-                "error_description" => $errorDescription,
-                "error_hint" => $errorHint,
-                "error_debug" => $errorDebug,
-                "status_code" => $statusCode,
+                'error' => $errorCode,
+                'error_description' => $errorDescription,
+                'error_hint' => $errorHint,
+                'error_debug' => $errorDebug,
+                'status_code' => $statusCode,
             ];
-            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/consent/reject?challenge='.$consentChallenge['challenge'],
+
+            return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/consent/reject?challenge=' . $consentChallenge['challenge'],
                 $requestData)->json();
         } catch (Exception $e) {
             if ($e->getCode() === 404) {
@@ -184,7 +187,7 @@ class Client
     {
         try {
             return Http::hydraAdmin()->put(
-                '/admin/oauth2/auth/requests/logout/accept?challenge='.$logoutChallenge
+                '/admin/oauth2/auth/requests/logout/accept?challenge=' . $logoutChallenge
             )->json();
         } catch (Exception $e) {
             if ($e->getCode() === 404) {
@@ -200,7 +203,7 @@ class Client
         try {
             return Http::hydraAdmin()->delete('/admin/oauth2/auth/sessions/login', [
                 'query' => [
-                    "subject" => $subject,
+                    'subject' => $subject,
                 ],
             ])->successful();
         } catch (Exception $e) {

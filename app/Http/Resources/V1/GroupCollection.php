@@ -9,7 +9,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 class GroupCollection extends ResourceCollection
 {
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)

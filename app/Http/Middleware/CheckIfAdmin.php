@@ -30,7 +30,6 @@ class CheckIfAdmin
      * Answer to unauthorized access request.
      *
      * @param [type] $request [description]
-     *
      * @return [type] [description]
      */
     private function respondToUnauthorizedRequest($request)
@@ -59,11 +58,10 @@ class CheckIfAdmin
      * (again - users, not admins).
      *
      * @param [type] $user [description]
-     *
      * @return bool [description]
      */
     private function checkIfUserIsAdmin(User $user)
     {
-        return ($user->hasRole('superadmin') === true);
+        return $user->hasRole('superadmin') === true;
     }
 }

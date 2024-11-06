@@ -6,7 +6,5 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UserinfoRequest extends FormRequest
 {
-    public function rules(): array
-    {
-    }
+    public function rules(): array {}
 }

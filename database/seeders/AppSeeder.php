@@ -25,23 +25,23 @@ class AppSeeder extends Seeder
         string $clientName
     ) {
         $app = App::firstOrCreate([
-            "system_name" => $systemName,
+            'system_name' => $systemName,
         ], [
-            "name" => $clientName,
+            'name' => $clientName,
             'public' => false,
-            'description' => 'This is the official '.$clientName.'.',
+            'description' => 'This is the official ' . $clientName . '.',
             'icon' => 'CogsDuotone',
-            "system_name" => $systemName,
+            'system_name' => $systemName,
             'user_id' => User::first()->id,
             'data' => [
-                "client_name" => $clientName,
-                "redirect_uris" => [
+                'client_name' => $clientName,
+                'redirect_uris' => [
                     route('login.apps.callback', ['app' => $systemName]),
                 ],
-                "scope" => explode(" ", config('services.apps')[$systemName]['scopes']),
-                "token_endpoint_auth_method" => "client_secret_post",
-                "frontchannel_logout_uri" => route('login.apps.frontchannel-logout', ['app' => $systemName]),
-            ]
+                'scope' => explode(' ', config('services.apps')[$systemName]['scopes']),
+                'token_endpoint_auth_method' => 'client_secret_post',
+                'frontchannel_logout_uri' => route('login.apps.frontchannel-logout', ['app' => $systemName]),
+            ],
         ]);
         // Check if App was just created
         if ($app->wasRecentlyCreated && app()->isLocal()) {
@@ -50,8 +50,8 @@ class AppSeeder extends Seeder
             $client_secret = $app->data['client_secret'];
 
             $envName = Str::upper($systemName);
-            shell_exec("sed -i \"s/.*IDENTITY_".$envName."_ID=.*/IDENTITY_".$envName."_ID=$client_id/\" .env");
-            shell_exec("sed -i \"s/.*IDENTITY_".$envName."_SECRET=.*/IDENTITY_".$envName."_SECRET=$client_secret/\" .env");
+            shell_exec('sed -i "s/.*IDENTITY_' . $envName . '_ID=.*/IDENTITY_' . $envName . "_ID=$client_id/\" .env");
+            shell_exec('sed -i "s/.*IDENTITY_' . $envName . '_SECRET=.*/IDENTITY_' . $envName . "_SECRET=$client_secret/\" .env");
         }
     }
 }

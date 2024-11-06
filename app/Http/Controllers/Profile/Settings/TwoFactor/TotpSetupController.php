@@ -22,15 +22,17 @@ class TotpSetupController extends Controller
         // Determine if Two Factor is enabled for the person
         $twoFactorEnabled = auth()->user()->twoFactors()->whereType(TwoFactorTypeEnum::TOTP)->exists();
         if ($twoFactorEnabled === false) {
-            $secret = Cache::remember('user-'.auth()->user()->id.'-two-factor-user-cache', now()->addHour(),
+            $secret = Cache::remember('user-' . auth()->user()->id . '-two-factor-user-cache', now()->addHour(),
                 function () use ($tfa) {
                     $secret = $tfa->createSecret();
+
                     return [
                         'secret' => $secret,
-                        'qrCode' => $tfa->getQRCodeImageAsDataUri(config('app.name')."-".auth()->user()->name, $secret),
+                        'qrCode' => $tfa->getQRCodeImageAsDataUri(config('app.name') . '-' . auth()->user()->name, $secret),
                     ];
                 });
         }
+
         return Inertia::render('Settings/TwoFactor/AuthenticatorApp', [
             'secret' => $secret['secret'] ?? null,
             'qrCode' => $secret['qrCode'] ?? null,
@@ -44,15 +46,15 @@ class TotpSetupController extends Controller
         $tfa = $this->createTwoFactorAuth();
         $data = $request->validated();
         // Verify that data->code is equal to cached value
-        $cachedValue = Cache::get('user-'.auth()->user()->id.'-two-factor-user-cache');
-        if (!isset($cachedValue['secret'])) {
+        $cachedValue = Cache::get('user-' . auth()->user()->id . '-two-factor-user-cache');
+        if (! isset($cachedValue['secret'])) {
             throw ValidationException::withMessages(['code' => 'Your secret expired, please try again.']);
         }
         if ($cachedValue['secret'] !== $data['secret']) {
             throw ValidationException::withMessages(['code' => 'Invalid code']);
         }
         // Verify that code is valid
-        if (!$tfa->verifyCode($data['secret'], $data['code'])) {
+        if (! $tfa->verifyCode($data['secret'], $data['code'])) {
             throw ValidationException::withMessages(['code' => 'Invalid code']);
         }
         // Add totp device to user
@@ -61,7 +63,8 @@ class TotpSetupController extends Controller
             'secret' => $data['secret'],
         ]);
         // Clear cache
-        Cache::forget('user-'.auth()->user()->id.'-two-factor-user-cache');
+        Cache::forget('user-' . auth()->user()->id . '-two-factor-user-cache');
+
         return redirect()->route('settings.two-factor');
     }
 
@@ -71,11 +74,12 @@ class TotpSetupController extends Controller
         $data = $request->validated();
         // Verify that password is correct
         $userPassword = auth()->user()->password;
-        if (!Hash::check($data['password'], $userPassword)) {
+        if (! Hash::check($data['password'], $userPassword)) {
             throw ValidationException::withMessages(['password' => 'Invalid password']);
         }
         // Delete totp device
         auth()->user()->twoFactors()->whereType(TwoFactorTypeEnum::TOTP)->delete();
+
         return redirect()->route('settings.two-factor');
 
     }

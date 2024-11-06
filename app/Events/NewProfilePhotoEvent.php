@@ -10,6 +10,7 @@ class NewProfilePhotoEvent
     use Dispatchable;
 
     public User $user;
+
     public string $path;
 
     public function __construct(User $user, string $path)

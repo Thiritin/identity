@@ -20,15 +20,16 @@ class GroupPolicy
      */
     public function viewAny(User $user): bool
     {
-        if (Auth::guard("admin")->check()) {
+        if (Auth::guard('admin')->check()) {
             return $user->can('admin.groups.view');
         }
-        if (Auth::guard("web")->check()) {
+        if (Auth::guard('web')->check()) {
             return true;
         }
-        if (Auth::guard("api")->check()) {
+        if (Auth::guard('api')->check()) {
             return $user->scopeCheck('groups.read');
         }
+
         return true;
     }
 
@@ -42,9 +43,11 @@ class GroupPolicy
             if ($userPermission === false) {
                 return Response::deny('Insufficient permissions, groups.read is missing');
             }
+
             return Response::allow();
         }
-        return Response::deny("User is not a member of the group");
+
+        return Response::deny('User is not a member of the group');
     }
 
     public function create(User $user): bool
@@ -59,22 +62,24 @@ class GroupPolicy
         }
         $userAdminInGroup = GroupUser::whereUserId($user->id)
             ->whereGroupId($group->id)
-            ->where(fn($q) => $q->whereLevel(GroupUserLevel::Admin)->orWhere('level', GroupUserLevel::Owner))
+            ->where(fn ($q) => $q->whereLevel(GroupUserLevel::Admin)->orWhere('level', GroupUserLevel::Owner))
             ->exists();
         $userAdminInParentGroup = GroupUser::whereUserId($user->id)
             ->whereGroupId($group->parent_id)
-            ->where(fn($q) => $q->whereLevel(GroupUserLevel::Admin)->orWhere('level', GroupUserLevel::Owner))
+            ->where(fn ($q) => $q->whereLevel(GroupUserLevel::Admin)->orWhere('level', GroupUserLevel::Owner))
             ->exists();
-        return ((Auth::guard("admin")->check() && $user->can('admin.groups.update')) || (($userAdminInGroup || $userAdminInParentGroup) && $user->scopeCheck('groups.update')));
+
+        return (Auth::guard('admin')->check() && $user->can('admin.groups.update')) || (($userAdminInGroup || $userAdminInParentGroup) && $user->scopeCheck('groups.update'));
     }
 
     public function delete(User $user, Group $group): bool
     {
-        if($group->type !== GroupTypeEnum::Team) {
+        if ($group->type !== GroupTypeEnum::Team) {
             return false;
         }
         $userOwnerInGroup = GroupUser::whereUserId($user->id)->whereGroupId($group->id)->whereLevel(GroupUserLevel::Owner)->exists();
         $userOwnerInParentGroup = GroupUser::whereUserId($user->id)->whereGroupId($group->parent_id)->whereLevel(GroupUserLevel::Owner)->exists();
-        return ((Auth::guard("admin")->check() && $user->can('admin.groups.delete')) || (($userOwnerInGroup || $userOwnerInParentGroup) && $user->scopeCheck('groups.delete')));
+
+        return (Auth::guard('admin')->check() && $user->can('admin.groups.delete')) || (($userOwnerInGroup || $userOwnerInParentGroup) && $user->scopeCheck('groups.delete'));
     }
 }

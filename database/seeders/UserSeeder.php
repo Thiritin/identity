@@ -22,14 +22,14 @@ class UserSeeder extends Seeder
         }
 
         $user = User::firstOrCreate([
-            "id" => 1
+            'id' => 1,
         ], [
-            "name" => "Admin",
-            "email" => "identity@eurofurence.localhost",
-            "email_verified_at" => now(),
-            "password" => \Hash::make(random_bytes(32))
+            'name' => 'Admin',
+            'email' => 'identity@eurofurence.localhost',
+            'email_verified_at' => now(),
+            'password' => \Hash::make(random_bytes(32)),
         ]);
         // Warning this user will be made admin!
-        $user->roles()->attach(Role::where('name','superadmin')->firstOrFail());
+        $user->roles()->attach(Role::where('name', 'superadmin')->firstOrFail());
     }
 }

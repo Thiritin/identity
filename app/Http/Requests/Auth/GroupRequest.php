@@ -5,6 +5,7 @@ namespace App\Http\Requests\Auth;
 use App\Http\Requests\Request;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\In;
+
 use function backpack_auth;
 
 class GroupRequest extends FormRequest
@@ -32,7 +33,7 @@ class GroupRequest extends FormRequest
             'name' => 'required|min:5|max:255',
             'type' => [
                 new In(['default', 'department', 'system']),
-                'required'
+                'required',
             ],
             'description' => 'nullable',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',

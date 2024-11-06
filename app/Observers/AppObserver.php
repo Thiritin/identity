@@ -20,7 +20,7 @@ class AppObserver
     {
         $app->data = \App\Services\Hydra\Models\App::find($app->client_id)->update($app->data);
         $app->client_id = $app->data['client_id'];
-        if (!empty($app->data['client_secret'])) {
+        if (! empty($app->data['client_secret'])) {
             $app->client_secret = Hash::make($app->data['client_secret']);
         }
         $app->saveQuietly();

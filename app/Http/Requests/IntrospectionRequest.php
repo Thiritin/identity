@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Hash;
 
 class IntrospectionRequest extends FormRequest
 {
-    private App|null $client = null;
+    private ?App $client = null;
 
     public function rules(): array
     {
         return [
-            "client_id" => "required|string",
-            "scope" => "nullable|string",
-            "token" => "required|string",
+            'client_id' => 'required|string',
+            'scope' => 'nullable|string',
+            'token' => 'required|string',
         ];
     }
 
@@ -34,6 +34,7 @@ class IntrospectionRequest extends FormRequest
         if (Hash::check($this->bearerToken(), $client->client_secret)) {
             return true;
         }
+
         return false;
     }
 
@@ -43,7 +44,8 @@ class IntrospectionRequest extends FormRequest
             return $this->client;
         }
 
-        $this->client = App::firstWhere('client_id', "=", $this->post('client_id'));
+        $this->client = App::firstWhere('client_id', '=', $this->post('client_id'));
+
         return $this->client;
     }
 }

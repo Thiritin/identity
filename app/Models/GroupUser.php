@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class GroupUser extends Pivot
 {
     public $incrementing = false;
+
     protected $primaryKey = null;
+
     public $timestamps = false;
 
     protected $casts = [
-        'level' => GroupUserLevel::class
+        'level' => GroupUserLevel::class,
     ];
 
     public function user()
@@ -32,16 +34,16 @@ class GroupUser extends Pivot
 
     public function isAdmin(): bool
     {
-        return ($this->isOwner() || $this->level === GroupUserLevel::Admin);
+        return $this->isOwner() || $this->level === GroupUserLevel::Admin;
     }
 
     public function isModerator(): bool
     {
-        return ($this->isAdmin() || $this->level === GroupUserLevel::Moderator);
+        return $this->isAdmin() || $this->level === GroupUserLevel::Moderator;
     }
 
     public function isMember(): bool
     {
-        return ($this->isModerator() || $this->level === GroupUserLevel::Member);
+        return $this->isModerator() || $this->level === GroupUserLevel::Member;
     }
 }

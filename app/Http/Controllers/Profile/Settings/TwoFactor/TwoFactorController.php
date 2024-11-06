@@ -24,8 +24,8 @@ class TwoFactorController extends Controller
                     'description' => 'Use a Yubikey device to sign in to your account.',
                     'url' => route('settings.two-factor.yubikey'),
                     'active' => Auth::user()->twoFactors()->whereType(TwoFactorTypeEnum::YUBIKEY)->exists(),
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 }

@@ -23,7 +23,8 @@ class UserResource extends Resource
     protected static ?string $slug = 'users';
 
     protected static ?string $recordTitleAttribute = 'name';
-    protected static ?string $navigationIcon = "heroicon-o-user";
+
+    protected static ?string $navigationIcon = 'heroicon-o-user';
 
     public static function form(Form $form): Form
     {
@@ -50,11 +51,11 @@ class UserResource extends Resource
 
                 Placeholder::make('created_at')
                     ->label('Created Date')
-                    ->content(fn(?User $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?User $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                 Placeholder::make('updated_at')
                     ->label('Last Modified Date')
-                    ->content(fn(?User $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?User $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
             ]);
     }
 

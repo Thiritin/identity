@@ -29,15 +29,16 @@ class StoreAvatarController extends Controller
         $image = $request->file('image');
         $image = Image::make($image)->crop($data['crop']['width'], $data['crop']['height'], $data['crop']['x'],
             $data['crop']['y'])->encode('webp', '100');
-        $path = Str::random(40).".webp";
+        $path = Str::random(40) . '.webp';
         Storage::disk('s3-avatars')->put($path, $image);
         NewProfilePhotoEvent::dispatch(Auth::user(), $path);
-        if (!is_null(Auth::user()->profile_photo_path)) {
+        if (! is_null(Auth::user()->profile_photo_path)) {
             if (Storage::disk('s3-avatars')->exists(Auth::user()->profile_photo_path)) {
                 Storage::disk('s3-avatars')->delete(Auth::user()->profile_photo_path);
             }
         }
         $request->user()->update(['profile_photo_path' => $path]);
+
         return Redirect::route('settings.profile');
     }
 }

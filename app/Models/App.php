@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class App extends Model
 {
-    protected $guarded = ["client_secret"];
+    protected $guarded = ['client_secret'];
+
     protected $casts = [
-        "data" => "array",
+        'data' => 'array',
     ];
 
     public function owner(): BelongsTo

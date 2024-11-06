@@ -14,14 +14,14 @@ class UpdateEmailController extends Controller
     {
         $data = $request->validate([
             'id' => [
-                "required",
+                'required',
             ],
             'newEmail' => [
-                "required",
+                'required',
             ],
         ]);
         $user = User::findByHashidOrFail($data['id']);
-        $newMailFromCache = Cache::get('user:'.$data['id'].':newEmail');
+        $newMailFromCache = Cache::get('user:' . $data['id'] . ':newEmail');
         if (sha1($user->email) === $data['newEmail']) {
             return Inertia::render('Auth/VerifyEmailSuccess', [
                 'user' => $user->only('name', 'email'),
@@ -36,8 +36,9 @@ class UpdateEmailController extends Controller
             ]);
         }
 
-        Log::info($user->id." has changed his E-Mail from ".$user->email." to ".$newMailFromCache);
+        Log::info($user->id . ' has changed his E-Mail from ' . $user->email . ' to ' . $newMailFromCache);
         $user->update(['email' => $newMailFromCache]);
+
         return Inertia::render('Auth/VerifyEmailSuccess', [
             'user' => $user->only('name', 'email'),
             'hideUserInfo' => true,

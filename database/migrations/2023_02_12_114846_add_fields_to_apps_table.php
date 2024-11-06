@@ -4,12 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class() extends Migration
+{
     public function up()
     {
         Schema::table('apps', function (Blueprint $table) {
-            $table->timestamp("starts_at")->nullable()->after('client_id');
-            $table->timestamp("ends_at")->nullable()->after('starts_at');
+            $table->timestamp('starts_at')->nullable()->after('client_id');
+            $table->timestamp('ends_at')->nullable()->after('starts_at');
             $table->boolean('public')->default(false)->after('ends_at');
             $table->boolean('featured')->default(false)->after('ends_at');
             $table->integer('priority')->unsigned()->default(1000)->after('public');
@@ -24,15 +25,15 @@ return new class extends Migration {
     {
         Schema::table('apps', function (Blueprint $table) {
             $table->dropColumn([
-                "starts_at",
-                "ends_at",
-                "public",
-                "featured",
-                "priority",
-                "name",
-                "description",
-                "icon",
-                "url",
+                'starts_at',
+                'ends_at',
+                'public',
+                'featured',
+                'priority',
+                'name',
+                'description',
+                'icon',
+                'url',
             ]);
         });
     }

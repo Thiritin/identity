@@ -10,7 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class GroupResource extends JsonResource
 {
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)

@@ -46,4 +46,3 @@ Route::delete('/settings/two-factor/yubikey/destroy', [YubikeySetupController::c
 
 Route::post('/profile/avatar/store', StoreAvatarController::class)
     ->name('profile.avatar.store');
-

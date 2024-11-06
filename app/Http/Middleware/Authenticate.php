@@ -16,12 +16,12 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (!$request->expectsJson()) {
-            if (Route::is("staff.*")) {
+        if (! $request->expectsJson()) {
+            if (Route::is('staff.*')) {
                 return route('login.apps.redirect', ['app' => 'staff']);
             }
+
             return route('login.apps.redirect', ['app' => 'portal']);
         }
     }
-
 }

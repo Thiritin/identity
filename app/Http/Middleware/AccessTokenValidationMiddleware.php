@@ -35,7 +35,7 @@ class AccessTokenValidationMiddleware
         }
 
         /* @var SocialiteIdentityProvider $provider */
-        $provider = Socialite::driver('idp-'.$systemName);
+        $provider = Socialite::driver('idp-' . $systemName);
         $token = $provider->getToken();
         $refreshToken = $provider->getRefreshToken();
         $tokenExpiresAt = $provider->getExpiresIn();
@@ -45,6 +45,7 @@ class AccessTokenValidationMiddleware
          */
         if ($token === null || $refreshToken === null || $tokenExpiresAt === null) {
             Auth::logout();
+
             return Redirect::route('auth.choose');
         }
 
@@ -60,6 +61,7 @@ class AccessTokenValidationMiddleware
             } catch (IdentityProviderException|UnexpectedValueException $exception) {
                 // If refresh fails, try to reauth user.
                 Auth::logout();
+
                 return Redirect::route('login.apps.redirect', ['app' => $systemName]);
             }
             /* @var SocialiteIdentityProvider $provider */

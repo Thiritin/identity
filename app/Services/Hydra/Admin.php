@@ -7,12 +7,13 @@ use Illuminate\Support\Facades\Http;
 class Admin
 {
     private $url;
+
     protected $http;
 
     public function __construct()
     {
         $this->url = config('services.hydra.admin');
-        $this->http = Http::baseUrl($this->url."/admin")->acceptJson();
+        $this->http = Http::baseUrl($this->url . '/admin')->acceptJson();
     }
 
     public function apps()
@@ -30,7 +31,7 @@ class Admin
 
     public function postRequest(string $path, array $body): array
     {
-        return $this->http->post($path,$body)->json();
+        return $this->http->post($path, $body)->json();
     }
 
     public function deleteRequest(string $path, array $body = []): bool

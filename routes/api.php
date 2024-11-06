@@ -23,9 +23,9 @@ Route::middleware('api')->prefix('v1/')->name('api.v1.')->group(function () {
      */
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('userinfo', UserinfoController::class)->name('userinfo');
-        Route::apiResource("groups", GroupController::class);
-        Route::apiResource("groups.users", GroupUserController::class, [
-            "only" => ["index", "store", "destroy"],
+        Route::apiResource('groups', GroupController::class);
+        Route::apiResource('groups.users', GroupUserController::class, [
+            'only' => ['index', 'store', 'destroy'],
         ]);
     });
     /**

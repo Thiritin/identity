@@ -11,7 +11,8 @@ class IntrospectionController extends Controller
 {
     public function __invoke(IntrospectionRequest $request, Client $client)
     {
-        $data = $client->getToken($request->post('token'), explode(" ", $request->post('scope')));
+        $data = $client->getToken($request->post('token'), explode(' ', $request->post('scope')));
+
         return new TokenResource($data);
     }
 }

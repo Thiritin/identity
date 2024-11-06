@@ -13,7 +13,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Resources\Concerns\Translatable;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -21,13 +20,13 @@ use Filament\Tables\Table;
 
 class GroupResource extends Resource
 {
-
     protected static ?string $model = Group::class;
 
     protected static ?string $slug = 'groups';
+
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $navigationIcon = "heroicon-o-users";
+    protected static ?string $navigationIcon = 'heroicon-o-users';
 
     public static function form(Form $form): Form
     {
@@ -38,23 +37,23 @@ class GroupResource extends Resource
                         FilamentGroup::make()->columns()->schema([
                             Placeholder::make('id')
                                 ->label('Internal ID')
-                                ->content(fn(?Group $record): string => $record?->id ?? '-'),
+                                ->content(fn (?Group $record): string => $record?->id ?? '-'),
                             Placeholder::make('hashid')
                                 ->label('Public ID')
-                                ->content(fn(?Group $record): string => $record?->hashid() ?? '-'),
+                                ->content(fn (?Group $record): string => $record?->hashid() ?? '-'),
                         ]),
                         TextInput::make('system_name')
                             ->label('System Name')
                             ->hint('Unique system name, should be left empty in most cases.')
                             ->unique('groups', 'system_name', ignoreRecord: true)
-                            ->disabled(fn(?Group $record) => $record?->exists),
+                            ->disabled(fn (?Group $record) => $record?->exists),
                         TextInput::make('name')
                             ->required(),
                         TextInput::make('nextcloud_folder_name')
                             ->label('Nextcloud Folder Name')
                             ->hiddenOn('create')
-                            ->required(fn(Group|null $record
-                            ) => $record !== null && !empty($record->nextcloud_folder_id))
+                            ->required(fn (?Group $record
+                            ) => $record !== null && ! empty($record->nextcloud_folder_id))
                             ->hint('Leave empty if the group should not be allowed to access Nextcloud.')
                             ->unique('groups', 'nextcloud_folder_name', ignoreRecord: true),
                         Textarea::make('description')->rows(5),
@@ -65,19 +64,19 @@ class GroupResource extends Resource
                     Section::make()->schema([
 
                         Select::make('type')->options([
-                            GroupTypeEnum::Default->value => "Default",
-                            GroupTypeEnum::Automated->value => "Automated",
-                            GroupTypeEnum::Department->value => "Department",
+                            GroupTypeEnum::Default->value => 'Default',
+                            GroupTypeEnum::Automated->value => 'Automated',
+                            GroupTypeEnum::Department->value => 'Department',
                         ])->required(),
                     ]),
 
                     Placeholder::make('created_at')
                         ->label('Created Date')
-                        ->content(fn(?Group $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                        ->content(fn (?Group $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                     Placeholder::make('updated_at')
                         ->label('Last Modified Date')
-                        ->content(fn(?Group $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                        ->content(fn (?Group $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
                 ]),
             ])->columns(3);
     }
@@ -91,7 +90,7 @@ class GroupResource extends Resource
                     ->sortable(),
                 TextColumn::make('type')
                     ->sortable()
-                    ->formatStateUsing(fn($state) => ucfirst($state->value)),
+                    ->formatStateUsing(fn ($state) => ucfirst($state->value)),
             ])
             ->actions([
                 EditAction::make(),

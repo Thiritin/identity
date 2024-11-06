@@ -8,7 +8,6 @@ use App\Policies\GroupPolicy;
 use App\Policies\GroupUserPolicy;
 use App\Services\Auth\AdminAuth;
 use App\Services\Auth\ApiGuard;
-use App\Services\Auth\TokenAuth;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
@@ -38,7 +37,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::before(function ($user, $ability) {
-            return ($user->hasRole('superadmin') && Str::startsWith($ability, "admin.")) ? true : null;
+            return ($user->hasRole('superadmin') && Str::startsWith($ability, 'admin.')) ? true : null;
         });
 
         Auth::extend('admin', function ($app, $name, array $config) {

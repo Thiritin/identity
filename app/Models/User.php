@@ -24,16 +24,16 @@ use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements MustVerifyEmail, FilamentUser
+class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
-    use HasFactory;
-    use Notifiable;
-    use HasRoles;
+    use CausesActivity;
     use HasApiTokens;
+    use HasFactory;
     use HasHashid;
     use HashidRouting;
-    use CausesActivity;
+    use HasRoles;
     use LogsActivity;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -115,7 +115,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
             ->log('mail-change-mail');
 
         Cache::put(
-            'user:'.$this->hashid.':newEmail',
+            'user:' . $this->hashid . ':newEmail',
             $newEmail,
             Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)));
         Notification::route('mail', $newEmail)
@@ -146,12 +146,14 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
     public function appCan(string $scope)
     {
         $auth = Auth::guard('api');
+
         return in_array($scope, $auth->getScopes(), true);
     }
 
     public function permCheck(string $ability)
     {
-        $adminCheck = $this->can('admin.'.$ability);
+        $adminCheck = $this->can('admin.' . $ability);
+
         return $adminCheck || $this->scopeCheck($ability);
     }
 
@@ -162,7 +164,8 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         }
         $sanctumCheck = $this->tokenCan($ability);
         $appCheck = $this->appCan($ability);
-        return ($sanctumCheck || $appCheck);
+
+        return $sanctumCheck || $appCheck;
     }
 
     public function canAccessPanel($panel): bool

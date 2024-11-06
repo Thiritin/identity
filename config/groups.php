@@ -1,4 +1,5 @@
 <?php
+
 return [
     /*
      * Groups Configuration
@@ -20,7 +21,6 @@ return [
     /**
      * Attendees
      * TODO: - Adds all attendees that ever attended into this Group.
-     *
      */
     'attendees' => env('GROUP_ATTENDEES_ID'),
 ];

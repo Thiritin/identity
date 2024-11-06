@@ -7,6 +7,7 @@ use Illuminate\Validation\ValidationException;
 class YubicoService
 {
     public string $identifier;
+
     public string $nonce;
 
     public function verify(string $otp): bool
@@ -27,19 +28,19 @@ class YubicoService
 
         $errorMessage = match ($responseData['status']) {
             'OK' => ($responseData['nonce'] === $this->nonce) ? null : 'Nonce mismatch.',
-            'BAD_OTP' => "The OTP is invalid format.",
-            'REPLAYED_OTP' => "The OTP has already been used.",
-            'BAD_SIGNATURE' => "The HMAC signature verification failed.",
-            'MISSING_PARAMETER' => "The request lacks a parameter.",
-            'NO_SUCH_CLIENT' => "The request id does not exist.",
-            'OPERATION_NOT_ALLOWED' => "The request id is not allowed to verify OTPs.",
-            'BACKEND_ERROR' => "Unexpected error in Yubico server.",
-            'NOT_ENOUGH_ANSWERS' => "Server could not get requested number of syncs during before timeout.",
-            'REPLAYED_REQUEST' => "Server has seen the OTP/Nonce combination before.",
-            default => "Unknown error.",
+            'BAD_OTP' => 'The OTP is invalid format.',
+            'REPLAYED_OTP' => 'The OTP has already been used.',
+            'BAD_SIGNATURE' => 'The HMAC signature verification failed.',
+            'MISSING_PARAMETER' => 'The request lacks a parameter.',
+            'NO_SUCH_CLIENT' => 'The request id does not exist.',
+            'OPERATION_NOT_ALLOWED' => 'The request id is not allowed to verify OTPs.',
+            'BACKEND_ERROR' => 'Unexpected error in Yubico server.',
+            'NOT_ENOUGH_ANSWERS' => 'Server could not get requested number of syncs during before timeout.',
+            'REPLAYED_REQUEST' => 'Server has seen the OTP/Nonce combination before.',
+            default => 'Unknown error.',
         };
         // Check if the signature is valid
-        if (!$this->verifyResponseSignature($responseData)) {
+        if (! $this->verifyResponseSignature($responseData)) {
             $errorMessage = 'Signature mismatch.';
         }
         if ($errorMessage) {
@@ -47,6 +48,7 @@ class YubicoService
         }
         // Get the first 12 characters of the OTP
         $this->identifier = substr($responseData['otp'], 0, 12);
+
         return true;
     }
 
@@ -105,6 +107,7 @@ class YubicoService
             $parts = explode('=', $line, 2);
             $arrayData[$parts[0]] = $parts[1];
         }
+
         return $arrayData;
     }
 }

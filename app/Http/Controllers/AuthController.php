@@ -19,9 +19,10 @@ class AuthController extends Controller
             return redirect()->route(config('services.apps')[$app]['home_route']);
         }
 
-        $url = Socialite::driver('idp-'.$app)
+        $url = Socialite::driver('idp-' . $app)
             ->scopes(config('services.apps')[$app]['scopes'])
             ->redirect();
+
         return Inertia::location($url->getTargetUrl());
     }
 
@@ -29,31 +30,33 @@ class AuthController extends Controller
     {
         $this->checkApp($app);
         try {
-            $userInfo = Socialite::driver('idp-'.$app)->user();
+            $userInfo = Socialite::driver('idp-' . $app)->user();
         } catch (InvalidStateException $e) {
             return redirect()->route('login.apps.redirect', ['app' => $app]);
         }
         $userid = Hashids::connection('user')->decode($userInfo->id)[0];
         Auth::guard($this->getGuard($app))->loginUsingId($userid);
-        Socialite::driver('idp-'.$app)->putToken(
+        Socialite::driver('idp-' . $app)->putToken(
             token: $userInfo->token,
             refreshToken: $userInfo->refreshToken,
             expiresIn: now()->addSeconds($userInfo->expiresIn),
         );
+
         return redirect()->route(config('services.apps')[$app]['home_route']);
     }
 
     public function logout($app)
     {
         $this->checkApp($app);
-        return Socialite::driver('idp-'.$app)->logoutAll();
+
+        return Socialite::driver('idp-' . $app)->logoutAll();
     }
 
     public function frontchannelLogout($app)
     {
         $this->checkApp($app);
         Auth::guard($this->getGuard($app))->logout();
-        Socialite::driver('idp-'.$app)->clearToken();
+        Socialite::driver('idp-' . $app)->clearToken();
     }
 
     private function checkApp($app)

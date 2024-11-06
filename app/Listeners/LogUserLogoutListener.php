@@ -6,9 +6,7 @@ use Illuminate\Auth\Events\Logout;
 
 class LogUserLogoutListener
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function handle(Logout $event)
     {

@@ -12,6 +12,7 @@ class GroupMember
         if ($request->user()->groups()->where('system_name', $groupSystemName)->doesntExist()) {
             abort(403);
         }
+
         return $next($request);
     }
 }

@@ -25,7 +25,7 @@ class YubikeySetupController extends Controller
     {
         return Inertia::render('Settings/TwoFactor/YubikeySetup', [
             'keys' => auth()->user()->twoFactors()->where('type', 'yubikey')->get([
-                'id', 'name', 'last_used_at'
+                'id', 'name', 'last_used_at',
             ]),
         ]);
     }
@@ -33,7 +33,7 @@ class YubikeySetupController extends Controller
     // Add new Yubikey
     public function store(YubikeyStoreRequest $request)
     {
-        $limitKey = 'yubikey-setup-'.$request->user()->id;
+        $limitKey = 'yubikey-setup-' . $request->user()->id;
         // Rate limit this endpoint
         if (RateLimiter::tooManyAttempts($limitKey, 10)) {
             throw ValidationException::withMessages(['code' => 'Too many attempts. Please try again later.']);
@@ -52,6 +52,7 @@ class YubikeySetupController extends Controller
             'identifier' => $yubico->identifier,
             'type' => 'yubikey',
         ]);
+
         return redirect()->route('settings.two-factor.yubikey');
     }
 
@@ -61,11 +62,12 @@ class YubikeySetupController extends Controller
         $data = $request->validated();
         // Verify that password is correct
         $userPassword = auth()->user()->password;
-        if (!Hash::check($data['password'], $userPassword)) {
+        if (! Hash::check($data['password'], $userPassword)) {
             throw ValidationException::withMessages(['password' => 'Invalid password']);
         }
         // Delete totp device
         auth()->user()->twoFactors()->where('id', $request->input('keyId'))->delete();
+
         return redirect()->route('settings.two-factor');
     }
 
@@ -80,7 +82,6 @@ class YubikeySetupController extends Controller
     {
         return $this->yubicoService->verifyResponseSignature($response);
     }
-
 
     private function convertResponseToArray(string $response): array
     {

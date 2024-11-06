@@ -40,7 +40,7 @@ class LoginController extends Controller
         }
 
         if ($subject !== null) {
-            return Redirect::to($hydra->acceptLogin($subject, $loginRequest["challenge"], null, $loginRequest));
+            return Redirect::to($hydra->acceptLogin($subject, $loginRequest['challenge'], null, $loginRequest));
         }
 
         return Inertia::render('Auth/Login');
@@ -78,7 +78,7 @@ class LoginController extends Controller
             }
 
             $url = (new Client())->acceptLogin($user->hashId(), $request->get('login_challenge'),
-                $request->get('remember') ? "2592000" : "3600");
+                $request->get('remember') ? '2592000' : '3600');
 
             return Inertia::location($url);
         }
@@ -92,14 +92,15 @@ class LoginController extends Controller
      */
     private function shouldSkipLogin(mixed $loginRequest): ?string
     {
-        if (isset($loginRequest["skip"]) && $loginRequest["skip"] === true) {
+        if (isset($loginRequest['skip']) && $loginRequest['skip'] === true) {
             return $loginRequest['subject'];
         }
 
         $registerLoginSkipOnceUserId = Session::get('justRegisteredSkipLogin.user_id');
-        if (!is_null($registerLoginSkipOnceUserId)) {
+        if (! is_null($registerLoginSkipOnceUserId)) {
             $subject = $registerLoginSkipOnceUserId;
             Session::forget('justRegisteredSkipLogin.user_id');
+
             return User::findOrFail($subject)->hashid;
         }
 
@@ -122,6 +123,7 @@ class LoginController extends Controller
         if ($clientModel->system_name === 'portal') {
             return true;
         }
+
         return false;
     }
 }

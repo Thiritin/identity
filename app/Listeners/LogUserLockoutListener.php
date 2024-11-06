@@ -6,9 +6,7 @@ use Illuminate\Auth\Events\Lockout;
 
 class LogUserLockoutListener
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function handle(Lockout $event)
     {

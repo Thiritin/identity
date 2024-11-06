@@ -14,7 +14,7 @@ class PasswordResetRequest extends FormRequest
             'password' => [
                 'required',
                 'confirmed',
-                \Illuminate\Validation\Rules\Password::min(8)->mixedCase()->numbers()
+                \Illuminate\Validation\Rules\Password::min(8)->mixedCase()->numbers(),
             ],
         ];
     }
