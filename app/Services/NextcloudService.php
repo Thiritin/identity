@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Group;
 use App\Models\User;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 
 class NextcloudService
@@ -41,6 +43,8 @@ class NextcloudService
             return true;
         }
         $res->throw();
+
+        return false;
     }
 
     public static function addUserToGroup(Group $group, User $user)

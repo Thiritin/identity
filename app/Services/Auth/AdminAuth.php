@@ -56,6 +56,9 @@ class AdminAuth implements Guard
             return false;
         }
         $signingKey = $this->getSigningKey();
+
+        // TODO: this method seems unfinished
+        return false;
     }
 
     protected function getSigningKey()
@@ -88,5 +91,10 @@ class AdminAuth implements Guard
         $this->user = $user;
 
         return $this;
+    }
+
+    public function hasUser(): bool
+    {
+        return ! is_null($this->user);
     }
 }

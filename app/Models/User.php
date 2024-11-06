@@ -8,6 +8,7 @@ use App\Notifications\VerifyEmailQueuedNotification;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -24,6 +25,10 @@ use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @method static User|null findByHashid($hashid)
+ * @method static User findByHashidOrFail($hashid)
+ */
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
     use CausesActivity;
@@ -74,7 +79,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
      * @var array
      */
     protected $appends = [
-        'hashid',
+        'hashid', // @phpstan-ignore rules.modelAppends
     ];
 
     public function inGroup(int $id): bool
@@ -122,7 +127,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             ->notify(new UpdateEmailNotification($newEmail, $this->hashid));
     }
 
-    public function groups()
+    public function groups(): BelongsToMany
     {
         return $this->belongsToMany(Group::class)
             ->using(GroupUser::class)
