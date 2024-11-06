@@ -17,14 +17,14 @@ class GroupUserPolicy
         return ($user->scopeCheck('groups.read') && ($groupUser->isMember() || $groupUser->group->parent?->isMember($user)));
     }
 
-    public function update(User $user, GroupUser $groupUserInitiator): bool
+    public function update(User $user, GroupUser $groupUser): bool
     {
-        return $user->scopeCheck('groups.update') && ($groupUserInitiator->isAdmin() || $groupUserInitiator->group->parent?->isAdmin($user));
+        return $user->scopeCheck('groups.update') && ($groupUser->isAdmin() || $groupUser->group->isAdmin($user) || $groupUser->group->parent?->isAdmin($user));
     }
 
-    public function create(User $user, GroupUser $groupUserInitiator): bool
+    public function create(User $user, GroupUser $groupUser): bool
     {
-        return $user->scopeCheck('groups.update') && ($groupUserInitiator->isAdmin() || $groupUserInitiator->group->parent?->isAdmin($user));
+        return $user->scopeCheck('groups.update') && ($groupUser->isAdmin() || $groupUser->group->isAdmin($user) || $groupUser->group->parent?->isAdmin($user));
     }
 
     public function delete(User $user, GroupUser $groupUser): Response
