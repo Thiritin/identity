@@ -26,6 +26,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
+ * @property string $hashid
  * @method static User|null findByHashid($hashid)
  * @method static User findByHashidOrFail($hashid)
  */

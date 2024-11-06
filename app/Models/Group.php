@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -124,7 +125,7 @@ class Group extends Model
         return $this->hasMany(__CLASS__, 'parent_id');
     }
 
-    public function parent()
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(__CLASS__, 'parent_id');
     }
