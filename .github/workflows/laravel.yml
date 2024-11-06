@@ -8,9 +8,7 @@ on:
 
 jobs:
   laravel-tests:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
         with:
@@ -44,3 +42,13 @@ jobs:
           DB_USERNAME: root
           DB_PASSWORD: ""
         run: vendor/bin/pest
+
+  laravel-pint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "laravel-pint"
+        uses: aglipanci/laravel-pint-action@latest
+        with:
+          testMode: true
+          pintVersion: 1.18.1
