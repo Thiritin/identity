@@ -8,9 +8,7 @@ use App\Models\User;
 
 class LogUserAppLoginListener
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function handle(AppLoginEvent $event)
     {

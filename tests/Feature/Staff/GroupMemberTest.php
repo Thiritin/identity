@@ -7,6 +7,7 @@ use App\Enums\GroupUserLevel;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+
 use function Pest\Laravel\patchJson;
 
 uses(RefreshDatabase::class);
@@ -36,11 +37,11 @@ test('Update member level to admin', function (GroupUserLevel $groupUserLevel) {
     var_dump(GroupUserLevel::Admin->name);
 
     $response = patchJson(
-        route('staff.groups.members.update', ["group" => $group, 'member' => $userToBeUpdated]),
-        ["level" => GroupUserLevel::Admin->value],
+        route('staff.groups.members.update', ['group' => $group, 'member' => $userToBeUpdated]),
+        ['level' => GroupUserLevel::Admin->value],
     );
 
-    $response->assertRedirect(route('staff.groups.members.index', ["group" => $group]));
+    $response->assertRedirect(route('staff.groups.members.index', ['group' => $group]));
 
     expect($group->users()->find($userToBeUpdated)->pivot->level)
         ->toBe(GroupUserLevel::Admin);

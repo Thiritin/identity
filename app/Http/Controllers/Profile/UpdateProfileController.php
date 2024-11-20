@@ -21,17 +21,18 @@ class UpdateProfileController extends Controller
         if ($user->email !== $request->get('email')) {
 
             $done = RateLimiter::attempt(
-                'emailVerify:'.$user->id,
+                'emailVerify:' . $user->id,
                 5,
                 function () use ($user, $request) {
-                    $this->validate($request, ["unique:users,email"]);
+                    $this->validate($request, ['unique:users,email']);
                     activity()->by($user)->log('mail.change-email');
                     $user->changeMail($request->get('email'));
+
                     return Redirect::route('settings.profile')->with('message', 'emailVerify');
                 },
                 900
             );
-            if (!$done) {
+            if (! $done) {
                 return Redirect::route('settings.profile')->with('message', 'emailTooMany');
             }
         }

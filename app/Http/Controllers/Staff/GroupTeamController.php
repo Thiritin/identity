@@ -16,16 +16,17 @@ class GroupTeamController extends Controller
         Gate::authorize('view', $group);
         $myDepartments = $request->user()->groups()
             ->where('type', GroupTypeEnum::Department)->select('id', 'level')->get()
-            ->mapWithKeys(fn($role) => [$role->id => ucwords($role->level)]);
+            ->mapWithKeys(fn ($role) => [$role->id => ucwords($role->level)]);
+
         return Inertia::render('Staff/Groups/Tabs/TeamTab', [
-            'group' => $group->loadCount('users')->only(['hashid', 'name', 'users_count','parent_id']),
+            'group' => $group->loadCount('users')->only(['hashid', 'name', 'users_count', 'parent_id']),
             'parent' => $group->parent?->only(['hashid', 'name']),
             'teams' => $group->children()
                 ->where('type', GroupTypeEnum::Team)
                 ->withCount('users')
                 ->get(['hashid', 'name', 'users_count']),
             'myGroups' => $myDepartments->values(),
-            'canEdit' => $group->isAdmin($request->user())
+            'canEdit' => $group->isAdmin($request->user()),
         ]);
     }
 
@@ -39,6 +40,7 @@ class GroupTeamController extends Controller
             'name' => $validated['name'],
             'type' => GroupTypeEnum::Team,
         ]);
+
         return redirect()->back();
     }
 }

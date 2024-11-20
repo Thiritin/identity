@@ -14,12 +14,13 @@ class RegisterController extends Controller
     public function __invoke(RegisterRequest $request)
     {
         $user = User::create([
-            "name" => $request->username,
-            "email" => $request->email,
-            "password" => Hash::make($request->password)
+            'name' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
         ]);
         event(new Registered($user));
         Session::put('justRegisteredSkipLogin.user_id', $user->id);
+
         return redirect()->route('login.apps.redirect', ['app' => 'portal']);
     }
 }

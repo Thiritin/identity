@@ -25,6 +25,7 @@ class TwoFactorController extends Controller
         }
         // Get last used two factor method
         $lastUsed = $twoFactors->firstWhere('last_used_at', '!=', null)->type ?? $twoFactors->first()->type ?? null;
+
         return Inertia::render('Auth/TwoFactor', [
             'twoFactors' => $twoFactors,
             'lastUsedMethod' => $lastUsed,
@@ -54,18 +55,18 @@ class TwoFactorController extends Controller
         }
 
         if ($data['method'] === 'yubikey') {
-            if (!$this->verifyYubikey($data, $twoFactors, $user)) {
+            if (! $this->verifyYubikey($data, $twoFactors, $user)) {
                 throw ValidationException::withMessages(['code' => 'Invalid Yubikey code.']);
             }
         } elseif ($data['method'] === 'totp') {
-            if (!$this->verifyTOTP($data, $twoFactors)) {
+            if (! $this->verifyTOTP($data, $twoFactors)) {
                 throw ValidationException::withMessages(['code' => 'Invalid TOTP code.']);
             }
         } else {
             throw ValidationException::withMessages(['code' => 'Invalid two factor method.']);
         }
         $url = (new Client())->acceptLogin($user->hashId(), $request->get('login_challenge'),
-            $request->get('remember') ? "2592000" : "3600");
+            $request->get('remember') ? '2592000' : '3600');
 
         return Inertia::location($url);
     }
@@ -80,7 +81,7 @@ class TwoFactorController extends Controller
             throw ValidationException::withMessages(['code' => 'This Yubikey is not known.']);
         }
 
-        $limitKey = 'yubikey-setup-'.$user->id;
+        $limitKey = 'yubikey-setup-' . $user->id;
         // Rate limit this endpoint
         if (RateLimiter::tooManyAttempts($limitKey, 10)) {
             throw ValidationException::withMessages(['code' => 'Too many attempts. Please try again later.']);
@@ -91,6 +92,7 @@ class TwoFactorController extends Controller
             // Update last used at
             $twoFactor->update(['last_used_at' => now()]);
         }
+
         return $success;
     }
 
@@ -102,6 +104,7 @@ class TwoFactorController extends Controller
             // Update last used at
             $factorModel->update(['last_used_at' => now()]);
         }
+
         return $success;
     }
 }

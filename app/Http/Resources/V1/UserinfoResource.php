@@ -32,7 +32,7 @@ class UserinfoResource extends JsonResource
 
         if ($this->scopeCheck('email')) {
             $data['email'] = $this->email;
-            $data['email_verified'] = !is_null($this->email_verified_at);
+            $data['email_verified'] = ! is_null($this->email_verified_at);
         }
 
         if ($this->scopeCheck('profile')) {

@@ -14,6 +14,7 @@ class UpdatePasswordController extends Controller
         $data = $request->validated();
 
         $request->user()->update(['password' => Hash::make($data['password'])]);
-        return Inertia::render("Settings/UpdatePassword", ["success" => true]);
+
+        return Inertia::render('Settings/UpdatePassword', ['success' => true]);
     }
 }

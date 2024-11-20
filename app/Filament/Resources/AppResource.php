@@ -60,37 +60,37 @@ class AppResource extends Resource
                         Tabs\Tab::make('Login')->icon('heroicon-o-arrow-left-on-rectangle')->schema([
                             TagsInput::make('data.redirect_uris')->columnSpan(2),
                             Select::make('data.subject_type')->options([
-                                "public" => "public",
-                                "pairwise" => "pairwise",
+                                'public' => 'public',
+                                'pairwise' => 'pairwise',
                             ])->columnSpan(2),
                             Select::make('data.grant_types')->multiple()->options([
-                                "authorization_code" => "authorization_code",
-                                "refresh_token" => "refresh_token",
-                                "implicit" => "implicit",
-                                "client_credentials" => "client_credentials",
+                                'authorization_code' => 'authorization_code',
+                                'refresh_token' => 'refresh_token',
+                                'implicit' => 'implicit',
+                                'client_credentials' => 'client_credentials',
                             ])->columnSpan(2),
                             Select::make('data.response_types')->multiple()->options([
-                                "code" => "code",
-                                "id_token" => "id_token",
-                                "token" => "token",
+                                'code' => 'code',
+                                'id_token' => 'id_token',
+                                'token' => 'token',
                             ])->columnSpan(2),
                         ]),
                         Tabs\Tab::make('Token')->icon('heroicon-o-lock-closed')->schema([
                             Select::make('data.token_endpoint_auth_method')->options([
-                                "client_secret_post" => "client_secret_post",
-                                "client_secret_basic" => "client_secret_basic",
-                                "private_key_jwt" => "private_key_jwt",
-                                "none" => "none",
+                                'client_secret_post' => 'client_secret_post',
+                                'client_secret_basic' => 'client_secret_basic',
+                                'private_key_jwt' => 'private_key_jwt',
+                                'none' => 'none',
                             ]),
                             TextInput::make('data.jwks_uri')
                                 ->helperText('When authenticating with a signed jwks key against the token endpoint, you may enter a path to a keys.json containing the public keys of your app here.')
                                 ->url(),
 
                             CheckboxList::make('data.scope')->options(static function () {
-                                return collect((new Client())->getScopes())->mapWithKeys(fn($v) => [$v => $v]);
+                                return collect((new Client())->getScopes())->mapWithKeys(fn ($v) => [$v => $v]);
                             })->afterStateHydrated(function (CheckboxList $component, $state) {
-                                if (!is_array($state)) {
-                                    $state = explode(" ", $state);
+                                if (! is_array($state)) {
+                                    $state = explode(' ', $state);
                                 }
                                 $component->state($state);
                             }),
@@ -122,9 +122,9 @@ class AppResource extends Resource
                         Tabs\Tab::make('Request')->icon('heroicon-o-signal')->schema([
                             TagsInput::make('data.request_uris')->columnSpan(2),
                             Select::make('data.request_object_signing_alg')->options([
-                                "none" => "none",
-                                "RS256" => "RS256",
-                                "ES256" => "ES256",
+                                'none' => 'none',
+                                'RS256' => 'RS256',
+                                'ES256' => 'ES256',
                             ])->columnSpan(2),
                         ]),
 
@@ -160,22 +160,22 @@ class AppResource extends Resource
                             TextInput::make('description')->required(),
                             Select::make('icon')->options(function () {
                                 return collect(scandir(resource_path('js/Components/Icons')))
-                                    ->filter(fn($icon) => !in_array($icon, ['.', '..']))
-                                    ->map(fn($icon) => str_replace('.vue', '', $icon))
+                                    ->filter(fn ($icon) => ! in_array($icon, ['.', '..']))
+                                    ->map(fn ($icon) => str_replace('.vue', '', $icon))
                                     ->values()
-                                    ->keyBy(fn($icon) => $icon)
+                                    ->keyBy(fn ($icon) => $icon)
                                     ->toArray();
                             })->hint('Request new Icons @ Thiritin')->required(),
                             TextInput::make('url')->url(),
                         ]),
                     Card::make()->schema([
                         Placeholder::make('created_at')
-                            ->label("Created At")
-                            ->content(fn(?App $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                            ->label('Created At')
+                            ->content(fn (?App $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                         Placeholder::make('updated_at')
-                            ->label("Updated At")
-                            ->content(fn(?App $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                            ->label('Updated At')
+                            ->content(fn (?App $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
                     ]),
 
                 ]),
@@ -211,7 +211,7 @@ class AppResource extends Resource
     public static function getGloballySearchableAttributes(): array
     {
         return [
-            "name",
+            'name',
         ];
     }
 }

@@ -19,7 +19,7 @@ class GroupUserObserver
         if (App::isLocal()) {
             return;
         }
-        if (($groupUser->group->nextcloud_folder_name || $groupUser->group->parent?->nextcloud_folder_name) && !app()->runningUnitTests()) {
+        if (($groupUser->group->nextcloud_folder_name || $groupUser->group->parent?->nextcloud_folder_name) && ! app()->runningUnitTests()) {
             NextcloudService::addUserToGroup($groupUser->group, $groupUser->user);
             $allowAclManagement = in_array($groupUser->level, [GroupUserLevel::Admin, GroupUserLevel::Owner]);
             if ($allowAclManagement && $groupUser->group->type !== GroupTypeEnum::Team) {
@@ -33,7 +33,7 @@ class GroupUserObserver
         if (App::isLocal()) {
             return;
         }
-        if ($groupUser->group->nextcloud_folder_name && !app()->runningUnitTests()) {
+        if ($groupUser->group->nextcloud_folder_name && ! app()->runningUnitTests()) {
             if ($groupUser->isDirty('level')) {
                 $allowAclManagement = in_array($groupUser->level, [GroupUserLevel::Admin, GroupUserLevel::Owner]);
                 NextcloudService::setManageAcl($groupUser->group, $groupUser->user, $allowAclManagement);
@@ -49,7 +49,7 @@ class GroupUserObserver
         if (App::isLocal()) {
             return;
         }
-        if ($groupUser->group->nextcloud_folder_name && !app()->runningUnitTests()) {
+        if ($groupUser->group->nextcloud_folder_name && ! app()->runningUnitTests()) {
             NextcloudService::removeUserFromGroup($groupUser->group, $groupUser->user);
             if ($groupUser->group->type !== GroupTypeEnum::Team) {
                 NextcloudService::setManageAcl($groupUser->group, $groupUser->user, false);

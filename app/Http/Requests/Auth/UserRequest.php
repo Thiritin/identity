@@ -4,6 +4,7 @@ namespace App\Http\Requests\Auth;
 
 use App\Http\Requests\Request;
 use Illuminate\Foundation\Http\FormRequest;
+
 use function backpack_auth;
 
 class UserRequest extends FormRequest

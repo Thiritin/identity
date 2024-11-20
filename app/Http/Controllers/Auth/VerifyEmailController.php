@@ -16,33 +16,36 @@ class VerifyEmailController extends Controller
         if ($request->user()->hasVerifiedEmail()) {
             return Redirect::route('auth.choose');
         }
+
         return Inertia::render('Auth/VerifyEmail');
     }
 
     public function verify(EmailVerificationRequest $request)
     {
         $user = $request->verifyUser();
-        if (!$user->hasVerifiedEmail()) {
+        if (! $user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
 
             event(new Verified($user));
         }
+
         // No login session? The user gets redirected to the success page.
         return Inertia::render('Auth/VerifyEmailSuccess', ['user' => $user->only('name', 'email')]);
     }
 
     public function resend(Request $request)
     {
-        $success = \Illuminate\Support\Facades\RateLimiter::attempt($request->user()->id.':resend-verification-email',
+        $success = \Illuminate\Support\Facades\RateLimiter::attempt($request->user()->id . ':resend-verification-email',
             1,
             function () use ($request) {
                 if ($request->user()->hasVerifiedEmail()) {
                     return Redirect::route('dashboard');
                 }
                 $request->user()->sendEmailVerificationNotification();
+
                 return true;
             }, 30);
-        if (!$success) {
+        if (! $success) {
             return Inertia::render('Auth/VerifyEmail')->with('status', 'throttled');
         }
 

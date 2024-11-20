@@ -10,9 +10,10 @@ class NextcloudService
 {
     public static function createGroup($groupId)
     {
-        Http::nextcloud()->post("/ocs/v1.php/cloud/groups", [
-            "groupid" => $groupId,
+        Http::nextcloud()->post('/ocs/v1.php/cloud/groups', [
+            'groupid' => $groupId,
         ])->throw();
+
         return $groupId;
     }
 
@@ -32,7 +33,7 @@ class NextcloudService
 
     public static function checkUserExists($userId): bool
     {
-        $res = Http::nextcloud()->get("ocs/v2.php/cloud/users/".$userId)->throwIfServerError();
+        $res = Http::nextcloud()->get('ocs/v2.php/cloud/users/' . $userId)->throwIfServerError();
         if ($res->notFound()) {
             return false;
         }
@@ -45,17 +46,17 @@ class NextcloudService
     public static function addUserToGroup(Group $group, User $user)
     {
         // Check user
-        if (!self::checkUserExists($user->hashid)) {
+        if (! self::checkUserExists($user->hashid)) {
             self::createUser($user); // Create user also adds groups so we don't need to add them here
         }
         Http::nextcloud()->post("ocs/v2.php/cloud/users/{$user->hashid}/groups", [
-            "groupid" => $group->hashid,
+            'groupid' => $group->hashid,
         ])->throw();
     }
 
     public static function removeUserFromGroup(Group $group, User $user)
     {
-        if (!self::checkUserExists($user->hashid)) {
+        if (! self::checkUserExists($user->hashid)) {
             return;
         }
         Http::nextcloud()->delete("ocs/v2.php/cloud/users/{$user->hashid}/groups?groupid={$group->hashid}")->throw();
@@ -72,18 +73,19 @@ class NextcloudService
 
     public static function getUsers()
     {
-        $res = Http::nextcloud()->get("ocs/v2.php/cloud/users", [
+        $res = Http::nextcloud()->get('ocs/v2.php/cloud/users', [
             'offset' => 0,
             'limit' => 1000,
         ])->throw();
         // Parse xml
         $xml = simplexml_load_string($res->body());
+
         return (array) $xml->data->users->element;
     }
 
     public static function createUser(User $user)
     {
-        Http::nextcloud()->post("ocs/v2.php/cloud/users", [
+        Http::nextcloud()->post('ocs/v2.php/cloud/users', [
             'displayName' => $user->name,
             'email' => $user->email,
             'groups' => $user->groups()->whereNotNull('nextcloud_folder_name')->get()->pluck('hashid')->toArray(),
@@ -97,19 +99,20 @@ class NextcloudService
 
     public static function createFolder(string $folderName, string $groupId): int
     {
-        $response = Http::nextcloud()->post("apps/groupfolders/folders", [
-            "mountpoint" => $folderName,
+        $response = Http::nextcloud()->post('apps/groupfolders/folders', [
+            'mountpoint' => $folderName,
         ])->throw();
         $xml = simplexml_load_string($response->body());
 
         // enable acl for group (we have that enabled for all groups)
         Http::nextcloud()->post("apps/groupfolders/folders/{$xml->data->id}/acl", [
-            "acl" => 1,
+            'acl' => 1,
         ])->throw();
         // add group to folder apps/groupfolders/folders/$folderId/groups/$groupId
         Http::nextcloud()->post("apps/groupfolders/folders/{$xml->data->id}/groups", [
-            "group" => $groupId,
+            'group' => $groupId,
         ])->throw();
+
         return (int) $xml->data->id;
     }
 
@@ -117,15 +120,14 @@ class NextcloudService
     public static function addGroupToFolder($folderId, $groupId)
     {
         Http::nextcloud()->post("apps/groupfolders/folders/{$folderId}/groups", [
-            "group" => $groupId,
+            'group' => $groupId,
         ])->throw();
     }
 
     public static function renameFolder(int $folderId, string $folderName): void
     {
         Http::nextcloud()->post("apps/groupfolders/folders/{$folderId}/mountpoint", [
-            "mountpoint" => $folderName,
+            'mountpoint' => $folderName,
         ])->throw();
     }
-
 }

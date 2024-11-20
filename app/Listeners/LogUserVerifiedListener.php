@@ -6,9 +6,7 @@ use Illuminate\Auth\Events\Verified;
 
 class LogUserVerifiedListener
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function handle(Verified $event)
     {

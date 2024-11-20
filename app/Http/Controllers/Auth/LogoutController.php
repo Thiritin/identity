@@ -15,19 +15,22 @@ class LogoutController extends Controller
     {
         if ($request->session()->get('web.token') !== null) {
             Session::flush();
-            return Redirect::to(config('app.url').'/oauth2/sessions/logout');
+
+            return Redirect::to(config('app.url') . '/oauth2/sessions/logout');
         }
 
         if ($request->missing('logout_challenge')) {
             Auth::logout();
             Session::flush();
-            return Redirect::to(config('app.url').'/oauth2/sessions/logout');
+
+            return Redirect::to(config('app.url') . '/oauth2/sessions/logout');
         }
 
         $request->validate(['logout_challenge' => 'required|string']);
         $hydra = new Client();
 
         $hydraResponse = $hydra->acceptLogoutRequest($request->get('logout_challenge'));
-        return redirect($hydraResponse["redirect_to"]);
+
+        return redirect($hydraResponse['redirect_to']);
     }
 }

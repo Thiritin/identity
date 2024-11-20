@@ -14,7 +14,7 @@ class GroupUserPolicy
 
     public function view(User $user, GroupUser $groupUser): bool
     {
-        return ($user->scopeCheck('groups.read') && ($groupUser->isMember() || $groupUser->group->parent?->isMember($user)));
+        return $user->scopeCheck('groups.read') && ($groupUser->isMember() || $groupUser->group->parent?->isMember($user));
     }
 
     public function update(User $user, GroupUser $groupUser): bool
@@ -30,7 +30,7 @@ class GroupUserPolicy
     public function delete(User $user, GroupUser $groupUser): Response
     {
         if ($groupUser->level === GroupUserLevel::Owner) {
-            return Response::deny("Owners cannot be removed from group.");
+            return Response::deny('Owners cannot be removed from group.');
         }
         if ($user->scopeCheck('groups.update') && $groupUser->isAdmin()) {
             return Response::allow();

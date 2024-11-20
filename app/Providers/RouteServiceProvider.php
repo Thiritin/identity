@@ -52,7 +52,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/apps/portal.php'));
 
             Route::middleware([
-                'web', 'auth:staff', 'verified', 'auth.oidc', 'guardswitcher:staff', 'groupmember:staff'
+                'web', 'auth:staff', 'verified', 'auth.oidc', 'guardswitcher:staff', 'groupmember:staff',
             ])
                 ->namespace($this->namespace)
                 ->name('staff.')

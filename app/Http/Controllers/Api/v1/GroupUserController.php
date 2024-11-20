@@ -18,6 +18,7 @@ class GroupUserController extends Controller
     public function index(Group $group, Request $request)
     {
         $this->authorize('view', [$group->users()->find($request->user()->id)->pivot]);
+
         return new GroupUserCollection(QueryBuilder::for($group->users())
             ->allowedFilters(AllowedFilter::exact('level', 'group_user.level'))
             ->simplePaginate(100));
@@ -35,7 +36,7 @@ class GroupUserController extends Controller
         };
 
         // validated email
-        if (!$user->hasVerifiedEmail()) {
+        if (! $user->hasVerifiedEmail()) {
             throw ValidationException::withMessages(['email' => 'User has not verified their email']);
         }
 
@@ -45,6 +46,7 @@ class GroupUserController extends Controller
         }
 
         $group->users()->attach($user, ['level' => $request->validationData()['level']]);
+
         return new GroupUserResource($group->users()->find($user->id));
     }
 
@@ -53,6 +55,7 @@ class GroupUserController extends Controller
         $pivot = $group->users()->find($request->user()->id)->pivot;
         $this->authorize('delete', [$pivot]);
         $group->users()->detach($user);
+
         return response(null, 204);
     }
 }

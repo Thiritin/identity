@@ -66,8 +66,7 @@ class Handler extends ExceptionHandler
             return $response;
         }
 
-
-        if (!in_array($status, [401, 402, 403, 404, 405, 500, 503])) {
+        if (! in_array($status, [401, 402, 403, 404, 405, 500, 503])) {
             return $response;
         }
 

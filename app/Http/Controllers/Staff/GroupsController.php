@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Parsedown;
-use Spatie\LaravelMarkdown\MarkdownRenderer;
 use Stevebauman\Purify\Facades\Purify;
 
 class GroupsController extends Controller
@@ -19,14 +18,14 @@ class GroupsController extends Controller
     {
         $myDepartments = $request->user()->groups()
             ->where('type', GroupTypeEnum::Department)->select('id', 'level')->get()
-            ->mapWithKeys(fn($role) => [$role->id => ucwords($role->level)]);
+            ->mapWithKeys(fn ($role) => [$role->id => ucwords($role->level)]);
 
         $departments = Group::where('type', GroupTypeEnum::Department)
             ->withCount('users')->get();
 
-        $departmentsSortedByMembershipAndUserCount = $departments->sortByDesc(fn($department) => [
+        $departmentsSortedByMembershipAndUserCount = $departments->sortByDesc(fn ($department) => [
             $myDepartments->contains($department->id),
-            $department->users_count
+            $department->users_count,
         ]);
 
         return Inertia::render('Staff/Groups/GroupsIndex', [
@@ -39,10 +38,11 @@ class GroupsController extends Controller
     {
         $Parsedown = new Parsedown();
         $Parsedown->setSafeMode(true);
+
         return Inertia::render('Staff/Groups/Tabs/GroupInfoTab', [
             'group' => $group
                 ->loadCount('users')
-                ->only(['hashid', 'name', 'users_count', 'description','parent_id']),
+                ->only(['hashid', 'name', 'users_count', 'description', 'parent_id']),
             'parent' => $group->parent?->only(['hashid', 'name']),
             'descriptionHtml' => $Parsedown->parse($group->description),
             'canEdit' => $request->user()->can('update', $group),
@@ -59,13 +59,15 @@ class GroupsController extends Controller
             ]);
         }
         $group->update($request->validated());
+
         return redirect()->back();
 
         $group->update([
             'description' => Purify::clean($request->validated()['description'], [
-                'HTML.Allowed' => 'div,p,span,ul,ol,li,strong,em,br,a[href],img[src],h1,h2,h3,h4,h5,h6'
-            ])
+                'HTML.Allowed' => 'div,p,span,ul,ol,li,strong,em,br,a[href],img[src],h1,h2,h3,h4,h5,h6',
+            ]),
         ]);
+
         return redirect()->back();
     }
 
@@ -74,6 +76,7 @@ class GroupsController extends Controller
         Gate::authorize('delete', $group);
         $parent = $group->parent;
         $group->delete();
+
         return redirect()->route('staff.groups.show', $parent);
 
     }

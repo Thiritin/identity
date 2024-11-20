@@ -6,9 +6,9 @@ use App\Enums\GroupUserLevel;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Actions\AttachAction;
+use Filament\Tables\Table;
 
 class UsersRelationManager extends RelationManager
 {
@@ -30,7 +30,7 @@ class UsersRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                AttachAction::make()->form(fn(AttachAction $action): array => [
+                AttachAction::make()->form(fn (AttachAction $action): array => [
                     $action->getRecordSelect(),
                     Forms\Components\Select::make('level')->required()
                         ->options(GroupUserLevel::class),

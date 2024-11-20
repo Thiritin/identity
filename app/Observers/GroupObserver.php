@@ -20,14 +20,15 @@ class GroupObserver
         if ($group->type === GroupTypeEnum::Team && $group->parent->nextcloud_folder_id) {
             NextcloudService::createGroup($group->hashid);
             // Parent->name / Group->name
-            NextcloudService::setDisplayName($group->hashid, $group->parent->name.' / '.$group->name);
+            NextcloudService::setDisplayName($group->hashid, $group->parent->name . ' / ' . $group->name);
             // Add to parent group folder
             NextcloudService::addGroupToFolder($group->parent->nextcloud_folder_id, $group->hashid);
+
             return;
         }
         if (Auth::user()) {
             $group->users()->attach(Auth::user(), [
-                "level" => GroupUserLevel::Owner
+                'level' => GroupUserLevel::Owner,
             ]);
         }
     }
@@ -38,7 +39,7 @@ class GroupObserver
             return;
         }
 
-        if ($group->isDirty('nextcloud_folder_name') && !app()->runningUnitTests()) {
+        if ($group->isDirty('nextcloud_folder_name') && ! app()->runningUnitTests()) {
             // Update or create the folder via nextcloud
             if ($group->nextcloud_folder_id) {
                 NextcloudService::renameFolder($group->nextcloud_folder_id, $group->nextcloud_folder_name);
@@ -49,22 +50,22 @@ class GroupObserver
                 $group->save();
                 NextcloudService::setDisplayName($group->hashid, $group->name);
                 // Add all users to the group
-                $group->users->each(fn($user) => NextcloudService::addUserToGroup($group, $user));
+                $group->users->each(fn ($user) => NextcloudService::addUserToGroup($group, $user));
                 // Set Admin & Owner to aclmanagers
-                $group->users->filter(fn($user) => in_array($user->pivot->level,
+                $group->users->filter(fn ($user) => in_array($user->pivot->level,
                     [GroupUserLevel::Admin, GroupUserLevel::Owner]))
-                    ->each(fn($user) => NextcloudService::setManageAcl($group, $user, true));
+                    ->each(fn ($user) => NextcloudService::setManageAcl($group, $user, true));
 
             }
         }
-        if ($group->nextcloud_folder_id && $group->isDirty('name') && !app()->runningUnitTests()) {
+        if ($group->nextcloud_folder_id && $group->isDirty('name') && ! app()->runningUnitTests()) {
             // Update the display name of the group
             NextcloudService::setDisplayName($group->hashid, $group->name);
         }
 
         // Team update nextcloud dipslay name
         if ($group->type === GroupTypeEnum::Team && $group->isDirty('name') && $group->parent->nextcloud_folder_id) {
-            NextcloudService::setDisplayName($group->hashid, $group->parent->name.' / '.$group->name);
+            NextcloudService::setDisplayName($group->hashid, $group->parent->name . ' / ' . $group->name);
         }
     }
 

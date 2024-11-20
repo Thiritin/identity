@@ -13,11 +13,17 @@ use Laravel\Socialite\Two\User;
 class SocialiteIdentityProvider extends AbstractProvider
 {
     private mixed $issuer;
+
     private mixed $userinfoEndpoint;
+
     private mixed $tokenEndpoint;
+
     private mixed $authorizationEndpoint;
+
     private mixed $jwksUri;
+
     private mixed $endSessionEndpoint;
+
     private mixed $revocationEndpoint;
 
     /**
@@ -51,6 +57,7 @@ class SocialiteIdentityProvider extends AbstractProvider
         $this->jwksUri = $config['jwks_uri'];
         $this->endSessionEndpoint = $config['end_session_endpoint'];
         $this->revocationEndpoint = $config['revocation_endpoint'];
+
         return $this;
     }
 
@@ -69,7 +76,7 @@ class SocialiteIdentityProvider extends AbstractProvider
         $response = $this->getHttpClient()->get($this->getIdentityConfig()->userinfoEndpoint, [
             'headers' => [
                 'cache-control' => 'no-cache',
-                'Authorization' => 'Bearer '.$token,
+                'Authorization' => 'Bearer ' . $token,
                 'Content-Type' => 'application/x-www-form-urlencoded',
             ],
         ]);
@@ -99,31 +106,31 @@ class SocialiteIdentityProvider extends AbstractProvider
         ?Carbon $expiresIn
     ) {
         if ($token) {
-            Session::put($this->clientId.'.token.value', $token);
-            Session::put($this->clientId.'.token.expiry', $expiresIn);
-            Session::put($this->clientId.'.refreshToken', $refreshToken);
+            Session::put($this->clientId . '.token.value', $token);
+            Session::put($this->clientId . '.token.expiry', $expiresIn);
+            Session::put($this->clientId . '.refreshToken', $refreshToken);
         }
     }
 
     public function clearToken(): void
     {
-        Session::forget($this->clientId.'.token.value');
-        Session::forget($this->clientId.'.token.expiry');
-        Session::forget($this->clientId.'.refreshToken');
+        Session::forget($this->clientId . '.token.value');
+        Session::forget($this->clientId . '.token.expiry');
+        Session::forget($this->clientId . '.refreshToken');
     }
 
-    public function getToken(): string|null
+    public function getToken(): ?string
     {
-        return Session::get($this->clientId.'.token.value');
+        return Session::get($this->clientId . '.token.value');
     }
 
-    public function getRefreshToken(): string|null
+    public function getRefreshToken(): ?string
     {
-        return Session::get($this->clientId.'.refreshToken');
+        return Session::get($this->clientId . '.refreshToken');
     }
 
-    public function getExpiresIn(): Carbon|null
+    public function getExpiresIn(): ?Carbon
     {
-        return Session::get($this->clientId.'.token.expiry');
+        return Session::get($this->clientId . '.token.expiry');
     }
 }

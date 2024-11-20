@@ -10,7 +10,6 @@ use League\OAuth2\Client\Provider\GenericProvider;
 
 class OpenIDService
 {
-
     public function setupOIDC(Request $request, $systemName): GenericProvider
     {
         $config = Cache::remember('identity_config', now()->addDay(), function () {
@@ -30,7 +29,7 @@ class OpenIDService
             'urlResourceOwnerDetails' => $config['userinfo_endpoint'],
             'accessTokenMethod' => AbstractProvider::METHOD_POST,
             'scopeSeparator' => ' ',
-            'scopes' => explode(" ", config('services.apps')[$systemName]['scopes'])
+            'scopes' => explode(' ', config('services.apps')[$systemName]['scopes']),
         ]);
     }
 }

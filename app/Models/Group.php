@@ -25,6 +25,7 @@ use Mtvs\EloquentHashids\HashidRouting;
  * @property Carbon $updated_at
  * @property-read Collection|User[] $users
  * @property-read int|null $users_count
+ *
  * @method static Builder|Group newModelQuery()
  * @method static Builder|Group newQuery()
  * @method static Builder|Group query()
@@ -33,6 +34,7 @@ use Mtvs\EloquentHashids\HashidRouting;
  * @method static Builder|Group whereLogo($value)
  * @method static Builder|Group whereName($value)
  * @method static Builder|Group whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 class Group extends Model
@@ -46,7 +48,7 @@ class Group extends Model
     protected $guarded = [];
 
     protected $casts = [
-        "type" => GroupTypeEnum::class,
+        'type' => GroupTypeEnum::class,
     ];
 
     public function users()
@@ -63,9 +65,9 @@ class Group extends Model
 
     public function owner()
     {
-        return $this->hasOneThrough(User::class, GroupUser::class, "group_id", "id", "id", "user_id")
+        return $this->hasOneThrough(User::class, GroupUser::class, 'group_id', 'id', 'id', 'user_id')
             ->where('level', GroupUserLevel::Owner)
-            ->select(["name"]);
+            ->select(['name']);
     }
 
     public function apps()
@@ -83,14 +85,14 @@ class Group extends Model
         $this->attributes['name'] = $value;
         $prefix = '';
         if ($this->parent) {
-            $prefix = $this->parent->name.' / ';
+            $prefix = $this->parent->name . ' / ';
         }
-        $this->attributes['slug'] = $prefix.Str::slug($value);
+        $this->attributes['slug'] = $prefix . Str::slug($value);
     }
 
     public function getLogoUrlAttribute()
     {
-        return (is_null($this->logo)) ? null : Storage::url('avatars/'.$this->logo);
+        return (is_null($this->logo)) ? null : Storage::url('avatars/' . $this->logo);
     }
 
     public function isMember(User $user): bool
@@ -101,9 +103,10 @@ class Group extends Model
     public function isAdmin(User $user)
     {
         $member = $this->users->find($user);
-        if (!$member) {
+        if (! $member) {
             return false;
         }
+
         return $member->pivot->level == GroupUserLevel::Admin || $member->pivot->level == GroupUserLevel::Owner;
     }
 

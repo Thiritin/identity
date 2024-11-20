@@ -14,7 +14,7 @@ class ForgotPasswordController extends Controller
 {
     public function __invoke(ForgotPasswordRequest $request)
     {
-        $key = 'reset-passwords:'.$request->ip();
+        $key = 'reset-passwords:' . $request->ip();
         // Throttle requests
         if (RateLimiter::tooManyAttempts($key, 5)) {
             throw ValidationException::withMessages(['email' => 'Too many attempts.']);

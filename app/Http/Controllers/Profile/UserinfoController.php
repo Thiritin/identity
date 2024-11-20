@@ -11,7 +11,7 @@ class UserinfoController extends Controller
     public function __invoke(Request $request)
     {
         $data = $request->validate([
-            'token' => 'string|required'
+            'token' => 'string|required',
         ]);
         $hydra = new Client();
         $hydra->getToken($data['token'], ['openid', 'profile']);

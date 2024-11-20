@@ -15,15 +15,15 @@ class GroupController extends Controller
 {
     public function index(Request $request)
     {
-        $this->authorize("viewAny", Group::class);
+        $this->authorize('viewAny', Group::class);
 
         $groups = Group::query();
 
         if ($request->user()->isStaff()) {
             $groups = $groups->where('type', GroupTypeEnum::Department)
-                ->orWhereHas('users', fn($q) => $q->where('user_id', $request->user()->id));
+                ->orWhereHas('users', fn ($q) => $q->where('user_id', $request->user()->id));
         } else {
-            $groups = $groups->whereHas('users', fn($q) => $q->where('user_id', $request->user()->id));
+            $groups = $groups->whereHas('users', fn ($q) => $q->where('user_id', $request->user()->id));
         }
 
         $groups = $groups->simplePaginate(25);
@@ -33,29 +33,33 @@ class GroupController extends Controller
 
     public function store(GroupStoreRequest $request)
     {
-        $this->authorize("create", Group::class);
+        $this->authorize('create', Group::class);
         $group = Group::create($request->validationData());
+
         return new GroupResource($group);
     }
 
     public function show(Group $group, Request $request)
     {
-        $this->authorize("view", [$group, $request->user()]);
+        $this->authorize('view', [$group, $request->user()]);
+
         return new GroupResource($group);
     }
 
     public function update(GroupUpdateRequest $request, Group $group)
     {
-        $this->authorize("update", [$group, $request->user()]);
+        $this->authorize('update', [$group, $request->user()]);
         $group->fill($request->validationData());
         $group->save();
+
         return new GroupResource($group);
     }
 
     public function destroy(Group $group, Request $request)
     {
-        $this->authorize("delete", [$group, $request->user()]);
+        $this->authorize('delete', [$group, $request->user()]);
         $group->delete();
+
         return response(null, 204);
     }
 }

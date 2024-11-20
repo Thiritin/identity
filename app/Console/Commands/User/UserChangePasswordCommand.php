@@ -16,8 +16,9 @@ class UserChangePasswordCommand extends Command
     {
         $email = $this->argument('email');
         $user = User::where('email', $email)->first();
-        if (!$user) {
+        if (! $user) {
             $this->error('User not found');
+
             return;
         }
         $password = $this->secret('New Password');

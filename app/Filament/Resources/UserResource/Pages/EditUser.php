@@ -23,10 +23,10 @@ class EditUser extends EditRecord
                 ->label('Reset 2FA')
                 ->requiresConfirmation()
                 ->color('danger')
-                ->visible(fn(User $record) => $record->twoFactors()->exists())
+                ->visible(fn (User $record) => $record->twoFactors()->exists())
                 ->action(function () {
-                $this->record->resetTwoFactorAuth();
-            }),
+                    $this->record->resetTwoFactorAuth();
+                }),
         ];
     }
 }

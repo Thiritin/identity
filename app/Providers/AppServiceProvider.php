@@ -21,9 +21,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
-    {
-    }
+    public function register() {}
 
     /**
      * Bootstrap any application services.
@@ -33,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         RateLimiter::for('login', function (Request $request) {
-            return Limit::perMinute(5)->by($request->email.$request->ip());
+            return Limit::perMinute(5)->by($request->email . $request->ip());
         });
 
         RateLimiter::for('register', function (Request $request) {
@@ -54,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
 
         Http::macro('nextcloud', function () {
             return Http::baseUrl(config('services.nextcloud.baseUrl'))
-                ->withHeader('OCS-APIRequest', "true")
+                ->withHeader('OCS-APIRequest', 'true')
                 ->withBasicAuth(config('services.nextcloud.username'), config('services.nextcloud.password'));
         });
 

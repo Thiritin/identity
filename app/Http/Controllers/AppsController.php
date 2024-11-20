@@ -9,32 +9,18 @@ class AppsController extends Controller
 {
     public function index()
     {
-        return inertia("Apps/Index");
+        return inertia('Apps/Index');
     }
 
-    public function create()
-    {
-    }
+    public function create() {}
 
-    public function store(Request $request)
-    {
-    }
+    public function store(Request $request) {}
 
-    public function show(App $app)
-    {
+    public function show(App $app) {}
 
-    }
+    public function edit(App $app) {}
 
-    public function edit(App $app)
-    {
-    }
+    public function update(Request $request) {}
 
-    public function update(Request $request)
-    {
-
-    }
-
-    public function destroy(App $app)
-    {
-    }
+    public function destroy(App $app) {}
 }

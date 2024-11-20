@@ -4,9 +4,7 @@ namespace App\Listeners;
 
 class LogUserLoginListener
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function handle($event)
     {

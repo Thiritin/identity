@@ -9,8 +9,8 @@ class GroupUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'description' => ['nullable','string','max:10000'],
-            'name' => ['nullable','string','max:255'],
+            'description' => ['nullable', 'string', 'max:10000'],
+            'name' => ['nullable', 'string', 'max:255'],
         ];
     }
 

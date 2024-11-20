@@ -15,9 +15,7 @@ class UpdateEmailNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(public $newEmail, public $hashId)
-    {
-    }
+    public function __construct(public $newEmail, public $hashId) {}
 
     public function via($notifiable): array
     {
@@ -44,5 +42,4 @@ class UpdateEmailNotification extends Notification implements ShouldQueue
             ]
         );
     }
-
 }

@@ -62,8 +62,8 @@ return [
     ],
     'hydra' => [
         'public' => env('HYDRA_PUBLIC_URL'),
-        'local_public' => env('HYDRA_LOCAL_PUBLIC'), # For Dev purposes
-        'admin' => env('HYDRA_ADMIN_URL')
+        'local_public' => env('HYDRA_LOCAL_PUBLIC'), // For Dev purposes
+        'admin' => env('HYDRA_ADMIN_URL'),
     ],
     // Yubikey
     'yubikey' => [
@@ -74,5 +74,5 @@ return [
         'baseUrl' => env('NEXTCLOUD_BASE_URL'),
         'username' => env('NEXTCLOUD_USERNAME'),
         'password' => env('NEXTCLOUD_PASSWORD'),
-    ]
+    ],
 ];

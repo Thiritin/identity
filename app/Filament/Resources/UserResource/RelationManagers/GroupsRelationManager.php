@@ -8,8 +8,8 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class GroupsRelationManager extends RelationManager
 {
@@ -22,26 +22,26 @@ class GroupsRelationManager extends RelationManager
         return $form
             ->schema([
                 TextInput::make('type')
-                         ->required(),
+                    ->required(),
 
                 FileUpload::make('logo')
-                          ->image()
-                          ->disk('avatars')
-                          ->label('Group Photo')
-                          ->imageResizeTargetWidth('512')
-                          ->imageResizeTargetHeight('512')
-                          ->imagePreviewHeight('256'),
+                    ->image()
+                    ->disk('avatars')
+                    ->label('Group Photo')
+                    ->imageResizeTargetWidth('512')
+                    ->imageResizeTargetHeight('512')
+                    ->imagePreviewHeight('256'),
 
                 Placeholder::make('created_at')
-                           ->label('Created Date')
-                           ->content(fn(?Group $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                    ->label('Created Date')
+                    ->content(fn (?Group $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                 Placeholder::make('updated_at')
-                           ->label('Last Modified Date')
-                           ->content(fn(?Group $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->label('Last Modified Date')
+                    ->content(fn (?Group $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
 
                 TextInput::make('internal_name')
-                         ->required(),
+                    ->required(),
             ]);
     }
 
@@ -52,8 +52,8 @@ class GroupsRelationManager extends RelationManager
                 TextColumn::make('type'),
 
                 TextColumn::make('name')
-                          ->searchable()
-                          ->sortable(),
+                    ->searchable()
+                    ->sortable(),
 
                 TextColumn::make('description'),
             ]);

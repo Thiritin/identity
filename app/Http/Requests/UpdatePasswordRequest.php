@@ -9,13 +9,13 @@ class UpdatePasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "current_password" => [
-                "required",
-                "current_password",
+            'current_password' => [
+                'required',
+                'current_password',
             ],
-            "password" => [
-                "required",
-                "confirmed",
+            'password' => [
+                'required',
+                'confirmed',
                 \Illuminate\Validation\Rules\Password::min(8)->mixedCase()->numbers(),
             ],
         ];

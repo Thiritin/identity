@@ -9,9 +9,9 @@ class GroupUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name.*" => "string|required|max:255",
-            "description.*" => "string|nullable",
-            "logo" => "file|image|nullable|mimes:jpeg,png,jpg|max:2048",
+            'name.*' => 'string|required|max:255',
+            'description.*' => 'string|nullable',
+            'logo' => 'file|image|nullable|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }

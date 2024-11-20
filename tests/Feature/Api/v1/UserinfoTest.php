@@ -5,6 +5,7 @@ use App\Models\Group;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
+
 use function Pest\Laravel\get;
 
 uses(RefreshDatabase::class);
@@ -18,10 +19,10 @@ test('Userinfo Authenticated - Only Sub', function () {
     $response = get(route('api.v1.userinfo'));
     $response->assertStatus(200);
     $response->assertJson([
-        "sub" => $user->hashid,
+        'sub' => $user->hashid,
     ]);
     $response->assertJsonMissing([
-        "name" => $user->name,
+        'name' => $user->name,
     ]);
 });
 
@@ -34,11 +35,10 @@ test('Userinfo Authenticated - Profile Scope', function () {
     $response = get(route('api.v1.userinfo'));
     $response->assertStatus(200);
     $response->assertJson([
-        "sub" => $user->hashid,
-        "name" => $user->name,
+        'sub' => $user->hashid,
+        'name' => $user->name,
     ]);
 });
-
 
 test('Userinfo Authenticated - Show groups that user is member', function () {
     $user = Sanctum::actingAs(
@@ -50,15 +50,15 @@ test('Userinfo Authenticated - Show groups that user is member', function () {
     /**
      * @type User $user
      */
-    $user->groups()->attach($group, ["level" => GroupUserLevel::Member]);
+    $user->groups()->attach($group, ['level' => GroupUserLevel::Member]);
 
     $response = get(route('api.v1.userinfo'));
     $response->assertStatus(200);
     $response->assertJsonFragment([
-        "groups" => [
+        'groups' => [
             $group->hashid,
         ],
     ]);
 });
 
-# echo hello
+// echo hello
