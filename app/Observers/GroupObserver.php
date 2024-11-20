@@ -13,11 +13,7 @@ class GroupObserver
 {
     public function created(Group $group)
     {
-        if (App::isLocal()) {
-            return;
-        }
-
-        if ($group->type === GroupTypeEnum::Team && $group->parent->nextcloud_folder_id) {
+        if (! App::isProduction() && $group->type === GroupTypeEnum::Team && $group->parent?->nextcloud_folder_id) {
             NextcloudService::createGroup($group->hashid);
             // Parent->name / Group->name
             NextcloudService::setDisplayName($group->hashid, $group->parent->name . ' / ' . $group->name);
@@ -35,7 +31,7 @@ class GroupObserver
 
     public function updated(Group $group): void
     {
-        if (App::isLocal()) {
+        if (! App::isProduction()) {
             return;
         }
 
@@ -71,7 +67,7 @@ class GroupObserver
 
     public function deleted(Group $group)
     {
-        if (App::isLocal()) {
+        if (! App::isProduction()) {
             return;
         }
 
