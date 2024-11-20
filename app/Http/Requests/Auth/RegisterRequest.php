@@ -6,9 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends FormRequest
 {
-    /**
-     * @var mixed
-     */
     public function rules()
     {
         return [

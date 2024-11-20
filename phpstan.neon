@@ -8,7 +8,7 @@ parameters:
         - routes/
         - resources/views
 
-    level: 1
+    level: 2
 
     ignoreErrors:
 

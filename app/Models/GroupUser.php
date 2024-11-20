@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\GroupUserLevel;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class GroupUser extends Pivot
@@ -17,12 +18,15 @@ class GroupUser extends Pivot
         'level' => GroupUserLevel::class,
     ];
 
-    public function user()
+    public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-    public function group()
+    /**
+     * @return HasOne<Group, $this>
+     */
+    public function group(): HasOne
     {
         return $this->hasOne(Group::class, 'id', 'group_id');
     }

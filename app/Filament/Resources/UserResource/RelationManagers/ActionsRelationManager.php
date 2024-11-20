@@ -30,7 +30,7 @@ class ActionsRelationManager extends RelationManager
                         $record = $column->getRecord();
                         $record->load('subject', 'causer');
 
-                        return $record->subject->name ?? $record->subject->data['client_name'] ?? $record->subject->id ?? $record->causer->name ?? $record->causer->id;
+                        return $record->subject->name ?? $record->subject->data['client_name'] ?? $record->subject->id ?? $record->causer->name ?? $record->causer->id ?? null;
                     })
                     ->description(fn (Activity $record): string => ($record->subject_type ?? $record->causer_type)),
 

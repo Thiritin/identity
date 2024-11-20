@@ -38,10 +38,13 @@ class Client
     /**
      * Accept OIDC Login Request
      *
-     * @param  string  $login_challenge
-     * @return Response
+     * @param string $subject
+     * @param string $login_challenge
+     * @param int|null $remember_seconds
+     * @param array|null $loginRequest
+     * @return string
      *
-     * @throws JsonException
+     * @throws Exception
      */
     public function acceptLogin(
         string $subject,

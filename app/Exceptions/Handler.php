@@ -72,7 +72,7 @@ class Handler extends ExceptionHandler
 
         return inertia('Auth/Error', [
             'title' => "Error $status",
-            'description' => $response->exception?->getMessage(),
+            'description' => isset($response->exception) ? $response->exception?->getMessage() : '',
         ])
             ->toResponse($request)
             ->setStatusCode($status);

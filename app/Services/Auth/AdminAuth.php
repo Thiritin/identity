@@ -38,9 +38,7 @@ class AdminAuth implements Guard
 
     public function id()
     {
-        if ($user = $this->user()) {
-            return $this->user()->getAuthIdentifier();
-        }
+        return $this->user()?->getAuthIdentifier();
     }
 
     public function user()
