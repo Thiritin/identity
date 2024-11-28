@@ -175,7 +175,9 @@ test('Update Group success as Owner', function () {
 });
 
 test('Delete Group success as Owner', function () {
-    $group = Group::factory()->create();
+    $group = Group::factory()->create([
+        'type' => GroupTypeEnum::Team,
+    ]);
 
     $user = Sanctum::actingAs(
         User::factory()->create(),

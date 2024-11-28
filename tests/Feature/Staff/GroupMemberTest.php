@@ -34,8 +34,6 @@ test('Update member level to admin', function (GroupUserLevel $groupUserLevel) {
 
     $this->actingAs($user, 'staff');
 
-    var_dump(GroupUserLevel::Admin->name);
-
     $response = patchJson(
         route('staff.groups.members.update', ['group' => $group, 'member' => $userToBeUpdated]),
         ['level' => GroupUserLevel::Admin->value],
