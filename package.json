@@ -8,7 +8,7 @@
     },
     "dependencies": {
         "github-markdown-css": "^5.7.0",
-        "laravel-precognition-vue-inertia": "^0.5.12",
+        "laravel-precognition-vue-inertia": "^0.5.13",
         "md-editor-v3": "^4.21.3",
         "primeicons": "^7.0.0",
         "primevue": "^3.53.0",
