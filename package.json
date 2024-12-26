@@ -12,7 +12,7 @@
         "md-editor-v3": "^4.21.3",
         "primeicons": "^7.0.0",
         "primevue": "^3.53.0",
-        "quill": "^2.0.2"
+        "quill": "^2.0.3"
     },
     "devDependencies": {
         "@headlessui/vue": "^1.7.7",
