@@ -11,7 +11,7 @@
         "laravel-precognition-vue-inertia": "^0.5.12",
         "md-editor-v3": "^4.21.3",
         "primeicons": "^7.0.0",
-        "primevue": "^3.53.0",
+        "primevue": "^3.53.1",
         "quill": "^2.0.2"
     },
     "devDependencies": {
