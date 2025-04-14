@@ -1,17 +1,18 @@
 services:
+
   laravel.test:
+    image: sail-8.2/app
     build:
-      context: ./docker/8.2
+      context: ./vendor/laravel/sail/runtimes/8.2
       dockerfile: Dockerfile
       args:
-        WWWGROUP: '${WWWGROUP}'
-    image: sail-8.2/app
+        WWWGROUP: '${WWWGROUP:-1000}'
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     ports:
       - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
     environment:
-      WWWUSER: '${WWWUSER}'
+      WWWUSER: '${WWWUSER:-1000}'
       LARAVEL_SAIL: 1
       XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
       XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
@@ -31,6 +32,7 @@ services:
       - traefik.http.routers.app.rule=Host(`identity.eurofurence.localhost`)
       - traefik.http.services.app.loadbalancer.server.port=80
       - traefik.http.routers.app.entrypoints=web
+
   traefik:
     image: 'traefik:v2.3'
     command:
@@ -49,6 +51,7 @@ services:
           - identity.eurofurence.localhost
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
+
   mysql:
     image: 'mysql/mysql-server:8.0'
     ports:
@@ -67,15 +70,12 @@ services:
     networks:
       - sail
     healthcheck:
-      test:
-        - CMD
-        - mysqladmin
-        - ping
-        - '-p${DB_PASSWORD}'
+      test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
       retries: 3
       timeout: 5s
+
   hydra:
-    image: 'oryd/hydra'
+    image: 'oryd/hydra:v2.3'
     networks:
       - sail
     environment:
@@ -114,14 +114,15 @@ services:
       - traefik.http.routers.hydra.entrypoints=web
     ports:
       - '4444:4444'
-      - '4445:4445' # NEVER EXPOSE PUBLICLY ON PROD, ADMIN ENDPONT!!!
+      - '127.0.0.1:4445:4445' # NEVER EXPOSE PUBLICLY ON PROD, ADMIN ENDPONT!!!
       - '5555:5555'
     depends_on:
       hydra-migrate:
         condition: service_completed_successfully
     command: serve all
+
   hydra-migrate:
-    image: 'oryd/hydra'
+    image: 'oryd/hydra:v2.3'
     networks:
       - sail
     environment:
@@ -131,8 +132,9 @@ services:
       - mysql
     command: migrate sql -e --yes
     restart: on-failure
+
   redis:
-    image: 'redis:alpine'
+    image: 'redis:7-alpine'
     ports:
       - '${FORWARD_REDIS_PORT:-6379}:6379'
     volumes:
@@ -140,12 +142,10 @@ services:
     networks:
       - sail
     healthcheck:
-      test:
-        - CMD
-        - redis-cli
-        - ping
+      test: ["CMD", "redis-cli", "ping"]
       retries: 3
       timeout: 5s
+
   soketi:
     image: 'quay.io/soketi/soketi:latest-16-alpine'
     environment:
@@ -159,8 +159,9 @@ services:
       - '${PUSHER_METRICS_PORT:-9601}:9601'
     networks:
       - sail
+
   meilisearch:
-    image: 'getmeili/meilisearch:latest'
+    image: 'getmeili/meilisearch:v1.13'
     ports:
       - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
     environment:
@@ -170,24 +171,22 @@ services:
     networks:
       - sail
     healthcheck:
-      test:
-        - CMD
-        - wget
-        - '--no-verbose'
-        - '--spider'
-        - 'http://localhost:7700/health'
+      test: ["CMD", "wget", "--no-verbose", "--spider", "http://localhost:7700/health"]
       retries: 3
       timeout: 5s
+
   mailpit:
-    image: 'axllent/mailpit:latest'
+    image: 'axllent/mailpit:v1.24'
     ports:
       - '${FORWARD_MAILPIT_PORT:-1025}:1025'
       - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
     networks:
       - sail
+
 networks:
   sail:
     driver: bridge
+
 volumes:
   sail-mysql:
     driver: local
@@ -197,3 +196,4 @@ volumes:
     driver: local
   sail-meilisearch:
     driver: local
+
