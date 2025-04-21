@@ -28,7 +28,7 @@
         background-position: right;
         background-repeat: no-repeat;
         background-size: cover;
-        background-image: url('../../../assets/cyberpunk_rudzik.jpg');
+        background-image: url('../../../assets/space_chromamancer.png');
     }
 
     .page * {

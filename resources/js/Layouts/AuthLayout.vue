@@ -18,7 +18,7 @@
     </VueCookieAcceptDecline>
     <div :class="{ dark: darkMode }">
         <div class="bg-white flex page dark:text-primary-300 dark:bg-primary-900">
-            <ArtistNotice url="https://rudzik.art" name="Rudzik"/>
+            <ArtistNotice url="https://www.furaffinity.net/user/chromamancer" name="Chromamancer"/>
             <!-- Page Content -->
             <div
                 class="!min-h-[calc(100dvh)] min-h-screen
