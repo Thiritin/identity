@@ -1,0 +1,54 @@
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.5
+
+LABEL maintainer="ThunderAl <community@thunderal.net>" \
+      org.opencontainers.image.authors="ThunderAl <community@thunderal.net>" \
+      org.opencontainers.image.title="EF Laraavel development environment" \
+      org.opencontainers.image.description="Fine tuned for build time and size image for EF identity system with laravel sail support"
+
+WORKDIR /var/www/html
+
+# PHP version to be installed
+# See: https://rpms.remirepo.net/wizard/
+# WARNING: PHP 8.2 have only security only support until December 2026
+ARG PHP_VERSION=8.2
+
+# list of all PHP packages to be installed
+ARG PHP_PACKAGES="php-cli composer php-intl php-json php-mbstring php-mysqlnd php-opcache php-pdo php-redis php-xml php-zip"
+
+# nodels version to be installed
+ARG NODE_VERSION=20
+
+ENV TZ=UTC
+
+RUN set -xe; \
+    echo "==> Installing basic dependencies"; \
+    microdnf install -y --nodocs vim nano git wget sudo; \
+    microdnf reinstall tzdata -y; \
+    \
+    echo "==> Setting up RPM repositories"; \
+    wget -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm -O epel-release.rpm; \
+      rpm -i epel-release.rpm; rm epel-release.rpm; \
+    wget -q https://rpms.remirepo.net/enterprise/remi-release-9.rpm -O remi-release.rpm; \
+      rpm -i remi-release.rpm; rm remi-release.rpm; \
+    \
+    echo "==> Installing PHP $PHP_VERSION and extensions"; \
+    microdnf module enable --nodocs -y php:remi-$PHP_VERSION; \
+    microdnf install -y --nodocs $PHP_PACKAGES; \
+    setcap "cap_net_bind_service=+ep" "$(which php)"; \
+    \
+    echo "==> Installing NodeJs"; \
+    microdnf module enable --nodocs -y nodejs:$NODE_VERSION; \
+    microdnf install -y --nodocs nodejs npm; \
+    \
+    microdnf clean all; \
+    \
+    echo "==> Setting up user (uid/gid will be changed by entrypoint later)"; \
+    groupadd --force -g 1000 sail; \
+    useradd -m -s /usr/bin/bash --no-user-group -g 1000 -u 1000 sail; \
+    wget -q https://github.com/tianon/gosu/releases/download/1.17/gosu-amd64 -O /usr/bin/gosu; \
+      chmod +x /usr/bin/gosu;
+
+COPY ./entrypoint.sh /entrypoint.sh
+COPY php.ini /etc/php.d/99_app.ini
+
+ENTRYPOINT exec /bin/bash /entrypoint.sh
