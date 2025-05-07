@@ -17,9 +17,3 @@ This project uses [laravel sail](https://laravel.com/docs/11.x/sail) for local d
 ### Security
 
 If you discover any security related issues, please email me@thiritin.com instead of using the issue tracker.
-
-## Credits
-
-- [Thiritin](https://github.com/thiritin)
-- [Invisi](https://github.com/invisi)
-- [All Contributors](../../contributors)
