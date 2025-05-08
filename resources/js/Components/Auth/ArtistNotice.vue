@@ -25,7 +25,7 @@
 </script>
 <style>
     .auth-background {
-        background-position: right;
+        background-position: 35% center;
         background-repeat: no-repeat;
         background-size: cover;
         background-image: url('../../../assets/space_chromamancer.png');
