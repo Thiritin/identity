@@ -13,7 +13,7 @@ WORKDIR /var/www/html
 ARG PHP_VERSION=8.2
 
 # list of all PHP packages to be installed
-ARG PHP_PACKAGES="php-cli composer php-intl php-json php-mbstring php-mysqlnd php-opcache php-pdo php-redis php-xml php-zip php-sodium"
+ARG PHP_PACKAGES="php-cli composer php-intl php-json php-mbstring php-mysqlnd php-opcache php-pdo php-redis php-xml php-zip php-sodium php-bcmath"
 
 # nodels version to be installed
 ARG NODE_VERSION=20
