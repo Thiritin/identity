@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\App;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Database\Eloquent\Builder;
 use Inertia\Inertia;
 
 class DashboardController extends Controller

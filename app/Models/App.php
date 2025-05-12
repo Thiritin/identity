@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * 
- *
  * @property int $id
  * @property string|null $system_name
  * @property string|null $client_id
@@ -28,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Group> $groups
  * @property-read int|null $groups_count
  * @property-read \App\Models\User $owner
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|App newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|App newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|App query()
@@ -48,6 +47,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|App whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|App whereUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|App whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class App extends Model

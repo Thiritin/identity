@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * 
- *
  * @property int $id
  * @property int $user_id
  * @property string|null $name
@@ -20,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TwoFactor newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TwoFactor newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TwoFactor onlyTrashed()
@@ -36,6 +35,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TwoFactor whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TwoFactor withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TwoFactor withoutTrashed()
+ *
  * @mixin \Eloquent
  */
 class TwoFactor extends Model

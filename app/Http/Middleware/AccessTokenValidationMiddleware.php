@@ -58,7 +58,7 @@ class AccessTokenValidationMiddleware
                 $token = $oidcService->getAccessToken('refresh_token', [
                     'refresh_token' => $refreshToken,
                 ]);
-            } catch (IdentityProviderException | UnexpectedValueException $exception) {
+            } catch (IdentityProviderException|UnexpectedValueException $exception) {
                 // If refresh fails, try to reauth user.
                 Auth::logout();
 

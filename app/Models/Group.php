@@ -25,6 +25,7 @@ use Mtvs\EloquentHashids\HashidRouting;
  * @property Carbon $updated_at
  * @property-read Collection|User[] $users
  * @property-read int|null $users_count
+ *
  * @method static Builder|Group newModelQuery()
  * @method static Builder|Group newQuery()
  * @method static Builder|Group query()
@@ -33,6 +34,7 @@ use Mtvs\EloquentHashids\HashidRouting;
  * @method static Builder|Group whereLogo($value)
  * @method static Builder|Group whereName($value)
  * @method static Builder|Group whereUpdatedAt($value)
+ *
  * @property int|null $parent_id
  * @property string|null $system_name
  * @property GroupTypeEnum $type
@@ -50,6 +52,7 @@ use Mtvs\EloquentHashids\HashidRouting;
  * @property-read \App\Models\User|null $owner
  * @property-read Group|null $parent
  * @property-read \App\Models\GroupUser|null $pivot
+ *
  * @method static \Database\Factories\GroupFactory factory($count = null, $state = [])
  * @method static Builder<static>|Group whereDescription($value)
  * @method static Builder<static>|Group whereNextcloudFolderId($value)
@@ -59,6 +62,7 @@ use Mtvs\EloquentHashids\HashidRouting;
  * @method static Builder<static>|Group whereSlug($value)
  * @method static Builder<static>|Group whereSystemName($value)
  * @method static Builder<static>|Group whereType($value)
+ *
  * @mixin Eloquent
  */
 class Group extends Model

@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Profile;
 
 use App\Events\NewProfilePhotoEvent;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Intervention\Image\Facades\Image;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 use Storage;
 
 class StoreAvatarController extends Controller

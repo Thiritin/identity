@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Profile;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateProfileRequest extends FormRequest
 {
