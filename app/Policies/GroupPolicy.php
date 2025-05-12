@@ -7,7 +7,7 @@ use App\Enums\GroupUserLevel;
 use App\Models\Group;
 use App\Models\GroupUser;
 use App\Models\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 

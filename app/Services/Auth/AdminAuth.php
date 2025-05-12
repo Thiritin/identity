@@ -83,6 +83,11 @@ class AdminAuth implements Guard
         return $key;
     }
 
+    public function hasUser()
+    {
+        return !is_null($this->user);
+    }
+
     public function setUser(Authenticatable $user)
     {
         $this->user = $user;
