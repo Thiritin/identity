@@ -33,6 +33,27 @@
         "vue": "^3.4.31",
         "vue-cookie-accept-decline": "^6.1.0",
         "vue-cookies": "^1.8.3",
-        "vue-cropperjs": "^5.0.0"
+        "vue-cropperjs": "^5.0.0",
+        "prettier": "^3.5.3"
+    },
+    "prettier": {
+        "trailingComma": "es5",
+        "tabWidth": 4,
+        "semi": false,
+        "singleQuote": true,
+        "vueIndentScriptAndStyle": true,
+        "endOfLine": "lf",
+        "singleAttributePerLine": false,
+        "overrides": [
+            {
+                "files": [
+                    "*.yml",
+                    "*.yaml"
+                ],
+                "options": {
+                    "tabWidth": 2
+                }
+            }
+        ]
     }
 }
