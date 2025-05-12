@@ -5,6 +5,24 @@ namespace App\Models;
 use App\Enums\GroupUserLevel;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
+/**
+ * 
+ *
+ * @property int $group_id
+ * @property int $user_id
+ * @property GroupUserLevel $level
+ * @property string|null $title
+ * @property-read \App\Models\Group|null $group
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupUser newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupUser newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupUser query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupUser whereGroupId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupUser whereLevel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupUser whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupUser whereUserId($value)
+ * @mixin \Eloquent
+ */
 class GroupUser extends Pivot
 {
     public $incrementing = false;

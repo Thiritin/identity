@@ -25,7 +25,6 @@ use Mtvs\EloquentHashids\HashidRouting;
  * @property Carbon $updated_at
  * @property-read Collection|User[] $users
  * @property-read int|null $users_count
- *
  * @method static Builder|Group newModelQuery()
  * @method static Builder|Group newQuery()
  * @method static Builder|Group query()
@@ -34,7 +33,32 @@ use Mtvs\EloquentHashids\HashidRouting;
  * @method static Builder|Group whereLogo($value)
  * @method static Builder|Group whereName($value)
  * @method static Builder|Group whereUpdatedAt($value)
- *
+ * @property int|null $parent_id
+ * @property string|null $system_name
+ * @property GroupTypeEnum $type
+ * @property string $slug
+ * @property string|null $description
+ * @property string|null $nextcloud_folder_name
+ * @property int|null $nextcloud_folder_id
+ * @property string|null $nextcloud_group_id
+ * @property-read Collection<int, \App\Models\App> $apps
+ * @property-read int|null $apps_count
+ * @property-read Collection<int, Group> $children
+ * @property-read int|null $children_count
+ * @property-read mixed $hashid
+ * @property-read mixed $logo_url
+ * @property-read \App\Models\User|null $owner
+ * @property-read Group|null $parent
+ * @property-read \App\Models\GroupUser|null $pivot
+ * @method static \Database\Factories\GroupFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Group whereDescription($value)
+ * @method static Builder<static>|Group whereNextcloudFolderId($value)
+ * @method static Builder<static>|Group whereNextcloudFolderName($value)
+ * @method static Builder<static>|Group whereNextcloudGroupId($value)
+ * @method static Builder<static>|Group whereParentId($value)
+ * @method static Builder<static>|Group whereSlug($value)
+ * @method static Builder<static>|Group whereSystemName($value)
+ * @method static Builder<static>|Group whereType($value)
  * @mixin Eloquent
  */
 class Group extends Model

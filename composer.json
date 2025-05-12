@@ -43,6 +43,7 @@
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.5",
         "fakerphp/faker": "^1.9.1",
         "itsgoingd/clockwork": "^5.1",
         "laravel/pint": "^1.18",
@@ -81,13 +82,18 @@
             "@php artisan key:generate --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan filament:upgrade"
+            "@php artisan filament:upgrade",
+            "@php artisan ide-helper:generate -H",
+            "@php artisan ide-helper:meta"
+        ],
+        "post-install-cmd": [
+            "@php artisan ide-helper:generate -H",
+            "@php artisan ide-helper:meta"
         ]
     },
     "extra": {
         "laravel": {
-            "dont-discover": [
-            ]
+            "dont-discover": []
         }
     },
     "config": {

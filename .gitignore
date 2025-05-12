@@ -17,3 +17,6 @@ yarn-error.log
 /public/css/app.css
 /public/build/
 /.phpunit.cache/test-results
+# https://github.com/barryvdh/laravel-ide-helper
+/_ide_helper.php
+/.phpstorm.meta.php
