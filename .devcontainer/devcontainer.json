@@ -1,0 +1,79 @@
+// https://aka.ms/devcontainer.json
+{
+    "name": "eurofurence/identity",
+    "dockerComposeFile": "compose.yaml",
+    "service": "workspace",
+    "remoteEnv": {
+        "PATH": "${containerEnv:PATH}:/var/www/html/vendor/bin"
+    },
+    // pre-initialize vendor folder for sail's Dockerfile
+    "initializeCommand": ".devcontainer/01-vendor.sh",
+    // install dependencies inside devcontainer
+    "postCreateCommand": ".devcontainer/02-setup.sh",
+    "shutdownAction": "stopCompose",
+    "workspaceFolder": "/var/www/html",
+    "remoteUser": "sail",
+    "portsAttributes": {
+        "80": { "label": "HTTP Ingest", "onAutoForward": "notify" },
+        "443": { "label": "HTTPS Ingest", "onAutoForward": "notify" },
+        "5173": { "label": "Vite WS", "onAutoForward": "notify" },
+        "5555": { "label": "Hydra", "onAutoForward": "notify" },
+        "4444": { "label": "Hydra API", "onAutoForward": "notify" },
+        "4445": { "label": "Hydra Admin API", "onAutoForward": "notify" },
+        "6001": { "label": "Pusher/Soketi", "onAutoForward": "notify" },
+        "3306": { "label": "MySQL", "onAutoForward": "notify" },
+        "6379": { "label": "Redis", "onAutoForward": "notify" },
+        "7700": { "label": "Meilisearch", "onAutoForward": "notify" },
+        "1025": { "label": "Mailpit SMTP", "onAutoForward": "notify" },
+        "8025": { "label": "Mailpit Dashboard", "onAutoForward": "notify" },
+        "8080": { "label": "Traefik Dashboard", "onAutoForward": "notify" },
+        "9601": { "label": "Pusher/Soketi Metrics", "onAutoForward": "notify" }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bmewburn.vscode-intelephense-client",
+                "EditorConfig.EditorConfig",
+                "esbenp.prettier-vscode",
+                "github.vscode-pull-request-github",
+                "amiralizadeh9480.laravel-extra-intellisense",
+                "mikestead.dotenv",
+                "ms-azuretools.vscode-docker",
+                "vue.volar",
+                "laravel.vscode-laravel"
+            ],
+            "settings": {
+                "editor.formatOnSave": true,
+                "editor.formatOnType": false,
+                "files.trimTrailingWhitespace": true,
+                "intelephense.environment.phpVersion": "8.2",
+                // increase for _ide_helper.php
+                "intelephense.files.maxSize": 10000000,
+                // https://github.com/bmewburn/vscode-intelephense/issues/3230
+                "intelephense.files.exclude": ["**/vendor/_laravel_ide"],
+                "Laravel.phpEnvironment": "sail",
+                "search.exclude": {
+                    "_ide_helper.php": true,
+                    "_ide_helper_models.php": true,
+                    ".phpstorm.meta.php": true,
+                    "composer.lock": true,
+                    "package-lock.json": true
+                },
+                "files.exclude": {
+                    "**/.DS_Store": true,
+                    "**/.git": true,
+                    "**/node_modules": true
+                },
+                "[json]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
+                "[jsonc]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                }
+            }
+        }
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    }
+}

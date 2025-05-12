@@ -1,0 +1,13 @@
+services:
+  workspace:
+    build:
+      context: ../vendor/laravel/sail/runtimes/8.2
+      dockerfile: Dockerfile
+      args:
+        WWWGROUP: '1000'
+    image: sail-8.2/app
+    environment:
+      # disable default "artisan serve"
+      - SUPERVISOR_PHP_COMMAND="sleep 1h"
+    volumes:
+      - '..:/var/www/html'
