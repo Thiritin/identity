@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'identity@eurofurence.localhost',
             'email_verified_at' => now(),
-            'password' => \Hash::make(random_bytes(32)),
+            'password' => \Hash::make(env('ADMIN_PASSWORD', random_bytes(32))),
         ]);
         // Warning this user will be made admin!
         $user->roles()->attach(Role::where('name', 'superadmin')->firstOrFail());

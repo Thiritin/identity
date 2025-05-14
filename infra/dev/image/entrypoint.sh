@@ -22,8 +22,12 @@ DEV_SERVER_COMMAND_FALLBACK="php -d variables_order=EGPCS /var/www/html/artisan 
 
 # Command that will be executed when running the container without any command
 # falling back to SUPERVISOR_PHP_COMMAND for backward compatibility
-DEV_SERVER_COMMAND="${SUPERVISOR_PHP_COMMAND:-$DEV_SERVER_COMMAND_FALLBACK}"
+DEV_SERVER_COMMAND="${DEV_SERVER_COMMAND:-$DEV_SERVER_COMMAND_FALLBACK}"
 
+# respect the SUPERVISOR_PHP_COMMAND for backward compatibility
+if [ -n "$SUPERVISOR_PHP_COMMAND" ]; then
+    DEV_SERVER_COMMAND="$SUPERVISOR_PHP_COMMAND"
+fi
 
 # respect the SUPERVISOR_PHP_USER for backward compatibility
 if [ -n "$SUPERVISOR_PHP_USER" ]; then
@@ -43,9 +47,9 @@ groupmod -g "$WWWGROUP" sail > /dev/null
 if [ ! -d "/var/www/html/vendor" ]; then
     echo "Installing PHP dependencies"
     if [ "$WWWUSERNAME" = "root" ]; then
-        composer install --no-interaction --prefer-dist --optimize-autoloader
+        composer install --no-interaction
     else
-        gosu "$WWWUSER:$WWWGROUP" composer install --no-interaction --prefer-dist --optimize-autoloader
+        gosu "$WWWUSER:$WWWGROUP" composer install --no-interaction
     fi
 fi
 
@@ -58,10 +62,16 @@ if [ $# -gt 0 ]; then
         exec gosu "$WWWUSER:$WWWGROUP" "$@"
     fi
 else
-    # if the command is not set, we will run the default command
-    if [ "$WWWUSERNAME" = "root" ]; then
-        exec $DEV_SERVER_COMMAND
-    else
-        exec gosu "$WWWUSER:$WWWGROUP" $DEV_SERVER_COMMAND
-    fi
+    # this setup will not properly pass the signals to the child process but its ok for dev environments
+    while true; do
+        # if the command is not set, we will run the default command
+        if [ "$WWWUSERNAME" = "root" ]; then
+            $DEV_SERVER_COMMAND
+        else
+            gosu "$WWWUSER:$WWWGROUP" $DEV_SERVER_COMMAND
+        fi
+
+        echo "==> Restarting the server in 5 seconds..."
+        sleep 5
+    done
 fi

@@ -1,5 +1,9 @@
 FROM registry.access.redhat.com/ubi9/ubi-minimal:9.5
 
+#
+# bump laravel.test image name version on every change of this file
+#
+
 LABEL maintainer="ThunderAl <community@thunderal.net>" \
       org.opencontainers.image.authors="ThunderAl <community@thunderal.net>" \
       org.opencontainers.image.title="EF Laraavel development environment" \

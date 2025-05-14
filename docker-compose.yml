@@ -1,7 +1,8 @@
 services:
 
   laravel.test:
-    image: localhost/ef-identity-dev:latest
+    # bump version if you change infra/dev/image/Containerfile
+    image: localhost/ef-identity-dev:v1
     build:
       context: ./infra/dev/image
       dockerfile: Containerfile
@@ -17,6 +18,7 @@ services:
       XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
       XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
       IGNITION_LOCAL_SITES_PATH: '${PWD}'
+      DEV_SERVER_COMMAND: '${DEV_SERVER_COMMAND:-}'
     restart: on-failure
     volumes:
       - '.:/var/www/html'
@@ -44,7 +46,6 @@ services:
       - '--entrypoints.web.address=:80'
     ports:
       - '80:80'
-      - '443:443'
       - '8080:8080'
     networks:
       sail:
