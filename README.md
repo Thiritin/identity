@@ -10,7 +10,7 @@ Podman is also supported, but you need to set up the podman socket and command t
 1. Clone the Repo
 2. Copy `.env.example` to `.env` and set up the environment variables if needed.  
    `cp .env.example .env`  
-   (It's better to generate new secret keys, but for basic simplicity we provide some default ones)
+   (you should generate new secret keys, but for simplicity some default ones are provided)
 3. Run `docker compose up -d` to start the docker containers.  
    It may take a while to pull and build images for the first time.
 4. Wait when php dependencies are installed and the dev server starts.  
@@ -84,7 +84,7 @@ For some rare cases, you may want to remove all pulled images and volumes `docke
 * `:1025`, `:8025` - MailPit local SMTP server
   (can be changed via `FORWARD_MAILPIT_PORT`, `FORWARD_MAILPIT_DASHBOARD_PORT` in `.env`)
 
-## Connecting to a MySQL database from the host
+## Connecting to the MySQL database from the host
 
 After you finish the installation, you can connect to the MySQL database from your host machine.
 
@@ -96,14 +96,14 @@ After you finish the installation, you can connect to the MySQL database from yo
 
 ## Receiving mail
 
-During development, you should use `identity.eurofurence.localhost` (eg `some-user@identity.eurofurence.localhost`)
-to receive emails.
+During development, you should use `identity.eurofurence.localhost` hostname
+(eg `some-user@identity.eurofurence.localhost`) to receive emails.
 
 Use mailpit to check the emails at [http://localhost:8025](http://localhost:8025).
 
 ## Security
 
-If you discover any security related issues, please email me@thiritin.com instead of using the issue tracker.
+If you discover any security-related issues, please email me@thiritin.com instead of using the issue tracker.
 
 ## Credits
 
