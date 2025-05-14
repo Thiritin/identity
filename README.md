@@ -103,10 +103,4 @@ Use mailpit to check the emails at [http://localhost:8025](http://localhost:8025
 
 ## Security
 
-If you discover any security-related issues, please email me@thiritin.com instead of using the issue tracker.
-
-## Credits
-
-- [Thiritin](https://github.com/thiritin)
-- [Invisi](https://github.com/invisi)
-- [All Contributors](../../contributors)
+If you discover any security related issues, please email me@thiritin.com instead of using the issue tracker.
