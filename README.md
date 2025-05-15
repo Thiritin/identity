@@ -26,8 +26,8 @@ Podman is also supported, but you need to set up the podman socket and command t
    docker compose exec -it -u sail laravel.test <command>
    ```
    (further commands will have a sail and pure docker-compose version)
-6. Run `sail php artisan migrate` or `docker compose exec -it -u sail laravel.test php artisan migrate`.
-7. Run `sail php artisan db:seed` or `docker compose exec -it -u sail laravel.test php artisan db:seed`.
+6. Run `sail artisan migrate` or `docker compose exec -it -u sail laravel.test php artisan migrate`.
+7. Run `sail artisan db:seed` or `docker compose exec -it -u sail laravel.test php artisan db:seed`.
 8. Run `sail npm install` or `docker compose exec -it -u sail laravel.test npm install`.
 9. Run `sail npm run dev` or `docker compose exec -it -u sail laravel.test npm run dev`.  
    (you can run this command locally. it may speed up HMR and file watching on some systems)
