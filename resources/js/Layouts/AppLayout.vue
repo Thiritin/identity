@@ -31,7 +31,7 @@
                                     <img class="h-10 w-auto" src="../../assets/ef.svg"
                                          alt="Eurofurence"/>
                                     <div>
-                                        <div class='font-medium font-sm text-primary-100'>StaffNet</div>
+                                        <div class='font-medium font-sm text-primary-100'>Staff Dashboard</div>
                                     </div>
                                 </div>
                                 <nav class="flex flex-1 flex-col">
@@ -64,7 +64,7 @@
                     <img class="h-10 w-auto" src="../../assets/ef.svg"
                          alt="Eurofurence"/>
                     <div>
-                        <div class='font-medium font-sm dark:text-primary-300'>StaffNet</div>
+                        <div class='font-medium font-sm dark:text-primary-300'>Staff Dashboard</div>
                     </div>
                 </div>
                 <nav class="flex flex-1 flex-col">
