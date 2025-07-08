@@ -4,4 +4,7 @@ vendor
 .github/workflows
 bootstrap/cache/*
 public/build
+storage/clockwork/*
+storage/framework/*/*
+storage/logs/*
 openapi.yml

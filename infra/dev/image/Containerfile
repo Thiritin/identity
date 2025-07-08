@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9/ubi-minimal:9.5
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.6
 
 #
 # bump laravel.test image name version on every change of this file
@@ -17,7 +17,7 @@ WORKDIR /var/www/html
 ARG PHP_VERSION=8.2
 
 # list of all PHP packages to be installed
-ARG PHP_PACKAGES="php-cli composer php-intl php-json php-mbstring php-mysqlnd php-opcache php-pdo php-redis php-xml php-zip php-sodium php-bcmath"
+ARG PHP_PACKAGES="php-cli composer php-intl php-json php-mbstring php-mysqlnd php-opcache php-pdo php-gd php-redis php-xml php-swoole php-zip php-sodium php-bcmath"
 
 # nodels version to be installed
 ARG NODE_VERSION=20
@@ -26,7 +26,7 @@ ENV TZ=UTC
 
 RUN set -xe; \
     echo "==> Installing basic dependencies"; \
-    microdnf install -y --nodocs vim nano git wget sudo; \
+    microdnf install -y --nodocs vim nano git wget procps-ng sudo; \
     microdnf reinstall tzdata -y; \
     \
     echo "==> Setting up RPM repositories"; \
@@ -34,6 +34,10 @@ RUN set -xe; \
       rpm -i epel-release.rpm; rm epel-release.rpm; \
     wget -q https://rpms.remirepo.net/enterprise/remi-release-9.rpm -O remi-release.rpm; \
       rpm -i remi-release.rpm; rm remi-release.rpm; \
+    \
+    echo "==> Installing c-ares (swoole requirement) from compatible repository"; \
+    wget -q "https://mirror.stream.centos.org/9-stream/BaseOS/$(uname -m)/os/Packages/c-ares-1.17.1-4.el9.$(uname -m).rpm" -O c-ares.rpm; \
+      rpm -i --nodigest c-ares.rpm; rm c-ares.rpm; \
     \
     echo "==> Installing PHP $PHP_VERSION and extensions"; \
     microdnf module enable --nodocs -y php:remi-$PHP_VERSION; \
@@ -55,4 +59,4 @@ RUN set -xe; \
 COPY ./entrypoint.sh /entrypoint.sh
 COPY php.ini /etc/php.d/99_app.ini
 
-ENTRYPOINT exec /bin/bash /entrypoint.sh
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
