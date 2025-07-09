@@ -2,7 +2,7 @@ services:
 
   laravel.test:
     # bump version if you change infra/dev/image/Containerfile
-    image: localhost/ef-identity-dev:v1
+    image: localhost/ef-identity-dev:v2
     build:
       context: ./infra/dev/image
       dockerfile: Containerfile

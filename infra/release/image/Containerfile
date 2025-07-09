@@ -1,12 +1,8 @@
-FROM registry.access.redhat.com/ubi9/ubi-minimal:9.6
-
-#
-# bump laravel.test image name version on every change of this file
-#
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.6 AS php-base
 
 LABEL maintainer="ThunderAl <community@thunderal.net>" \
       org.opencontainers.image.authors="ThunderAl <community@thunderal.net>" \
-      org.opencontainers.image.title="EF Laravel development environment" \
+      org.opencontainers.image.title="EF Laravel release environment" \
       org.opencontainers.image.description="Fine tuned for build time and size image for EF identity system with laravel sail support"
 
 WORKDIR /var/www/html
@@ -24,9 +20,13 @@ ARG NODE_VERSION=20
 
 ENV TZ=UTC
 
+#
+# Installing system dependencies
+#
+
 RUN set -xe; \
     echo "==> Installing basic dependencies"; \
-    microdnf install -y --nodocs vim nano git wget procps-ng sudo unzip; \
+    microdnf install -y --nodocs git wget procps-ng sudo unzip; \
     microdnf reinstall tzdata -y; \
     \
     echo "==> Setting up RPM repositories"; \
@@ -48,15 +48,60 @@ RUN set -xe; \
     microdnf module enable --nodocs -y nodejs:$NODE_VERSION; \
     microdnf install -y --nodocs nodejs npm; \
     \
-    microdnf clean all; \
-    \
-    echo "==> Setting up user (uid/gid will be changed by entrypoint later)"; \
-    groupadd --force -g 1000 sail; \
-    useradd -m -s /usr/bin/bash --no-user-group -g 1000 -u 1000 sail; \
-    wget -q https://github.com/tianon/gosu/releases/download/1.17/gosu-amd64 -O /usr/bin/gosu; \
-      chmod +x /usr/bin/gosu;
+    microdnf clean all;
 
-COPY ./entrypoint.sh /entrypoint.sh
-COPY php.ini /etc/php.d/99_app.ini
+COPY ./infra/release/image/entrypoint.sh /entrypoint.sh
+COPY ./infra/release/image/php.ini /etc/php.d/99_app.ini
+
+#
+# Pre-Download composer dependencies (post install scripts will be executed later)
+#
+
+COPY ./composer.json ./composer.lock /var/www/html/
+
+RUN --mount=type=cache,target=/root/.composer/cache \
+    set -xe; \
+    echo "==> Download composer dependencies"; \
+    composer install --no-dev --no-interaction --no-scripts;
+
+FROM php-base AS frontend
+
+#
+# dependencies as a separated layer
+#
+
+COPY ./package.json ./package-lock.json /var/www/html/
+
+RUN --mount=type=cache,target=/root/.npm \
+    set -xe; \
+    echo "==> Download frontend dependencies"; \
+    npm install --no-audit;
+
+#
+# build frontend assets
+#
+
+COPY . /var/www/html/
+COPY ./resources /var/www/html/resources
+
+RUN --mount=type=cache,target=/root/.npm \
+    set -xe; \
+    echo "==> Building frontend assets"; \
+    npm run build;
+
+FROM php-base AS release
+
+COPY . /var/www/html/
+
+RUN --mount=type=cache,target=/root/.composer/cache \
+    set -xe; \
+    echo "==> Finalise and install dependencies"; \
+    composer install --no-dev --no-interaction --optimize-autoloader; \
+    echo "==> Building common caches"; \
+    php artisan event:cache; \
+    php artisan route:cache; \
+    php artisan view:cache;
+
+COPY --from=frontend /var/www/html/public /var/www/html/public
 
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
