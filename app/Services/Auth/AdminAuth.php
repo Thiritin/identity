@@ -38,9 +38,8 @@ class AdminAuth implements Guard
 
     public function id()
     {
-        if ($user = $this->user()) {
-            return $this->user()->getAuthIdentifier();
-        }
+        $user = $this->user();
+        return $user?->getAuthIdentifier();
     }
 
     public function user()
@@ -48,6 +47,8 @@ class AdminAuth implements Guard
         if (! is_null($this->user)) {
             return $this->user;
         }
+
+        return null;
     }
 
     public function validate(array $credentials = []): bool
@@ -56,6 +57,8 @@ class AdminAuth implements Guard
             return false;
         }
         $signingKey = $this->getSigningKey();
+
+        // FIXME
     }
 
     protected function getSigningKey()
@@ -88,5 +91,9 @@ class AdminAuth implements Guard
         $this->user = $user;
 
         return $this;
+    }
+
+    public function hasUser() {
+        return !is_null($this->user);
     }
 }
