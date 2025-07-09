@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi9/ubi-minimal:9.6 AS php-base
 
 LABEL maintainer="ThunderAl <community@thunderal.net>" \
       org.opencontainers.image.authors="ThunderAl <community@thunderal.net>" \
-      org.opencontainers.image.title="EF Laraavel release environment" \
+      org.opencontainers.image.title="EF Laravel release environment" \
       org.opencontainers.image.description="Fine tuned for build time and size image for EF identity system with laravel sail support"
 
 WORKDIR /var/www/html
@@ -15,7 +15,7 @@ ARG PHP_VERSION=8.2
 # list of all PHP packages to be installed
 ARG PHP_PACKAGES="php-cli composer php-intl php-json php-mbstring php-mysqlnd php-opcache php-pdo php-gd php-redis php-xml php-swoole php-zip php-sodium php-bcmath"
 
-# nodels version to be installed
+# nodejs version to be installed
 ARG NODE_VERSION=20
 
 ENV TZ=UTC
