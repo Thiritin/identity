@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\App;
+use App\Domains\User\Models\App;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Hash;

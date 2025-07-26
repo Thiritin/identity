@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\User;
+use App\Domains\User\Models\User;
 use Illuminate\Foundation\Events\Dispatchable;
 
 class NewProfilePhotoEvent

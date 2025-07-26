@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Profile\Settings\TwoFactor\TotpSetupController;
-use App\Http\Controllers\Profile\Settings\TwoFactor\YubikeySetupController;
-use App\Http\Controllers\Profile\Settings\UpdatePasswordController;
-use App\Http\Controllers\Profile\StoreAvatarController;
-use App\Http\Controllers\Profile\UpdateProfileController;
+use App\Domains\User\Http\Controllers\DashboardController;
+use App\Domains\User\Http\Controllers\Settings\TwoFactor\TotpSetupController;
+use App\Domains\User\Http\Controllers\Settings\TwoFactor\YubikeySetupController;
+use App\Domains\User\Http\Controllers\Settings\UpdatePasswordController;
+use App\Domains\User\Http\Controllers\StoreAvatarController;
+use App\Domains\User\Http\Controllers\UpdateProfileController;
 use Illuminate\Support\Facades\Route;
 
 // General Routes

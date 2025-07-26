@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\GroupUser;
+use App\Domains\Staff\Models\GroupUser;
 use Illuminate\Foundation\Events\Dispatchable;
 
 class GroupUserAddedEvent

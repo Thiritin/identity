@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware\Admin;
+namespace App\Domains\*Admin;
 
 use Filament\Http\Middleware\Authenticate;
 

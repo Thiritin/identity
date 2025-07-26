@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Group;
-use App\Models\GroupUser;
+use App\Domains\Staff\Models\Group;
+use App\Domains\Staff\Models\GroupUser;
 use App\Policies\GroupPolicy;
 use App\Policies\GroupUserPolicy;
 use App\Services\Auth\AdminAuth;

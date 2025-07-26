@@ -5,7 +5,7 @@ namespace App\Http\Resources\V1;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-/** @see \App\Models\GroupUser */
+/** @see \App\Domains\Staff\Models\GroupUser */
 class GroupUserCollection extends ResourceCollection
 {
     /**

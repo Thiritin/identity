@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\IntrospectionRequest;
 use App\Http\Resources\V1\TokenResource;
-use App\Services\Hydra\Client;
+use App\Domains\Auth\Services\Client;
 
 class IntrospectionController extends Controller
 {

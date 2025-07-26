@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Enums\GroupUserLevel;
-use App\Models\User;
+use App\Domains\User\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -28,7 +28,7 @@ class CheckStaffGroupMembershipJob implements ShouldQueue
 
     public function handle(): void
     {
-        $staffGroup = \App\Models\Group::where('system_name', 'staff')->firstOrFail();
+        $staffGroup = \App\Domains\Staff\Models\Group::where('system_name', 'staff')->firstOrFail();
         $isMemberInAnyDepartment = $this->user->groups()->where('type', 'department')->exists();
         if ($isMemberInAnyDepartment) {
             $staffGroup->users()->syncWithoutDetaching([$this->user->id => ['level' => GroupUserLevel::Member]]);

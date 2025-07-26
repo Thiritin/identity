@@ -2,18 +2,18 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\AccessTokenValidationMiddleware;
-use App\Http\Middleware\Authenticate;
-use App\Http\Middleware\EncryptCookies;
-use App\Http\Middleware\GroupMember;
-use App\Http\Middleware\GuardSwitcher;
-use App\Http\Middleware\HandleInertiaRequests;
-use App\Http\Middleware\PreventRequestsDuringMaintenance;
-use App\Http\Middleware\RedirectIfAuthenticated;
-use App\Http\Middleware\TokenIntrospectionCheckMiddleware;
-use App\Http\Middleware\TrimStrings;
-use App\Http\Middleware\TrustProxies;
-use App\Http\Middleware\VerifyCsrfToken;
+use App\Domains\*AccessTokenValidationMiddleware;
+use App\Domains\*Authenticate;
+use App\Domains\*EncryptCookies;
+use App\Domains\*GroupMember;
+use App\Domains\*GuardSwitcher;
+use App\Domains\*HandleInertiaRequests;
+use App\Domains\*PreventRequestsDuringMaintenance;
+use App\Domains\*RedirectIfAuthenticated;
+use App\Domains\*TokenIntrospectionCheckMiddleware;
+use App\Domains\*TrimStrings;
+use App\Domains\*TrustProxies;
+use App\Domains\*VerifyCsrfToken;
 use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
@@ -40,7 +40,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        // \App\Http\Middleware\TrustHosts::class,
+        // \App\Domains\*TrustHosts::class,
         TrustProxies::class,
         HandleCors::class,
         PreventRequestsDuringMaintenance::class,

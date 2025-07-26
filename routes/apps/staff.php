@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Staff\DashboardController;
-use App\Http\Controllers\Staff\GroupMemberController;
-use App\Http\Controllers\Staff\GroupsController;
-use App\Http\Controllers\Staff\GroupTeamController;
+use App\Domains\Staff\Http\Controllers\DashboardController;
+use App\Domains\Staff\Http\Controllers\GroupMemberController;
+use App\Domains\Staff\Http\Controllers\GroupsController;
+use App\Domains\Staff\Http\Controllers\GroupTeamController;
 
 // Forward / to /dashboard
 Route::redirect('/', '/dashboard');

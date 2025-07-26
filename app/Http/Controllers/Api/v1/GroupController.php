@@ -8,7 +8,7 @@ use App\Http\Requests\GroupStoreRequest;
 use App\Http\Requests\GroupUpdateRequest;
 use App\Http\Resources\V1\GroupCollection;
 use App\Http\Resources\V1\GroupResource;
-use App\Models\Group;
+use App\Domains\Staff\Models\Group;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller

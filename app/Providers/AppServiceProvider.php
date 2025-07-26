@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use App\Providers\Socialite\SocialiteIdentityProvider;
-use App\Services\Hydra\Admin;
-use App\Services\Hydra\Client;
+use App\Domains\Auth\Services\Admin;
+use App\Domains\Auth\Services\Client;
 use Filament\Facades\Filament;
 use Filament\Navigation\UserMenuItem;
 use Illuminate\Cache\RateLimiting\Limit;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\Hydra\Client;
+use App\Domains\Auth\Services\Client;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

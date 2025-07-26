@@ -4,9 +4,9 @@ namespace App\Policies;
 
 use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
-use App\Models\Group;
-use App\Models\GroupUser;
-use App\Models\User;
+use App\Domains\Staff\Models\Group;
+use App\Domains\Staff\Models\GroupUser;
+use App\Domains\User\Models\User;
 use Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;

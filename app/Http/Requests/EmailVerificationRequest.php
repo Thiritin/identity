@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\User;
+use App\Domains\User\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EmailVerificationRequest extends FormRequest

@@ -3,8 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\AppLoginEvent;
-use App\Models\App;
-use App\Models\User;
+use App\Domains\User\Models\App;
+use App\Domains\User\Models\User;
 
 class LogUserAppLoginListener
 {

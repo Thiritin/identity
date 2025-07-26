@@ -4,8 +4,11 @@ services:
     # bump version if you change infra/dev/image/Containerfile
     image: localhost/ef-identity-dev:v2
     build:
-      context: ./infra/dev/image
-      dockerfile: Containerfile
+      context: './vendor/laravel/sail/runtimes/8.3'
+      dockerfile: Dockerfile
+    # Commented out as entrypoint has an error, readd as soon as fixed
+    #  context: ./infra/dev/image
+    #  dockerfile: Containerfile
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     ports:
@@ -27,8 +30,6 @@ services:
     depends_on:
       - mysql
       - redis
-      - soketi
-      - meilisearch
       - mailpit
     labels:
       - traefik.enable=true
@@ -148,35 +149,6 @@ services:
       retries: 3
       timeout: 5s
 
-  soketi:
-    image: 'quay.io/soketi/soketi:latest-16-alpine'
-    environment:
-      SOKETI_DEBUG: '${SOKETI_DEBUG:-1}'
-      SOKETI_METRICS_SERVER_PORT: '9601'
-      SOKETI_DEFAULT_APP_ID: '${PUSHER_APP_ID}'
-      SOKETI_DEFAULT_APP_KEY: '${PUSHER_APP_KEY}'
-      SOKETI_DEFAULT_APP_SECRET: '${PUSHER_APP_SECRET}'
-    ports:
-      - '${PUSHER_PORT:-6001}:6001'
-      - '${PUSHER_METRICS_PORT:-9601}:9601'
-    networks:
-      - sail
-
-  meilisearch:
-    image: 'getmeili/meilisearch:v1.13'
-    ports:
-      - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
-    environment:
-      MEILI_NO_ANALYTICS: '${MEILISEARCH_NO_ANALYTICS:-false}'
-    volumes:
-      - 'sail-meilisearch:/meili_data'
-    networks:
-      - sail
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--spider", "http://localhost:7700/health"]
-      retries: 3
-      timeout: 5s
-
   mailpit:
     image: 'axllent/mailpit:v1.24'
     ports:
@@ -193,9 +165,5 @@ volumes:
   sail-mysql:
     driver: local
   sail-redis:
-    driver: local
-  sail-minio:
-    driver: local
-  sail-meilisearch:
     driver: local
 

@@ -3,8 +3,8 @@
 namespace App\Policies;
 
 use App\Enums\GroupUserLevel;
-use App\Models\GroupUser;
-use App\Models\User;
+use App\Domains\Staff\Models\GroupUser;
+use App\Domains\User\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 

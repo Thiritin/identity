@@ -2,8 +2,8 @@
 
 namespace App\Providers\Filament;
 
-use App\Http\Middleware\AccessTokenValidationMiddleware;
-use App\Http\Middleware\Admin\AuthenticateMiddleware;
+use App\Domains\*AccessTokenValidationMiddleware;
+use App\Domains\*Admin\AuthenticateMiddleware;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;

@@ -179,6 +179,14 @@ return [
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * Domain Service Providers...
+         */
+        App\Domains\Auth\Providers\AuthServiceProvider::class,
+        App\Domains\User\Providers\UserServiceProvider::class,
+        App\Domains\Staff\Providers\StaffServiceProvider::class,
+        App\Domains\Admin\Providers\AdminServiceProvider::class,
+
     ],
 
     /*
