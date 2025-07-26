@@ -26,7 +26,7 @@ class GroupTeamController extends Controller
                 ->withCount('users')
                 ->get(['hashid', 'name', 'users_count']),
             'myGroups' => $myDepartments->values(),
-            'canEdit' => $group->isAdmin($request->user()),
+            'canEdit' => $group->userCanManageUsers($request->user()),
         ]);
     }
 

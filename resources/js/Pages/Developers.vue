@@ -104,14 +104,14 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout.vue'
-    import Card from '@/Components/Card.vue'
-    import CogsDuotone from '@/Components/Icons/CogsDuotone.vue'
-    import KeySkeletonSolid from '@/Components/Icons/KeySkeletonSolid.vue'
-    import CodeDuotone from '@/Components/Icons/CodeDuotone.vue'
-    import ServerDuotone from '@/Components/Icons/ServerDuotone.vue'
-    import Github from '@/Components/Icons/Github.vue'
-    import Logo from '@/Auth/Logo.vue'
+    import AppLayout from '@Shared/Layouts/AppLayout.vue'
+    import Card from '@Shared/Components/Card.vue'
+    import CogsDuotone from '@Shared/Components/Icons/CogsDuotone.vue'
+    import KeySkeletonSolid from '@Shared/Components/Icons/KeySkeletonSolid.vue'
+    import CodeDuotone from '@Shared/Components/Icons/CodeDuotone.vue'
+    import ServerDuotone from '@Shared/Components/Icons/ServerDuotone.vue'
+    import Github from '@Shared/Components/Icons/Github.vue'
+    import Logo from '@Auth/Pages/Logo.vue'
 
     export default {
         name: 'Developers',

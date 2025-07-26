@@ -5,7 +5,7 @@ namespace App\Domains\Staff\Observers;
 use App\Domains\Staff\Enums\GroupTypeEnum;
 use App\Domains\Staff\Enums\GroupUserLevel;
 use App\Jobs\CheckStaffGroupMembershipJob;
-use App\Domains\User\Models\GroupUser;
+use App\Domains\Staff\Models\GroupUser;
 use App\Domains\Auth\Services\NextcloudService;
 use Illuminate\Support\Facades\App;
 
@@ -21,7 +21,7 @@ class GroupUserObserver
         }
         if (($groupUser->group->nextcloud_folder_name || $groupUser->group->parent?->nextcloud_folder_name) && ! app()->runningUnitTests()) {
             NextcloudService::addUserToGroup($groupUser->group, $groupUser->user);
-            $allowAclManagement = in_array($groupUser->level, [GroupUserLevel::Admin, GroupUserLevel::Owner]);
+            $allowAclManagement = $groupUser->can_manage_users && in_array($groupUser->level, [GroupUserLevel::Director, GroupUserLevel::DivisionDirector]);
             if ($allowAclManagement && $groupUser->group->type !== GroupTypeEnum::Team) {
                 NextcloudService::setManageAcl($groupUser->group, $groupUser->user, $allowAclManagement);
             }
@@ -34,8 +34,8 @@ class GroupUserObserver
             return;
         }
         if ($groupUser->group->nextcloud_folder_name && ! app()->runningUnitTests()) {
-            if ($groupUser->isDirty('level')) {
-                $allowAclManagement = in_array($groupUser->level, [GroupUserLevel::Admin, GroupUserLevel::Owner]);
+            if ($groupUser->isDirty('level') || $groupUser->isDirty('can_manage_users')) {
+                $allowAclManagement = $groupUser->can_manage_users && in_array($groupUser->level, [GroupUserLevel::Director, GroupUserLevel::DivisionDirector]);
                 NextcloudService::setManageAcl($groupUser->group, $groupUser->user, $allowAclManagement);
             }
         }

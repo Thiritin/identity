@@ -10,7 +10,7 @@ return new class() extends Migration
     {
         Schema::create('two_factors', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('name')->nullable();
             $table->string('identifier')->nullable();
             $table->string('type');

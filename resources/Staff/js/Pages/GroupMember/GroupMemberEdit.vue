@@ -1,10 +1,10 @@
 <script setup>
 import {defineProps} from 'vue'
-import AppLayout from '../../../Layouts/AppLayout.vue'
-import SiteHeader from '../../../Components/Staff/SiteHeader.vue'
+import AppLayout from '../../../../Shared/js/Layouts/AppLayout.vue'
+import SiteHeader from '../../../../Shared/js/Components/Staff/SiteHeader.vue'
 import {Head, useForm} from '@inertiajs/vue3'
 import Dropdown from 'primevue/dropdown'
-import PrimaryButton from '../../../Components/PrimaryButton.vue'
+import PrimaryButton from '../../../../Shared/js/Components/PrimaryButton.vue'
 
 defineOptions({layout: AppLayout})
 const props = defineProps({

@@ -11,7 +11,10 @@ abstract class DomainServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    abstract public function register();
+    public function register()
+    {
+        // Override in child classes if needed
+    }
 
     /**
      * Bootstrap any application services.

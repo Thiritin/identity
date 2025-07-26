@@ -23,7 +23,25 @@ const appName = window.document.getElementsByTagName('title')[0]?.innerText || '
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+    resolve: (name) => {
+        // Handle domain-prefixed page names by routing to the correct domain
+        if (name.startsWith('Auth/')) {
+            const pageName = name.substring(5); // Remove 'Auth/' prefix
+            return resolvePageComponent(`../Auth/js/Pages/${pageName}.vue`, import.meta.glob('../Auth/js/Pages/**/*.vue'));
+        } else if (name.startsWith('User/')) {
+            const pageName = name.substring(5); // Remove 'User/' prefix
+            return resolvePageComponent(`../User/js/Pages/${pageName}.vue`, import.meta.glob('../User/js/Pages/**/*.vue'));
+        } else if (name.startsWith('Staff/')) {
+            const pageName = name.substring(6); // Remove 'Staff/' prefix
+            return resolvePageComponent(`../Staff/js/Pages/${pageName}.vue`, import.meta.glob('../Staff/js/Pages/**/*.vue'));
+        } else if (name.startsWith('Admin/')) {
+            const pageName = name.substring(6); // Remove 'Admin/' prefix
+            return resolvePageComponent(`../Admin/js/Pages/${pageName}.vue`, import.meta.glob('../Admin/js/Pages/**/*.vue'));
+        } else {
+            // Default to User domain for pages without prefix
+            return resolvePageComponent(`../User/js/Pages/${name}.vue`, import.meta.glob('../User/js/Pages/**/*.vue'));
+        }
+    },
     progress: {
         color: '#4B5563',
     },

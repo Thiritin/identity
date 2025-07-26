@@ -4,7 +4,7 @@ namespace App\Domains\Staff\Observers;
 
 use App\Domains\Staff\Enums\GroupTypeEnum;
 use App\Domains\Staff\Enums\GroupUserLevel;
-use App\Domains\User\Models\Group;
+use App\Domains\Staff\Models\Group;
 use App\Domains\Auth\Services\NextcloudService;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +24,8 @@ class GroupObserver
         }
         if (Auth::user()) {
             $group->users()->attach(Auth::user(), [
-                'level' => GroupUserLevel::Owner,
+                'level' => GroupUserLevel::Director,
+                'can_manage_users' => true,
             ]);
         }
     }
@@ -47,9 +48,9 @@ class GroupObserver
                 NextcloudService::setDisplayName($group->hashid, $group->name);
                 // Add all users to the group
                 $group->users->each(fn ($user) => NextcloudService::addUserToGroup($group, $user));
-                // Set Admin & Owner to aclmanagers
-                $group->users->filter(fn ($user) => in_array($user->pivot->level,
-                    [GroupUserLevel::Admin, GroupUserLevel::Owner]))
+                // Set Directors with management rights to aclmanagers
+                $group->users->filter(fn ($user) => $user->pivot->can_manage_users && in_array($user->pivot->level,
+                    [GroupUserLevel::Director, GroupUserLevel::DivisionDirector]))
                     ->each(fn ($user) => NextcloudService::setManageAcl($group, $user, true));
 
             }

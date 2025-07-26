@@ -1,6 +1,6 @@
 <script setup>
 
-import SiteHeader from "../../../../Components/Staff/SiteHeader.vue";
+import SiteHeader from "../../../../../Shared/js/Components/Staff/SiteHeader.vue";
 import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown';
 import InputText from "primevue/inputtext";

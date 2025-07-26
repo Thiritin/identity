@@ -49,12 +49,12 @@
 </template>
 
 <script setup>
-import Logo from '@/Auth/Logo.vue'
-import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
-import UserBox from '@/Pages/Auth/UserBox.vue'
+import Logo from '@Auth/Pages/Logo.vue'
+import LoginScreenWelcome from '@Auth/Pages/LoginScreenWelcome.vue'
+import UserBox from './UserBox.vue'
 import {Head, useForm} from '@inertiajs/vue3'
 import {computed, ref} from 'vue'
-import AuthLayout from "../../Layouts/AuthLayout.vue";
+import AuthLayout from "../../../Shared/js/Layouts/AuthLayout.vue";
 import Button from "primevue/button";
 
 defineOptions({

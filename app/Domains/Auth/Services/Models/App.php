@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\Hydra\Models;
+namespace App\Domains\Auth\Services\Models;
 
-use App\Domains\Auth\Services\Hydra\Admin;
+use App\Domains\Auth\Services\Admin;
 
 class App extends Admin
 {

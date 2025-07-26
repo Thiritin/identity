@@ -67,11 +67,11 @@
 </template>
 
 <script setup>
-import Logo from '@/Auth/Logo.vue'
-import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
-import FormInput from '@/Auth/Form/AuthFormInput.vue'
-import AuthLayout from '@/Layouts/AuthLayout.vue'
-import PasswordInfoBox from '@/Auth/PasswordInfoBox.vue'
+import Logo from '@Auth/Pages/Logo.vue'
+import LoginScreenWelcome from '@Auth/Pages/LoginScreenWelcome.vue'
+import FormInput from '@Auth/Pages/Form/AuthFormInput.vue'
+import AuthLayout from '@Shared/Layouts/AuthLayout.vue'
+import PasswordInfoBox from '@Auth/Pages/PasswordInfoBox.vue'
 import {Head, Link} from '@inertiajs/vue3'
 import InputText from "primevue/inputtext";
 import InlineMessage from "primevue/inlinemessage";

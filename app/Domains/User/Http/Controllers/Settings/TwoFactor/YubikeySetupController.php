@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Profile\Settings\TwoFactor;
+namespace App\Domains\User\Http\Controllers\Settings\TwoFactor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\YubikeyDestroyRequest;

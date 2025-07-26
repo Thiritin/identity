@@ -1,5 +1,5 @@
 <script setup>
-import AppLayout from '../../../../Layouts/AppLayout.vue'
+import AppLayout from '../../../../../Shared/js/Layouts/AppLayout.vue'
 import {useForm} from '@inertiajs/vue3'
 import {ref, useAttrs} from 'vue'
 import Dialog from 'primevue/dialog'
@@ -7,7 +7,7 @@ import Button from 'primevue/button'
 import TabComponent from "./TabComponent.vue";
 import TabHeader from "./TabHeader.vue";
 import {useToast} from "primevue/usetoast";
-import GroupListItem from "../../../../Components/GroupListItem.vue";
+import GroupListItem from "../../../../../Shared/js/Components/GroupListItem.vue";
 
 const deleteModal = ref({
     visible: false,

@@ -9,8 +9,8 @@ v-else class='w-5 text-gray-600 fill-current cursor-pointer' title='Enable Dark 
     </div>
 </template>
 <script>
-    import MoonStars from '@/Components/Icons/MoonStars.vue'
-    import Sun from '@/Components/Icons/Sun.vue'
+    import MoonStars from './Icons/MoonStars.vue'
+    import Sun from './Icons/Sun.vue'
 
     export default {
         name: 'ToogleDarkMode',

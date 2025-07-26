@@ -2,6 +2,9 @@
 
 namespace App\Domains\User\Models;
 
+use App\Domains\Staff\Enums\UserRankEnum;
+use App\Domains\Staff\Models\Group;
+use App\Domains\Staff\Models\GroupUser;
 use App\Notifications\PasswordResetQueuedNotification;
 use App\Notifications\UpdateEmailNotification;
 use App\Notifications\VerifyEmailQueuedNotification;
@@ -22,7 +25,6 @@ use Mtvs\EloquentHashids\HashidRouting;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
@@ -31,7 +33,6 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     use HasFactory;
     use HasHashid;
     use HashidRouting;
-    use HasRoles;
     use LogsActivity;
     use Notifiable;
 
@@ -91,6 +92,61 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         return $this->inGroup(config('groups.staff'));
     }
 
+    /**
+     * Get the user's global rank based on their department directorships
+     */
+    public function getRank(): UserRankEnum
+    {
+        // Director: User who is director of any department
+        $isDirectorOfDepartment = $this->groups()
+            ->where('type', 'department')
+            ->wherePivot('level', 'director')
+            ->exists();
+
+        if ($isDirectorOfDepartment) {
+            return UserRankEnum::Director;
+        }
+
+        // Staffer: User who is member of any department
+        $isInDepartment = $this->groups()
+            ->where('type', 'department')
+            ->exists();
+
+        if ($isInDepartment) {
+            return UserRankEnum::Staffer;
+        }
+
+        // Default to Staffer for any group membership
+        return UserRankEnum::Staffer;
+    }
+
+    /**
+     * Check if user is a global director
+     */
+    public function isDirector(): bool
+    {
+        return $this->getRank() === UserRankEnum::Director;
+    }
+
+    /**
+     * Get all groups where this user is a director
+     */
+    public function directorOfGroups()
+    {
+        return $this->groups()->wherePivotIn('level', ['director', 'division_director']);
+    }
+
+    /**
+     * Get all groups where this user can manage users
+     */
+    public function canManageUsersInGroups()
+    {
+        return $this->groups()->where(function ($query) {
+            $query->wherePivotIn('level', ['director', 'division_director'])
+                  ->orWhere('can_manage_users', true);
+        });
+    }
+
     public function sendEmailVerificationNotification(): void
     {
         activity()
@@ -129,6 +185,8 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             ->withPivot(
                 [
                     'level',
+                    'can_manage_users',
+                    'title',
                 ]
             );
     }
@@ -170,7 +228,10 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function canAccessPanel($panel): bool
     {
-        return $this->hasRole('superadmin');
+        // Check if user is a member of the system_admins group
+        return $this->groups()
+            ->where('system_name', 'system_admins')
+            ->exists();
     }
 
     public function getActivitylogOptions(): LogOptions

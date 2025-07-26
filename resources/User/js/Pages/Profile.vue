@@ -139,15 +139,15 @@
 
 <script setup>
 import {Head, Link, usePage} from '@inertiajs/vue3'
-import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
-import SettingsHeader from '@/Components/Settings/SettingsHeader.vue'
-import SettingsSubHeader from '@/Components/Settings/SettingsSubHeader.vue'
-import BaseInput from '@/Components/BaseInput.vue'
-import BaseButton from '@/Components/BaseButton.vue'
-import PrimaryButton from '@/Components/PrimaryButton.vue'
-import AvatarModal from '@/Profile/AvatarModal.vue'
+import AvatarImage from './AvatarImage.vue'
+import SettingsHeader from '@Shared/Components/Settings/SettingsHeader.vue'
+import SettingsSubHeader from '@Shared/Components/Settings/SettingsSubHeader.vue'
+import BaseInput from '@Shared/Components/BaseInput.vue'
+import BaseButton from '@Shared/Components/BaseButton.vue'
+import PrimaryButton from '@Shared/Components/PrimaryButton.vue'
+import AvatarModal from '../Components/AvatarModal.vue'
 import {computed, ref} from "vue";
-import BaseAlert from "@/Components/BaseAlert.vue";
+import BaseAlert from "@Shared/Components/BaseAlert.vue";
 import {useForm} from 'laravel-precognition-vue-inertia';
 import InputText from "primevue/inputtext";
 import InlineMessage from "primevue/inlinemessage";
@@ -187,7 +187,7 @@ const showEmailTooMany = computed(() => {
 })
 </script>
 <script>
-import AuthLayout from "@/Layouts/AuthLayout.vue";
+import AuthLayout from "../../../Shared/js/Layouts/AuthLayout.vue";
 
 export default {
     layout: AuthLayout,

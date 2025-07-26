@@ -1,7 +1,7 @@
 <script setup>
 
 import {computed, ref} from "vue";
-import LoginScreenWelcome from "@/Auth/LoginScreenWelcome.vue";
+import LoginScreenWelcome from "@Auth/Pages/LoginScreenWelcome.vue";
 import {Head} from "@inertiajs/vue3";
 import {useForm} from 'laravel-precognition-vue-inertia'
 import InputText from "primevue/inputtext";
@@ -104,7 +104,7 @@ const selectedMethod = ref(props.lastUsedMethod);
 </style>
 
 <script>
-import AuthLayout from "@/Layouts/AuthLayout.vue";
+import AuthLayout from "@Shared/Layouts/AuthLayout.vue";
 
 export default {
     layout: AuthLayout

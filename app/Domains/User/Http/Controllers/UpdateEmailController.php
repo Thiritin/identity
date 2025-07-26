@@ -3,6 +3,7 @@
 namespace App\Domains\User\Http\Controllers;
 
 use App\Domains\User\Models\User;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;

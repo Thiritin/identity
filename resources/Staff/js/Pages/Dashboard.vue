@@ -1,9 +1,9 @@
 <script setup>
-import AppLayout from "../../Layouts/AppLayout.vue";
+import AppLayout from "../../../Shared/js/Layouts/AppLayout.vue";
 import {ChevronRightIcon} from "@heroicons/vue/24/outline/index.js";
 import {defineAsyncComponent} from "vue";
 import {Head} from '@inertiajs/vue3'
-import SiteHeader from "../../Components/Staff/SiteHeader.vue";
+import SiteHeader from "../../../Shared/js/Components/Staff/SiteHeader.vue";
 
 const loadIconComponent = (name) => defineAsyncComponent(() => import(`../../Components/Icons/${name}.vue`))
 

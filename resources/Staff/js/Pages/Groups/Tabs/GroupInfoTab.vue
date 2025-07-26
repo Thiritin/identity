@@ -1,6 +1,6 @@
 <script setup>
 
-import AppLayout from "../../../../Layouts/AppLayout.vue";
+import AppLayout from "../../../../../Shared/js/Layouts/AppLayout.vue";
 import TabHeader from "./TabHeader.vue";
 import TabComponent from "./TabComponent.vue";
 import Button from 'primevue/button';

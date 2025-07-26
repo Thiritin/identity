@@ -3,6 +3,7 @@
 namespace App\Domains\User\Http\Controllers;
 
 use App\Domains\User\Models\App;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class AppsController extends Controller

@@ -62,6 +62,6 @@ class CheckIfAdmin
      */
     private function checkIfUserIsAdmin(User $user)
     {
-        return $user->hasRole('superadmin') === true;
+        return $user->groups()->where('system_name', 'system_admins')->exists();
     }
 }

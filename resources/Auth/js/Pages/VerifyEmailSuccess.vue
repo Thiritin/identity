@@ -17,13 +17,13 @@
 </template>
 <script setup>
 
-import Logo from '@/Auth/Logo.vue'
-import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
-import AuthLayout from '@/Layouts/AuthLayout.vue'
-import UserBox from '@/Pages/Auth/UserBox.vue'
+import Logo from '@Auth/Pages/Logo.vue'
+import LoginScreenWelcome from '@Auth/Pages/LoginScreenWelcome.vue'
+import AuthLayout from '@Shared/Layouts/AuthLayout.vue'
+import UserBox from './UserBox.vue'
 import {Head, Link, useForm, usePage} from '@inertiajs/vue3'
 import {computed} from "vue";
-import PrimaryButton from "../../Components/PrimaryButton.vue";
+import PrimaryButton from "../../../Shared/js/Components/PrimaryButton.vue";
 
 defineProps({
     user: {

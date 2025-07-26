@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
-use App\Models\User;
+use App\Domains\Staff\Enums\GroupTypeEnum;
+use App\Domains\Staff\Enums\GroupUserLevel;
+use App\Domains\Staff\Models\Group;
+use App\Domains\User\Models\User;
 use Illuminate\Database\Seeder;
 
 /**
@@ -29,7 +31,40 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => \Hash::make(env('ADMIN_PASSWORD', random_bytes(32))),
         ]);
-        // Warning this user will be made admin!
-        $user->roles()->attach(Role::where('name', 'superadmin')->firstOrFail());
+
+        // Create or find System Admin group for IDP admin access
+        $adminGroup = Group::firstOrCreate([
+            'name' => 'System Administrators'
+        ], [
+            'type' => GroupTypeEnum::Automated,
+            'system_name' => 'system_admins',
+            'description' => 'System Administrators - Full IDP admin access'
+        ]);
+
+        // Attach user as Member of admin group (membership grants admin privileges)
+        $adminGroup->users()->syncWithoutDetaching([
+            $user->id => [
+                'level' => GroupUserLevel::Member->value,
+                'can_manage_users' => true,
+                'title' => 'System Administrator'
+            ]
+        ]);
+
+        // Also create BOD group for organizational structure
+        $bodGroup = Group::firstOrCreate([
+            'name' => 'Board of Directors'
+        ], [
+            'type' => GroupTypeEnum::BOD,
+            'description' => 'Board of Directors - Top level organizational group'
+        ]);
+
+        // Attach user as Director of BOD (organizational role, not system admin)
+        $bodGroup->users()->syncWithoutDetaching([
+            $user->id => [
+                'level' => GroupUserLevel::Director->value,
+                'can_manage_users' => true,
+                'title' => 'Chairman'   
+            ]
+        ]);
     }
 }

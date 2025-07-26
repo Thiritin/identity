@@ -3,7 +3,7 @@
 namespace Tests\Feature\Staff;
 
 use App\Enums\GroupTypeEnum;
-use App\Enums\GroupUserLevel;
+use App\Domains\Staff\Enums\GroupUserLevel;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,7 +12,7 @@ use function Pest\Laravel\patchJson;
 
 uses(RefreshDatabase::class);
 
-test('Update member level to admin', function (GroupUserLevel $groupUserLevel) {
+test('Update member level to team lead', function (GroupUserLevel $groupUserLevel) {
     $group = Group::factory()->create();
     $staffGroup = Group::factory()->create([
         'system_name' => 'staff',
@@ -36,14 +36,14 @@ test('Update member level to admin', function (GroupUserLevel $groupUserLevel) {
 
     $response = patchJson(
         route('staff.groups.members.update', ['group' => $group, 'member' => $userToBeUpdated]),
-        ['level' => GroupUserLevel::Admin->value],
+        ['level' => GroupUserLevel::TeamLead->value],
     );
 
     $response->assertRedirect(route('staff.groups.members.index', ['group' => $group]));
 
     expect($group->users()->find($userToBeUpdated)->pivot->level)
-        ->toBe(GroupUserLevel::Admin);
+        ->toBe(GroupUserLevel::TeamLead);
 })->with([
-    'as owner of group' => GroupUserLevel::Owner,
-    'as admin of group' => GroupUserLevel::Admin,
+    'as director of group' => GroupUserLevel::Director,
+    'as division director of group' => GroupUserLevel::DivisionDirector,
 ]);

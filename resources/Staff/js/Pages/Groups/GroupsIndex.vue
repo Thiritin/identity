@@ -1,7 +1,7 @@
 <script setup>
-import AppLayout from '../../../Layouts/AppLayout.vue';
-import SiteHeader from '../../../Components/Staff/SiteHeader.vue';
-import GroupListItem from "../../../Components/GroupListItem.vue";
+import AppLayout from '../../../../Shared/js/Layouts/AppLayout.vue';
+import SiteHeader from '../../../../Shared/js/Components/Staff/SiteHeader.vue';
+import GroupListItem from "../../../../Shared/js/Components/GroupListItem.vue";
 
 defineOptions({ layout: AppLayout });
 

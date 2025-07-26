@@ -10,7 +10,7 @@ return new class() extends Migration
     public function up(): void
     {
         Schema::table('groups', function (Blueprint $table) {
-            $table->foreignIdFor(Group::class, 'parent_id')->after('id')->nullable()->constrained('groups')->cascadeOnDelete();
+            $table->foreignId('parent_id')->after('id')->nullable()->constrained('groups')->cascadeOnDelete();
         });
     }
 };

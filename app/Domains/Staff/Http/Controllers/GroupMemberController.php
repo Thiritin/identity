@@ -20,26 +20,27 @@ class GroupMemberController extends Controller
         return Inertia::render('Staff/Groups/Tabs/MemberTab', [
             'group' => $group->loadCount('users')->only(['hashid', 'name', 'users_count', 'parent_id']),
             'parent' => $group->parent?->only(['hashid', 'name']),
-            // Sort Owner, Admin, Moderator, Member and then by name
+            // Sort Director, TeamLead, Member and then by name
             'users' => $group->users()
                 ->with([
                     'groups' => fn ($q) => $q->where('type', 'team')->where('parent_id', $group->id)->get(['id', 'name']),
                 ])
-                ->withPivot('level')->get(['id', 'name', 'profile_photo_path'])->map(fn ($user
+                ->withPivot(['level', 'title', 'can_manage_users'])->get(['id', 'name', 'profile_photo_path'])->map(fn ($user
                 ) => [
                     'id' => $user->hashid,
                     'name' => $user->name,
                     'profile_photo_path' => (is_null($user->profile_photo_path)) ? null : Storage::drive('s3-avatars')->url($user->profile_photo_path),
-                    'level' => $user->pivot->level,
+                    'level' => $user->pivot->level->value,
+                    'can_manage_users' => $user->pivot->can_manage_users,
                     'teams' => $user->groups->map(fn ($group) => [
                         'id' => $group->hashid,
                         'name' => $group->name,
                     ]),
                     'title' => $user->pivot->title,
                 ])->sortBy(fn ($user) => [
-                    $user['level'] === 'owner' ? 0 : 1,
-                    $user['level'] === 'admin' ? 1 : 2,
-                    $user['level'] === 'moderator' ? 2 : 3,
+                    $user['level'] === 'DivisionDirector' ? 0 : 1,
+                    $user['level'] === 'Director' ? 1 : 2,
+                    $user['level'] === 'TeamLead' ? 2 : 3,
                     $user['name'],
                 ]),
             'canEdit' => $request->user()->can('update', $group),
@@ -97,8 +98,8 @@ class GroupMemberController extends Controller
      */
     public function update(Group $group, User $member, Request $request)
     {
-        $isAdminOfParentGroup = $group->parent?->isAdmin($request->user());
-        if ($member->id == $request->user()->id && ! $isAdminOfParentGroup) {
+        $canManageFromParent = $group->parent?->userCanManageUsers($request->user());
+        if ($member->id == $request->user()->id && ! $canManageFromParent) {
             throw ValidationException::withMessages(['You cannot update your own level.']);
         }
 
@@ -121,7 +122,7 @@ class GroupMemberController extends Controller
      */
     public function destroy(Group $group, User $member, Request $request)
     {
-        if ($member->id === $request->user()->id && ! $group->parent?->isAdmin($request->user())) {
+        if ($member->id === $request->user()->id && ! $group->parent?->userCanManageUsers($request->user())) {
             throw ValidationException::withMessages(['You cannot remove yourself.']);
         }
 

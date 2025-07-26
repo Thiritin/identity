@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Domains\Auth\Http\Controllers;
 
 use App\Domains\User\Models\User;
 use App\Domains\Auth\Services\Hydra\Client;
@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use RobThree\Auth\TwoFactorAuth;
+use App\Http\Controllers\Controller;
 
 class TwoFactorController extends Controller
 {

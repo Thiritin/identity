@@ -77,10 +77,10 @@
 
 <script setup>
 import {Head} from "@inertiajs/vue3";
-import SettingsHeader from "@/Components/Settings/SettingsHeader.vue";
-import BaseInput from "@/Components/BaseInput.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import PasswordInfoBox from "../../Auth/PasswordInfoBox.vue";
+import SettingsHeader from "../../../Shared/js/Components/Settings/SettingsHeader.vue";
+import BaseInput from "../../../Shared/js/Components/BaseInput.vue";
+import PrimaryButton from "../../../Shared/js/Components/PrimaryButton.vue";
+import PasswordInfoBox from "../../../Auth/js/Pages/PasswordInfoBox.vue";
 import {useForm} from 'laravel-precognition-vue-inertia'
 import InputText from "primevue/inputtext";
 import InlineMessage from "primevue/inlinemessage";
@@ -104,7 +104,7 @@ function submitForm() {
 </script>
 <script>
 
-import AuthLayout from "@/Layouts/AuthLayout.vue";
+import AuthLayout from "../../../Shared/js/Layouts/AuthLayout.vue";
 
 export default {
     layout: AuthLayout

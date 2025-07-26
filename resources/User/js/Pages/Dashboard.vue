@@ -34,11 +34,11 @@ const props = defineProps({
 const user = computed(() => usePage().props.user)
 </script>
 <script>
-import AuthLayout from '../Layouts/AuthLayout.vue'
+import AuthLayout from '../../../Shared/js/Layouts/AuthLayout.vue'
 import {defineAsyncComponent} from "vue";
 
 // dynamically load vue3 icon
-const loadIconComponent = (name) => defineAsyncComponent(() => import(`../Components/Icons/${name}.vue`))
+const loadIconComponent = (name) => defineAsyncComponent(() => import(`../../../Shared/js/Components/Icons/${name}.vue`))
 
 export default {
     layout: AuthLayout,

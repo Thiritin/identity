@@ -14,7 +14,7 @@
     </div>
 </template>
 <script>
-    import CircleUser from '@/Components/Icons/CircleUser.vue'
+    import CircleUser from '@Shared/Components/Icons/CircleUser.vue'
 
     export default {
         name: 'UserBox',

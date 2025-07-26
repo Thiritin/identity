@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\App;
-use App\Models\User;
+use App\Domains\User\Models\App;
+use App\Domains\User\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 

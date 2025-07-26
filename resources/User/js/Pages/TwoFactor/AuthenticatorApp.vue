@@ -1,8 +1,8 @@
 <script setup>
-import SettingsHeader from "@/Components/Settings/SettingsHeader.vue";
-import SettingsSubHeader from "@/Components/Settings/SettingsSubHeader.vue";
+import SettingsHeader from "@Shared/Components/Settings/SettingsHeader.vue";
+import SettingsSubHeader from "@Shared/Components/Settings/SettingsSubHeader.vue";
 import {Head} from "@inertiajs/vue3";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
+import PrimaryButton from "@Shared/Components/PrimaryButton.vue";
 import {useForm} from 'laravel-precognition-vue-inertia'
 import InputText from "primevue/inputtext";
 import InlineMessage from "primevue/inlinemessage";
@@ -114,7 +114,7 @@ watch(enableForm, (value) => {
 </style>
 
 <script>
-import AuthLayout from "@/Layouts/AuthLayout.vue";
+import AuthLayout from "../../../../Shared/js/Layouts/AuthLayout.vue";
 
 export default {
     layout: AuthLayout

@@ -19,7 +19,6 @@
         "filament/forms": "^3.2",
         "filament/notifications": "^3.2",
         "filament/tables": "^3.2",
-        "firebase/php-jwt": "^6.0",
         "genl/matice": "^1.1",
         "guzzlehttp/guzzle": "^7.5",
         "inertiajs/inertia-laravel": "^1.0",
@@ -37,7 +36,6 @@
         "robthree/twofactorauth": "^2.1",
         "sentry/sentry-laravel": "^4.7",
         "spatie/laravel-activitylog": "^4.7",
-        "spatie/laravel-permission": "^6.2.0",
         "spatie/laravel-query-builder": "^5.1",
         "stevebauman/purify": "^6.2",
         "tightenco/ziggy": "^1.0"

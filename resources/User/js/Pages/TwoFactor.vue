@@ -23,9 +23,9 @@
 </template>
 
 <script setup>
-import SettingsHeader from '@/Components/Settings/SettingsHeader.vue'
-import SettingsSubHeader from '@/Components/Settings/SettingsSubHeader.vue'
-import ListItem from "@/Components/ListItem.vue";
+import SettingsHeader from '@Shared/Components/Settings/SettingsHeader.vue'
+import SettingsSubHeader from '@Shared/Components/Settings/SettingsSubHeader.vue'
+import ListItem from "@Shared/Components/ListItem.vue";
 import {Head} from "@inertiajs/vue3";
 
 const props = defineProps({
@@ -39,7 +39,7 @@ const props = defineProps({
 <style scoped></style>
 
 <script>
-import AuthLayout from "@/Layouts/AuthLayout.vue";
+import AuthLayout from "../../../Shared/js/Layouts/AuthLayout.vue";
 
 export default {
     layout: AuthLayout

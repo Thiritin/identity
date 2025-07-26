@@ -4,6 +4,7 @@ namespace App\Domains\Staff\Models;
 
 use App\Domains\Staff\Enums\GroupTypeEnum;
 use App\Domains\Staff\Enums\GroupUserLevel;
+use App\Domains\User\Models\User;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -55,19 +56,36 @@ class Group extends Model
     {
         return $this->belongsToMany(User::class)
             ->using(GroupUser::class)
-            ->withPivot(
-                [
-                    'level',
-                    'title',
-                ]
-            );
+            ->withPivot([
+                'level',
+                'title',
+                'can_manage_users',
+            ]);
     }
 
-    public function owner()
+    /**
+     * Get the leadership for this group (Directors, Division Directors, Team Leads)
+     */
+    public function leadership()
     {
-        return $this->hasOneThrough(User::class, GroupUser::class, 'group_id', 'id', 'id', 'user_id')
-            ->where('level', GroupUserLevel::Owner)
-            ->select(['name']);
+        return $this->users()->wherePivotIn('level', [
+            GroupUserLevel::Director->value,
+            GroupUserLevel::DivisionDirector->value,
+            GroupUserLevel::TeamLead->value,
+        ]);
+    }
+
+    /**
+     * Get users who can manage other users in this group
+     */
+    public function userManagers()
+    {
+        return $this->users()->where(function ($query) {
+            $query->wherePivotIn('level', [
+                GroupUserLevel::Director->value,
+                GroupUserLevel::DivisionDirector->value,
+            ])->orWhere('can_manage_users', true);
+        });
     }
 
     public function apps()
@@ -95,19 +113,51 @@ class Group extends Model
         return (is_null($this->logo)) ? null : Storage::url('avatars/' . $this->logo);
     }
 
+    /**
+     * Check if a user is a member of this group
+     */
     public function isMember(User $user): bool
     {
         return $this->users->contains($user);
     }
 
-    public function isAdmin(User $user)
+    /**
+     * Check if a user can manage users in this group
+     */
+    public function userCanManageUsers(User $user): bool
     {
         $member = $this->users->find($user);
-        if (! $member) {
+        if (!$member) {
             return false;
         }
 
-        return $member->pivot->level == GroupUserLevel::Admin || $member->pivot->level == GroupUserLevel::Owner;
+        return $member->pivot->canManageUsers();
+    }
+
+    /**
+     * Check if a user is a director of this group
+     */
+    public function userIsDirector(User $user): bool
+    {
+        $member = $this->users->find($user);
+        if (!$member) {
+            return false;
+        }
+
+        return $member->pivot->isDirector();
+    }
+
+    /**
+     * Check if a user is a leader in this group
+     */
+    public function userIsLeader(User $user): bool
+    {
+        $member = $this->users->find($user);
+        if (!$member) {
+            return false;
+        }
+
+        return $member->pivot->isLeader();
     }
 
     public function children()
@@ -118,5 +168,45 @@ class Group extends Model
     public function parent()
     {
         return $this->belongsTo(__CLASS__, 'parent_id');
+    }
+
+    /**
+     * Get all descendants (children, grandchildren, etc.)
+     */
+    public function descendants()
+    {
+        return $this->children()->with('descendants');
+    }
+
+    /**
+     * Get all ancestors (parent, grandparent, etc.)
+     */
+    public function ancestors()
+    {
+        return $this->parent ? collect([$this->parent])->merge($this->parent->ancestors()) : collect();
+    }
+
+    /**
+     * Check if this group can have a specific type as parent
+     */
+    public function canHaveParentType(GroupTypeEnum $parentType): bool
+    {
+        return $this->type->canHaveParent($parentType);
+    }
+
+    /**
+     * Get the full hierarchy path
+     */
+    public function getHierarchyPath(): string
+    {
+        $path = [$this->name];
+        $parent = $this->parent;
+        
+        while ($parent) {
+            array_unshift($path, $parent->name);
+            $parent = $parent->parent;
+        }
+        
+        return implode(' > ', $path);
     }
 }

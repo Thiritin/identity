@@ -28,7 +28,7 @@
                             <!-- Sidebar component, swap this element with another sidebar if you like -->
                             <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-primary-600 px-6 pb-2">
                                 <div class="flex h-16 shrink-0 items-center gap-3">
-                                    <img class="h-10 w-auto" src="../../assets/ef.svg"
+                                    <img class="h-10 w-auto" src="../../../assets/ef.svg"
                                          alt="Eurofurence"/>
                                     <div>
                                         <div class='font-medium font-sm text-primary-100'>Staff Dashboard</div>
@@ -61,7 +61,7 @@
             <div
                 class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 text-primary-100 bg-primary-600 px-6">
                 <div class="flex h-16 shrink-0 items-center gap-3">
-                    <img class="h-10 w-auto" src="../../assets/ef.svg"
+                    <img class="h-10 w-auto" src="../../../assets/ef.svg"
                          alt="Eurofurence"/>
                     <div>
                         <div class='font-medium font-sm dark:text-primary-300'>Staff Dashboard</div>

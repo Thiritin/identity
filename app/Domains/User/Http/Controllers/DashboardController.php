@@ -3,6 +3,7 @@
 namespace App\Domains\User\Http\Controllers;
 
 use App\Domains\User\Models\App;
+use App\Http\Controllers\Controller;
 use Auth;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Support\Facades\Cache;

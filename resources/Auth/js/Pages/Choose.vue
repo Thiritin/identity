@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import Logo from '@/Auth/Logo.vue'
-import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
-import AuthLayout from '@/Layouts/AuthLayout.vue'
+import Logo from '@Auth/Pages/Logo.vue'
+import LoginScreenWelcome from '@Auth/Pages/LoginScreenWelcome.vue'
+import AuthLayout from '@Shared/Layouts/AuthLayout.vue'
 import {Head, Link} from '@inertiajs/vue3'
 
 export default {

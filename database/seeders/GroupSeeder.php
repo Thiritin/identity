@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Enums\GroupTypeEnum;
-use App\Models\Group;
+use App\Domains\Staff\Enums\GroupTypeEnum;
+use App\Domains\Staff\Models\Group;
 use Illuminate\Database\Seeder;
 
 class GroupSeeder extends Seeder

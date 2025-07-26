@@ -2,6 +2,7 @@
 
 use App\Domains\User\Http\Controllers\DashboardController;
 use App\Domains\User\Http\Controllers\Settings\TwoFactor\TotpSetupController;
+use App\Domains\User\Http\Controllers\Settings\TwoFactor\TwoFactorController;
 use App\Domains\User\Http\Controllers\Settings\TwoFactor\YubikeySetupController;
 use App\Domains\User\Http\Controllers\Settings\UpdatePasswordController;
 use App\Domains\User\Http\Controllers\StoreAvatarController;
@@ -23,7 +24,7 @@ Route::post('/settings/update-password', UpdatePasswordController::class)
     ->name('settings.update-password.store');
 
 Route::get('/settings/two-factor',
-    \App\Http\Controllers\Profile\Settings\TwoFactor\TwoFactorController::class)->name('settings.two-factor');
+    TwoFactorController::class)->name('settings.two-factor');
 /** Two Factor */
 Route::get('/settings/two-factor/totp', [TotpSetupController::class, 'show'])->name('settings.two-factor.totp');
 Route::post('/settings/two-factor/totp/store',

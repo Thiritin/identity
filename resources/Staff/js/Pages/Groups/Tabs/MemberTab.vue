@@ -1,5 +1,5 @@
 <script setup>
-import AppLayout from '../../../../Layouts/AppLayout.vue'
+import AppLayout from '../../../../../Shared/js/Layouts/AppLayout.vue'
 import {router, useForm} from '@inertiajs/vue3'
 import {ref, useAttrs} from 'vue'
 import Dialog from 'primevue/dialog'

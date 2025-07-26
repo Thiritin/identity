@@ -37,7 +37,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::before(function ($user, $ability) {
-            return ($user->hasRole('superadmin') && Str::startsWith($ability, 'admin.')) ? true : null;
+            return ($user->groups()->where('system_name', 'system_admins')->exists() && Str::startsWith($ability, 'admin.')) ? true : null;
         });
 
         Auth::extend('admin', function ($app, $name, array $config) {
