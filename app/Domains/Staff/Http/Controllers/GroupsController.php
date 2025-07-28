@@ -5,7 +5,7 @@ namespace App\Domains\Staff\Http\Controllers;
 use App\Domains\Staff\Enums\GroupTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Groups\GroupUpdateRequest;
-use App\Domains\User\Models\Group;
+use App\Domains\Staff\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;

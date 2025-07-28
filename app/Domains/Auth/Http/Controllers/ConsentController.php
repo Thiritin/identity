@@ -67,7 +67,8 @@ class ConsentController extends Controller
                 'avatar' => $user->profile_photo_path
             ],
             'scopes' => $scopes,
-            'requestedAudience' => $consentRequest['requested_access_token_audience'] ?? []
+            'requestedAudience' => $consentRequest['requested_access_token_audience'] ?? [],
+            'hideUserInfo' => true
         ]);
     }
 
@@ -152,12 +153,6 @@ class ConsentController extends Controller
                 'icon' => 'user',
                 'required' => true
             ],
-            'profile' => [
-                'name' => 'Profile Information',
-                'description' => 'Access your name and profile picture',
-                'icon' => 'user-circle',
-                'required' => false
-            ],
             'email' => [
                 'name' => 'Email Address',
                 'description' => 'Access your email address',
@@ -169,24 +164,15 @@ class ConsentController extends Controller
                 'description' => 'Access your group and organization memberships',
                 'icon' => 'users',
                 'required' => false
-            ],
-            'offline_access' => [
-                'name' => 'Offline Access',
-                'description' => 'Maintain access when you\'re not actively using the app',
-                'icon' => 'clock',
-                'required' => false
             ]
         ];
 
         $formattedScopes = [];
         
         foreach ($requestedScopes as $scope) {
-            $formattedScopes[] = $scopeDescriptions[$scope] ?? [
-                'name' => ucfirst(str_replace('_', ' ', $scope)),
-                'description' => "Access {$scope} information",
-                'icon' => 'shield-check',
-                'required' => false
-            ];
+            if (isset($scopeDescriptions[$scope])) {
+                $formattedScopes[] = $scopeDescriptions[$scope];
+            }
         }
 
         return $formattedScopes;

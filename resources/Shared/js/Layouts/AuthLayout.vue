@@ -27,7 +27,10 @@
                             <slot name="header">
                                 <AuthHeader v-if="!$page.props.hideUserInfo && user" class="mb-8"></AuthHeader>
                             </slot>
-                            <slot :artist-info="artistInfo"></slot>
+                            <!-- Add padding to the main content area -->
+                            <div class="px-8 pt-8 pb-8">
+                                <slot :artist-info="artistInfo"></slot>
+                            </div>
                         </div>
                     </Transition>
                     

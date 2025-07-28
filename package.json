@@ -7,13 +7,17 @@
         "build": "vite build"
     },
     "dependencies": {
+        "@primeuix/styles": "^1.2.2",
+        "@primevue/icons": "^4.3.6",
         "@tailwindcss/postcss": "^4.1.11",
         "github-markdown-css": "^5.7.0",
         "laravel-precognition-vue-inertia": "^0.6.0",
         "md-editor-v3": "^4.21.3",
         "primeicons": "^7.0.0",
         "primevue": "^3.53.1",
-        "quill": "^2.0.2"
+        "quill": "^2.0.2",
+        "tailwind-merge": "^3.3.1",
+        "tailwindcss-primeui": "^0.6.1"
     },
     "devDependencies": {
         "@headlessui/vue": "^1.7.7",

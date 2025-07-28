@@ -2,37 +2,34 @@
     <Head title="Sign In"></Head>
     
     <!-- Header section -->
-    <div class="px-8 pt-8 pb-6 text-center">
+    <div class="text-center mb-8">
         <Logo class="mx-auto w-16 h-16 mb-4" />
         <h1 class="text-2xl font-bold text-gray-900 mb-2">Welcome back</h1>
         <p class="text-gray-600">Sign in to {{ clientName || 'Eurofurence' }}</p>
     </div>
 
-    <!-- Form section -->
-    <div class="px-8 pb-8">
-        <!-- Error display -->
-        <Message v-if="$page.props.flash?.error" severity="error" class="w-full mb-6 animate-slide-in">
-            {{ $page.props.flash.error }}
-        </Message>
+    <!-- Error display -->
+    <Message v-if="$page.props.flash?.error" severity="error" class="w-full mb-6 animate-slide-in">
+        {{ $page.props.flash.error }}
+    </Message>
 
-        <!-- Step 1: Identify user -->
-        <IdentifyStep 
-            v-if="step === 'identify'"
-            @user-identified="handleUserIdentified"
-            class="animate-slide-in"
-        />
+    <!-- Step 1: Identify user -->
+    <IdentifyStep 
+        v-if="step === 'identify'"
+        @user-identified="handleUserIdentified"
+        class="animate-slide-in"
+    />
 
-        <!-- Step 2: Authenticate -->
-        <AuthenticateStep 
-            v-else-if="step === 'authenticate'"
-            :user="user"
-            :auth-methods="authMethods"
-            :webauthn-options="webauthnOptions"
-            @authenticated="handleAuthenticated"
-            @go-back="goBack"
-            class="animate-slide-in"
-        />
-    </div>
+    <!-- Step 2: Authenticate -->
+    <AuthenticateStep 
+        v-else-if="step === 'authenticate'"
+        :user="user"
+        :auth-methods="authMethods"
+        :webauthn-options="webauthnOptions"
+        @authenticated="handleAuthenticated"
+        @go-back="goBack"
+        class="animate-slide-in"
+    />
 </template>
 
 <script setup>

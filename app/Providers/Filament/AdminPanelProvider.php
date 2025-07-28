@@ -2,7 +2,7 @@
 
 namespace App\Providers\Filament;
 
-use App\Domains\Admin\Http\Middleware\AccessTokenValidationMiddleware;
+use App\Http\Middleware\AccessTokenValidationMiddleware;
 use App\Domains\Admin\Http\Middleware\AuthenticateMiddleware;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;

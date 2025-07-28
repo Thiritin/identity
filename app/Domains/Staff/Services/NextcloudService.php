@@ -2,7 +2,7 @@
 
 namespace App\Domains\Staff\Services;
 
-use App\Domains\User\Models\Group;
+use App\Domains\Staff\Models\Group;
 use App\Domains\User\Models\User;
 use Illuminate\Support\Facades\Http;
 

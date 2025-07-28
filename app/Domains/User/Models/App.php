@@ -3,6 +3,7 @@
 namespace App\Domains\User\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Domains\Staff\Models\Group;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class App extends Model

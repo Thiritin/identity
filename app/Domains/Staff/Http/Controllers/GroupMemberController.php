@@ -4,7 +4,7 @@ namespace App\Domains\Staff\Http\Controllers;
 
 use App\Domains\Staff\Enums\GroupUserLevel;
 use App\Http\Controllers\Controller;
-use App\Domains\User\Models\Group;
+use App\Domains\Staff\Models\Group;
 use App\Domains\User\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;

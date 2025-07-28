@@ -15,11 +15,15 @@
                         required
                         placeholder="Enter your email or username"
                         :class="{ 'p-invalid': form.errors.identifier }"
-                        class="w-full p-inputtext-lg"
+                        class="w-full"
                     />
-                    <ProgressSpinner v-if="form.processing" class="absolute right-3 top-3" style="width:24px;height:24px" />
+                    <div v-if="form.processing" class="absolute right-3 top-3">
+                        <ProgressBar mode="indeterminate" style="width:24px;height:24px" />
+                    </div>
                 </div>
-                <InlineMessage v-if="form.errors.identifier" severity="error">{{ form.errors.identifier }}</InlineMessage>
+                <Message v-if="form.errors.identifier" severity="error" class="w-full">
+                    {{ form.errors.identifier }}
+                </Message>
             </div>
 
             <!-- Continue button -->
@@ -28,7 +32,7 @@
                     type="submit"
                     :loading="form.processing"
                     :disabled="form.processing || !form.identifier"
-                    class="w-full p-button-lg"
+                    class="w-full"
                     :label="form.processing ? 'Checking...' : 'Continue'"
                 />
 
@@ -65,8 +69,6 @@
             <!-- Help section -->
             <div class="text-center pt-2">
                 <Button
-                    type="button"
-                    class="p-button-link p-button-lg"
                     label="Can't access your account?"
                     @click="showForgotAccountModal = true"
                     link
@@ -95,7 +97,7 @@
                     <Button
                         label="Cancel"
                         @click="showForgotAccountModal = false"
-                        class="p-button-outlined"
+                        outlined
                     />
                     <Link
                         :href="route('auth.forgot-password.view')"
@@ -103,7 +105,6 @@
                     >
                         <Button
                             label="Get Help"
-                            class="p-button-primary"
                         />
                     </Link>
                 </div>
@@ -115,13 +116,12 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useForm, Link } from '@inertiajs/vue3'
-import InputText from 'primevue/inputtext'
-import Button from 'primevue/button'
-import ProgressSpinner from 'primevue/progressspinner'
-import InlineMessage from 'primevue/inlinemessage'
-import Message from 'primevue/message'
-import Divider from 'primevue/divider'
-import Dialog from 'primevue/dialog'
+import InputText from '@Shared/Components/volt/InputText.vue'
+import Button from '@Shared/Components/volt/Button.vue'
+import ProgressBar from '@Shared/Components/volt/ProgressBar.vue'
+import Message from '@Shared/Components/volt/Message.vue'
+import Divider from '@Shared/Components/volt/Divider.vue'
+import Dialog from '@Shared/Components/volt/Dialog.vue'
 import Telegram from '@Shared/Components/Icons/Telegram.vue'
 
 const emit = defineEmits(['user-identified'])
@@ -159,73 +159,5 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-// Override PrimeVue styles to match our design
-:deep(.p-inputtext) {
-    border-radius: 0.75rem;
-    font-size: 16px;
-    padding: 0.75rem 1rem;
-    border-width: 1.5px;
-    
-    &:enabled:focus {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-    
-    &.p-invalid {
-        border-color: #ef4444;
-        
-        &:enabled:focus {
-            border-color: #ef4444;
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-        }
-    }
-}
-
-:deep(.p-button) {
-    border-radius: 0.75rem;
-    padding: 0.75rem 1rem;
-    
-    &:not(:disabled):hover {
-        transform: translateY(-1px);
-    }
-    
-    &:not(:disabled):active {
-        transform: translateY(0);
-    }
-    
-    &.p-button-lg {
-        font-size: 1rem;
-    }
-}
-
-:deep(.p-message) {
-    border-radius: 0.75rem;
-    margin: 0;
-}
-
-:deep(.p-dialog) {
-    border-radius: 1rem;
-    
-    .p-dialog-header {
-        border-top-left-radius: 1rem;
-        border-top-right-radius: 1rem;
-        padding: 1.5rem;
-    }
-    
-    .p-dialog-content {
-        padding: 1.5rem;
-    }
-    
-    .p-dialog-footer {
-        border-bottom-left-radius: 1rem;
-        border-bottom-right-radius: 1rem;
-        padding: 1.5rem;
-    }
-}
-
-:deep(.p-divider) {
-    .p-divider-content {
-        background-color: #ffffff;
-    }
-}
+/* No need for custom styles as they are handled by Tailwind and PrimeUI */
 </style>
