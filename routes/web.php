@@ -6,6 +6,8 @@ use App\Domains\Auth\Http\Controllers\ForgotPasswordController;
 use App\Domains\Auth\Http\Controllers\FrontChannelLogoutController;
 use App\Domains\Auth\Http\Controllers\LoginController;
 use App\Domains\Auth\Http\Controllers\LogoutController;
+use App\Domains\Auth\Http\Controllers\ModernConsentController;
+use App\Domains\Auth\Http\Controllers\ModernLoginController;
 use App\Domains\Auth\Http\Controllers\PasswordResetController;
 use App\Domains\Auth\Http\Controllers\RegisterController;
 use App\Domains\Auth\Http\Controllers\VerifyEmailController;
@@ -14,12 +16,25 @@ use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->name('auth.')->group(function () {
+    // Legacy login (keep for backward compatibility)
     Route::get('login', [LoginController::class, 'view'])->name(
         'login.view'
     );
     Route::post('login', [LoginController::class, 'submit'])
         ->middleware([HandlePrecognitiveRequests::class])
         ->name('login.submit');
+
+    // Modern multi-step login
+    Route::get('modern-login', [ModernLoginController::class, 'view'])->name('modern-login.view');
+    Route::post('modern-login/identify', [ModernLoginController::class, 'identifyUser'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('modern-login.identify');
+    Route::post('modern-login/authenticate-password', [ModernLoginController::class, 'authenticatePassword'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('modern-login.authenticate-password');
+    Route::post('modern-login/authenticate-webauthn', [ModernLoginController::class, 'authenticateWebauthn'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('modern-login.authenticate-webauthn');
 
     Route::get('two-factor',
         [\App\Domains\Auth\Http\Controllers\TwoFactorController::class, 'show'])
@@ -30,7 +45,14 @@ Route::prefix('auth')->name('auth.')->group(function () {
         ->middleware(['signed', HandlePrecognitiveRequests::class])
         ->name('two-factor.submit');
 
+    // Legacy consent (keep for backward compatibility)
     Route::get('consent', ConsentController::class)->name('consent');
+    
+    // Modern consent flow
+    Route::get('modern-consent', [ModernConsentController::class, 'view'])->name('modern-consent.view');
+    Route::post('modern-consent', [ModernConsentController::class, 'submit'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('modern-consent.submit');
     Route::get('logout', LogoutController::class)->name('logout');
 
     Route::middleware('guest:web')->group(function () {

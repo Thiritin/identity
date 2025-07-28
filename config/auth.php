@@ -20,6 +20,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Remember Me Durations
+    |--------------------------------------------------------------------------
+    |
+    | These options control how long users remain authenticated when they
+    | choose to stay signed in. Values are in seconds.
+    |
+    */
+
+    'remember_duration_standard' => 3600,     // 1 hour
+    'remember_duration_extended' => 2592000,  // 30 days
+
+    /*
+    |--------------------------------------------------------------------------
     | Authentication Guards
     |--------------------------------------------------------------------------
     |

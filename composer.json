@@ -38,7 +38,8 @@
         "spatie/laravel-activitylog": "^4.7",
         "spatie/laravel-query-builder": "^5.1",
         "stevebauman/purify": "^6.2",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^1.0",
+        "web-auth/webauthn-lib": "^5.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

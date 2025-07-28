@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\User\Http\Controllers\DashboardController;
+use App\Domains\User\Http\Controllers\Settings\Security\PasskeyController;
 use App\Domains\User\Http\Controllers\Settings\TwoFactor\TotpSetupController;
 use App\Domains\User\Http\Controllers\Settings\TwoFactor\TwoFactorController;
 use App\Domains\User\Http\Controllers\Settings\TwoFactor\YubikeySetupController;
@@ -44,6 +45,31 @@ Route::post('/settings/two-factor/yubikey/setup', [YubikeySetupController::class
 Route::delete('/settings/two-factor/yubikey/destroy', [YubikeySetupController::class, 'destroy'])
     ->middleware([\Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class])
     ->name('settings.two-factor.yubikey.destroy');
+
+/** Security */
+Route::get('/settings/security/activity', function () {
+    $user = Auth::user();
+    $securityService = app(\App\Domains\Auth\Services\SecurityNotificationService::class);
+    $events = $securityService->getSecurityEvents($user);
+    
+    return Inertia::render('User/Security/Activity', [
+        'events' => $events
+    ]);
+})->name('settings.security.activity');
+
+/** Passkeys */
+Route::get('/settings/security/passkeys', [PasskeyController::class, 'index'])
+    ->name('settings.security.passkeys');
+Route::post('/settings/security/passkeys/register', [PasskeyController::class, 'register'])
+    ->name('settings.security.passkeys.register');
+Route::post('/settings/security/passkeys', [PasskeyController::class, 'store'])
+    ->middleware([\Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class])
+    ->name('settings.security.passkeys.store');
+Route::patch('/settings/security/passkeys/{credential}', [PasskeyController::class, 'update'])
+    ->middleware([\Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class])
+    ->name('settings.security.passkeys.update');
+Route::delete('/settings/security/passkeys/{credential}', [PasskeyController::class, 'destroy'])
+    ->name('settings.security.passkeys.destroy');
 
 Route::post('/profile/avatar/store', StoreAvatarController::class)
     ->name('profile.avatar.store');

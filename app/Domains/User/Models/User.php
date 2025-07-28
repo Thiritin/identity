@@ -12,6 +12,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -194,6 +195,16 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function twoFactors(): HasOne
     {
         return $this->hasOne(TwoFactor::class);
+    }
+
+    public function webauthnCredentials(): HasMany
+    {
+        return $this->hasMany(WebauthnCredential::class);
+    }
+
+    public function hasWebauthnCredentials(): bool
+    {
+        return $this->webauthnCredentials()->exists();
     }
 
     public function resetTwoFactorAuth()
