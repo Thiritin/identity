@@ -17,7 +17,7 @@ export default {
             'p-2',
 
             // Size
-            'min-w-[2.5rem]',
+            'min-w-10',
 
             // Color
             'bg-transparent dark:bg-surface-900',

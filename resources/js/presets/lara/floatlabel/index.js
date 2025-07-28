@@ -15,8 +15,8 @@ export default {
             '[&>*:last-child]:ease',
 
             // Focus Label Appearance
-            '[&>*:last-child]:has-[:focus]:-top-3',
-            '[&>*:last-child]:has-[:focus]:text-sm',
+            '[&>*:last-child]:has-focus:-top-3',
+            '[&>*:last-child]:has-focus:text-sm',
 
             // Filled Input Label Appearance
             '[&>*:last-child]:has-[.filled]:-top-3',

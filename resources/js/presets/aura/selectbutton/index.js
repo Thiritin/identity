@@ -20,7 +20,7 @@ export default {
 
             // Before
             'before:absolute before:left-1 before:top-1 before:w-[calc(100%-0.5rem)] before:h-[calc(100%-0.5rem)] before:rounded-[4px] before:z-0',
-            '[&>*]:z-10',
+            '*:z-10',
 
             // Color
             'bg-surface-100 dark:bg-surface-950',

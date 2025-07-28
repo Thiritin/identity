@@ -13,7 +13,7 @@
         <!-- Add new passkey section -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
             <div class="flex items-start space-x-4">
-                <div class="flex-shrink-0">
+                <div class="shrink-0">
                     <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                         <KeyIcon class="w-6 h-6 text-green-600" />
                     </div>
@@ -64,7 +64,7 @@
                     class="p-6 flex items-center justify-between"
                 >
                     <div class="flex items-center space-x-4">
-                        <div class="flex-shrink-0">
+                        <div class="shrink-0">
                             <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
                                 <KeyIcon class="w-5 h-5 text-gray-600" />
                             </div>
@@ -122,7 +122,7 @@
                         
                         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                             <div class="flex">
-                                <InformationCircleIcon class="w-5 h-5 text-blue-400 flex-shrink-0" />
+                                <InformationCircleIcon class="w-5 h-5 text-blue-400 shrink-0" />
                                 <div class="ml-3">
                                     <p class="text-sm text-blue-800">
                                         You'll be prompted to use your device's biometrics, PIN, or security key to create your passkey.
@@ -143,7 +143,7 @@
 
                 <div v-if="registrationError" class="mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
                     <div class="flex">
-                        <ExclamationTriangleIcon class="w-5 h-5 text-red-400 flex-shrink-0" />
+                        <ExclamationTriangleIcon class="w-5 h-5 text-red-400 shrink-0" />
                         <div class="ml-3">
                             <p class="text-sm text-red-800">{{ registrationError }}</p>
                         </div>

@@ -9,7 +9,7 @@ export default {
             { 'rounded-md': parent.instance.$name !== 'InputGroup' },
             { 'first:rounded-l-md rounded-none last:rounded-r-md': parent.instance.$name == 'InputGroup' },
             { 'border-0 border-y border-l last:border-r': parent.instance.$name == 'InputGroup' },
-            { 'first:ml-0 ml-[-1px]': parent.instance.$name == 'InputGroup' && !props.showButtons },
+            { 'first:ml-0 -ml-px': parent.instance.$name == 'InputGroup' && !props.showButtons },
 
             // Color and Background
             'bg-surface-0 dark:bg-surface-900',
@@ -72,7 +72,7 @@ export default {
             // Misc
             'relative',
             'cursor-pointer',
-            'overflow-hidden overflow-ellipsis',
+            'overflow-hidden text-ellipsis',
             'whitespace-nowrap',
             'appearance-none'
         ]
@@ -271,7 +271,7 @@ export default {
     },
     transition: {
         enterFromClass: 'opacity-0 scale-y-[0.8]',
-        enterActiveClass: 'transition-[transform,opacity] duration-[120ms] ease-[cubic-bezier(0,0,0.2,1)]',
+        enterActiveClass: 'transition-[transform,opacity] duration-120 ease-out',
         leaveActiveClass: 'transition-opacity duration-100 ease-linear',
         leaveToClass: 'opacity-0'
     }

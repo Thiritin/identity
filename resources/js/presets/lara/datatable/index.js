@@ -223,7 +223,7 @@ export default {
                 'shadow-md',
 
                 // Size
-                'min-w-[12.5rem]',
+                'min-w-50',
 
                 // Color
                 'bg-surface-0 dark:bg-surface-800',
@@ -379,7 +379,7 @@ export default {
                     // Misc
                     'relative',
                     'cursor-pointer',
-                    'overflow-hidden overflow-ellipsis',
+                    'overflow-hidden text-ellipsis',
                     'whitespace-nowrap',
                     'appearance-none'
                 ]
@@ -1092,7 +1092,7 @@ export default {
         },
         transition: {
             enterFromClass: 'opacity-0 scale-y-[0.8]',
-            enterActiveClass: 'transition-[transform,opacity] duration-[120ms] ease-[cubic-bezier(0,0,0.2,1)]',
+            enterActiveClass: 'transition-[transform,opacity] duration-120 ease-out',
             leaveActiveClass: 'transition-opacity duration-100 ease-linear',
             leaveToClass: 'opacity-0'
         }

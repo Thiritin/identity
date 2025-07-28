@@ -1,24 +1,27 @@
 <template>
     <div class="space-y-6">
         <form @submit.prevent="submit" class="space-y-6">
-            <!-- Email input -->
+            <!-- Email/Username input -->
             <div class="space-y-2">
-                <label for="identifier" class="block text-sm font-medium text-text-primary">
-                    Email address
+                <label for="identifier" class="block text-sm font-medium text-gray-700">
+                    Email or Username
                 </label>
                 <div class="relative">
                     <input
                         id="identifier"
                         v-model="form.identifier"
-                        type="email"
-                        autocomplete="email"
+                        type="text"
+                        autocomplete="username"
                         required
-                        class="modern-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ef-green-primary focus:border-ef-green-primary transition-colors"
-                        :class="{ 'border-red-500 focus:ring-red-500 focus:border-red-500': form.errors.identifier }"
-                        placeholder="Enter your email"
+                        class="auth-input w-full px-4 py-3 border border-gray-300 rounded-xl focus-accent transition-all"
+                        :class="{ 
+                            'border-red-300 focus:border-red-500 focus:ring-red-500': form.errors.identifier,
+                            'pr-12': form.processing 
+                        }"
+                        placeholder="Enter your email or username"
                     />
                     <div v-if="form.processing" class="absolute right-3 top-3">
-                        <div class="animate-spin rounded-full h-6 w-6 border-2 border-gray-300 border-t-ef-green-primary"></div>
+                        <div class="animate-spin rounded-full h-6 w-6 border-2 border-gray-300 border-t-blue-600"></div>
                     </div>
                 </div>
                 <div v-if="form.errors.identifier" class="text-sm text-red-600">
@@ -26,44 +29,50 @@
                 </div>
             </div>
 
-            <!-- Action buttons -->
+            <!-- Continue button -->
             <div class="space-y-4">
                 <button
                     type="submit"
                     :disabled="form.processing || !form.identifier"
-                    class="w-full bg-ef-green-primary hover:bg-ef-green-dark disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-ef-green-primary focus:ring-offset-2"
+                    class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transform hover:scale-[1.02] disabled:hover:scale-100"
                 >
-                    <span v-if="form.processing">Checking...</span>
-                    <span v-else>Next</span>
+                    <span v-if="form.processing" class="flex items-center justify-center">
+                        <div class="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2"></div>
+                        Checking...
+                    </span>
+                    <span v-else>Continue</span>
                 </button>
 
-                <div class="text-center">
-                    <button
-                        type="button"
-                        class="text-sm text-ef-green-primary hover:text-ef-green-dark font-medium"
-                        @click="showForgotPassword = true"
-                    >
-                        Forgot email?
-                    </button>
+                <!-- Passwordless login hint -->
+                <div v-if="showPasswordlessHint" class="text-center">
+                    <p class="text-sm text-blue-600 bg-blue-50 rounded-lg p-3 border border-blue-200">
+                        <span class="inline-flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            Got a passkey? Sign in without a password
+                        </span>
+                    </p>
                 </div>
             </div>
         </form>
 
-        <!-- Alternative sign-in methods -->
+        <!-- Divider -->
         <div class="relative">
             <div class="absolute inset-0 flex items-center">
-                <div class="w-full border-t border-gray-300"></div>
+                <div class="w-full border-t border-gray-200"></div>
             </div>
             <div class="relative flex justify-center text-sm">
-                <span class="px-2 bg-background-modern text-text-secondary">or</span>
+                <span class="px-3 bg-white text-gray-500">or</span>
             </div>
         </div>
 
+        <!-- Alternative authentication methods -->
         <div class="space-y-3">
-            <!-- Future: Add social login buttons here -->
+            <!-- Google Sign-in (placeholder) -->
             <button
                 type="button"
-                class="w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                class="w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 disabled
             >
                 <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24">
@@ -74,25 +83,43 @@
                 </svg>
                 <span class="text-gray-500">Continue with Google (Coming Soon)</span>
             </button>
+
+            <!-- Help section -->
+            <div class="text-center pt-2">
+                <button
+                    type="button"
+                    class="text-sm text-blue-600 hover:text-blue-500 font-medium transition-colors"
+                    @click="showForgotAccountModal = true"
+                >
+                    Can't access your account?
+                </button>
+            </div>
         </div>
 
-        <!-- Forgot Password Modal -->
-        <div v-if="showForgotPassword" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div class="bg-white rounded-lg p-6 max-w-md w-full">
-                <h3 class="text-lg font-medium text-text-primary mb-4">Find your email</h3>
-                <p class="text-sm text-text-secondary mb-4">
-                    Enter your recovery email or contact support for help accessing your account.
-                </p>
+        <!-- Forgot Account Modal -->
+        <div v-if="showForgotAccountModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" @click="showForgotAccountModal = false">
+            <div class="bg-white rounded-2xl p-6 max-w-md w-full animate-slide-in" @click.stop>
+                <div class="text-center mb-6">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
+                        <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Need help signing in?</h3>
+                    <p class="text-sm text-gray-600">
+                        If you can't remember your email or username, you can recover your account or get help from our support team.
+                    </p>
+                </div>
                 <div class="flex space-x-3">
                     <button
-                        @click="showForgotPassword = false"
-                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                        @click="showForgotAccountModal = false"
+                        class="flex-1 px-4 py-2 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
                     >
                         Cancel
                     </button>
                     <Link
                         :href="route('auth.forgot-password.view')"
-                        class="flex-1 bg-ef-green-primary hover:bg-ef-green-dark text-white px-4 py-2 rounded-lg text-center"
+                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-center transition-colors"
                     >
                         Get Help
                     </Link>
@@ -103,17 +130,28 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useForm, Link } from '@inertiajs/vue3'
 
 const emit = defineEmits(['user-identified'])
 
-const showForgotPassword = ref(false)
+const showForgotAccountModal = ref(false)
+const showPasswordlessHint = ref(false)
 
 const form = useForm({
     identifier: '',
     login_challenge: new URLSearchParams(window.location.search).get('login_challenge')
 })
+
+// Show passwordless hint after user starts typing
+const showHint = computed(() => {
+    return form.identifier.length > 0 && !form.processing && !form.errors.identifier
+})
+
+// Animate hint appearance
+setTimeout(() => {
+    showPasswordlessHint.value = true
+}, 2000)
 
 const submit = () => {
     form.post(route('auth.modern-login.identify'), {
@@ -122,56 +160,54 @@ const submit = () => {
         }
     })
 }
+
+onMounted(() => {
+    // Focus the input field when component mounts
+    document.getElementById('identifier')?.focus()
+})
 </script>
 
 <style scoped>
-.modern-input {
+.auth-input {
     font-size: 16px; /* Prevent zoom on iOS */
     background-color: #ffffff;
+    border-width: 1.5px;
 }
 
-.modern-input:focus {
+.auth-input:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(26, 95, 63, 0.2);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.bg-background-modern {
-    background-color: #fafbfc;
+.focus-accent:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.text-text-primary {
-    color: #202124;
+/* Progressive disclosure animation */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.text-text-secondary {
-    color: #5f6368;
+.animate-slide-in {
+    animation: slideIn 0.3s ease-out;
 }
 
-.bg-ef-green-primary {
-    background-color: #1a5f3f;
+/* Enhance button interactions */
+button:not(:disabled):hover {
+    transform: translateY(-1px);
 }
 
-.bg-ef-green-dark {
-    background-color: #0f3d27;
-}
-
-.text-ef-green-primary {
-    color: #1a5f3f;
-}
-
-.text-ef-green-dark {
-    color: #0f3d27;
-}
-
-.hover\:bg-ef-green-dark:hover {
-    background-color: #0f3d27;
-}
-
-.focus\:ring-ef-green-primary:focus {
-    --tw-ring-color: rgba(26, 95, 63, 0.5);
-}
-
-.focus\:border-ef-green-primary:focus {
-    border-color: #1a5f3f;
+button:not(:disabled):active {
+    transform: translateY(0);
 }
 </style>

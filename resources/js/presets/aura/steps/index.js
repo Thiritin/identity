@@ -19,14 +19,14 @@ export default {
             'before:border-surface-200',
             'before:dark:border-surface-700',
             'before:w-full',
-            '[&:first-child]:before:w-[calc(50%+1rem)]',
-            '[&:last-child]:before:w-1/2',
+            'first:before:w-[calc(50%+1rem)]',
+            'last:before:w-1/2',
             'before:absolute',
             'before:top-1/2',
             'before:left-0',
             'before:transform',
             'before:mt-[calc(-1rem+1px)]',
-            '[&:first-child]:before:translate-x-[100%]'
+            'first:before:translate-x-full'
         ]
     },
     action: ({ props }) => ({
@@ -68,7 +68,7 @@ export default {
             'w-8',
             'h-8',
             'text-sm',
-            'leading-[2rem]',
+            'leading-8',
             'font-medium',
 
             // Colors
@@ -106,7 +106,7 @@ export default {
             // Text and Overflow
             'whitespace-nowrap',
             'overflow-hidden',
-            'overflow-ellipsis',
+            'text-ellipsis',
             'max-w-full'
         ]
     })

@@ -6,7 +6,7 @@ export default {
 
             // Position
             'relative',
-            { '!transition-none !transform-none !w-screen !h-screen !max-h-full !top-0 !left-0': props.position == 'full' },
+            { 'transition-none! transform-none! w-screen! h-screen! max-h-full! top-0! left-0!': props.position == 'full' },
 
             // Size
             {
@@ -38,7 +38,7 @@ export default {
             'shrink-0',
 
             // Spacing
-            'p-[1.125rem]',
+            'p-4.5',
 
             // Colors
             'bg-surface-0 dark:bg-surface-900',
@@ -97,7 +97,7 @@ export default {
     content: {
         class: [
             // Spacing and Size
-            'p-[1.125rem]',
+            'p-4.5',
             'pt-0',
             'h-full',
             'w-full',

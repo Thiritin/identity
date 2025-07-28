@@ -71,7 +71,7 @@ export default {
             'opacity-0',
             'rounded-md',
             'outline-none',
-            'border-1 border-surface-200 dark:border-surface-700',
+            'border border-surface-200 dark:border-surface-700',
 
             // Misc
             'appearance-none',

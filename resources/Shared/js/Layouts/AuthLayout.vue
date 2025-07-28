@@ -21,7 +21,7 @@
             <ArtistNotice url="https://www.furaffinity.net/user/chromamancer" name="Chromamancer"/>
             <!-- Page Content -->
             <div
-                class="!min-h-[calc(100dvh)] min-h-screen
+                class="min-h-[calc(100dvh)]! min-h-screen
                 mx-auto w-full max-w-md
                 flex-1 flex flex-col items-center justify-center lg:flex-none
                 px-6 sm:px-12

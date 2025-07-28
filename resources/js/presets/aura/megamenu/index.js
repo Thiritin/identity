@@ -50,7 +50,7 @@ export default {
     }),
     menuitem: ({ props }) => ({
         class: [
-            'sm:relative static my-[2px] [&:first-child]:mt-0',
+            'sm:relative static my-[2px] first:mt-0',
             {
                 'sm:w-auto w-full': props.horizontal,
                 'w-full': !props.horizontal
@@ -143,7 +143,7 @@ export default {
         class: 'w-full sm:w-1/2'
     },
     submenu: {
-        class: ['m-0 list-none', 'p-1 px-2 w-full sm:min-w-[14rem]']
+        class: ['m-0 list-none', 'p-1 px-2 w-full sm:min-w-56']
     },
     submenuheader: {
         class: [

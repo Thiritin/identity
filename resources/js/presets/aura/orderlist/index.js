@@ -11,7 +11,7 @@ export default {
             'flex xl:flex-col justify-center gap-2',
 
             // Spacing
-            'p-[1.125rem]'
+            'p-4.5'
         ]
     },
     moveupbutton: {
@@ -229,7 +229,7 @@ export default {
             'p-1',
 
             // Size
-            'min-h-[12rem] max-h-[24rem]',
+            'min-h-48 max-h-96',
 
             // Shape
             'rounded-b-md',

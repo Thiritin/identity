@@ -18,7 +18,7 @@ export default {
             'before:absolute before:-top-[9px] before:-ml-[9px] before:left-[calc(var(--overlayArrowLeft,0)+1.25rem)] z-0',
             'before:w-0 before:h-0',
             'before:border-transparent before:border-solid',
-            'before:border-x-[8px] before:border-[8px]',
+            'before:border-x-8 before:border-8',
             'before:border-t-0 before:border-b-surface-300/10 dark:before:border-b-surface-700',
 
             'after:absolute after:-top-2 after:-ml-[8px] after:left-[calc(var(--overlayArrowLeft,0)+1.25rem)]',
@@ -33,7 +33,7 @@ export default {
     },
     transition: {
         enterFromClass: 'opacity-0 scale-y-[0.8]',
-        enterActiveClass: 'transition-[transform,opacity] duration-[120ms] ease-[cubic-bezier(0,0,0.2,1)]',
+        enterActiveClass: 'transition-[transform,opacity] duration-120 ease-out',
         leaveActiveClass: 'transition-opacity duration-100 ease-linear',
         leaveToClass: 'opacity-0'
     }

@@ -62,10 +62,10 @@ export default {
             'border',
 
             // Size
-            'w-[2rem]',
-            'h-[2rem]',
+            'w-8',
+            'h-8',
             'text-sm',
-            'leading-[2rem]',
+            'leading-8',
 
             // Colors
             {
@@ -104,7 +104,7 @@ export default {
             // Text and Overflow
             'whitespace-nowrap',
             'overflow-hidden',
-            'overflow-ellipsis',
+            'text-ellipsis',
             'max-w-full'
         ]
     })

@@ -33,7 +33,7 @@
                     :key="event.id"
                     class="p-6 flex items-start space-x-4"
                 >
-                    <div class="flex-shrink-0">
+                    <div class="shrink-0">
                         <div class="w-10 h-10 rounded-full flex items-center justify-center"
                              :class="getEventIconClass(event.event)">
                             <component :is="getEventIcon(event.event)" class="w-5 h-5" />
@@ -45,7 +45,7 @@
                             <p class="text-sm font-medium text-gray-900">
                                 {{ event.description }}
                             </p>
-                            <time class="text-xs text-gray-500 flex-shrink-0">
+                            <time class="text-xs text-gray-500 shrink-0">
                                 {{ formatTime(event.timestamp) }}
                             </time>
                         </div>
@@ -73,7 +73,7 @@
                     </div>
                     
                     <!-- Event type indicator -->
-                    <div class="flex-shrink-0">
+                    <div class="shrink-0">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                               :class="getEventBadgeClass(event.event)">
                             {{ getEventType(event.event) }}
@@ -98,7 +98,7 @@
         <!-- Security Tips -->
         <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
             <div class="flex">
-                <InformationCircleIcon class="w-6 h-6 text-blue-400 flex-shrink-0" />
+                <InformationCircleIcon class="w-6 h-6 text-blue-400 shrink-0" />
                 <div class="ml-3">
                     <h3 class="text-sm font-medium text-blue-800 mb-2">Security Tips</h3>
                     <ul class="text-sm text-blue-700 space-y-1">

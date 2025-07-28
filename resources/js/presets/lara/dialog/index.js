@@ -23,11 +23,11 @@ export default {
             {
                 'transition-none': state.maximized,
                 'transform-none': state.maximized,
-                '!w-screen': state.maximized,
-                '!h-screen': state.maximized,
-                '!max-h-full': state.maximized,
-                '!top-0': state.maximized,
-                '!left-0': state.maximized
+                'w-screen!': state.maximized,
+                'h-screen!': state.maximized,
+                'max-h-full!': state.maximized,
+                'top-0!': state.maximized,
+                'left-0!': state.maximized
             }
         ]
     }),

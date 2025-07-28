@@ -415,7 +415,7 @@ export default {
                 'rounded-md',
 
                 // Size
-                'min-w-[12rem]',
+                'min-w-48',
                 'py-1',
 
                 // Colors

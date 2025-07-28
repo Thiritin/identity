@@ -418,7 +418,7 @@ export default {
         root: {
             class: [
                 // Sizing and Shape
-                'min-w-[12.5rem]',
+                'min-w-50',
                 'rounded-md',
 
                 // Spacing
@@ -440,7 +440,7 @@ export default {
             ]
         },
         menuitem: {
-            class: 'relative my-[2px] [&:first-child]:mt-0'
+            class: 'relative my-[2px] first:mt-0'
         },
         content: ({ context }) => ({
             class: [
@@ -530,7 +530,7 @@ export default {
         submenu: {
             class: [
                 // Sizing and Shape
-                'min-w-[12.5rem]',
+                'min-w-50',
                 'rounded-md',
 
                 // Spacing

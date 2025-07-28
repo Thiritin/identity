@@ -42,7 +42,7 @@ export default {
             {
                 'p-3': props.display !== 'chip',
                 'py-3 px-3': props.display === 'chip' && !props?.modelValue?.length,
-                'py-[0.375rem] px-3': props.display === 'chip' && props?.modelValue?.length > 0
+                'py-1.5 px-3': props.display === 'chip' && props?.modelValue?.length > 0
             },
 
             // Color
@@ -53,7 +53,7 @@ export default {
             'transition duration-200',
 
             // Misc
-            'overflow-hidden whitespace-nowrap cursor-pointer overflow-ellipsis'
+            'overflow-hidden whitespace-nowrap cursor-pointer text-ellipsis'
         ]
     }),
     token: {
@@ -537,7 +537,7 @@ export default {
     },
     transition: {
         enterFromClass: 'opacity-0 scale-y-[0.8]',
-        enterActiveClass: 'transition-[transform,opacity] duration-[120ms] ease-[cubic-bezier(0,0,0.2,1)]',
+        enterActiveClass: 'transition-[transform,opacity] duration-120 ease-out',
         leaveActiveClass: 'transition-opacity duration-100 ease-linear',
         leaveToClass: 'opacity-0'
     }

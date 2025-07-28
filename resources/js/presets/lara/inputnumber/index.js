@@ -12,7 +12,7 @@ export default {
             { 'first:ml-0 -ml-px': parent.instance.$name == 'InputGroup' && !props.showButtons },
 
             //Sizing
-            { '!w-16': props.showButtons && props.buttonLayout == 'vertical' }
+            { 'w-16!': props.showButtons && props.buttonLayout == 'vertical' }
         ]
     }),
     input: {
@@ -94,7 +94,7 @@ export default {
                 'border-primary',
 
                 // Sizing
-                'w-[3rem]',
+                'w-12',
                 { 'px-4 py-3': parent.props.showButtons && parent.props.buttonLayout !== 'stacked' },
                 { 'p-0': parent.props.showButtons && parent.props.buttonLayout == 'stacked' },
                 { 'w-full': parent.props.showButtons && parent.props.buttonLayout == 'vertical' },
@@ -139,7 +139,7 @@ export default {
                 'border-primary',
 
                 // Sizing
-                'w-[3rem]',
+                'w-12',
                 { 'px-4 py-3': parent.props.showButtons && parent.props.buttonLayout !== 'stacked' },
                 { 'p-0': parent.props.showButtons && parent.props.buttonLayout == 'stacked' },
                 { 'w-full': parent.props.showButtons && parent.props.buttonLayout == 'vertical' },

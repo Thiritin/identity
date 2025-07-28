@@ -17,7 +17,7 @@ export default {
             'p-3',
 
             // Size
-            'min-w-[3rem]',
+            'min-w-12',
 
             // Color
             'bg-surface-50 dark:bg-surface-800',

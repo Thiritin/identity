@@ -49,7 +49,7 @@ export default {
             'transition duration-200',
 
             // Misc
-            'overflow-hidden whitespace-nowrap cursor-pointer overflow-ellipsis'
+            'overflow-hidden whitespace-nowrap cursor-pointer text-ellipsis'
         ]
     },
     trigger: {
@@ -266,8 +266,8 @@ export default {
                     'text-base leading-none',
 
                     // Size
-                    'w-[0.875rem]',
-                    'h-[0.875rem]',
+                    'w-3.5',
+                    'h-3.5',
 
                     // Colors
                     {
@@ -360,7 +360,7 @@ export default {
     },
     transition: {
         enterFromClass: 'opacity-0 scale-y-[0.8]',
-        enterActiveClass: 'transition-[transform,opacity] duration-[120ms] ease-[cubic-bezier(0,0,0.2,1)]',
+        enterActiveClass: 'transition-[transform,opacity] duration-120 ease-out',
         leaveActiveClass: 'transition-opacity duration-100 ease-linear',
         leaveToClass: 'opacity-0'
     }

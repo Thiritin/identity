@@ -51,7 +51,7 @@ const showDescriptionLabel = computed(() => {
     ></TabHeader>
     <TabComponent :active-index="0" :group="group"></TabComponent>
     <!-- Body -->
-    <div class="p-4 max-w-screen-md mx-auto pt-8">
+    <div class="p-4 max-w-(--breakpoint-md) mx-auto pt-8">
         <!-- Description Field -->
         <div>
             <!-- Title -->

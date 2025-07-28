@@ -17,8 +17,8 @@ export default {
             {
                 'p-0': context.nogutter || context.dot,
                 'px-2': !context.nogutter && !context.dot,
-                'min-w-[0.5rem] w-2 h-2': context.dot,
-                'min-w-[1.5rem] h-6': !context.dot
+                'min-w-2 w-2 h-2': context.dot,
+                'min-w-6 h-6': !context.dot
             },
 
             // Shape

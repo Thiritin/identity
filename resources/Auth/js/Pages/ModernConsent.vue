@@ -44,7 +44,7 @@
             <div v-if="form.errors.general" class="mb-6">
                 <div class="bg-red-50 border border-red-200 rounded-lg p-4">
                     <div class="flex">
-                        <ExclamationTriangleIcon class="h-5 w-5 text-red-400 flex-shrink-0" />
+                        <ExclamationTriangleIcon class="h-5 w-5 text-red-400 shrink-0" />
                         <div class="ml-3">
                             <p class="text-sm text-red-800">{{ form.errors.general }}</p>
                         </div>
@@ -64,7 +64,7 @@
                         :key="index"
                         class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg"
                     >
-                        <div class="flex-shrink-0 mt-0.5">
+                        <div class="shrink-0 mt-0.5">
                             <component 
                                 :is="getScopeIcon(scope.icon)" 
                                 class="w-5 h-5 text-ef-green-primary"
@@ -83,7 +83,7 @@
                                 {{ scope.description }}
                             </p>
                         </div>
-                        <div v-if="!scope.required" class="flex-shrink-0">
+                        <div v-if="!scope.required" class="shrink-0">
                             <input
                                 v-model="selectedScopes"
                                 :value="scope.name.toLowerCase().replace(' ', '_')"

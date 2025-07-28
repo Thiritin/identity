@@ -63,12 +63,14 @@ class ModernLoginController extends Controller
 
         $identifier = $request->get('identifier');
         
-        // Find user by email
-        $user = User::where('email', $identifier)->first();
+        // Find user by email or username
+        $user = User::where('email', $identifier)
+            ->orWhere('username', $identifier)
+            ->first();
         
         if (!$user) {
             throw ValidationException::withMessages([
-                'identifier' => 'No account found with this email address.'
+                'identifier' => 'No account found with this email address or username.'
             ]);
         }
 

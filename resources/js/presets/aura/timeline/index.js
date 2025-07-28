@@ -48,13 +48,13 @@ export default {
             'inline-flex items-center justify-center',
 
             // Size
-            'w-[1.125rem] h-[1.125rem]',
+            'w-4.5 h-4.5',
 
             // Appearance
             'rounded-full border-2 border-surface-200 bg-surface-0 dark:border-surface-700 dark:bg-surface-950',
 
             // Before
-            'before:rounded-full before:w-[0.375rem] before:h-[0.375rem] before:bg-primary',
+            'before:rounded-full before:w-1.5 before:h-1.5 before:bg-primary',
             // After
             'after:absolute after:rounded-full after:w-full after:h-full after:shadow-sm'
         ]

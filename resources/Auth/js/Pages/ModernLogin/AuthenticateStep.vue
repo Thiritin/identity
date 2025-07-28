@@ -2,7 +2,7 @@
     <div class="space-y-6">
         <!-- User info header -->
         <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-            <div class="flex-shrink-0">
+            <div class="shrink-0">
                 <img 
                     v-if="user?.avatar" 
                     :src="user.avatar" 
@@ -142,7 +142,7 @@
         <!-- Stay signed in explanation -->
         <div v-if="passwordForm.stay_signed_in || webauthnForm.stay_signed_in" class="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <div class="flex">
-                <InformationCircleIcon class="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                <InformationCircleIcon class="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                 <div class="ml-3">
                     <p class="text-sm text-blue-800">
                         <strong>Stay signed in</strong> keeps you signed in for 30 days on this device. 

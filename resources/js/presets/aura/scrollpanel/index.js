@@ -5,7 +5,7 @@ export default {
             'h-full w-full',
 
             // Layering
-            'z-[1]',
+            'z-1',
 
             // Spacing
             'overflow-hidden',
@@ -47,7 +47,7 @@ export default {
             'invisible z-20',
 
             // Transition
-            'transition duration-[250ms] ease-linear',
+            'transition duration-250 ease-linear',
 
             // Misc
             'relative'
@@ -68,7 +68,7 @@ export default {
             'z-20',
 
             // Transition
-            'transition duration-[250ms] ease-linear',
+            'transition duration-250 ease-linear',
 
             // Misc
             'relative'

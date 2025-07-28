@@ -84,8 +84,8 @@ export default {
                 context.active ? 'text-primary' : 'text-surface-900 dark:text-surface-0', // Adjust colors as needed
 
                 // Size and Shape
-                'min-w-[2rem]',
-                'h-[2rem]',
+                'min-w-8',
+                'h-8',
                 'line-height-[2rem]',
                 'rounded-full',
 
@@ -141,7 +141,7 @@ export default {
             enterActiveClass: 'overflow-hidden transition-[max-height] duration-1000 ease-[cubic-bezier(0.42,0,0.58,1)]',
             enterToClass: 'max-h-[1000px]',
             leaveFromClass: 'max-h-[1000px]',
-            leaveActiveClass: 'overflow-hidden transition-[max-height] duration-[450ms] ease-[cubic-bezier(0,1,0,1)]',
+            leaveActiveClass: 'overflow-hidden transition-[max-height] duration-450 ease-[cubic-bezier(0,1,0,1)]',
             leaveToClass: 'max-h-0'
         },
         content: ({ parent }) => ({

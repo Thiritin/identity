@@ -149,7 +149,7 @@ export default {
             'border-0 border-b border-solid',
 
             // Spacing
-            context?.size === 'small' ? 'py-[0.375rem] px-2' : context?.size === 'large' ? 'py-[0.9375rem] px-5' : 'py-3 px-4',
+            context?.size === 'small' ? 'py-1.5 px-2' : context?.size === 'large' ? 'py-3.75 px-5' : 'py-3 px-4',
 
             // Color
             (props.sortable === '' || props.sortable) && context.sorted ? 'bg-primary-highlight text-primary-highlight-inverse' : 'bg-surface-0 text-surface-700 dark:text-white/80 dark:bg-surface-900',
@@ -189,7 +189,7 @@ export default {
                 'border-0 border-b border-solid',
 
                 // Spacing
-                context?.size === 'small' ? 'py-[0.375rem] px-2' : context?.size === 'large' ? 'py-[0.9375rem] px-5' : 'py-3 px-4',
+                context?.size === 'small' ? 'py-1.5 px-2' : context?.size === 'large' ? 'py-3.75 px-5' : 'py-3 px-4',
 
                 // Color
                 (props.sortable === '' || props.sortable) && context.sorted ? 'bg-primary-highlight text-primary-highlight-inverse' : 'bg-surface-0 text-surface-700 dark:text-white/80 dark:bg-surface-900',
@@ -234,7 +234,7 @@ export default {
                 { 'first:border-l border-r border-b': context?.showGridlines },
 
                 // Spacing
-                context?.size === 'small' ? 'py-[0.375rem] px-2' : context?.size === 'large' ? 'py-[0.9375rem] px-5' : 'py-3 px-4',
+                context?.size === 'small' ? 'py-1.5 px-2' : context?.size === 'large' ? 'py-3.75 px-5' : 'py-3 px-4',
 
                 // Misc
                 {
@@ -400,7 +400,7 @@ export default {
                     'opacity-0',
                     'rounded-md',
                     'outline-none',
-                    'border-1 border-surface-200 dark:border-surface-700',
+                    'border border-surface-200 dark:border-surface-700',
 
                     // Misc
                     'appearance-none',
@@ -413,8 +413,8 @@ export default {
                     'text-base leading-none',
 
                     // Size
-                    'w-[0.875rem]',
-                    'h-[0.875rem]',
+                    'w-3.5',
+                    'h-3.5',
 
                     // Colors
                     {
@@ -431,7 +431,7 @@ export default {
 
         transition: {
             enterFromClass: 'opacity-0 scale-y-[0.8]',
-            enterActiveClass: 'transition-[transform,opacity] duration-[120ms] ease-[cubic-bezier(0,0,0.2,1)]',
+            enterActiveClass: 'transition-[transform,opacity] duration-120 ease-out',
             leaveActiveClass: 'transition-opacity duration-100 ease-linear',
             leaveToClass: 'opacity-0'
         }

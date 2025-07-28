@@ -15,7 +15,7 @@ export default {
             'dark:text-white/80',
 
             // Spacing
-            'p-[1.125rem]',
+            'p-4.5',
             'gap-2',
 
             // Borders
@@ -90,7 +90,7 @@ export default {
             'dark:text-white/80',
 
             // Spacing
-            'p-[1.125rem]',
+            'p-4.5',
 
             // Borders
             'border border-t-0',

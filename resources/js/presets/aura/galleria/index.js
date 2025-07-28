@@ -126,7 +126,7 @@ export default {
             'opacity-50',
 
             // States
-            '[&[data-p-active="true"]]:opacity-100',
+            'data-[p-active="true"]:opacity-100',
             'hover:opacity-100',
 
             // Transitions
@@ -213,7 +213,7 @@ export default {
     closebutton: {
         class: [
             // Positioning
-            '!absolute top-0 right-0',
+            'absolute! top-0 right-0',
 
             // Display & Flexbox
             'flex justify-center items-center overflow-hidden',
@@ -249,10 +249,10 @@ export default {
             'mx-2',
 
             // Positioning
-            'top-1/2 mt-[-0.5rem] left-0',
+            'top-1/2 -mt-2 left-0',
             {
-                '!absolute': parent.props.showItemNavigators,
-                '!fixed': !parent.props.showItemNavigators
+                'absolute!': parent.props.showItemNavigators,
+                'fixed!': !parent.props.showItemNavigators
             },
 
             // Hover Effect
@@ -277,10 +277,10 @@ export default {
             'mx-2',
 
             // Positioning
-            'top-1/2 mt-[-0.5rem] right-0',
+            'top-1/2 -mt-2 right-0',
             {
-                '!absolute': parent.props.showItemNavigators,
-                '!fixed': !parent.props.showItemNavigators
+                'absolute!': parent.props.showItemNavigators,
+                'fixed!': !parent.props.showItemNavigators
             },
 
             // Hover Effect

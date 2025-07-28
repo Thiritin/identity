@@ -9,7 +9,7 @@
     <div class="space-y-8">
         <UserBox :user="user"/>
         <div
-            class="text-sm shadow-md p-2 border-l-[4px] border-primary-600 dark:border-primary-300 dark:text-primary-300"
+            class="text-sm shadow-md p-2 border-l-4 border-primary-600 dark:border-primary-300 dark:text-primary-300"
         >
             {{ $trans('verify_helptext') }}
         </div>

@@ -16,7 +16,7 @@ export default {
             'flex items-center flex-wrap gap-2',
 
             // Spacing
-            'm-0 py-[0.375rem] px-3',
+            'm-0 py-1.5 px-3',
 
             // Size
             'w-full',

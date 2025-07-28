@@ -13,7 +13,7 @@ export default {
 
             // Color
             'bg-surface-0 dark:bg-surface-900',
-            '[&:last-child]:border-b',
+            'last:border-b',
             'border-surface-200 dark:border-surface-700',
 
             // Transitions
@@ -24,11 +24,11 @@ export default {
             {
                 'transition-none': state.maximized,
                 'transform-none': state.maximized,
-                '!w-screen': state.maximized,
-                '!h-screen': state.maximized,
-                '!max-h-full': state.maximized,
-                '!top-0': state.maximized,
-                '!left-0': state.maximized
+                'w-screen!': state.maximized,
+                'h-screen!': state.maximized,
+                'max-h-full!': state.maximized,
+                'top-0!': state.maximized,
+                'left-0!': state.maximized
             }
         ]
     }),

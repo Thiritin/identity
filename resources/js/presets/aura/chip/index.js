@@ -30,7 +30,7 @@ export default {
             'rounded-md leading-6',
 
             // Spacing
-            'ml-[0.375rem]',
+            'ml-1.5',
 
             // Size
             'w-4 h-4',

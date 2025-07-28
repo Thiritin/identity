@@ -23,7 +23,7 @@ export default {
             'flex items-center justify-center',
 
             // Position
-            '!absolute',
+            'absolute!',
             'top-0 left-0',
             'z-20',
 
@@ -43,7 +43,7 @@ export default {
             'flex items-center justify-center',
 
             // Position
-            '!absolute',
+            'absolute!',
             'top-0 right-0',
             'z-20',
 

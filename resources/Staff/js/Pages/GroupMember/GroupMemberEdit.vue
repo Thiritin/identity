@@ -34,9 +34,9 @@ const levels = [
         }))">
                 <!-- Prime Vue Edit Member form with one select input of level -->
                 <Dropdown v-model="form.level" :options="levels" option-value="value" optionLabel="name"
-                          class="w-full md:w-[14rem]"/>
+                          class="w-full md:w-56"/>
                 <div class="flex pt-2 justify-start">
-                    <PrimaryButton type="submit" class="btn btn-primary w-full md:w-[14rem]">Update</PrimaryButton>
+                    <PrimaryButton type="submit" class="btn btn-primary w-full md:w-56">Update</PrimaryButton>
                 </div>
             </form>
         </div>

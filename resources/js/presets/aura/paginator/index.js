@@ -26,7 +26,7 @@ export default {
             'border-0 rounded-full',
 
             // Size
-            'min-w-[2.5rem] h-10 m-[0.143rem]',
+            'min-w-10 h-10 m-[0.143rem]',
             'leading-none',
 
             // Color
@@ -57,7 +57,7 @@ export default {
             'border-0 rounded-full',
 
             // Size
-            'min-w-[2.5rem] h-10 m-[0.143rem]',
+            'min-w-10 h-10 m-[0.143rem]',
             'leading-none',
 
             // Color
@@ -88,7 +88,7 @@ export default {
             'border-0 rounded-full',
 
             // Size
-            'min-w-[2.5rem] h-10 m-[0.143rem]',
+            'min-w-10 h-10 m-[0.143rem]',
             'leading-none',
 
             // Color
@@ -119,7 +119,7 @@ export default {
             'border-0 rounded-full',
 
             // Size
-            'min-w-[2.5rem] h-10 m-[0.143rem]',
+            'min-w-10 h-10 m-[0.143rem]',
             'leading-none',
 
             // Color
@@ -150,7 +150,7 @@ export default {
             'border-0 rounded-full',
 
             // Size
-            'min-w-[2.5rem] h-10 m-[0.143rem]',
+            'min-w-10 h-10 m-[0.143rem]',
             'leading-none',
 
             // Color
@@ -233,7 +233,7 @@ export default {
                 // Misc
                 'relative',
                 'cursor-pointer',
-                'overflow-hidden overflow-ellipsis',
+                'overflow-hidden text-ellipsis',
                 'whitespace-nowrap',
                 'appearance-none'
             ]
@@ -343,7 +343,7 @@ export default {
                     'border border-surface-300 dark:border-surface-700',
 
                     // Sizing and Spacing
-                    'w-[1%] max-w-[3rem]',
+                    'w-[1%] max-w-12',
                     'py-2 px-3 m-0',
 
                     //Shape
@@ -360,7 +360,7 @@ export default {
 
                     // Misc
                     'cursor-pointer',
-                    'overflow-hidden overflow-ellipsis',
+                    'overflow-hidden text-ellipsis',
                     'whitespace-nowrap',
                     'appearance-none'
                 ]
@@ -430,7 +430,7 @@ export default {
                 // Misc
                 'relative',
                 'cursor-pointer',
-                'overflow-hidden overflow-ellipsis',
+                'overflow-hidden text-ellipsis',
                 'whitespace-nowrap',
                 'appearance-none'
             ]

@@ -2,7 +2,7 @@ export default {
     root: ({ props }) => ({
         class: [
             // Sizing and Shape
-            'min-w-[12rem]',
+            'min-w-48',
             'rounded-md',
 
             // Colors

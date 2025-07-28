@@ -174,8 +174,8 @@ export default {
                 'text-base leading-none',
 
                 // Size
-                'w-[0.875rem]',
-                'h-[0.875rem]',
+                'w-3.5',
+                'h-3.5',
 
                 // Colors
                 {

@@ -9,7 +9,7 @@
     <form v-if="!status" class="space-y-12" @submit.prevent="submit">
         <div class="space-y-6">
             <div
-                class="text-sm shadow-md p-2 border-l-[4px] border-primary-600 dark:border-primary-300 dark:text-primary-300"
+                class="text-sm shadow-md p-2 border-l-4 border-primary-600 dark:border-primary-300 dark:text-primary-300"
             >
                 {{ $trans('forgot_password_helptext') }}
             </div>
@@ -39,7 +39,7 @@
         </div>
     </form>
     <div v-else>
-        <div class="text-sm shadow-md p-2 border-l-[4px] border-primary-600">
+        <div class="text-sm shadow-md p-2 border-l-4 border-primary-600">
             {{ status }}
         </div>
     </div>

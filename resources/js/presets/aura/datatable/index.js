@@ -117,7 +117,7 @@ export default {
                 'border-0 border-b border-solid',
 
                 // Spacing
-                context?.size === 'small' ? 'py-[0.375rem] px-2' : context?.size === 'large' ? 'py-[0.9375rem] px-5' : 'py-3 px-4',
+                context?.size === 'small' ? 'py-1.5 px-2' : context?.size === 'large' ? 'py-3.75 px-5' : 'py-3 px-4',
 
                 // Color
                 (props.sortable === '' || props.sortable) && context.sorted ? 'bg-primary-highlight text-primary-highlight-inverse' : 'bg-surface-0 text-surface-700 dark:text-white/80 dark:bg-surface-900',
@@ -161,8 +161,8 @@ export default {
                 { 'bg-surface-0 dark:bg-surface-900': parent.instance.frozenRow || props.frozen || props.frozen === '' },
 
                 // Spacing
-                { 'py-[0.375rem] px-2': context?.size === 'small' && !state['d_editing'] },
-                { 'py-[0.9375rem] px-5': context?.size === 'large' && !state['d_editing'] },
+                { 'py-1.5 px-2': context?.size === 'small' && !state['d_editing'] },
+                { 'py-3.75 px-5': context?.size === 'large' && !state['d_editing'] },
                 { 'py-3 px-4': context?.size !== 'large' && context?.size !== 'small' && !state['d_editing'] },
                 { 'py-[0.6rem] px-2': state['d_editing'] },
 
@@ -226,7 +226,7 @@ export default {
                 'shadow-md',
 
                 // Size
-                'min-w-[12.5rem]',
+                'min-w-50',
 
                 // Color
                 'bg-surface-0 dark:bg-surface-900',
@@ -378,7 +378,7 @@ export default {
                     // Misc
                     'relative',
                     'cursor-pointer',
-                    'overflow-hidden overflow-ellipsis',
+                    'overflow-hidden text-ellipsis',
                     'whitespace-nowrap',
                     'appearance-none'
                 ]
@@ -465,7 +465,7 @@ export default {
                     'items-center inline-flex text-center align-bottom justify-center',
 
                     // Sizes & Spacing
-                    'text-sm py-[0.4375rem] px-[0.875rem] w-full',
+                    'text-sm py-1.75 px-3.5 w-full',
 
                     // Shape
                     'rounded-md',
@@ -497,7 +497,7 @@ export default {
                     'items-center inline-flex text-center align-bottom justify-center',
 
                     // Sizes & Spacing
-                    'text-sm py-[0.4375rem] px-[0.875rem] w-full mt-2',
+                    'text-sm py-1.75 px-3.5 w-full mt-2',
 
                     // Shape
                     'rounded-md',
@@ -538,7 +538,7 @@ export default {
                     'items-center inline-flex text-center align-bottom justify-center',
 
                     // Sizes & Spacing
-                    'text-sm py-[0.4375rem] px-[0.875rem]',
+                    'text-sm py-1.75 px-3.5',
 
                     // Shape
                     'rounded-md',
@@ -563,7 +563,7 @@ export default {
                     'items-center inline-flex text-center align-bottom justify-center',
 
                     // Sizes & Spacing
-                    'text-sm py-[0.4375rem] px-[0.875rem]',
+                    'text-sm py-1.75 px-3.5',
 
                     // Shape
                     'rounded-md',
@@ -848,7 +848,7 @@ export default {
                     'opacity-0',
                     'rounded-md',
                     'outline-none',
-                    'border-1 border-surface-200 dark:border-surface-700',
+                    'border border-surface-200 dark:border-surface-700',
 
                     // Misc
                     'appearance-none',
@@ -965,8 +965,8 @@ export default {
             icon: {
                 class: [
                     // Size
-                    'w-[0.875rem]',
-                    'h-[0.875rem]',
+                    'w-3.5',
+                    'h-3.5',
 
                     // Colors
                     'text-white dark:text-surface-950',
@@ -1066,8 +1066,8 @@ export default {
             icon: {
                 class: [
                     // Size
-                    'w-[0.875rem]',
-                    'h-[0.875rem]',
+                    'w-3.5',
+                    'h-3.5',
 
                     // Colors
                     'text-white dark:text-surface-950',
@@ -1081,7 +1081,7 @@ export default {
         transition: {
             class: 'p-3 flex flex-col gap-2',
             enterFromClass: 'opacity-0 scale-y-[0.8]',
-            enterActiveClass: 'transition-[transform,opacity] duration-[120ms] ease-[cubic-bezier(0,0,0.2,1)]',
+            enterActiveClass: 'transition-[transform,opacity] duration-120 ease-out',
             leaveActiveClass: 'transition-opacity duration-100 ease-linear',
             leaveToClass: 'opacity-0'
         }

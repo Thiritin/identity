@@ -169,7 +169,7 @@ export default {
         }
     },
     loadingicon: {
-        class: ['text-surface-500 dark:text-surface-0/70', 'absolute top-[50%] right-[0.5rem] -mt-2 animate-spin']
+        class: ['text-surface-500 dark:text-surface-0/70', 'absolute top-[50%] right-2 -mt-2 animate-spin']
     },
     panel: {
         class: [
@@ -254,7 +254,7 @@ export default {
     },
     transition: {
         enterFromClass: 'opacity-0 scale-y-[0.8]',
-        enterActiveClass: 'transition-[transform,opacity] duration-[120ms] ease-[cubic-bezier(0,0,0.2,1)]',
+        enterActiveClass: 'transition-[transform,opacity] duration-120 ease-out',
         leaveActiveClass: 'transition-opacity duration-100 ease-linear',
         leaveToClass: 'opacity-0'
     }

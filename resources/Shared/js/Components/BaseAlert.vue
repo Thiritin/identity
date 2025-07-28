@@ -1,7 +1,7 @@
 <template>
     <div class="rounded-md bg-yellow-50 p-4 w-full">
         <div class="flex">
-            <div class="flex-shrink-0">
+            <div class="shrink-0">
                 <ExclamationTriangleIcon
                     aria-hidden="true"
                     class="h-5 w-5 text-yellow-400"

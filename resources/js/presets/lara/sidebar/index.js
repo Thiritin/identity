@@ -6,7 +6,7 @@ export default {
 
             // Position
             'relative',
-            { '!transition-none !transform-none !w-screen !h-screen !max-h-full !top-0 !left-0': props.position == 'full' },
+            { 'transition-none! transform-none! w-screen! h-screen! max-h-full! top-0! left-0!': props.position == 'full' },
 
             // Size
             {

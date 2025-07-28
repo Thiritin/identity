@@ -26,10 +26,10 @@ export default {
             'border-transparent',
             'border-solid',
             {
-                'border-y-[10px] border-r-[10px] border-l-0 border-r-surface-700': context?.right || (!context?.right && !context?.left && !context?.top && !context?.bottom),
-                'border-y-[10px] border-l-[10px] border-r-0 border-l-surface-700': context?.left,
-                'border-x-[10px] border-t-[10px] border-b-0 border-t-surface-700': context?.top,
-                'border-x-[10px] border-b-[10px] border-t-0 border-b-surface-700': context?.bottom
+                'border-y-10 border-r-10 border-l-0 border-r-surface-700': context?.right || (!context?.right && !context?.left && !context?.top && !context?.bottom),
+                'border-y-10 border-l-10 border-r-0 border-l-surface-700': context?.left,
+                'border-x-10 border-t-10 border-b-0 border-t-surface-700': context?.top,
+                'border-x-10 border-b-10 border-t-0 border-b-surface-700': context?.bottom
             },
 
             // Spacing

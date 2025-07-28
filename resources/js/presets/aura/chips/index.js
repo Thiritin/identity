@@ -99,7 +99,7 @@ export default {
     removeTokenIcon: {
         class: [
             // Spacing
-            'ml-[0.375rem]',
+            'ml-1.5',
 
             // Size
             'w-4 h-4',

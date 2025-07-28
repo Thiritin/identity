@@ -207,7 +207,7 @@ export default {
             'list-none m-0 p-0',
 
             // Size
-            'min-h-[12rem] max-h-[24rem]',
+            'min-h-48 max-h-96',
 
             // Shape
             'rounded-b-md',
@@ -622,7 +622,7 @@ export default {
             'list-none m-0 p-0',
 
             // Size
-            'min-h-[12rem] max-h-[24rem]',
+            'min-h-48 max-h-96',
 
             // Shape
             'rounded-b-md',
@@ -643,9 +643,9 @@ export default {
         ]
     },
     transition: {
-        enterFromClass: '!transition-none',
-        enterActiveClass: '!transition-none',
-        leaveActiveClass: '!transition-none',
-        leaveToClass: '!transition-none'
+        enterFromClass: 'transition-none!',
+        enterActiveClass: 'transition-none!',
+        leaveActiveClass: 'transition-none!',
+        leaveToClass: 'transition-none!'
     }
 };

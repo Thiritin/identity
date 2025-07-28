@@ -104,7 +104,7 @@ export default {
     nodetoggler: {
         class: [
             // Position
-            'absolute bottom-[-0.75rem] left-2/4 -ml-3',
+            'absolute -bottom-3 left-2/4 -ml-3',
             'z-20',
 
             // Flexbox

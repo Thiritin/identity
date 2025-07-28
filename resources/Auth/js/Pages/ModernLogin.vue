@@ -1,69 +1,60 @@
 <template>
     <Head title="Sign In"></Head>
     
-    <div class="min-h-screen bg-background-modern flex">
-        <!-- Left side - Branding (hidden on mobile) -->
-        <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-ef-green-primary to-ef-green-light items-center justify-center p-12">
-            <div class="max-w-md text-center text-white">
-                <Logo class="mx-auto mb-8 w-24 h-24" />
-                <h1 class="text-4xl font-bold mb-4">Welcome to {{ $trans('app_name') }}</h1>
-                <p class="text-xl opacity-90">Secure authentication for the Eurofurence community</p>
-            </div>
-        </div>
-
-        <!-- Right side - Login form -->
-        <div class="flex-1 flex items-center justify-center p-8">
-            <div class="w-full max-w-md">
-                <!-- Mobile logo -->
-                <div class="lg:hidden text-center mb-8">
+    <!-- Auth0-inspired centered design -->
+    <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+        <div class="w-full max-w-md">
+            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden hover-lift">
+                <!-- Header section -->
+                <div class="px-8 pt-8 pb-6 text-center">
                     <Logo class="mx-auto w-16 h-16 mb-4" />
-                    <h1 class="text-2xl font-bold text-text-primary">Sign in</h1>
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">Welcome back</h1>
+                    <p class="text-gray-600">Sign in to {{ clientName || 'Eurofurence' }}</p>
                 </div>
 
-                <!-- Desktop header -->
-                <div class="hidden lg:block mb-8">
-                    <h1 class="text-3xl font-bold text-text-primary mb-2">Sign in</h1>
-                    <p class="text-text-secondary">to continue to {{ clientName || 'Eurofurence' }}</p>
-                </div>
-
-                <!-- Error display -->
-                <div v-if="$page.props.flash?.error" class="mb-6">
-                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <ExclamationTriangleIcon class="h-5 w-5 text-red-400" />
-                            </div>
-                            <div class="ml-3">
-                                <p class="text-sm text-red-800">{{ $page.props.flash.error }}</p>
+                <!-- Form section -->
+                <div class="px-8 pb-8">
+                    <!-- Error display -->
+                    <div v-if="$page.props.flash?.error" class="mb-6 animate-slide-in">
+                        <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <ExclamationTriangleIcon class="h-5 w-5 text-red-500" />
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-red-700">{{ $page.props.flash.error }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Step 1: Identify user -->
+                    <IdentifyStep 
+                        v-if="step === 'identify'"
+                        @user-identified="handleUserIdentified"
+                        class="animate-slide-in"
+                    />
+
+                    <!-- Step 2: Authenticate -->
+                    <AuthenticateStep 
+                        v-else-if="step === 'authenticate'"
+                        :user="user"
+                        :auth-methods="authMethods"
+                        :webauthn-options="webauthnOptions"
+                        @authenticated="handleAuthenticated"
+                        @go-back="goBack"
+                        class="animate-slide-in"
+                    />
                 </div>
 
-                <!-- Step 1: Identify user -->
-                <IdentifyStep 
-                    v-if="step === 'identify'"
-                    @user-identified="handleUserIdentified"
-                />
-
-                <!-- Step 2: Authenticate -->
-                <AuthenticateStep 
-                    v-else-if="step === 'authenticate'"
-                    :user="user"
-                    :auth-methods="authMethods"
-                    :webauthn-options="webauthnOptions"
-                    @authenticated="handleAuthenticated"
-                    @go-back="goBack"
-                />
-
                 <!-- Footer -->
-                <div class="mt-8 text-center">
-                    <div class="text-sm text-text-secondary">
-                        <a href="/auth/register" class="font-medium text-ef-green-primary hover:text-ef-green-dark">
+                <div class="px-8 py-6 bg-gray-50 border-t border-gray-100">
+                    <div class="text-center text-sm text-gray-600">
+                        <a href="/auth/register" class="font-medium text-blue-600 hover:text-blue-500 transition-colors">
                             Create account
                         </a>
-                        <span class="mx-2">•</span>
-                        <a href="/help" class="font-medium text-ef-green-primary hover:text-ef-green-dark">
+                        <span class="mx-3 text-gray-400">"</span>
+                        <a href="/help" class="font-medium text-blue-600 hover:text-blue-500 transition-colors">
                             Need help?
                         </a>
                     </div>
@@ -116,55 +107,47 @@ const goBack = () => {
 </script>
 
 <style scoped>
-.bg-background-modern {
-    background-color: #fafbfc;
+/* Auth0-inspired modern styling */
+.auth-container {
+    background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
 }
 
-.text-text-primary {
-    color: #202124;
+/* Smooth transitions for all interactive elements */
+* {
+    transition: all 0.2s ease-in-out;
 }
 
-.text-text-secondary {
-    color: #5f6368;
+/* Custom shadow for the login card */
+.shadow-auth {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-.text-ef-green-primary {
-    color: #1a5f3f;
+/* Focus states with modern blue accent */
+.focus-accent:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.text-ef-green-dark {
-    color: #0f3d27;
+/* Hover states */
+.hover-lift:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
 }
 
-.bg-ef-green-primary {
-    background-color: #1a5f3f;
+/* Progressive disclosure animation */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.bg-ef-green-light {
-    background-color: #2d7a5f;
-}
-
-.from-ef-green-primary {
-    --tw-gradient-from: #1a5f3f;
-}
-
-.to-ef-green-light {
-    --tw-gradient-to: #2d7a5f;
-}
-
-.border-ef-green-primary {
-    border-color: #1a5f3f;
-}
-
-.hover\:bg-ef-green-dark:hover {
-    background-color: #0f3d27;
-}
-
-.focus\:border-ef-green-primary:focus {
-    border-color: #1a5f3f;
-}
-
-.focus\:ring-ef-green-primary:focus {
-    --tw-ring-color: #1a5f3f;
+.animate-slide-in {
+    animation: slideIn 0.3s ease-out;
 }
 </style>

@@ -23,7 +23,7 @@ export default {
             'flex items-center justify-center',
 
             // Position
-            '!absolute',
+            'absolute!',
             'top-0 left-0',
             'z-20',
 
@@ -43,7 +43,7 @@ export default {
             'flex items-center justify-center',
 
             // Position
-            '!absolute',
+            'absolute!',
             'top-0 right-0',
             'z-20',
 
@@ -96,7 +96,7 @@ export default {
                 'flex items-center',
 
                 // Spacing
-                'py-4 px-[1.125rem]',
+                'py-4 px-4.5',
                 '-mb-px',
 
                 // Shape
@@ -141,7 +141,7 @@ export default {
     panelcontainer: {
         class: [
             // Spacing
-            'p-[1.125rem] pt-[0.875rem]',
+            'p-4.5 pt-3.5',
 
             // Shape
             'border-0 rounded-none',
