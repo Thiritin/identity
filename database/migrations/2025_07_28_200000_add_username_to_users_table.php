@@ -12,23 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            if (!Schema::hasColumn('users', 'username')) {
-                $table->string('username')->nullable()->unique()->after('email');
-                $table->index('username');
-            }
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::table('users', function (Blueprint $table) {
-            if (Schema::hasColumn('users', 'username')) {
-                $table->dropIndex(['username']);
-                $table->dropColumn('username');
-            }
+            $table->unique('name');
+            $table->index('name');
         });
     }
 };

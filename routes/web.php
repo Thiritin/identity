@@ -1,13 +1,11 @@
 <?php
 
 use App\Domains\Auth\Http\Controllers\ChooseController;
-use App\Domains\Auth\Http\Controllers\ConsentController;
 use App\Domains\Auth\Http\Controllers\ForgotPasswordController;
 use App\Domains\Auth\Http\Controllers\FrontChannelLogoutController;
-use App\Domains\Auth\Http\Controllers\LoginController;
 use App\Domains\Auth\Http\Controllers\LogoutController;
-use App\Domains\Auth\Http\Controllers\ModernConsentController;
-use App\Domains\Auth\Http\Controllers\ModernLoginController;
+use App\Domains\Auth\Http\Controllers\ConsentController;
+use App\Domains\Auth\Http\Controllers\LoginController;
 use App\Domains\Auth\Http\Controllers\PasswordResetController;
 use App\Domains\Auth\Http\Controllers\RegisterController;
 use App\Domains\Auth\Http\Controllers\VerifyEmailController;
@@ -16,25 +14,18 @@ use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->name('auth.')->group(function () {
-    // Legacy login (keep for backward compatibility)
-    Route::get('login', [LoginController::class, 'view'])->name(
-        'login.view'
-    );
-    Route::post('login', [LoginController::class, 'submit'])
+    // Login routes
+    Route::get('login', [LoginController::class, 'view'])->name('login.view');
+    Route::post('login/identify', [LoginController::class, 'identifyUser'])
         ->middleware([HandlePrecognitiveRequests::class])
-        ->name('login.submit');
+        ->name('login.identify');
+    Route::post('login/authenticate-password', [LoginController::class, 'authenticatePassword'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('login.authenticate-password');
+    Route::post('login/authenticate-webauthn', [LoginController::class, 'authenticateWebauthn'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('login.authenticate-webauthn');
 
-    // Modern multi-step login
-    Route::get('modern-login', [ModernLoginController::class, 'view'])->name('modern-login.view');
-    Route::post('modern-login/identify', [ModernLoginController::class, 'identifyUser'])
-        ->middleware([HandlePrecognitiveRequests::class])
-        ->name('modern-login.identify');
-    Route::post('modern-login/authenticate-password', [ModernLoginController::class, 'authenticatePassword'])
-        ->middleware([HandlePrecognitiveRequests::class])
-        ->name('modern-login.authenticate-password');
-    Route::post('modern-login/authenticate-webauthn', [ModernLoginController::class, 'authenticateWebauthn'])
-        ->middleware([HandlePrecognitiveRequests::class])
-        ->name('modern-login.authenticate-webauthn');
 
     Route::get('two-factor',
         [\App\Domains\Auth\Http\Controllers\TwoFactorController::class, 'show'])
@@ -45,14 +36,11 @@ Route::prefix('auth')->name('auth.')->group(function () {
         ->middleware(['signed', HandlePrecognitiveRequests::class])
         ->name('two-factor.submit');
 
-    // Legacy consent (keep for backward compatibility)
-    Route::get('consent', ConsentController::class)->name('consent');
-    
-    // Modern consent flow
-    Route::get('modern-consent', [ModernConsentController::class, 'view'])->name('modern-consent.view');
-    Route::post('modern-consent', [ModernConsentController::class, 'submit'])
+    // Consent routes
+    Route::get('consent', [ConsentController::class, 'view'])->name('consent');
+    Route::post('consent', [ConsentController::class, 'submit'])
         ->middleware([HandlePrecognitiveRequests::class])
-        ->name('modern-consent.submit');
+        ->name('consent.submit');
     Route::get('logout', LogoutController::class)->name('logout');
 
     Route::middleware('guest:web')->group(function () {

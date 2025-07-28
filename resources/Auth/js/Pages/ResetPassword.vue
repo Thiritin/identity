@@ -1,102 +1,201 @@
 <template>
-    <Head title="Forgot Password"></Head>
-    <Logo></Logo>
-    <LoginScreenWelcome
-        :sub-title="$trans('password_reset_sub_title')"
-        :title="$trans('password_reset_title')"
-        class="mb-10"
-    />
-    <form class="space-y-12" @submit.prevent="submit">
-        <div class="space-y-6">
-            <div class="flex flex-col gap-2">
-                <label for="email">{{ $trans('email') }}</label>
-                <InputText id="email"
-                           type="email"
-                           autocomplete="email"
-                           @change="form.validate('email')"
-                           :invalid="form.invalid('email')"
-                           v-model.trim.lazy="form.email"
-                />
-                <InlineMessage v-if="form.invalid('email')" severity="error">{{ form.errors.email }}
-                </InlineMessage>
-            </div>
-            <PasswordInfoBox :password="form.password"/>
-            <div class="flex flex-col gap-2">
-                <label for="password">{{ $trans('password') }}</label>
-                <InputText id="password"
-                           type="password"
-                           autocomplete="password"
-                           @change="form.validate('password')"
-                           :invalid="form.invalid('password')"
-                           v-model.trim.lazy="form.password"
-                />
-                <InlineMessage v-if="form.invalid('password')" severity="error">{{ form.errors.password }}
-                </InlineMessage>
-            </div>
-            <div class="flex flex-col gap-2">
-                <label for="password_confirmation">{{ $trans('password_confirmation') }}</label>
-                <InputText id="password_confirmation"
-                           type="password"
-                           autocomplete="password_confirmation"
-                           @change="form.validate('password_confirmation')"
-                           :invalid="form.invalid('password_confirmation')"
-                           v-model.trim.lazy="form.password_confirmation"
-                />
-                <InlineMessage v-if="form.invalid('password_confirmation')"
-                               severity="error">{{ form.errors.password_confirmation }}
-                </InlineMessage>
+    <Head title="Reset Password"></Head>
+    
+    <!-- Header section -->
+    <div class="px-8 pt-8 pb-6 text-center">
+        <Logo class="mx-auto w-16 h-16 mb-4" />
+        <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ $trans('password_reset_title') }}</h1>
+        <p class="text-gray-600">{{ $trans('password_reset_sub_title') }}</p>
+    </div>
+
+    <!-- Form section -->
+    <div class="px-8 pb-8">
+        <!-- Error display -->
+        <div v-if="$page.props.flash?.error" class="mb-6 animate-slide-in">
+            <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <ExclamationTriangleIcon class="h-5 w-5 text-red-500" />
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-red-700">{{ $page.props.flash.error }}</p>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="flex flex-col">
-            <button
-                :class="form.processing ? 'bg-primary-400' : 'bg-primary-500'"
-                :disabled="form.processing"
-                class="py-3 rounded-lg px-12 ml-auto text-white text-2xl mb-4 font-semibold focus:outline-none"
-                type="submit"
-            >
-                {{ $trans('reset_password') }}
-            </button>
-            <Link
-                :href="route('auth.login.view')"
-                class="ml-auto text-gray-700"
-            >
-                {{ $trans('back_to_login') }}
-            </Link>
-        </div>
-    </form>
+
+        <form @submit.prevent="submit" class="space-y-6 animate-slide-in">
+            <!-- Email field -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+                    {{ $trans('email') }}
+                </label>
+                <input
+                    id="email"
+                    type="email"
+                    v-model.trim.lazy="form.email"
+                    @change="form.validate('email')"
+                    autocomplete="email"
+                    :class="{'border-red-300': form.invalid('email')}"
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-ef-green-primary focus:border-ef-green-primary transition-colors"
+                />
+                <p v-if="form.invalid('email')" class="mt-1 text-sm text-red-600">{{ form.errors.email }}</p>
+            </div>
+
+            <PasswordInfoBox
+                :password="form.password"
+                class="bg-gray-50 rounded-lg p-4"
+            />
+
+            <!-- Password field -->
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+                    {{ $trans('password') }}
+                </label>
+                <input
+                    id="password"
+                    type="password"
+                    v-model.trim.lazy="form.password"
+                    @change="form.validate('password')"
+                    autocomplete="new-password"
+                    :class="{'border-red-300': form.invalid('password')}"
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-ef-green-primary focus:border-ef-green-primary transition-colors"
+                />
+                <p v-if="form.invalid('password')" class="mt-1 text-sm text-red-600">{{ form.errors.password }}</p>
+            </div>
+
+            <!-- Password Confirmation field -->
+            <div>
+                <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">
+                    {{ $trans('password_confirmation') }}
+                </label>
+                <input
+                    id="password_confirmation"
+                    type="password"
+                    v-model.trim.lazy="form.password_confirmation"
+                    @change="form.validate('password_confirmation')"
+                    autocomplete="new-password"
+                    :class="{'border-red-300': form.invalid('password_confirmation')}"
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-ef-green-primary focus:border-ef-green-primary transition-colors"
+                />
+                <p v-if="form.invalid('password_confirmation')" class="mt-1 text-sm text-red-600">
+                    {{ form.errors.password_confirmation }}
+                </p>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="flex flex-col space-y-3 pt-6">
+                <button
+                    type="submit"
+                    :disabled="form.processing"
+                    class="w-full bg-ef-green-primary hover:bg-ef-green-dark disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-ef-green-primary focus:ring-offset-2"
+                >
+                    <span v-if="form.processing">Processing...</span>
+                    <span v-else>{{ $trans('reset_password') }}</span>
+                </button>
+                
+                <Link
+                    :href="route('auth.login.view')"
+                    class="w-full bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg transition-colors text-center"
+                >
+                    {{ $trans('back_to_login') }}
+                </Link>
+            </div>
+        </form>
+    </div>
 </template>
 
 <script setup>
+import { Head, Link } from '@inertiajs/vue3'
+import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 import Logo from '@Auth/Pages/Logo.vue'
-import LoginScreenWelcome from '@Auth/Pages/LoginScreenWelcome.vue'
-import FormInput from '@Auth/Pages/Form/AuthFormInput.vue'
-import AuthLayout from '@Shared/Layouts/AuthLayout.vue'
 import PasswordInfoBox from '@Auth/Pages/PasswordInfoBox.vue'
-import {Head, Link} from '@inertiajs/vue3'
-import InputText from "primevue/inputtext";
-import InlineMessage from "primevue/inlinemessage";
-import Button from "primevue/button";
-import {useForm} from 'laravel-precognition-vue-inertia';
+import AuthLayout from '@Shared/Layouts/AuthLayout.vue'
+import { useForm } from 'laravel-precognition-vue-inertia'
 
-defineOptions({layout: AuthLayout});
+defineOptions({
+    layout: AuthLayout
+})
+
 const props = defineProps({
     email: String,
     token: String,
-});
+})
 
 const form = useForm('post', route('auth.password-reset.store'), {
     email: props.email,
     token: props.token,
     password: null,
     password_confirmation: null,
-});
+})
 
 function submit() {
     form.submit({
         onSuccess: () => {
-            form.reset('password', 'password_confirmation');
+            form.reset('password', 'password_confirmation')
         }
-    });
+    })
+}
+</script>
+
+<style scoped>
+/* Auth0-inspired modern styling */
+.auth-container {
+    background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
 }
 
-</script>
+/* Smooth transitions for all interactive elements */
+* {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Custom shadow for the login card */
+.shadow-auth {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Focus states with modern blue accent */
+.focus-accent:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Hover states */
+.hover-lift:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+}
+
+/* Progressive disclosure animation */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+.bg-ef-green-primary {
+    background-color: #1a5f3f;
+}
+
+.bg-ef-green-dark {
+    background-color: #0f3d27;
+}
+
+.focus\:ring-ef-green-primary:focus {
+    --tw-ring-color: rgba(26, 95, 63, 0.5);
+}
+
+.focus\:border-ef-green-primary:focus {
+    border-color: #1a5f3f;
+}
+</style>

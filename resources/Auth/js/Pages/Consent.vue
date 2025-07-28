@@ -1,8 +1,7 @@
 <template>
     <Head title="Grant Permission"></Head>
     
-    <div class="min-h-screen bg-background-modern flex items-center justify-center p-4">
-        <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+    <div class="p-8">
             <!-- Header -->
             <div class="text-center mb-8">
                 <div class="flex items-center justify-center space-x-4 mb-6">
@@ -135,27 +134,28 @@
                 </button>
             </div>
 
-            <!-- Footer links -->
-            <div class="mt-6 text-center space-x-4 text-xs text-text-secondary">
-                <a 
-                    v-if="client.policy_uri" 
-                    :href="client.policy_uri" 
-                    target="_blank"
-                    class="hover:text-ef-green-primary"
-                >
-                    Privacy Policy
-                </a>
-                <span v-if="client.policy_uri && client.tos_uri">•</span>
-                <a 
-                    v-if="client.tos_uri" 
-                    :href="client.tos_uri" 
-                    target="_blank"
-                    class="hover:text-ef-green-primary"
-                >
-                    Terms of Service
-                </a>
+            <!-- Client-specific links -->
+            <div v-if="client.policy_uri || client.tos_uri" class="mt-6 text-center">
+                <div class="text-xs text-gray-500 space-x-4">
+                    <a 
+                        v-if="client.policy_uri" 
+                        :href="client.policy_uri" 
+                        target="_blank"
+                        class="hover:text-ef-green-primary"
+                    >
+                        {{ client.name }} Privacy Policy
+                    </a>
+                    <span v-if="client.policy_uri && client.tos_uri">•</span>
+                    <a 
+                        v-if="client.tos_uri" 
+                        :href="client.tos_uri" 
+                        target="_blank"
+                        class="hover:text-ef-green-primary"
+                    >
+                        {{ client.name }} Terms of Service
+                    </a>
+                </div>
             </div>
-        </div>
     </div>
 </template>
 
@@ -214,12 +214,12 @@ const allow = () => {
     form.granted_scopes = [...requiredScopes, ...optionalScopes]
     form.action = 'allow'
     
-    form.post(route('auth.modern-consent.submit'))
+    form.post(route('auth.consent.submit'))
 }
 
 const deny = () => {
     form.action = 'deny'
-    form.post(route('auth.modern-consent.submit'))
+    form.post(route('auth.consent.submit'))
 }
 </script>
 
