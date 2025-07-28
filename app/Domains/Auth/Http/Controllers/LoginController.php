@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Domains\User\Models\App;
 use App\Domains\User\Models\User;
-use App\Domains\Auth\Services\Hydra\Client;
+use App\Domains\Auth\Services\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
