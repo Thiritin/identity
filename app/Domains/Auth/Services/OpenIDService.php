@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Domains\Auth\Services;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;

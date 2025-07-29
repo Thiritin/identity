@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Enums\GroupUserLevel;
+use App\Domains\Staff\Enums\GroupUserLevel;
 use App\Domains\User\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

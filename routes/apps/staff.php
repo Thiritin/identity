@@ -6,6 +6,9 @@ use App\Domains\Staff\Http\Controllers\GroupsController;
 use App\Domains\Staff\Http\Controllers\GroupTeamController;
 use App\Domains\Staff\Http\Controllers\GroupUserManagementController;
 use App\Domains\Staff\Http\Controllers\OrganizationChartController;
+use App\Domains\Staff\Http\Controllers\UsersController;
+use App\Domains\Staff\Http\Controllers\ProfileController;
+use App\Domains\Staff\Http\Controllers\SearchController;
 
 // Forward / to /dashboard
 Route::redirect('/', '/dashboard');
@@ -25,6 +28,18 @@ Route::patch('/groups/{group}/users/{user}/level', [GroupUserManagementControlle
 Route::resource('groups', GroupsController::class)->only(['index', 'show', 'update', 'destroy']);
 Route::resource('groups.members', GroupMemberController::class);
 Route::resource('groups.teams', GroupTeamController::class)->only(['index', 'store']);
+
+// Users/Directory
+Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+Route::get('/users/{user}', [UsersController::class, 'show'])->name('users.show');
+
+// Profile Management
+Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+// Global Search
+Route::post('/search', [SearchController::class, 'search'])->name('search');
+
 // rewrite /departments to /groups
 Route::get('/departments', fn () => redirect()->route('groups.index'));
 Route::get('/departments/{department}', fn ($department) => redirect()->route('staff.groups.show', $department));

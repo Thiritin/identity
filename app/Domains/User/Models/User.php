@@ -48,6 +48,25 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'username',
         'password',
         'profile_photo_path',
+        'first_name',
+        'last_name',
+        'nickname',
+        'phone_numbers',
+        'telegram_username',
+        'telegram_user_id',
+        'address_line_1',
+        'address_line_2',
+        'city',
+        'state_province',
+        'postal_code',
+        'country',
+        'date_of_birth',
+        'languages',
+        'credit_as',
+        'joined_ef_year',
+        'first_ef_year',
+        'profile_visibility',
+        'profile_completed_at',
     ];
 
     /**
@@ -69,6 +88,12 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'date_of_birth' => 'date',
+        'profile_completed_at' => 'datetime',
+        'phone_numbers' => 'array',
+        'languages' => 'array',
+        'profile_visibility' => 'array',
+        'joined_ef_year' => 'integer',
     ];
 
     /**

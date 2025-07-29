@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\GroupTypeEnum;
+use App\Domains\Staff\Enums\GroupTypeEnum;
 use App\Domains\Staff\Enums\GroupUserLevel;
 use App\Models\Group;
 use App\Models\User;

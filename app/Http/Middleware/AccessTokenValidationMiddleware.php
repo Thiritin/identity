@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Providers\Socialite\SocialiteIdentityProvider;
-use App\Services\OpenIDService;
+use App\Domains\Auth\Services\OpenIDService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;

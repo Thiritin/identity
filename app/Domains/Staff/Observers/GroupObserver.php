@@ -22,12 +22,6 @@ class GroupObserver
 
             return;
         }
-        if (Auth::user()) {
-            $group->users()->attach(Auth::user(), [
-                'level' => GroupUserLevel::Director,
-                'can_manage_users' => true,
-            ]);
-        }
     }
 
     public function updated(Group $group): void

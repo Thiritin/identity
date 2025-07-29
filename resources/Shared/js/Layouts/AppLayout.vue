@@ -69,6 +69,9 @@
                 </div>
                 <nav class="flex flex-1 flex-col">
                     <ul role="list" class="flex flex-1 flex-col gap-y-7">
+                        <li class="mb-4">
+                            <GlobalSearch />
+                        </li>
                         <li>
                             <StaffMainMenu :navigation="navigation"></StaffMainMenu>
                         </li>
@@ -130,12 +133,14 @@
             </div>
         </div>
 
-        <div class="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
+        <div class="sticky top-0 z-40 flex items-center gap-x-4 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
             <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" @click="sidebarOpen = true">
                 <span class="sr-only">Open sidebar</span>
                 <Bars3Icon class="h-6 w-6" aria-hidden="true"/>
             </button>
-            <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">Dashboard</div>
+            <div class="flex-1">
+                <GlobalSearch />
+            </div>
             <Menu>
                 <MenuButton>
                     <a href="#">
@@ -205,6 +210,7 @@ import {Bars3Icon, HomeIcon, UsersIcon, XMarkIcon,} from '@heroicons/vue/24/outl
 import {Link, usePage} from "@inertiajs/vue3";
 import StaffMainMenu from "../Components/Staff/Menu/StaffMainMenu.vue";
 import StaffTeamMenu from "../Components/Staff/Menu/StaffTeamMenu.vue";
+import GlobalSearch from "../Components/Staff/GlobalSearch.vue";
 import Toast from 'primevue/toast'
 
 function updateNavigation() {
@@ -222,10 +228,16 @@ let navigationSource = reactive([
         currentEval: () => route().current('staff.dashboard')
     },
     {
-        name: 'Departments',
+        name: 'Groups',
         href: route('staff.groups.index'),
         icon: UsersIcon,
-        currentEval: () => route().current('staff.groups.index')
+        currentEval: () => route().current('staff.groups.*')
+    },
+    {
+        name: 'Staff Directory',
+        href: route('staff.users.index'),
+        icon: UsersIcon,
+        currentEval: () => route().current('staff.users.*')
     },
 ]);
 
@@ -240,6 +252,10 @@ const navigation = computed(() => {
 })
 
 const profileNavMenu = [
+    {
+        name: 'Edit Profile',
+        route: route('staff.profile.edit'),
+    },
     {
         name: 'profile',
         route: route('settings.profile'),

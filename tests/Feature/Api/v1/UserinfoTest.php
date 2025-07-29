@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\GroupUserLevel;
+use App\Domains\Staff\Enums\GroupUserLevel;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

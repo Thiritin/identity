@@ -16,21 +16,72 @@ class GroupsController extends Controller
 {
     public function index(Request $request)
     {
-        $myDepartments = $request->user()->groups()
-            ->where('type', GroupTypeEnum::Department)->select('id', 'level')->get()
-            ->mapWithKeys(fn ($role) => [$role->id => ucwords($role->level)]);
+        $user = $request->user();
+        
+        // Get user's groups
+        $myGroups = $user->groups()->with(['users' => function ($query) {
+            $query->withPivot(['level', 'title']);
+        }])->get()->map(function ($group) use ($user) {
+            return [
+                'id' => $group->id,
+                'hashid' => $group->hashid,
+                'name' => $group->name,
+                'description' => $group->description,
+                'type' => $group->type->getDisplayName(),
+                'logo_url' => $group->logo_url,
+                'members_count' => $group->users->count(),
+                'user_level' => $group->pivot->level->getDisplayName(),
+                'user_title' => $group->pivot->title,
+                'can_manage' => $group->userCanManageUsers($user),
+            ];
+        });
 
-        $departments = Group::where('type', GroupTypeEnum::Department)
-            ->withCount('users')->get();
+        // Get all departments with leadership and teams
+        $allDepartments = Group::where('type', GroupTypeEnum::Department)
+            ->with([
+                'users' => function ($query) {
+                    $query->withPivot(['level', 'title'])
+                          ->wherePivotIn('level', ['director', 'division_director']);
+                },
+                'children' => function ($query) {
+                    $query->withCount('users');
+                }
+            ])
+            ->withCount('users')
+            ->get()
+            ->map(function ($group) use ($user) {
+                return [
+                    'id' => $group->id,
+                    'hashid' => $group->hashid,
+                    'name' => $group->name,
+                    'description' => $group->description,
+                    'logo_url' => $group->logo_url,
+                    'members_count' => $group->users_count,
+                    'teams_count' => $group->children->count(),
+                    'can_manage' => $group->userCanManageUsers($user),
+                    'leadership' => $group->users->map(function ($leader) {
+                        return [
+                            'id' => $leader->id,
+                            'name' => $leader->name,
+                            'profile_photo_url' => $leader->profile_photo_url,
+                            'level' => $leader->pivot->level->getDisplayName(),
+                            'title' => $leader->pivot->title,
+                        ];
+                    }),
+                    'teams' => $group->children->map(function ($team) {
+                        return [
+                            'id' => $team->id,
+                            'name' => $team->name,
+                            'description' => $team->description,
+                            'members_count' => $team->users_count,
+                        ];
+                    }),
+                ];
+            });
 
-        $departmentsSortedByMembershipAndUserCount = $departments->sortByDesc(fn ($department) => [
-            $myDepartments->contains($department->id),
-            $department->users_count,
-        ]);
-
-        return Inertia::render('Staff/Groups/GroupsIndex', [
-            'groups' => $departmentsSortedByMembershipAndUserCount->values(),
-            'myGroups' => $myDepartments,
+        return Inertia::render('Staff/Groups/GroupsModern', [
+            'myGroups' => $myGroups,
+            'allDepartments' => $allDepartments,
         ]);
     }
 

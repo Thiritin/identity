@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\GroupUserLevel;
+use App\Domains\Staff\Enums\GroupUserLevel;
 use App\Domains\Staff\Models\GroupUser;
 use App\Domains\User\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;

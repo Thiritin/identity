@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Enums\GroupTypeEnum;
-use App\Enums\GroupUserLevel;
+use App\Domains\Staff\Enums\GroupTypeEnum;
+use App\Domains\Staff\Enums\GroupUserLevel;
 use App\Domains\Staff\Models\Group;
 use App\Domains\Staff\Models\GroupUser;
 use App\Domains\User\Models\User;
@@ -62,11 +62,11 @@ class GroupPolicy
         }
         $userAdminInGroup = GroupUser::whereUserId($user->id)
             ->whereGroupId($group->id)
-            ->where(fn ($q) => $q->whereLevel(GroupUserLevel::Admin)->orWhere('level', GroupUserLevel::Owner))
+            ->where(fn ($q) => $q->whereLevel(GroupUserLevel::Director)->orWhere('level', GroupUserLevel::DivisionDirector))
             ->exists();
         $userAdminInParentGroup = GroupUser::whereUserId($user->id)
             ->whereGroupId($group->parent_id)
-            ->where(fn ($q) => $q->whereLevel(GroupUserLevel::Admin)->orWhere('level', GroupUserLevel::Owner))
+            ->where(fn ($q) => $q->whereLevel(GroupUserLevel::Director)->orWhere('level', GroupUserLevel::DivisionDirector))
             ->exists();
 
         return (Auth::guard('admin')->check() && $user->can('admin.groups.update')) || (($userAdminInGroup || $userAdminInParentGroup) && $user->scopeCheck('groups.update'));
