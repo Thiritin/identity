@@ -1,5 +1,5 @@
 <script setup>
-import AppLayout from '../../layouts/AppLayout.vue'
+import AppLayout from '../../../layouts/AppLayout.vue'
 import {useForm} from '@inertiajs/vue3'
 import {ref, useAttrs} from 'vue'
 import Dialog from '@Shared/components/volt/Dialog.vue'

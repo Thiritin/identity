@@ -1,5 +1,5 @@
 <script setup>
-import AppLayout from '../layouts/AppLayout.vue';
+import AppLayout from '../../layouts/AppLayout.vue';
 import SiteHeader from '../../components/Staff/SiteHeader.vue';
 import GroupListItem from "../../components/GroupListItem.vue";
 

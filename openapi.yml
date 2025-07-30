@@ -3,7 +3,7 @@ servers:
   - description: Production
     url: 'https://identity.eurofurence.org/api/v1'
   - description: Local
-    url: 'https://identity.eurofurence.localhost/api/v1'
+    url: 'https://identity.eurofurence.lan/api/v1'
 info:
   version: 1.0.0
   title: Eurofurence Identity

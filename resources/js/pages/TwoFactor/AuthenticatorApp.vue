@@ -114,7 +114,7 @@ watch(enableForm, (value) => {
 </style>
 
 <script>
-import AuthLayout from "../layouts/AuthLayout.vue";
+import AuthLayout from "../../layouts/AuthLayout.vue";
 
 export default {
     layout: AuthLayout

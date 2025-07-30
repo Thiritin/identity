@@ -1,7 +1,7 @@
 <script setup>
 import {Link, router, usePage} from '@inertiajs/vue3'
 import {Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
-import AvatarImage from '../pages/AvatarImage.vue'
+import AvatarImage from '../../pages/AvatarImage.vue'
 import {computed} from 'vue'
 import {ChevronDownIcon, ChevronLeftIcon} from "@heroicons/vue/24/outline"
 

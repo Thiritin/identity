@@ -7,9 +7,9 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/js/app.js',
-                'resources/Auth/js/app.js',
-                'resources/User/js/app.js',
-                'resources/Staff/js/app.js',
+                'resources/js/auth-app.js',
+                'resources/js/user-app.js',
+                'resources/js/staff-app.js',
                 'resources/Admin/js/app.js',
             ],
             refresh: true,
@@ -26,10 +26,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': '/resources/js',
-            '@Shared': '/resources/Shared/js',
-            '@Auth': '/resources/Auth/js',
-            '@User': '/resources/User/js',
-            '@Staff': '/resources/Staff/js',
+            '@Shared': '/resources/js',
             '@Admin': '/resources/Admin/js',
         },
     },

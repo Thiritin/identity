@@ -1,8 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@reference "tailwindcss-primeui";
 
 /* Primary and Surface Palettes */
 :root {

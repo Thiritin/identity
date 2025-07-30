@@ -121,17 +121,21 @@
                 <Link :href="route('dashboard')">
                     <Button
                         type="button"
-                        :label="$trans('cancel')"
+                        variant="secondary"
                         class="mr-2"
-                    />
+                    >
+                        {{ $trans('cancel') }}
+                    </Button>
                 </Link>
 
 
                 <Button
-                    :loading="form.processing"
+                    :disabled="form.processing"
                     type="submit"
-                    :label="$trans('save')"
-                />
+                >
+                    <i v-if="form.processing" class="pi pi-spin pi-spinner mr-2"></i>
+                    {{ $trans('save') }}
+                </Button>
             </div>
         </div>
     </form>
@@ -145,13 +149,13 @@ import SettingsSubHeader from '@Shared/components/Settings/SettingsSubHeader.vue
 import BaseInput from '@Shared/components/BaseInput.vue'
 import BaseButton from '@Shared/components/BaseButton.vue'
 import PrimaryButton from '@Shared/components/PrimaryButton.vue'
-import AvatarModal from '../Components/AvatarModal.vue'
+import AvatarModal from '../components/AvatarModal.vue'
 import {computed, ref} from "vue";
 import BaseAlert from "@Shared/components/BaseAlert.vue";
 import {useForm} from 'laravel-precognition-vue-inertia';
 import InputText from "@Shared/components/volt/InputText.vue";
 import InlineMessage from "@Shared/components/volt/Message.vue";
-import Button from "@Shared/components/volt/Button.vue";
+import { Button } from "@/components/ui/button";
 
 const props = defineProps({
     errors: Object,

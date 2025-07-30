@@ -14,7 +14,7 @@ WORKDIR /var/www/html
 # PHP version to be installed
 # See: https://rpms.remirepo.net/wizard/
 # WARNING: PHP 8.2 have only security only support until December 2026
-ARG PHP_VERSION=8.2
+ARG PHP_VERSION=8.4
 
 # list of all PHP packages to be installed
 ARG PHP_PACKAGES="php-cli composer php-intl php-json php-mbstring php-mysqlnd php-opcache php-pdo php-gd php-redis php-xml php-swoole php-zip php-sodium php-bcmath"

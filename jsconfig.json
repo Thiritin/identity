@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./resources/js/*"],
+            "@Shared/*": ["./resources/js/*"],
+            "@Admin/*": ["./resources/Admin/js/*"]
+        }
+    }
+}

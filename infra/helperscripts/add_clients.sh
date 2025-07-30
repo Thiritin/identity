@@ -4,8 +4,8 @@ client=$(hydra create client \
     --format json \
     --name "Eurofurence IAM" \
     --scope "offline_access offline openid email admin profile groups groups.read groups.write groups.delete" \
-    --redirect-uri http://identity.eurofurence.localhost/auth/callback \
-    --frontchannel-logout-callback http://identity.eurofurence.localhost/auth/frontchannel-logout)
+    --redirect-uri http://identity.eurofurence.lan/auth/callback \
+    --frontchannel-logout-callback http://identity.eurofurence.lan/auth/frontchannel-logout)
 client_id=$(echo $client | jq -r '.client_id')
 client_secret=$(echo $client | jq -r '.client_secret')
 
@@ -17,8 +17,8 @@ client=$(hydra create client \
     --format json \
     --name "Eurofurence IAM Admin" \
     --scope "offline_access offline openid email admin profile groups groups.read groups.write groups.delete" \
-    --redirect-uri http://identity.eurofurence.localhost/admin/callback \
-    --frontchannel-logout-callback http://identity.eurofurence.localhost/admin/frontchannel-logout)
+    --redirect-uri http://identity.eurofurence.lan/admin/callback \
+    --frontchannel-logout-callback http://identity.eurofurence.lan/admin/frontchannel-logout)
 
 client_id=$(echo $client | jq -r '.client_id')
 client_secret=$(echo $client | jq -r '.client_secret')

@@ -2,8 +2,10 @@ services:
     laravel.test:
         image: 'localhost/ef-identity-dev:v2'
         build:
-            context: ./vendor/laravel/sail/runtimes/8.3
+            context: './vendor/laravel/sail/runtimes/8.4'
             dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
@@ -28,7 +30,7 @@ services:
             - mysql
         labels:
             - traefik.enable=true
-            - traefik.http.routers.app.rule=Host(`identity.eurofurence.localhost`)
+            - traefik.http.routers.app.rule=Host(`identity.eurofurence.lan`) || Host(`identity.eurofurence.localhost`)
             - traefik.http.services.app.loadbalancer.server.port=80
             - traefik.http.routers.app.entrypoints=web
     traefik:
@@ -42,9 +44,12 @@ services:
         ports:
             - '80:80'
             - '8080:8080'
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
         networks:
             sail:
                 aliases:
+                    - identity.eurofurence.lan
                     - identity.eurofurence.localhost
         volumes:
             - '/var/run/docker.sock:/var/run/docker.sock:ro'
@@ -83,7 +88,7 @@ services:
             DEV: 'true'
         labels:
             - traefik.enable=true
-            - 'traefik.http.routers.hydra.rule=Host(`identity.eurofurence.localhost`) && PathPrefix(`/.well-known`,`/oauth2`,`/health`,`/userinfo`)'
+            - 'traefik.http.routers.hydra.rule=(Host(`identity.eurofurence.lan`) || Host(`identity.eurofurence.localhost`)) && PathPrefix(`/.well-known`,`/oauth2`,`/health`,`/userinfo`)'
             - traefik.http.services.hydra.loadbalancer.server.port=4444
             - traefik.http.routers.hydra.entrypoints=web
         ports:

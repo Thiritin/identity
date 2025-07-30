@@ -86,8 +86,8 @@ const artistInfo = {
 <script>
 import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 import 'vue-cookie-accept-decline/dist/vue-cookie-accept-decline.css'
-import AuthFooter from "../Components/Auth/AuthFooter.vue";
-import AuthHeader from "../Components/Auth/AuthHeader.vue";
+import AuthFooter from "../components/Auth/AuthFooter.vue";
+import AuthHeader from "../components/Auth/AuthHeader.vue";
 import {usePage} from "@inertiajs/vue3";
 
 export default {
@@ -164,7 +164,7 @@ export default {
     background-position: 35% center;
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url('../../../assets/space_chromamancer.jpeg');
+    background-image: url('../../assets/space_chromamancer.jpeg');
 }
 
 .page * {

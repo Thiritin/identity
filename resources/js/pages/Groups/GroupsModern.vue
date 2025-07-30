@@ -1,5 +1,5 @@
 <script setup>
-import AppLayout from "../layouts/AppLayout.vue";
+import AppLayout from "../../layouts/AppLayout.vue";
 import {Head, usePage} from '@inertiajs/vue3'
 import {ref, computed} from "vue";
 import Card from "@Shared/components/volt/Card.vue";
@@ -7,7 +7,7 @@ import TabView from "@Shared/components/volt/Tabs.vue";
 import TabPanel from "@Shared/components/volt/TabPanel.vue";
 import DataTable from "@Shared/components/volt/DataTable.vue";
 import Column from "primevue/column";
-import Button from "@Shared/components/volt/Button.vue";
+import { Button } from "@/components/ui/button";
 import Badge from "@Shared/components/volt/Badge.vue";
 import Avatar from "@Shared/components/volt/Avatar.vue";
 import InputText from "@Shared/components/volt/InputText.vue";
@@ -131,12 +131,13 @@ defineOptions({layout: AppLayout})
                                 
                                 <div class="mt-4 pt-4 border-t border-gray-200">
                                     <Button 
-                                        :label="`View ${group.type}`"
-                                        icon="pi pi-external-link" 
                                         class="w-full"
-                                        severity="secondary"
-                                        size="small"
-                                    />
+                                        variant="secondary"
+                                        size="sm"
+                                    >
+                                        <i class="pi pi-external-link mr-2"></i>
+                                        View {{ group.type }}
+                                    </Button>
                                 </div>
                             </template>
                         </Card>
@@ -228,20 +229,20 @@ defineOptions({layout: AppLayout})
                                     <template #body="slotProps">
                                         <div class="flex space-x-2">
                                             <Button 
-                                                icon="pi pi-eye" 
-                                                size="small" 
-                                                severity="secondary" 
-                                                text 
+                                                size="sm" 
+                                                variant="ghost" 
                                                 :title="`View ${slotProps.data.name}`"
-                                            />
+                                            >
+                                                <i class="pi pi-eye"></i>
+                                            </Button>
                                             <Button 
                                                 v-if="slotProps.data.can_manage"
-                                                icon="pi pi-cog" 
-                                                size="small" 
-                                                severity="secondary" 
-                                                text 
+                                                size="sm" 
+                                                variant="ghost" 
                                                 title="Manage Department"
-                                            />
+                                            >
+                                                <i class="pi pi-cog"></i>
+                                            </Button>
                                         </div>
                                     </template>
                                 </Column>

@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             'id' => 1,
         ], [
             'name' => 'Admin',
-            'email' => 'identity@eurofurence.localhost',
+            'email' => 'identity@eurofurence.lan',
             'email_verified_at' => now(),
             'password' => \Hash::make(env('ADMIN_PASSWORD', random_bytes(32))),
         ]);

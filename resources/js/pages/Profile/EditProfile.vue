@@ -1,5 +1,5 @@
 <script setup>
-import AppLayout from "../layouts/AppLayout.vue";
+import AppLayout from "../../layouts/AppLayout.vue";
 import {Head, useForm} from '@inertiajs/vue3'
 import {ref} from "vue";
 import Card from "@Shared/components/volt/Card.vue";
@@ -8,7 +8,7 @@ import Textarea from "@Shared/components/volt/Textarea.vue";
 import Calendar from "primevue/calendar";
 import MultiSelect from "@Shared/components/volt/MultiSelect.vue";
 import Chips from "primevue/chips";
-import Button from "@Shared/components/volt/Button.vue";
+import { Button } from "@/components/ui/button";
 import FileUpload from "primevue/fileupload";
 import Avatar from "@Shared/components/volt/Avatar.vue";
 import Divider from "@Shared/components/volt/Divider.vue";
@@ -407,16 +407,19 @@ defineOptions({layout: AppLayout})
                 <!-- Form Actions -->
                 <div class="flex justify-end space-x-4 pt-6">
                     <Button 
-                        label="Cancel" 
-                        severity="secondary" 
+                        variant="secondary" 
                         @click="$inertia.visit(route('staff.dashboard'))"
-                    />
+                    >
+                        Cancel
+                    </Button>
                     <Button 
                         type="submit"
-                        label="Save Profile" 
-                        :loading="form.processing"
-                        icon="pi pi-save"
-                    />
+                        :disabled="form.processing"
+                    >
+                        <i v-if="!form.processing" class="pi pi-save mr-2"></i>
+                        <span v-if="form.processing" class="animate-spin mr-2">⏳</span>
+                        Save Profile
+                    </Button>
                 </div>
             </form>
             

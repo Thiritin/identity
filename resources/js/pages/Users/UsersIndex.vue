@@ -1,5 +1,5 @@
 <script setup>
-import AppLayout from "../layouts/AppLayout.vue";
+import AppLayout from "../../layouts/AppLayout.vue";
 import {Head, router} from '@inertiajs/vue3'
 import {ref, computed, onMounted} from "vue";
 import Card from "@Shared/components/volt/Card.vue";

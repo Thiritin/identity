@@ -1,6 +1,6 @@
 <script setup>
 
-import AppLayout from "../../layouts/AppLayout.vue";
+import AppLayout from "../../../layouts/AppLayout.vue";
 import TabHeader from "./TabHeader.vue";
 import TabComponent from "./TabComponent.vue";
 import Button from '@Shared/components/volt/Button.vue';

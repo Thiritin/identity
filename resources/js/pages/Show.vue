@@ -104,7 +104,7 @@
 <script>
     import AppLayout from '@Shared/layouts/AppLayout.vue'
     import { PencilIcon, PhoneIcon } from '@heroicons/vue/solid'
-    import AvatarModal from '../Components/AvatarModal.vue'
+    import AvatarModal from '../components/AvatarModal.vue'
     import AvatarImage from './AvatarImage.vue'
 
     const profile = {

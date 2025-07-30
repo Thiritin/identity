@@ -31,10 +31,10 @@ Podman is also supported, but you need to set up the podman socket and command t
 8. Run `sail npm install` or `docker compose exec -it -u sail laravel.test npm install`.
 9. Run `sail npm run dev` or `docker compose exec -it -u sail laravel.test npm run dev`.  
    (you can run this command locally. it may speed up HMR and file watching on some systems)
-10. Add `identity.eurofurence.localhost` to your hosts file and forward them to `127.0.0.1`.
-11. You can now go to http://identity.eurofurence.localhost.    
+10. Add `identity.eurofurence.lan` to your hosts file and forward them to `127.0.0.1`.
+11. You can now go to http://identity.eurofurence.lan.    
     it may take a while to load first time.  
-    Default credentials are: `identity@eurofurence.localhost`, `admin` (unless you changed them in `.env`).
+    Default credentials are: `identity@eurofurence.lan`, `admin` (unless you changed them in `.env`).
 
 ### Entering laravel container
 
@@ -96,8 +96,8 @@ After you finish the installation, you can connect to the MySQL database from yo
 
 ## Receiving mail
 
-During development, you should use `identity.eurofurence.localhost` hostname
-(eg `some-user@identity.eurofurence.localhost`) to receive emails.
+During development, you should use `identity.eurofurence.lan` hostname
+(eg `some-user@identity.eurofurence.lan`) to receive emails.
 
 Use mailpit to check the emails at [http://localhost:8025](http://localhost:8025).
 
