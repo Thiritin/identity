@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "es2016",
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "skipLibCheck": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./resources/js/*"],
+            "@Shared/*": ["./resources/js/*"],
+            "@Admin/*": ["./resources/Admin/js/*"],
+        }
+    },
+}
