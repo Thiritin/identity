@@ -28,7 +28,13 @@ class CheckStaffGroupMembershipJob implements ShouldQueue
 
     public function handle(): void
     {
-        $staffGroup = \App\Models\Group::where('system_name', 'staff')->firstOrFail();
+        $staffGroupId = config('groups.staff');
+        
+        if (empty($staffGroupId)) {
+            return;
+        }
+        
+        $staffGroup = \App\Models\Group::findOrFail($staffGroupId);
         $isMemberInAnyDepartment = $this->user->groups()->where('type', 'department')->exists();
         if ($isMemberInAnyDepartment) {
             $staffGroup->users()->syncWithoutDetaching([$this->user->id => ['level' => GroupUserLevel::Member]]);

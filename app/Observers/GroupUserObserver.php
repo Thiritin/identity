@@ -5,8 +5,10 @@ namespace App\Observers;
 use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
 use App\Jobs\CheckStaffGroupMembershipJob;
+use App\Jobs\Nextcloud\AddUserToGroupJob;
+use App\Jobs\Nextcloud\RemoveUserFromGroupJob;
+use App\Jobs\Nextcloud\UpdateUserGroupLevelJob;
 use App\Models\GroupUser;
-use App\Services\NextcloudService;
 use Illuminate\Support\Facades\App;
 
 class GroupUserObserver
@@ -16,15 +18,13 @@ class GroupUserObserver
         if ($groupUser->group->type === GroupTypeEnum::Department) {
             CheckStaffGroupMembershipJob::dispatch($groupUser->user);
         }
+
         if (App::isLocal()) {
             return;
         }
+
         if (($groupUser->group->nextcloud_folder_name || $groupUser->group->parent?->nextcloud_folder_name) && ! app()->runningUnitTests()) {
-            NextcloudService::addUserToGroup($groupUser->group, $groupUser->user);
-            $allowAclManagement = in_array($groupUser->level, [GroupUserLevel::Admin, GroupUserLevel::Owner]);
-            if ($allowAclManagement && $groupUser->group->type !== GroupTypeEnum::Team) {
-                NextcloudService::setManageAcl($groupUser->group, $groupUser->user, $allowAclManagement);
-            }
+            AddUserToGroupJob::dispatch($groupUser->group, $groupUser->user, $groupUser->level);
         }
     }
 
@@ -33,10 +33,11 @@ class GroupUserObserver
         if (App::isLocal()) {
             return;
         }
+
         if ($groupUser->group->nextcloud_folder_name && ! app()->runningUnitTests()) {
             if ($groupUser->isDirty('level')) {
-                $allowAclManagement = in_array($groupUser->level, [GroupUserLevel::Admin, GroupUserLevel::Owner]);
-                NextcloudService::setManageAcl($groupUser->group, $groupUser->user, $allowAclManagement);
+                $oldLevel = GroupUserLevel::from($groupUser->getOriginal('level'));
+                UpdateUserGroupLevelJob::dispatch($groupUser->group, $groupUser->user, $groupUser->level, $oldLevel);
             }
         }
     }
@@ -46,14 +47,13 @@ class GroupUserObserver
         if ($groupUser->group->type === GroupTypeEnum::Department) {
             CheckStaffGroupMembershipJob::dispatch($groupUser->user);
         }
+
         if (App::isLocal()) {
             return;
         }
+
         if ($groupUser->group->nextcloud_folder_name && ! app()->runningUnitTests()) {
-            NextcloudService::removeUserFromGroup($groupUser->group, $groupUser->user);
-            if ($groupUser->group->type !== GroupTypeEnum::Team) {
-                NextcloudService::setManageAcl($groupUser->group, $groupUser->user, false);
-            }
+            RemoveUserFromGroupJob::dispatch($groupUser->group, $groupUser->user, $groupUser->group->type);
         }
     }
 }

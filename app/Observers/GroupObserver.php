@@ -4,8 +4,10 @@ namespace App\Observers;
 
 use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
+use App\Jobs\Nextcloud\CreateGroupJob;
+use App\Jobs\Nextcloud\DeleteGroupJob;
+use App\Jobs\Nextcloud\UpdateGroupJob;
 use App\Models\Group;
-use App\Services\NextcloudService;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,14 +16,11 @@ class GroupObserver
     public function created(Group $group)
     {
         if (! App::isProduction() && $group->type === GroupTypeEnum::Team && $group->parent?->nextcloud_folder_id) {
-            NextcloudService::createGroup($group->hashid);
-            // Parent->name / Group->name
-            NextcloudService::setDisplayName($group->hashid, $group->parent->name . ' / ' . $group->name);
-            // Add to parent group folder
-            NextcloudService::addGroupToFolder($group->parent->nextcloud_folder_id, $group->hashid);
+            CreateGroupJob::dispatch($group, true, $group->parent->nextcloud_folder_id);
 
             return;
         }
+
         if (Auth::user()) {
             $group->users()->attach(Auth::user(), [
                 'level' => GroupUserLevel::Owner,
@@ -35,33 +34,13 @@ class GroupObserver
             return;
         }
 
-        if ($group->isDirty('nextcloud_folder_name') && ! app()->runningUnitTests()) {
-            // Update or create the folder via nextcloud
-            if ($group->nextcloud_folder_id) {
-                NextcloudService::renameFolder($group->nextcloud_folder_id, $group->nextcloud_folder_name);
-            } else {
-                NextcloudService::createGroup($group->hashid);
-                $group->nextcloud_folder_id = NextcloudService::createFolder($group->nextcloud_folder_name,
-                    $group->hashid);
-                $group->save();
-                NextcloudService::setDisplayName($group->hashid, $group->name);
-                // Add all users to the group
-                $group->users->each(fn ($user) => NextcloudService::addUserToGroup($group, $user));
-                // Set Admin & Owner to aclmanagers
-                $group->users->filter(fn ($user) => in_array($user->pivot->level,
-                    [GroupUserLevel::Admin, GroupUserLevel::Owner]))
-                    ->each(fn ($user) => NextcloudService::setManageAcl($group, $user, true));
+        if (! app()->runningUnitTests()) {
+            $changedFields = array_keys($group->getDirty());
+            $relevantChanges = array_intersect($changedFields, ['nextcloud_folder_name', 'name']);
 
+            if (! empty($relevantChanges)) {
+                UpdateGroupJob::dispatch($group, $group->getOriginal(), $relevantChanges);
             }
-        }
-        if ($group->nextcloud_folder_id && $group->isDirty('name') && ! app()->runningUnitTests()) {
-            // Update the display name of the group
-            NextcloudService::setDisplayName($group->hashid, $group->name);
-        }
-
-        // Team update nextcloud dipslay name
-        if ($group->type === GroupTypeEnum::Team && $group->isDirty('name') && $group->parent->nextcloud_folder_id) {
-            NextcloudService::setDisplayName($group->hashid, $group->parent->name . ' / ' . $group->name);
         }
     }
 
@@ -71,6 +50,6 @@ class GroupObserver
             return;
         }
 
-        NextcloudService::deleteGroup($group->hashid);
+        DeleteGroupJob::dispatch($group->hashid, $group->id);
     }
 }
