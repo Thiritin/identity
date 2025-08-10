@@ -17,3 +17,5 @@ yarn-error.log
 /public/css/app.css
 /public/build/
 /.phpunit.cache/test-results
+logs/
+CLAUDE.md
