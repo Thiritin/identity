@@ -1,26 +1,18 @@
-FROM php:8.3-alpine as base
+FROM dunglas/frankenphp:1.9-php8.3-bookworm as base
 WORKDIR /app
 
 ENV COMPOSER_MEMORY_LIMIT=-1
 ######################################################
-# Step 1 | Install Dependencies
+# Install Dependencies
 ######################################################
-COPY .github/docker/install-php-extensions /usr/local/bin/
-
-RUN apk update \
+RUN apt-get update \
     && chmod +x /usr/local/bin/install-php-extensions \
-    && apk add --no-cache curl git unzip openssl tar ca-certificates \
-    && install-php-extensions gd bcmath pdo_mysql zip intl opcache pcntl redis swoole @composer \
-    && rm -rf /var/cache/apk/*
-
+    && apt-get install -y --no-install-recommends curl git unzip openssl tar ca-certificates \
+    && install-php-extensions gd bcmath pdo_mysql zip intl opcache pcntl redis @composer \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 ######################################################
-# Copy Configuration
-######################################################
-COPY .github/docker/php/opcache.ini $PHP_INI_DIR/conf.d/opcache.ini
-COPY .github/docker/php/php.ini $PHP_INI_DIR/conf.d/php.ini
-
-######################################################
-# Step 6 | Configure Credentials & Hosts for external Git (optional)
+# Configure Credentials & Hosts for external Git (optional)
 ######################################################
 COPY composer.json composer.lock /app/
 RUN composer install --no-dev --no-scripts --no-autoloader
@@ -33,11 +25,11 @@ FROM base as local
 ######################################################
 FROM base as vite-vendor-build
 WORKDIR /app
-RUN COMPOSER_ALLOW_SUPERUSER=1 | rm composer.lock composer.json && composer require tightenco/ziggy:^1.0 --ignore-platform-reqs
+RUN rm -f composer.lock composer.json && COMPOSER_ALLOW_SUPERUSER=1 composer require tightenco/ziggy:^1.0 --ignore-platform-reqs
 ######################################################
 # NodeJS Stage
 ######################################################
-FROM node:20-buster as vite
+FROM node:20-bookworm as vite
 WORKDIR /app
 COPY package.json package-lock.json tailwind.config.js vite.config.js postcss.config.js ./
 RUN npm install
@@ -49,11 +41,12 @@ RUN npm run build
 ######################################################
 FROM base as production
 COPY --from=vite /app/public/build ./public/build
+COPY composer.json composer.lock /app/
+RUN composer install --no-dev --optimize-autoloader --no-scripts --no-progress --no-interaction
 COPY . /app/
-RUN composer install --no-dev --optimize-autoloader \
-    && chmod 777 -R bootstrap storage \
+RUN chmod 777 -R bootstrap storage \
+    && composer install \
     && rm -rf .env bootstrap/cache/*.php auth.json \
     && chown -R www-data:www-data /app \
-    && rm -rf ~/.composer  \
     && php artisan matice:generate
-CMD sh -c "php artisan octane:start --host=0.0.0.0 --port=80"
+CMD sh -c "php artisan octane:start --host=0.0.0.0 --port=80 --admin-port=2019 --server=frankenphp"
