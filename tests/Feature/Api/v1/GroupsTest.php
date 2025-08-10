@@ -7,7 +7,6 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
-
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\delete;
@@ -494,3 +493,168 @@ test('Ensure that staff user can see all department and own groups', function ()
         'name' => $group2->name,
     ]);
 });
+
+// Tests for with_users functionality
+test('Get groups index without with_users parameter excludes user data', function () {
+    $group = Group::factory()->create();
+    $user = Sanctum::actingAs(
+        User::factory()->create(),
+        ['groups.read']
+    );
+    $member = User::factory()->create();
+
+    $group->users()->sync([
+        $user->id => ['level' => GroupUserLevel::Member],
+        $member->id => ['level' => GroupUserLevel::Member]
+    ]);
+
+    $response = get(route('api.v1.groups.index'));
+
+    $response->assertSuccessful();
+    $response->assertJsonMissing(['users']);
+    $response->assertJsonFragment(['name' => $group->name]);
+});
+
+test('Get groups index with with_users=true includes user data without email when missing view_full_staff_details claim', function () {
+    $group = Group::factory()->create();
+    $user = Sanctum::actingAs(
+        User::factory()->create(),
+        ['groups.read'] // Note: missing view_full_staff_details
+    );
+    $member = User::factory()->create();
+
+    $group->users()->sync([
+        $user->id => ['level' => GroupUserLevel::Member],
+        $member->id => ['level' => GroupUserLevel::Admin]
+    ]);
+
+    $response = get(route('api.v1.groups.index', ['with_users' => true]));
+
+    $response->assertSuccessful();
+    $response->assertJsonPath('data.0.users.0.user_id', $user->hashid);
+    $response->assertJsonPath('data.0.users.0.username', $user->name);
+    $response->assertJsonPath('data.0.users.0.level', 'member');
+    $response->assertJsonPath('data.0.users.0.email', null); // Email should be null
+    $response->assertJsonPath('data.0.users.1.user_id', $member->hashid);
+    $response->assertJsonPath('data.0.users.1.username', $member->name);
+    $response->assertJsonPath('data.0.users.1.level', 'admin');
+    $response->assertJsonPath('data.0.users.1.email', null); // Email should be null
+});
+
+test('Get groups index with with_users=true includes user data with email when view_full_staff_details claim is present', function () {
+    $group = Group::factory()->create();
+    $user = Sanctum::actingAs(
+        User::factory()->create(),
+        ['groups.read', 'view_full_staff_details'] // Has the required claim
+    );
+    $member = User::factory()->create();
+
+    $group->users()->sync([
+        $user->id => ['level' => GroupUserLevel::Member],
+        $member->id => ['level' => GroupUserLevel::Admin]
+    ]);
+
+    $response = get(route('api.v1.groups.index', ['with_users' => true]));
+
+    $response->assertSuccessful();
+    $response->assertJsonPath('data.0.users.0.user_id', $user->hashid);
+    $response->assertJsonPath('data.0.users.0.username', $user->name);
+    $response->assertJsonPath('data.0.users.0.level', 'member');
+    $response->assertJsonPath('data.0.users.0.email', $user->email); // Email should be present
+    $response->assertJsonPath('data.0.users.1.user_id', $member->hashid);
+    $response->assertJsonPath('data.0.users.1.username', $member->name);
+    $response->assertJsonPath('data.0.users.1.level', 'admin');
+    $response->assertJsonPath('data.0.users.1.email', $member->email); // Email should be present
+});
+
+test('Get groups index with with_users=false does not include user data', function () {
+    $group = Group::factory()->create();
+    $user = Sanctum::actingAs(
+        User::factory()->create(),
+        ['groups.read', 'view_full_staff_details']
+    );
+    $member = User::factory()->create();
+
+    $group->users()->sync([
+        $user->id => ['level' => GroupUserLevel::Member],
+        $member->id => ['level' => GroupUserLevel::Admin]
+    ]);
+
+    $response = get(route('api.v1.groups.index', ['with_users' => false]));
+
+    $response->assertSuccessful();
+    $response->assertJsonMissing(['users']);
+    $response->assertJsonFragment(['name' => $group->name]);
+});
+
+test('Get single group show endpoint does not support with_users parameter', function () {
+    $group = Group::factory()->create();
+    $user = Sanctum::actingAs(
+        User::factory()->create(),
+        ['groups.read', 'view_full_staff_details']
+    );
+    $member = User::factory()->create();
+
+    $group->users()->sync([
+        $user->id => ['level' => GroupUserLevel::Member],
+        $member->id => ['level' => GroupUserLevel::Admin]
+    ]);
+
+    // Test that show endpoint doesn't include users even with with_users parameter
+    $response = get(route('api.v1.groups.show', ['group' => $group, 'with_users' => true]));
+
+    $response->assertSuccessful();
+    $response->assertJsonMissing(['users']);
+    $response->assertJsonFragment(['name' => $group->name]);
+});
+
+test('Get groups index with with_users respects staff filtering for non-staff users', function () {
+    $departmentGroup = Group::factory()->create(['type' => GroupTypeEnum::Department]);
+    $regularGroup = Group::factory()->create(['type' => GroupTypeEnum::None]);
+
+    $user = Sanctum::actingAs(
+        User::factory()->create(),
+        ['groups.read', 'view_full_staff_details']
+    );
+
+    // User is only member of regular group, not department
+    $regularGroup->users()->sync([$user->id => ['level' => GroupUserLevel::Member]]);
+
+    $response = get(route('api.v1.groups.index', ['with_users' => true]));
+
+    $response->assertSuccessful();
+    // Should only see the regular group they're a member of, not the department
+    $response->assertJsonFragment(['name' => $regularGroup->name]);
+    $response->assertJsonMissing(['name' => $departmentGroup->name]);
+});
+
+test('Get groups index with with_users includes avatar data when present', function () {
+    $group = Group::factory()->create();
+    $user = Sanctum::actingAs(
+        User::factory()->create(['profile_photo_path' => 'avatars/test-avatar.jpg']),
+        ['groups.read', 'view_full_staff_details']
+    );
+
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member]]);
+
+    $response = get(route('api.v1.groups.index', ['with_users' => true]));
+
+    $response->assertSuccessful();
+    $response->assertJsonPath('data.0.users.0.avatar', 'avatars/test-avatar.jpg');
+});
+
+test('Get groups index with with_users handles null avatar gracefully', function () {
+    $group = Group::factory()->create();
+    $user = Sanctum::actingAs(
+        User::factory()->create(['profile_photo_path' => null]),
+        ['groups.read', 'view_full_staff_details']
+    );
+
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member]]);
+
+    $response = get(route('api.v1.groups.index', ['with_users' => true]));
+
+    $response->assertSuccessful();
+    $response->assertJsonPath('data.0.users.0.avatar', null);
+});
+

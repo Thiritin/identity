@@ -106,6 +106,7 @@ services:
       WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_7: registration.reg.live
       WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_8: registration.room.test
       WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_9: registration.room.live
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_10: view_full_staff_details
       LOG_LEAK_SENSITIVE_VALUES: "true"
       OAUTH2_EXPOSE_INTERNAL_ERRORS: "true"
       DEV: "true"

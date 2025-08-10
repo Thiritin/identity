@@ -42,7 +42,12 @@ class ApiGuard extends TokenGuard
             $hydra = new Client();
             $response = $hydra->getToken($token);
 
-            if ($response['active'] === true) {
+            // Handle exception case (when Hydra is not available or connection fails)
+            if ($response instanceof \Exception) {
+                return null;
+            }
+
+            if (is_array($response) && ($response['active'] ?? false) === true) {
                 $this->audiences = $response['aud'];
                 $this->client_id = $response['client_id'];
                 $this->exp = $response['exp'];
@@ -70,7 +75,12 @@ class ApiGuard extends TokenGuard
         $hydra = new Client();
         $response = $hydra->getToken($credentials[$this->inputKey]);
 
-        return $response['active'] === true;
+        // Handle exception case (when Hydra is not available or connection fails)
+        if ($response instanceof \Exception) {
+            return false;
+        }
+
+        return is_array($response) && ($response['active'] ?? false) === true;
     }
 
     public function getScopes()
