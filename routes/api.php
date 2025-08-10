@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\v1\GroupController;
 use App\Http\Controllers\Api\v1\GroupUserController;
 use App\Http\Controllers\Api\v1\IntrospectionController;
 use App\Http\Controllers\Api\v1\UserinfoController;
+use App\Http\Controllers\HealthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,3 +35,6 @@ Route::middleware('api')->prefix('v1/')->name('api.v1.')->group(function () {
     // Introspect requires auth via client id + secret
     Route::post('introspect', IntrospectionController::class)->name('introspect');
 });
+
+// Health check endpoint - no authentication required
+Route::get('health', HealthController::class)->name('health');
