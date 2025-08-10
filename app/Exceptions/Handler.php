@@ -62,6 +62,11 @@ class Handler extends ExceptionHandler
         $response = parent::render($request, $e);
         $status = $response->getStatusCode();
 
+        // For API requests, always return the proper response (even in local/testing)
+        if ($request->is('api/*') || $request->expectsJson()) {
+            return $response;
+        }
+
         if (App::isLocal()) {
             return $response;
         }

@@ -17,16 +17,36 @@ class GroupUserController extends Controller
 {
     public function index(Group $group, Request $request)
     {
-        $this->authorize('view', [$group->users()->find($request->user()->id)->pivot]);
+        // For staff members, they might not be group members but can still view
+        $userInGroup = $group->users()->find($request->user()->id);
+        if ($userInGroup && $userInGroup->pivot) {
+            $this->authorize('view', [$userInGroup->pivot]);
+        } else {
+            // If not a group member, check if they can view the group itself
+            $this->authorize('view', $group);
+        }
+
+        $selectFields = ['users.id', 'users.name', 'users.profile_photo_path', 'group_user.level', 'group_user.title'];
+        if ($request->user()->tokenCan('view_full_staff_details')) {
+            $selectFields[] = 'users.email';
+        }
 
         return new GroupUserCollection(QueryBuilder::for($group->users())
+            ->select($selectFields)
             ->allowedFilters(AllowedFilter::exact('level', 'group_user.level'))
             ->simplePaginate(100));
     }
 
     public function store(GroupUserStoreRequest $request, Group $group)
     {
-        $this->authorize('create', [$group->users()->find($request->user()->id)->pivot]);
+        // For staff members, they might not be group members but can still create
+        $userInGroup = $group->users()->find($request->user()->id);
+        if ($userInGroup && $userInGroup->pivot) {
+            $this->authorize('create', [$userInGroup->pivot]);
+        } else {
+            // If not a group member, check if they can update the group itself
+            $this->authorize('update', $group);
+        }
 
         $useField = isset($request->validationData()['email']) ? 'email' : 'id';
 
@@ -52,8 +72,15 @@ class GroupUserController extends Controller
 
     public function destroy(Group $group, User $user, Request $request)
     {
-        $pivot = $group->users()->find($request->user()->id)->pivot;
-        $this->authorize('delete', [$pivot]);
+        // For staff members, they might not be group members but can still delete
+        $userInGroup = $group->users()->find($request->user()->id);
+        if ($userInGroup && $userInGroup->pivot) {
+            $this->authorize('delete', [$userInGroup->pivot]);
+        } else {
+            // If not a group member, check if they can update the group itself
+            $this->authorize('update', $group);
+        }
+
         $group->users()->detach($user);
 
         return response(null, 204);

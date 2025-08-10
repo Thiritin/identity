@@ -8,5 +8,4 @@ enum GroupUserLevel: string
     case Moderator = 'moderator';
     case Admin = 'admin';
     case Owner = 'owner';
-
 }

@@ -18,6 +18,23 @@ info:
     This is the official API Documentation for the Eurofurence Identity service. This can be used to query or automated different things within the Identity service.
 
     To request a new oauth2 client contact [Thiritin](https://t.me/thiritin) via telegram.
+
+    ## OAuth2 Scopes
+
+    The following scopes are available for OAuth2 authentication:
+
+    - `openid`: Basic OpenID Connect functionality
+    - `offline`: Offline access (refresh tokens)
+    - `offline_access`: Offline access (refresh tokens)
+    - `profile`: Access to user profile information
+    - `email`: Access to user email address
+    - `groups`: Access to user's group memberships
+    - `groups.read`: Read access to group information
+    - `groups.write`: Write access to group information (create/update)
+    - `groups.delete`: Delete access to group information
+    - `view_full_staff_details`: Access to full staff details including email addresses in group and user listings. Without this scope, email addresses are filtered out of API responses for privacy protection.
+    - `read`: General read access
+    - `write`: General write access
   x-logo:
     url: 'https://raw.githubusercontent.com/Thiritin/identity/main/resources/assets/ef.svg'
     backgroundColor: '#004e4c'
@@ -39,12 +56,14 @@ security:
       - groups.read
       - groups.write
       - groups.delete
+      - view_full_staff_details
   - AccessToken:
       - read
       - write
       - groups.read
       - groups.write
       - groups.delete
+      - view_full_staff_details
 paths:
   /userinfo:
     get:
@@ -111,6 +130,13 @@ paths:
             type: integer
           description: Used for pagination.
           example: 1
+        - in: query
+          name: with_users
+          schema:
+            type: boolean
+            default: false
+          description: Include user membership data for each group with username, email, avatar, and user level within the group.
+          example: true
       responses:
         '200':
           content:
@@ -156,6 +182,63 @@ paths:
                       to:
                         type: integer
                         example: 25
+              examples:
+                without_users:
+                  summary: Groups without user data
+                  value:
+                    data:
+                      - id: "Y6K08PEKXG9Q7ZWJ"
+                        type: "department"
+                        name: "Information Technology"
+                        description: "IT Department handling all technical aspects"
+                        logo: null
+                        slug: "information-technology"
+                        created_at: "2023-02-19T19:22:51.000000Z"
+                        updated_at: "2024-08-14T18:52:24.000000Z"
+                    links:
+                      first: "https://identity.eurofurence.org/api/v1/groups?page=1"
+                      last: null
+                      prev: null
+                      next: "https://identity.eurofurence.org/api/v1/groups?page=2"
+                    meta:
+                      current_page: 1
+                      from: 1
+                      path: 1
+                      to: 25
+                with_users:
+                  summary: Groups with user data (when with_users=true)
+                  value:
+                    data:
+                      - id: "Y6K08PEKXG9Q7ZWJ"
+                        type: "department"
+                        name: "Information Technology"
+                        description: "IT Department handling all technical aspects"
+                        logo: null
+                        slug: "information-technology"
+                        created_at: "2023-02-19T19:22:51.000000Z"
+                        updated_at: "2024-08-14T18:52:24.000000Z"
+                        users:
+                          - user_id: "1VJEQAYWW54TZ5VD"
+                            name: "John Doe"
+                            email: "john.doe@example.com"
+                            level: "admin"
+                            title: "Department Lead"
+                            avatar: "https://s3.eurofurence.org/avatars/john-doe-avatar.jpg"
+                          - user_id: "2XKFRBZXX65UA6WE"
+                            name: "Jane Smith"
+                            email: "jane.smith@example.com"
+                            level: "member"
+                            avatar: null
+                    links:
+                      first: "https://identity.eurofurence.org/api/v1/groups?page=1"
+                      last: null
+                      prev: null
+                      next: "https://identity.eurofurence.org/api/v1/groups?page=2"
+                    meta:
+                      current_page: 1
+                      from: 1
+                      path: 1
+                      to: 25
           description: OK
       tags:
         - Groups
@@ -199,7 +282,7 @@ paths:
             - groups.read
         - AccessToken:
             - groups.read
-      description: This call returns a paginated result of all groups.
+      description: This call returns a single group with optional user membership data.
       parameters:
         - in: path
           name: group
@@ -208,6 +291,13 @@ paths:
           description: Group Identifier
           required: true
           example: 8513K1FW0H4W2SJG
+        - in: query
+          name: with_users
+          schema:
+            type: boolean
+            default: false
+          description: Include user membership data for the group with username, email, avatar, and user level within the group.
+          example: true
       responses:
         '200':
           content:
@@ -217,6 +307,43 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/Group'
+              examples:
+                without_users:
+                  summary: Single group without user data
+                  value:
+                    data:
+                      id: "Y6K08PEKXG9Q7ZWJ"
+                      type: "department"
+                      name: "Information Technology"
+                      description: "IT Department handling all technical aspects"
+                      logo: null
+                      slug: "information-technology"
+                      created_at: "2023-02-19T19:22:51.000000Z"
+                      updated_at: "2024-08-14T18:52:24.000000Z"
+                with_users:
+                  summary: Single group with user data (when with_users=true)
+                  value:
+                    data:
+                      id: "Y6K08PEKXG9Q7ZWJ"
+                      type: "department"
+                      name: "Information Technology"
+                      description: "IT Department handling all technical aspects"
+                      logo: null
+                      slug: "information-technology"
+                      created_at: "2023-02-19T19:22:51.000000Z"
+                      updated_at: "2024-08-14T18:52:24.000000Z"
+                      users:
+                        - user_id: "1VJEQAYWW54TZ5VD"
+                          name: "John Doe"
+                          email: "john.doe@example.com"
+                          level: "admin"
+                          title: "Department Lead"
+                          avatar: "https://s3.eurofurence.org/avatars/john-doe-single.jpg"
+                        - user_id: "2XKFRBZXX65UA6WE"
+                          name: "Jane Smith"
+                          email: "jane.smith@example.com"
+                          level: "member"
+                          avatar: null
           description: OK
         '404':
           content:
@@ -338,7 +465,7 @@ paths:
   '/groups/{group}/users':
     get:
       summary: List members
-      description: Show members of the groups.
+      description: Show members of the groups. Email addresses are only visible with the `view_full_staff_details` scope/permission.
       security:
         - OpenID:
             - groups.update
@@ -638,20 +765,42 @@ components:
     GroupUser:
       type: object
       properties:
-        group_id:
-          readOnly: true
-          type: string
-          description: The group id
         user_id:
           type: string
-          description: The user id
+          description: The user's unique identifier
+          example: "1VJEQAYWW54TZ5VD"
+        group_id:
+          type: string
+          description: The group's unique identifier
+          example: "Y6K08PEKXG9Q7ZWJ"
+        name:
+          type: string
+          description: The user's display name
+          example: "John Doe"
+        email:
+          type: string
+          nullable: true
+          description: The user's email address (only visible with view_full_staff_details permission)
+          example: "john.doe@example.com"
+        avatar:
+          type: string
+          nullable: true
+          description: URL to the user's profile picture
+          example: "https://s3.eurofurence.org/avatars/user-profile-photo.jpg"
         level:
           type: string
+          description: The user's permission level within this group
           enum:
             - member
             - moderator
             - admin
             - owner
+          example: "member"
+        title:
+          type: string
+          nullable: true
+          description: The user's custom title within this group
+          example: "App Developer"
     GroupUserForm:
       type: object
       properties:
@@ -738,6 +887,48 @@ components:
         updated_at:
           type: string
           example: '2022-12-10T20:41:34.000000Z'
+        users:
+          type: array
+          description: User membership data for the group (only present when with_users=true)
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/GroupUserWithData'
+    GroupUserWithData:
+      type: object
+      description: User membership data including user details and level within the group
+      properties:
+        user_id:
+          type: string
+          description: The user's unique identifier
+          example: "1VJEQAYWW54TZ5VD"
+        name:
+          type: string
+          description: The user's display name
+          example: "John Doe"
+        email:
+          type: string
+          nullable: true
+          description: The user's email address (only visible with view_full_staff_details permission)
+          example: "john.doe@example.com"
+        avatar:
+          type: string
+          nullable: true
+          description: URL to the user's profile picture
+          example: "https://s3.eurofurence.org/avatars/user-profile-photo.jpg"
+        level:
+          type: string
+          description: The user's permission level within this group
+          enum:
+            - member
+            - moderator
+            - admin
+            - owner
+          example: "member"
+        title:
+          type: string
+          nullable: true
+          description: The user's custom title within this group
+          example: "Senior Developer"
     Error:
       type: object
       properties:

@@ -26,6 +26,17 @@ class GroupController extends Controller
             $groups = $groups->whereHas('users', fn ($q) => $q->where('user_id', $request->user()->id));
         }
 
+        if ($request->boolean('with_users')) {
+            $selectFields = ['users.id', 'users.name', 'users.profile_photo_path', 'group_user.level'];
+            if ($request->user()->tokenCan('view_full_staff_details')) {
+                $selectFields[] = 'users.email';
+            }
+
+            $groups = $groups->with(['users' => function ($query) use ($selectFields) {
+                $query->select($selectFields);
+            }]);
+        }
+
         $groups = $groups->simplePaginate(25);
 
         return new GroupCollection($groups);

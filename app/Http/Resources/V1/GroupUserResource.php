@@ -15,9 +15,14 @@ class GroupUserResource extends JsonResource
      */
     public function toArray($request)
     {
+        $hasFullStaffDetails = $request->user() && $request->user()->scopeCheck('view_full_staff_details');
+
         return [
+            'user_id' => $this->hashid,
             'group_id' => $this->pivot->group->hashid,
-            'user_id' => $this->pivot->user->hashid,
+            'name' => $this->name,
+            'email' => $hasFullStaffDetails ? $this->email : null,
+            'avatar' => $this->profile_photo_path,
             'level' => $this->pivot->level,
         ];
     }

@@ -30,7 +30,8 @@ class TokensRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\Action::make('Create')->action(function ($livewire, array $data) {
-                    $token = $livewire->ownerRecord->createToken($data['name'], $data['abilities'], (is_null($data['expires_at'])) ? Carbon::parse($data['expires_at']) : null);
+                    $expiresAt = ! is_null($data['expires_at']) ? Carbon::parse($data['expires_at']) : null;
+                    $token = $livewire->ownerRecord->createToken($data['name'], $data['abilities'], $expiresAt);
                     Cache::put('admin.accessKeyTmp.' . $token->accessToken->id, $token->plainTextToken, now()->addMinutes(3));
                 })->form([
                     Forms\Components\TextInput::make('name'),

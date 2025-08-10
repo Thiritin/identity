@@ -18,16 +18,25 @@ class GroupPolicy
     /**
      * View Any will be limited on the controller level to a users own groups or staff groups
      */
-    public function viewAny(User $user): bool
+    public function viewAny(User $user): bool|Response
     {
         if (Auth::guard('admin')->check()) {
             return $user->can('admin.groups.view');
         }
-        if (Auth::guard('web')->check()) {
+        if (Auth::guard('web')->check() || Auth::guard('staff')->check()) {
             return true;
         }
         if (Auth::guard('api')->check()) {
             return $user->scopeCheck('groups.read');
+        }
+
+        // Handle Sanctum token authentication (auth:sanctum middleware)
+        // When using Sanctum, no specific guard is active, so we check for API scopes
+        if (auth()->check() && $user->currentAccessToken()) {
+            if (!$user->scopeCheck('groups.read')) {
+                return Response::deny('Insufficient permissions, groups.read is missing');
+            }
+            return true;
         }
 
         return true;
@@ -36,7 +45,8 @@ class GroupPolicy
     public function view(User $user, Group $group): Response
     {
         $inGroup = $user->inGroup($group->id);
-        $staffException = ($group->type === GroupTypeEnum::Department || $group->type === GroupTypeEnum::Team) && $user->isStaff();
+        $isStaff = $user->isStaff();
+        $staffException = ($group->type === GroupTypeEnum::Department || $group->type === GroupTypeEnum::Team) && $isStaff;
         $userPermission = $user->scopeCheck('groups.read');
 
         if ($inGroup || $staffException) {
@@ -45,6 +55,17 @@ class GroupPolicy
             }
 
             return Response::allow();
+        }
+
+        // Provide specific error messages based on the situation
+        if (! $inGroup && ($group->type === GroupTypeEnum::Department || $group->type === GroupTypeEnum::Team)) {
+            if (empty(config('groups.staff'))) {
+                return Response::deny('Staff group is not configured. Please contact administrator.');
+            }
+
+            if (! $isStaff) {
+                return Response::deny('You must be a staff member to access this department/team.');
+            }
         }
 
         return Response::deny('User is not a member of the group');
