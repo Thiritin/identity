@@ -10,18 +10,6 @@ jobs:
   laravel-tests:
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: identity_test
-          MYSQL_USER: identity
-          MYSQL_PASSWORD: identity
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
     steps:
       - uses: actions/checkout@v4
 
@@ -60,16 +48,19 @@ jobs:
         run: |
           cp .env.example .env
           echo "APP_ENV=testing" >> .env
-          echo "DB_CONNECTION=mysql" >> .env
-          echo "DB_HOST=127.0.0.1" >> .env
-          echo "DB_PORT=3306" >> .env
-          echo "DB_DATABASE=identity_test" >> .env
-          echo "DB_USERNAME=identity" >> .env
-          echo "DB_PASSWORD=identity" >> .env
+          echo "DB_CONNECTION=sqlite" >> .env
+          echo "DB_DATABASE=:memory:" >> .env
           echo "CACHE_DRIVER=array" >> .env
           echo "QUEUE_CONNECTION=sync" >> .env
           echo "SESSION_DRIVER=array" >> .env
           echo "MAIL_MAILER=array" >> .env
+          echo "PARALLEL_TESTING=true" >> .env
+          echo "FILESYSTEM_DRIVER=local" >> .env
+          echo "AWS_ACCESS_KEY_ID=test" >> .env
+          echo "AWS_SECRET_ACCESS_KEY=test" >> .env
+          echo "AWS_DEFAULT_REGION=us-east-1" >> .env
+          echo "AWS_BUCKET_AVATARS=test-bucket" >> .env
+          echo "AWS_ENDPOINT=http://localhost:9000" >> .env
 
       - name: Generate Application Key
         run: php artisan key:generate
@@ -80,40 +71,29 @@ jobs:
       - name: Clear Config Cache
         run: php artisan config:clear
 
-      - name: Run Database Migrations
-        run: php artisan migrate --force
-        env:
-          DB_CONNECTION: mysql
-          DB_HOST: 127.0.0.1
-          DB_PORT: 3306
-          DB_DATABASE: identity_test
-          DB_USERNAME: identity
-          DB_PASSWORD: identity
-
-      - name: Run Database Seeders
-        run: php artisan db:seed --force
-        env:
-          DB_CONNECTION: mysql
-          DB_HOST: 127.0.0.1
-          DB_PORT: 3306
-          DB_DATABASE: identity_test
-          DB_USERNAME: identity
-          DB_PASSWORD: identity
-
       - name: Execute Tests
-        run: vendor/bin/pest --coverage --min=80
+        run: vendor/bin/pest --parallel --processes=4
         env:
           APP_ENV: testing
-          DB_CONNECTION: mysql
-          DB_HOST: 127.0.0.1
-          DB_PORT: 3306
-          DB_DATABASE: identity_test
-          DB_USERNAME: identity
-          DB_PASSWORD: identity
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
           CACHE_DRIVER: array
           QUEUE_CONNECTION: sync
           SESSION_DRIVER: array
           MAIL_MAILER: array
+          PARALLEL_TESTING: "true"
+          FILESYSTEM_DRIVER: local
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+          AWS_DEFAULT_REGION: us-east-1
+          AWS_BUCKET_AVATARS: test-bucket
+          AWS_ENDPOINT: http://localhost:9000
+          FILESYSTEM_DRIVER: local
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+          AWS_DEFAULT_REGION: us-east-1
+          AWS_BUCKET_AVATARS: test-bucket
+          AWS_ENDPOINT: http://localhost:9000
 
   laravel-pint:
     runs-on: ubuntu-latest

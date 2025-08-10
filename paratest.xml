@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<paratest>
+    <phpunit>phpunit.xml</phpunit>
+    <processes>4</processes>
+    <functional>true</functional>
+    <no-coverage>false</no-coverage>
+    <coverage-html>storage/app/coverage</coverage-html>
+    <coverage-clover>storage/app/clover.xml</coverage-clover>
+    <testsuite>
+        <directory>tests/</directory>
+    </testsuite>
+</paratest>

@@ -18,6 +18,15 @@
     <server name="QUEUE_CONNECTION" value="sync"/>
     <server name="SESSION_DRIVER" value="array"/>
     <server name="TELESCOPE_ENABLED" value="false"/>
+    <server name="PARALLEL_TESTING" value="true"/>
+    <server name="DB_CONNECTION" value="sqlite"/>
+    <server name="DB_DATABASE" value=":memory:"/>
+    <server name="FILESYSTEM_DRIVER" value="local"/>
+    <server name="AWS_ACCESS_KEY_ID" value="test"/>
+    <server name="AWS_SECRET_ACCESS_KEY" value="test"/>
+    <server name="AWS_DEFAULT_REGION" value="us-east-1"/>
+    <server name="AWS_BUCKET_AVATARS" value="test-bucket"/>
+    <server name="AWS_ENDPOINT" value="http://localhost:9000"/>
   </php>
   <source>
     <include>

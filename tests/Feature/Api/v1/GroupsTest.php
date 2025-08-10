@@ -610,7 +610,7 @@ test('Get single group show endpoint does not support with_users parameter', fun
 
 test('Get groups index with with_users respects staff filtering for non-staff users', function () {
     $departmentGroup = Group::factory()->create(['type' => GroupTypeEnum::Department]);
-    $regularGroup = Group::factory()->create(['type' => GroupTypeEnum::None]);
+    $regularGroup = Group::factory()->create(['type' => GroupTypeEnum::Default]);
 
     $user = Sanctum::actingAs(
         User::factory()->create(),
@@ -640,7 +640,7 @@ test('Get groups index with with_users includes avatar data when present', funct
     $response = get(route('api.v1.groups.index', ['with_users' => true]));
 
     $response->assertSuccessful();
-    $response->assertJsonPath('data.0.users.0.avatar', 'avatars/test-avatar.jpg');
+    $response->assertJsonPath('data.0.users.0.avatar', 'http://localhost:9000/test-bucket/avatars/test-avatar.jpg');
 });
 
 test('Get groups index with with_users handles null avatar gracefully', function () {
