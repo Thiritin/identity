@@ -19,3 +19,4 @@ yarn-error.log
 /.phpunit.cache/test-results
 logs/
 CLAUDE.md
+config.json
