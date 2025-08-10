@@ -103,7 +103,7 @@
 </template>
 <script>
     import AppLayout from '@Shared/layouts/AppLayout.vue'
-    import { PencilIcon, PhoneIcon } from '@heroicons/vue/solid'
+    import { Edit as PencilIcon, Phone as PhoneIcon } from 'lucide-vue-next'
     import AvatarModal from '../components/AvatarModal.vue'
     import AvatarImage from './AvatarImage.vue'
 

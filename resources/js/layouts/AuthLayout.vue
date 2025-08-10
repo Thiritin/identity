@@ -1,22 +1,5 @@
 <template>
-    <VueCookieAcceptDecline
-        :disable-decline="true"
-        :show-postpone-button="false"
-        element-id="cookies"
-        position="top"
-        transition-name="slideFromTop"
-        type="bar"
-    >
-
-        <!-- Optional -->
-        <template #message>
-            {{ $trans('cookie_notice') }}
-        </template>
-
-        <!-- Optional -->
-        <template #acceptContent>OK</template>
-    </VueCookieAcceptDecline>
-    <div :class="{ dark: darkMode }">
+    <div>
         <div class="min-h-screen auth-background-layout flex items-center justify-center page dark:text-primary-300 p-4">
             <!-- Page Content -->
             <div class="w-full max-w-lg">
@@ -84,18 +67,15 @@ const artistInfo = {
 };
 </script>
 <script>
-import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
-import 'vue-cookie-accept-decline/dist/vue-cookie-accept-decline.css'
 import AuthFooter from "../components/Auth/AuthFooter.vue";
 import AuthHeader from "../components/Auth/AuthHeader.vue";
 import {usePage} from "@inertiajs/vue3";
 
 export default {
-    components: {AuthHeader, AuthFooter, VueCookieAcceptDecline},
+    components: {AuthHeader, AuthFooter},
     data() {
         return {
             animated: true,
-            darkMode: this.$cookies.isKey('darkMode'),
             navigation: {
                 main: [
                     {
@@ -128,23 +108,6 @@ export default {
                 ],
             },
         }
-    },
-    mounted() {
-        this.animated = true;
-        this.dark = 'dark:text-primary-300 dark:bg-primary-900';
-    },
-    methods: {
-        toggleDarkMode() {
-            if (this.darkMode === false) {
-                this.$cookies.set('darkMode', 'true', 2147483647);
-            }
-
-            if (this.darkMode === true) {
-                this.$cookies.remove('darkMode');
-            }
-
-            this.darkMode = !this.darkMode;
-        },
     }
 }
 </script>

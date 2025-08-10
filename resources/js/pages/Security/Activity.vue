@@ -117,15 +117,15 @@
 import { ref, computed } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import {
-    ShieldCheckIcon,
-    KeyIcon,
-    ArrowRightOnRectangleIcon as SignInIcon,
-    ArrowLeftOnRectangleIcon as SignOutIcon,
-    CheckCircleIcon,
-    XCircleIcon,
-    InformationCircleIcon,
-    ExclamationTriangleIcon
-} from '@heroicons/vue/24/outline'
+    ShieldCheck as ShieldCheckIcon,
+    Key as KeyIcon,
+    LogIn as SignInIcon,
+    LogOut as SignOutIcon,
+    CheckCircle as CheckCircleIcon,
+    XCircle as XCircleIcon,
+    Info as InformationCircleIcon,
+    TriangleAlert as ExclamationTriangleIcon
+} from 'lucide-vue-next'
 
 const props = defineProps({
     events: Array

@@ -30,6 +30,9 @@ class LoginController extends Controller
             return Redirect::route('auth.choose');
         }
 
+        // Clear any existing login session data to start fresh
+        Session::forget(['login.user_id', 'login.login_challenge', 'login.webauthn_options']);
+
         $hydra = new Client();
         $loginRequest = $hydra->getLoginRequest($request->get('login_challenge'));
 
@@ -48,7 +51,7 @@ class LoginController extends Controller
         }
 
         // Start with identity step
-        return Inertia::render('Auth/Login', [
+        return Inertia::render('Auth/Login/Login', [
             'step' => 'identify',
             'login_challenge' => $request->get('login_challenge')
         ]);
@@ -56,6 +59,22 @@ class LoginController extends Controller
 
     public function identifyUser(Request $request)
     {
+        // Handle GET request - check if user is already identified
+        if ($request->isMethod('GET')) {
+            $userId = Session::get('login.user_id');
+            $loginChallenge = Session::get('login.login_challenge');
+            
+            // If no user identified or no login challenge, redirect to main login
+            if (!$userId || !$loginChallenge) {
+                return Redirect::route('auth.login.view', $request->only('login_challenge'));
+            }
+            
+            // User is identified, show authenticate step
+            $user = User::findOrFail($userId);
+            return $this->renderAuthenticateStep($user, $loginChallenge);
+        }
+        
+        // Handle POST request - process identification
         $request->validate([
             'identifier' => 'required|string|max:255',
             'login_challenge' => 'required|string'
@@ -78,6 +97,11 @@ class LoginController extends Controller
         Session::put('login.user_id', $user->id);
         Session::put('login.login_challenge', $request->get('login_challenge'));
 
+        return $this->renderAuthenticateStep($user, $request->get('login_challenge'));
+    }
+    
+    private function renderAuthenticateStep(User $user, string $loginChallenge)
+    {
         // Determine available authentication methods
         $hasPassword = !empty($user->password);
         $hasWebauthn = $user->hasWebauthnCredentials();
@@ -95,7 +119,7 @@ class LoginController extends Controller
             Session::put('login.webauthn_options', serialize($webauthnOptions));
         }
 
-        return Inertia::render('Auth/Login', [
+        return Inertia::render('Auth/Login/Login', [
             'step' => 'authenticate',
             'user' => [
                 'name' => $user->name,

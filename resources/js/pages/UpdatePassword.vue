@@ -64,11 +64,13 @@
 
                 <div class="flex justify-end">
                     <Button
-                        :loading="form.processing"
+                        :disabled="form.processing"
                         type="submit"
                         class="block"
-                        :label="$trans('submit')"
-                    />
+                    >
+                        <SpinnerIcon v-if="form.processing" class="w-4 h-4 mr-2 animate-spin" />
+                        {{ $trans('submit') }}
+                    </Button>
                 </div>
             </div>
         </form>
@@ -84,7 +86,8 @@ import PasswordInfoBox from "./PasswordInfoBox.vue";
 import {useForm} from 'laravel-precognition-vue-inertia'
 import InputText from "@Shared/components/volt/InputText.vue";
 import InlineMessage from "@Shared/components/volt/Message.vue";
-import Button from "@Shared/components/volt/Button.vue";
+import { Button } from "@/components/ui/button";
+import { Loader2 as SpinnerIcon } from 'lucide-vue-next';
 
 defineProps({
     errors: Object,
@@ -104,7 +107,7 @@ function submitForm() {
 </script>
 <script>
 
-import AuthLayout from "../layouts/AuthLayout.vue";
+import AuthLayout from "@Shared/layouts/AuthLayout.vue";
 
 export default {
     layout: AuthLayout

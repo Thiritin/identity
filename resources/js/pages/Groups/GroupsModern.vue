@@ -12,12 +12,15 @@ import Badge from "@Shared/components/volt/Badge.vue";
 import Avatar from "@Shared/components/volt/Avatar.vue";
 import InputText from "@Shared/components/volt/InputText.vue";
 import {
-    UserGroupIcon, 
-    BuildingOfficeIcon,
-    ChevronDownIcon,
-    ChevronRightIcon,
-    MagnifyingGlassIcon
-} from "@heroicons/vue/24/outline/index.js";
+    Users as UserGroupIcon, 
+    Building as BuildingOfficeIcon,
+    ChevronDown as ChevronDownIcon,
+    ChevronRight as ChevronRightIcon,
+    Search as MagnifyingGlassIcon,
+    ExternalLink as ExternalLinkIcon,
+    Eye as EyeIcon,
+    Settings as CogIcon
+} from "lucide-vue-next";
 
 const props = defineProps({
     myGroups: Array,
@@ -135,7 +138,7 @@ defineOptions({layout: AppLayout})
                                         variant="secondary"
                                         size="sm"
                                     >
-                                        <i class="pi pi-external-link mr-2"></i>
+                                        <ExternalLinkIcon class="w-4 h-4 mr-2" />
                                         View {{ group.type }}
                                     </Button>
                                 </div>
@@ -233,7 +236,7 @@ defineOptions({layout: AppLayout})
                                                 variant="ghost" 
                                                 :title="`View ${slotProps.data.name}`"
                                             >
-                                                <i class="pi pi-eye"></i>
+                                                <EyeIcon class="w-4 h-4" />
                                             </Button>
                                             <Button 
                                                 v-if="slotProps.data.can_manage"
@@ -241,7 +244,7 @@ defineOptions({layout: AppLayout})
                                                 variant="ghost" 
                                                 title="Manage Department"
                                             >
-                                                <i class="pi pi-cog"></i>
+                                                <CogIcon class="w-4 h-4" />
                                             </Button>
                                         </div>
                                     </template>

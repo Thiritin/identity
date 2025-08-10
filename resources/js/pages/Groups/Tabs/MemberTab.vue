@@ -3,7 +3,7 @@ import AppLayout from '../../../layouts/AppLayout.vue'
 import {router, useForm} from '@inertiajs/vue3'
 import {ref, useAttrs} from 'vue'
 import Dialog from '@Shared/components/volt/Dialog.vue'
-import Button from '@Shared/components/volt/Button.vue'
+import { Button } from '@/components/ui/button'
 import TabComponent from "./TabComponent.vue";
 import TabHeader from "./TabHeader.vue";
 import {useToast} from "primevue/usetoast";
@@ -84,13 +84,13 @@ const form = useForm({})
                         <div class="flex gap-2" v-if="canEdit && (user.id !== attrs.user.id || parent !== null)">
                             <Button
                                 @click="router.visit(route('staff.groups.members.edit', {group: group.hashid, member: user.id}))"
-                                severity="secondary"
-                                size="small"
+                                variant="secondary"
+                                size="sm"
                             >Edit<span class="sr-only">, {{ user.name }}</span></Button>
 
                             <Button
-                                severity="danger"
-                                size="small"
+                                variant="destructive"
+                                size="sm"
                                 @click="showDeleteModal(group.hashid, user)"
                                 :aria-controls="deleteModal.visible ? 'dlg' : null"
                                 :aria-expanded="!!deleteModal.visible">Remove<span
@@ -113,14 +113,16 @@ const form = useForm({})
             <form action="#" method="post"
                   @submit.prevent="deleteUser">
                 <div class="flex justify-content-end pull-right gap-2">
-                    <Button type="button" label="Cancel"
-                            severity="secondary"
-                            @click="deleteModal.visible = false"></Button>
+                    <Button type="button" variant="secondary"
+                            @click="deleteModal.visible = false">
+                        Cancel
+                    </Button>
 
                     <Button
                         type="submit"
-                        :loading="form.processing"
-                        severity="danger">
+                        :disabled="form.processing"
+                        variant="destructive">
+                        <i v-if="form.processing" class="pi pi-spin pi-spinner mr-2"></i>
                         Remove<span class="sr-only">, {{ deleteModal.user.name }}</span>
                     </Button>
                 </div>

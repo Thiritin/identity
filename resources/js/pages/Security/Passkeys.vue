@@ -212,13 +212,13 @@
 import { ref } from 'vue'
 import { Head, router } from '@inertiajs/vue3'
 import {
-    KeyIcon,
-    PlusIcon,
-    PencilIcon,
-    TrashIcon,
-    InformationCircleIcon,
-    ExclamationTriangleIcon
-} from '@heroicons/vue/24/outline'
+    Key as KeyIcon,
+    Plus as PlusIcon,
+    Edit as PencilIcon,
+    Trash as TrashIcon,
+    Info as InformationCircleIcon,
+    TriangleAlert as ExclamationTriangleIcon
+} from 'lucide-vue-next'
 
 const props = defineProps({
     credentials: Array,

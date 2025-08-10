@@ -8,7 +8,7 @@ import BaseButton from "../../components/BaseButton.vue";
 import InputText from "@Shared/components/volt/InputText.vue";
 import InlineMessage from "@Shared/components/volt/Message.vue";
 import {useForm} from 'laravel-precognition-vue-inertia'
-import Button from "@Shared/components/volt/Button.vue";
+import { Button } from "@/components/ui/button";
 
 const disableKeyId = ref(null)
 const showCreateField = ref(false)
@@ -81,11 +81,13 @@ function submitDisableForm() {
 
             <div class="flex justify-end">
                 <Button
-                    :loading="enableForm.processing"
+                    :disabled="enableForm.processing"
                     type="submit"
                     class="block"
-                    :label="$trans('submit')"
-                />
+                >
+                    <i v-if="enableForm.processing" class="pi pi-spin pi-spinner mr-2"></i>
+                    {{ $trans('submit') }}
+                </Button>
             </div>
         </form>
     </div>
@@ -108,8 +110,8 @@ function submitDisableForm() {
                 </InlineMessage>
             </div>
             <div class="flex justify-end gap-3">
-                <Button severity="secondary" size="small" @click="disableKeyId = null" secondary>Cancel</Button>
-                <Button size="small" primary>Submit</Button>
+                <Button variant="secondary" size="sm" @click="disableKeyId = null">Cancel</Button>
+                <Button size="sm">Submit</Button>
             </div>
         </form>
     </div>
@@ -125,7 +127,9 @@ function submitDisableForm() {
                     <div class="text-sm">{{ key.last_used_at }}</div>
                 </div>
                 <div>
-                    <Button link @click="disableKeyId = key.id" size="small" icon="pi pi-trash"/>
+                    <Button variant="ghost" @click="disableKeyId = key.id" size="sm">
+                        <i class="pi pi-trash"></i>
+                    </Button>
                 </div>
             </ListItem>
         </div>

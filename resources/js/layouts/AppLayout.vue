@@ -1,59 +1,34 @@
 <template>
     <div>
-        <TransitionRoot as="template" :show="sidebarOpen">
-            <Dialog as="div" class="relative z-50 lg:hidden" @close="sidebarOpen = false">
-                <TransitionChild as="template" enter="transition-opacity ease-linear duration-300"
-                                 enter-from="opacity-0" enter-to="opacity-100"
-                                 leave="transition-opacity ease-linear duration-300" leave-from="opacity-100"
-                                 leave-to="opacity-0">
-                    <div class="fixed inset-0 bg-gray-900/80"/>
-                </TransitionChild>
-
-                <div class="fixed inset-0 flex">
-                    <TransitionChild as="template" enter="transition ease-in-out duration-300 transform"
-                                     enter-from="-translate-x-full" enter-to="translate-x-0"
-                                     leave="transition ease-in-out duration-300 transform" leave-from="translate-x-0"
-                                     leave-to="-translate-x-full">
-                        <DialogPanel class="relative mr-16 flex w-full max-w-xs flex-1">
-                            <TransitionChild as="template" enter="ease-in-out duration-300" enter-from="opacity-0"
-                                             enter-to="opacity-100" leave="ease-in-out duration-300"
-                                             leave-from="opacity-100" leave-to="opacity-0">
-                                <div class="absolute left-full top-0 flex w-16 justify-center pt-5">
-                                    <button type="button" class="-m-2.5 p-2.5" @click="sidebarOpen = false">
-                                        <span class="sr-only">Close sidebar</span>
-                                        <XMarkIcon class="h-6 w-6 text-white" aria-hidden="true"/>
-                                    </button>
-                                </div>
-                            </TransitionChild>
-                            <!-- Sidebar component, swap this element with another sidebar if you like -->
-                            <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-primary-600 px-6 pb-2">
-                                <div class="flex h-16 shrink-0 items-center gap-3">
-                                    <img class="h-10 w-auto" src="../../assets/ef.svg"
-                                         alt="Eurofurence"/>
-                                    <div>
-                                        <div class='font-medium font-sm text-primary-100'>Staff Dashboard</div>
-                                    </div>
-                                </div>
-                                <nav class="flex flex-1 flex-col">
-                                    <ul role="list" class="flex flex-1 flex-col gap-y-7">
-                                        <li>
-                                            <ul role="list" class="-mx-2 space-y-1">
-                                                <li>
-                                                    <StaffMainMenu :navigation="navigation"></StaffMainMenu>
-                                                </li>
-                                                <li v-if="teams.length">
-                                                    <StaffTeamMenu :teams="teams"></StaffTeamMenu>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </DialogPanel>
-                    </TransitionChild>
+        <!-- Mobile sidebar -->
+        <Sheet :open="sidebarOpen" @update:open="sidebarOpen = $event">
+            <SheetContent side="left" class="w-full max-w-xs bg-primary-600 text-primary-100 p-0">
+                <!-- Sidebar component, swap this element with another sidebar if you like -->
+                <div class="flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-2">
+                    <div class="flex h-16 shrink-0 items-center gap-3">
+                        <img class="h-10 w-auto" src="../../assets/ef.svg"
+                             alt="Eurofurence"/>
+                        <div>
+                            <div class='font-medium font-sm text-primary-100'>Staff Dashboard</div>
+                        </div>
+                    </div>
+                    <nav class="flex flex-1 flex-col">
+                        <ul role="list" class="flex flex-1 flex-col gap-y-7">
+                            <li>
+                                <ul role="list" class="-mx-2 space-y-1">
+                                    <li>
+                                        <StaffMainMenu :navigation="navigation"></StaffMainMenu>
+                                    </li>
+                                    <li v-if="teams.length">
+                                        <StaffTeamMenu :teams="teams"></StaffTeamMenu>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
-            </Dialog>
-        </TransitionRoot>
+            </SheetContent>
+        </Sheet>
 
         <!-- Static sidebar for desktop -->
         <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
@@ -79,10 +54,10 @@
                             <StaffTeamMenu v-if="teams.length" :teams="teams"></StaffTeamMenu>
                         </li>
                         <li class="-mx-6 mt-auto">
-                            <Menu as="div">
-                                <MenuButton as="div">
-                                    <a href="#"
-                                       class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-primary-100 duration-200 hover:bg-primary-700">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger as-child>
+                                    <button
+                                       class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-primary-100 duration-200 hover:bg-primary-700 w-full">
                                         <img
                                             v-if="$page.props.user.avatar"
                                             class="h-8 w-8 rounded-full bg-gray-50"
@@ -90,43 +65,33 @@
                                             :alt="$page.props.user.name"/>
                                         <span class="sr-only">Your profile</span>
                                         <span aria-hidden="true">{{ $page.props.user.name }}</span>
-                                    </a>
-                                </MenuButton>
-                                <transition
-                                    enter-active-class="transition ease-out duration-100"
-                                    enter-from-class="transform opacity-0 scale-95"
-                                    enter-to-class="transform opacity-100 scale-100"
-                                    leave-active-class="transition ease-in duration-75"
-                                    leave-from-class="transform opacity-100 scale-100"
-                                    leave-to-class="transform opacity-0 scale-95"
+                                    </button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                    class="w-48 bg-white dark:bg-primary-600"
+                                    align="start"
+                                    side="top"
                                 >
-                                    <MenuItems
-                                        class="z-50 origin-bottom-right absolute bottom-16 left-4 w-48 rounded-md shadow-lg drop-shadow py-1 bg-white dark:bg-primary-600 ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                    <DropdownMenuItem
+                                        v-for="item in profileNavMenu"
+                                        :key="item"
+                                        as-child
                                     >
-                                        <MenuItem
-                                            v-for="item in profileNavMenu"
-                                            :key="item"
-                                            v-slot="{ active }"
-                                        >
-                                            <Link
-                                                :class="[
-                                active ? 'bg-primary-800' : '',
-                                'block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300',
-                            ]"
-                                                :href="item.route"
-                                            >{{ $trans(item.name) }}
-                                            </Link>
-                                        </MenuItem>
-                                        <MenuItem>
-                                            <a
-                                                class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
-                                                :href="route('login.apps.logout',{app: 'staff'})"
-                                            >{{ $trans('logout') }}
-                                            </a>
-                                        </MenuItem>
-                                    </MenuItems>
-                                </transition>
-                            </Menu>
+                                        <Link
+                                            class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
+                                            :href="item.route"
+                                        >{{ $trans(item.name) }}
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem as-child>
+                                        <a
+                                            class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
+                                            :href="route('login.apps.logout',{app: 'staff'})"
+                                        >{{ $trans('logout') }}
+                                        </a>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </li>
                     </ul>
                 </nav>
@@ -141,50 +106,39 @@
             <div class="flex-1">
                 <GlobalSearch />
             </div>
-            <Menu>
-                <MenuButton>
-                    <a href="#">
+            <DropdownMenu>
+                <DropdownMenuTrigger as-child>
+                    <button>
                         <span class="sr-only">Your profile</span>
                         <img class="h-8 w-8 rounded-full bg-gray-50"
                              :src="$page.props.user.avatar"
                              :alt="$page.props.user.name"/>
-                    </a>
-                </MenuButton>
-                <transition
-                    enter-active-class="transition ease-out duration-100"
-                    enter-from-class="transform opacity-0 scale-95"
-                    enter-to-class="transform opacity-100 scale-100"
-                    leave-active-class="transition ease-in duration-75"
-                    leave-from-class="transform opacity-100 scale-100"
-                    leave-to-class="transform opacity-0 scale-95"
+                    </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                    class="w-48 bg-white dark:bg-primary-600"
+                    align="end"
                 >
-                    <MenuItems
-                        class="z-50 origin-top-right absolute right-4 mt-48 w-48 rounded-md shadow-lg drop-shadow py-1 bg-white dark:bg-primary-600 ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    <DropdownMenuItem
+                        v-for="item in profileNavMenu"
+                        :key="item"
+                        as-child
                     >
-                        <MenuItem
-                            v-for="item in profileNavMenu"
-                            :key="item"
-                            v-slot="{ active }"
-                        >
-                            <Link
-                                :class="[
-                                active ? 'bg-primary-800' : '',
-                                'block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300',
-                            ]"
-                                :href="item.route"
-                            >{{ $trans(item.name) }}
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <a
-                                class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
-                                :href="route('auth.logout')"
-                            >{{ $trans('logout') }}
-                            </a>
-                        </MenuItem>
-                    </MenuItems>
-                </transition>
-            </Menu>
+                        <Link
+                            class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
+                            :href="item.route"
+                        >{{ $trans(item.name) }}
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem as-child>
+                        <a
+                            class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
+                            :href="route('auth.logout')"
+                        >{{ $trans('logout') }}
+                        </a>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </div>
 
         <main class="lg:pl-72">
@@ -197,16 +151,18 @@
 <script setup>
 import {computed, reactive, ref} from 'vue'
 import {
-    Dialog,
-    DialogPanel,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
-    TransitionChild,
-    TransitionRoot
-} from '@headlessui/vue'
-import {Bars3Icon, HomeIcon, UsersIcon, XMarkIcon,} from '@heroicons/vue/24/outline'
+    Sheet,
+    SheetContent,
+    SheetOverlay,
+    SheetTrigger,
+} from '@/components/ui/sheet'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import {Menu as Bars3Icon, Home as HomeIcon, Users as UsersIcon, X as XMarkIcon,} from 'lucide-vue-next'
 import {Link, usePage} from "@inertiajs/vue3";
 import StaffMainMenu from "../components/Staff/Menu/StaffMainMenu.vue";
 import StaffTeamMenu from "../components/Staff/Menu/StaffTeamMenu.vue";

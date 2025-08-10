@@ -1,34 +1,21 @@
-@import "tailwindcss";
-@import "tailwindcss-primeui";
 @import "tw-animate-css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@custom-variant dark (&:where(.app-dark, .app-dark *));
-
-/* Primary and Surface Palettes */
-:root {
-  --p-primary-50: #effefb;
-  --p-primary-100: #c8fff3;
-  --p-primary-200: #90ffe8;
-  --p-primary-300: #51f7db;
-  --p-primary-400: #1de4c9;
-  --p-primary-500: #05c7b0;
-  --p-primary-600: #00a190;
-  --p-primary-700: #058075;
-  --p-primary-800: #0a655e;
-  --p-primary-900: #0e534e;
-  --p-primary-950: #003d3b;
-  --p-surface-0: #ffffff;
-  --p-surface-50: #fafafa;
-  --p-surface-100: #f4f4f5;
-  --p-surface-200: #e4e4e7;
-  --p-surface-300: #d4d4d8;
-  --p-surface-400: #a1a1aa;
-  --p-surface-500: #71717a;
-  --p-surface-600: #52525b;
-  --p-surface-700: #3f3f46;
-  --p-surface-800: #27272a;
-  --p-surface-900: #18181b;
-  --p-surface-950: #09090b;
+@layer base {
+  :root {
+    --color-colorrimary-50: #effefb;
+  --color-colorrimary-100: #c8fff3;
+  --color-colorrimary-200: #90ffe8;
+  --color-colorrimary-300: #51f7db;
+  --color-colorrimary-400: #1de4c9;
+  --color-colorrimary-500: #05c7b0;
+  --color-colorrimary-600: #00a190;
+  --color-colorrimary-700: #058075;
+  --color-colorrimary-800: #0a655e;
+  --color-colorrimary-900: #0e534e;
+  --color-primary-950: #003d3b;
   --p-content-border-radius: 6px;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -109,8 +96,9 @@
   --p-text-muted-color: var(--p-surface-400);
   --p-text-hover-muted-color: var(--p-surface-300);
 }
+}
 
-@theme inline {
+.app-dark {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -147,6 +135,40 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  @keyframes accordion-down {
+  from {
+    height: 0;
+    }
+  to {
+    height: var(--reka-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+  from {
+    height: var(--reka-accordion-content-height);
+    }
+  to {
+    height: 0;
+    }
+  }
+  @keyframes accordion-down {
+  from {
+    height: 0;
+    }
+  to {
+    height: var(--reka-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+  from {
+    height: var(--reka-accordion-content-height);
+    }
+  to {
+    height: 0;
+    }
+  }
 }
 
 .dark {

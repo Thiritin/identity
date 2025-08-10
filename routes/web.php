@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->name('auth.')->group(function () {
     // Login routes
     Route::get('login', [LoginController::class, 'view'])->name('login.view');
-    Route::post('login/identify', [LoginController::class, 'identifyUser'])
+    Route::match(['GET', 'POST'], 'login/identify', [LoginController::class, 'identifyUser'])
         ->middleware([HandlePrecognitiveRequests::class])
         ->name('login.identify');
     Route::post('login/authenticate-password', [LoginController::class, 'authenticatePassword'])

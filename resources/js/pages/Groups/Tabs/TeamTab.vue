@@ -3,7 +3,7 @@ import AppLayout from '../../../layouts/AppLayout.vue'
 import {useForm} from '@inertiajs/vue3'
 import {ref, useAttrs} from 'vue'
 import Dialog from '@Shared/components/volt/Dialog.vue'
-import Button from '@Shared/components/volt/Button.vue'
+import { Button } from '@/components/ui/button'
 import TabComponent from "./TabComponent.vue";
 import TabHeader from "./TabHeader.vue";
 import {useToast} from "primevue/usetoast";
@@ -91,14 +91,16 @@ const form = useForm({})
             <form action="#" method="post"
                   @submit.prevent="deleteUser">
                 <div class="flex justify-content-end pull-right gap-2">
-                    <Button type="button" label="Cancel"
-                            severity="secondary"
-                            @click="deleteModal.visible = false"></Button>
+                    <Button type="button" variant="secondary"
+                            @click="deleteModal.visible = false">
+                        Cancel
+                    </Button>
 
                     <Button
                         type="submit"
-                        :loading="form.processing"
-                        severity="danger">
+                        :disabled="form.processing"
+                        variant="destructive">
+                        <i v-if="form.processing" class="pi pi-spin pi-spinner mr-2"></i>
                         Remove<span class="sr-only">, {{ deleteModal.user.name }}</span>
                     </Button>
                 </div>

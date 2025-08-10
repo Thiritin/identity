@@ -1,9 +1,9 @@
 <script setup>
 
 import SiteHeader from "../../../components/Staff/SiteHeader.vue";
-import Button from '@Shared/components/volt/Button.vue';
+import { Button } from '@/components/ui/button';
 import Dropdown from '@Shared/components/volt/Select.vue';
-import InputText from "@Shared/components/volt/InputText.vue";
+import { Input } from "@/components/ui/input";
 import {Head, Link, usePage} from "@inertiajs/vue3";
 import Dialog from '@Shared/components/volt/Dialog.vue';
 import {ref, watch} from "vue";
@@ -106,23 +106,22 @@ const options = ref(['Staff List', 'Email']);
         <template v-slot:action v-if="canEdit">
             <div class="flex gap-2">
                 <Button
-                    size="small"
+                    size="sm"
                     @click="showEditTeamDialog = true">Edit Team</Button>
                 <Button
-                    size="small"
+                    size="sm"
                     @click="showAddMemberDialog = true">Add User
                 </Button>
                 <Button
                     v-if="group.parent_id === null"
-                    size="small"
-                    outlined
+                    size="sm"
+                    variant="outline"
                     @click="showAddTeamDialog = true">Add Team
                 </Button>
                 <Button
                     v-if="group.parent_id !== null"
-                    size="small"
-                    severity="danger"
-                    outlined
+                    size="sm"
+                    variant="destructive"
                     @click="confirmDeleteTeamDialog = true">Delete Team
                 </Button>
             </div>
@@ -151,12 +150,12 @@ const options = ref(['Staff List', 'Email']);
             <!-- E-Mail -->
             <div v-if="addVia === 'Email'">
                 <label for="email">E-Mail</label>
-                <InputText :invalid="addUserForm.errors.email" v-model="addUserForm.email" type="email" id="email" class="w-full"/>
+                <Input :class="{ 'border-red-500': addUserForm.errors.email }" v-model="addUserForm.email" type="email" id="email" class="w-full"/>
                 <small class="text-red-500" v-if="addUserForm.errors.email">{{ addUserForm.errors.email }}</small>
             </div>
             <!-- Submit Button -->
             <div class="flex justify-end">
-                <Button type="submit" class="btn btn-primary w-full">Add Member</Button>
+                <Button type="submit" class="w-full">Add Member</Button>
             </div>
         </form>
     </Dialog>
@@ -164,11 +163,11 @@ const options = ref(['Staff List', 'Email']);
     <Dialog v-model:visible="showAddTeamDialog" modal class="max-w-md" header="Create a new Team">
         <form @submit.prevent="submitTeamForm()" class="space-y-3">
             <label for="name">Team Name</label>
-            <InputText :invalid="addTeamForm.errors.name" v-model="addTeamForm.name" id="name" class="w-full"/>
+            <Input :class="{ 'border-red-500': addTeamForm.errors.name }" v-model="addTeamForm.name" id="name" class="w-full"/>
             <small class="text-red-500" v-if="addTeamForm.errors.name">{{ addTeamForm.errors.name }}</small>
             <!-- Submit Button -->
             <div class="flex justify-end">
-                <Button type="submit" class="btn btn-primary w-full">Create Team</Button>
+                <Button type="submit" class="w-full">Create Team</Button>
             </div>
         </form>
     </Dialog>
@@ -177,12 +176,13 @@ const options = ref(['Staff List', 'Email']);
         <p>Are you sure you want to delete this Team?</p>
         <div class="flex justify-end gap-2">
             <Button
-                size="small"
+                size="sm"
+                variant="secondary"
                 @click="confirmDeleteTeamDialog = false">Cancel
             </Button>
             <Button
-                size="small"
-                severity="danger"
+                size="sm"
+                variant="destructive"
                 @click="useForm('DELETE', route('staff.groups.destroy', {group: group.hashid}),{}).submit({
                     preserveScroll: true,
                     onSuccess: () => {
@@ -197,11 +197,11 @@ const options = ref(['Staff List', 'Email']);
     <Dialog v-model:visible="showEditTeamDialog" modal class="max-w-md" header="Edit Team Name">
         <form @submit.prevent="submitEditTeamForm()" class="space-y-3">
             <label for="name">Team Name</label>
-            <InputText :invalid="editTeamForm.errors.name" v-model="editTeamForm.name" id="name" class="w-full"/>
+            <Input :class="{ 'border-red-500': editTeamForm.errors.name }" v-model="editTeamForm.name" id="name" class="w-full"/>
             <small class="text-red-500" v-if="editTeamForm.errors.name">{{ editTeamForm.errors.name }}</small>
             <!-- Submit Button -->
             <div class="flex justify-end">
-                <Button type="submit" class="btn btn-primary w-full">Save</Button>
+                <Button type="submit" class="w-full">Save</Button>
             </div>
         </form>
     </Dialog>

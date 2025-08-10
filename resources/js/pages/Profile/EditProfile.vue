@@ -16,14 +16,15 @@ import InputNumber from "@Shared/components/volt/InputNumber.vue";
 import Dropdown from "@Shared/components/volt/Select.vue";
 import Message from "@Shared/components/volt/Message.vue";
 import {
-    UserIcon,
-    EnvelopeIcon,
-    PhoneIcon,
-    MapPinIcon,
-    CalendarIcon,
-    LanguageIcon,
-    IdentificationIcon
-} from "@heroicons/vue/24/outline/index.js";
+    User as UserIcon,
+    Mail as EnvelopeIcon,
+    Phone as PhoneIcon,
+    MapPin as MapPinIcon,
+    Calendar as CalendarIcon,
+    Languages as LanguageIcon,
+    CreditCard as IdentificationIcon,
+    Save as SaveIcon
+} from "lucide-vue-next";
 
 const props = defineProps({
     user: Object,
@@ -416,7 +417,7 @@ defineOptions({layout: AppLayout})
                         type="submit"
                         :disabled="form.processing"
                     >
-                        <i v-if="!form.processing" class="pi pi-save mr-2"></i>
+                        <SaveIcon v-if="!form.processing" class="w-4 h-4 mr-2" />
                         <span v-if="form.processing" class="animate-spin mr-2">⏳</span>
                         Save Profile
                     </Button>

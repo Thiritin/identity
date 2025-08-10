@@ -111,7 +111,7 @@
     import CodeDuotone from '@Shared/components/Icons/CodeDuotone.vue'
     import ServerDuotone from '@Shared/components/Icons/ServerDuotone.vue'
     import Github from '@Shared/components/Icons/Github.vue'
-    import Logo from './Logo.vue'
+    import Logo from '@/components/Logo.vue'
 
     export default {
         name: 'Developers',

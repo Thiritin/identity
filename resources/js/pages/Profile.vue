@@ -133,7 +133,7 @@
                     :disabled="form.processing"
                     type="submit"
                 >
-                    <i v-if="form.processing" class="pi pi-spin pi-spinner mr-2"></i>
+                    <SpinnerIcon v-if="form.processing" class="w-4 h-4 mr-2 animate-spin" />
                     {{ $trans('save') }}
                 </Button>
             </div>
@@ -156,6 +156,7 @@ import {useForm} from 'laravel-precognition-vue-inertia';
 import InputText from "@Shared/components/volt/InputText.vue";
 import InlineMessage from "@Shared/components/volt/Message.vue";
 import { Button } from "@/components/ui/button";
+import { Loader2 as SpinnerIcon } from 'lucide-vue-next';
 
 const props = defineProps({
     errors: Object,
@@ -191,7 +192,7 @@ const showEmailTooMany = computed(() => {
 })
 </script>
 <script>
-import AuthLayout from "../layouts/AuthLayout.vue";
+import AuthLayout from "@Shared/layouts/AuthLayout.vue";
 
 export default {
     layout: AuthLayout,

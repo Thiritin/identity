@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import {ExclamationTriangleIcon} from "@heroicons/vue/24/solid/index.js";
+import {TriangleAlert as ExclamationTriangleIcon} from "lucide-vue-next";
 
 export default {
     name: 'BaseAlert',

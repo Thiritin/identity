@@ -14,8 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import CheckIcon from '@primevue/icons/check';
-import MinusIcon from '@primevue/icons/minus';
+import { Check as CheckIcon, Minus as MinusIcon } from 'lucide-vue-next';
 import Checkbox, { type CheckboxPassThroughOptions, type CheckboxProps } from 'primevue/checkbox';
 import { ref } from 'vue';
 import { ptViewMerge } from './utils';

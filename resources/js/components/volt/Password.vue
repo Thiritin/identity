@@ -19,8 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import EyeIcon from '@primevue/icons/eye';
-import EyeSlashIcon from '@primevue/icons/eyeslash';
+import { Eye as EyeIcon, EyeOff as EyeSlashIcon } from 'lucide-vue-next';
 import Password, { type PasswordPassThroughOptions, type PasswordProps } from 'primevue/password';
 import { ref } from 'vue';
 import { ptViewMerge } from './utils';

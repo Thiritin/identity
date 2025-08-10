@@ -3,7 +3,8 @@
 import AppLayout from "../../../layouts/AppLayout.vue";
 import TabHeader from "./TabHeader.vue";
 import TabComponent from "./TabComponent.vue";
-import Button from '@Shared/components/volt/Button.vue';
+import { Button } from '@/components/ui/button';
+import { Loader2 as SpinnerIcon } from 'lucide-vue-next';
 
 import {computed, ref} from "vue";
 import {useForm} from "laravel-precognition-vue-inertia";
@@ -101,13 +102,15 @@ const showDescriptionLabel = computed(() => {
                        class="text-red-500 text-xs font-semibold">{{ form.errors.description }}</small>
                 <div class="mt-2 flex gap-3 justify-end">
                     <Button
-                        size="small"
-                        severity="danger"
+                        size="sm"
+                        variant="secondary"
                         @click="editModeEnabled = false;form.reset()">Cancel
                     </Button>
                     <Button
-                        size="small"
-                        :loading="form.processing" @click="submit()">Save
+                        size="sm"
+                        :disabled="form.processing" @click="submit()">
+                        <SpinnerIcon v-if="form.processing" class="w-4 h-4 mr-2 animate-spin" />
+                        Save
                     </Button>
                 </div>
             </div>

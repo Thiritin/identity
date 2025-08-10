@@ -6,12 +6,13 @@ import OverlayPanel from 'primevue/overlaypanel';
 import Avatar from 'primevue/avatar';
 import Badge from 'primevue/badge';
 import { 
-    MagnifyingGlassIcon, 
-    UserIcon, 
-    UserGroupIcon,
-    BuildingOfficeIcon,
-    CommandLineIcon 
-} from '@heroicons/vue/24/outline';
+    Search as MagnifyingGlassIcon, 
+    User as UserIcon, 
+    Users as UserGroupIcon,
+    Building as BuildingOfficeIcon,
+    Terminal as CommandLineIcon,
+    Loader2 as SpinnerIcon
+} from 'lucide-vue-next';
 
 const searchQuery = ref('');
 const searchResults = ref([]);
@@ -152,7 +153,7 @@ const getResultIcon = (type) => {
                 @blur="hideResults"
             />
             <div v-if="isLoading" class="absolute right-3 top-1/2 transform -translate-y-1/2">
-                <i class="pi pi-spinner pi-spin text-green-200"></i>
+                <SpinnerIcon class="w-4 h-4 animate-spin text-green-200" />
             </div>
         </div>
 

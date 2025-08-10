@@ -40,9 +40,9 @@
           <template #header>
             <div class="flex justify-between">
               <h3 class="text-lg font-semibold">Group Members ({{ users.length }})</h3>
-              <span class="p-input-icon-left">
-                <i class="pi pi-search" />
-                <InputText v-model="filters['global'].value" placeholder="Search users..." />
+              <span class="relative">
+                <SearchIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <InputText v-model="filters['global'].value" placeholder="Search users..." class="pl-10" />
               </span>
             </div>
           </template>
@@ -108,18 +108,23 @@
             <template #body="slotProps">
               <div class="flex gap-2">
                 <Button
-                  icon="pi pi-eye"
-                  class="p-button-rounded p-button-text p-button-sm"
+                  variant="ghost"
+                  size="sm"
                   @click="viewUser(slotProps.data)"
                   v-tooltip="'View Profile'"
-                />
+                >
+                  <EyeIcon class="w-4 h-4" />
+                </Button>
                 <Button
-                  icon="pi pi-trash"
-                  class="p-button-rounded p-button-text p-button-sm p-button-danger"
+                  variant="ghost"
+                  size="sm"
                   @click="removeUser(slotProps.data)"
                   :disabled="!canRemoveUser(slotProps.data)"
                   v-tooltip="'Remove from Group'"
-                />
+                  class="text-destructive hover:text-destructive"
+                >
+                  <TrashIcon class="w-4 h-4" />
+                </Button>
               </div>
             </template>
           </Column>
@@ -135,14 +140,20 @@
       :modal="true"
     >
       <div class="confirmation-content">
-        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+        <ExclamationTriangleIcon class="w-8 h-8 mr-3 text-orange-500" />
         <span v-if="userToRemove">
           Are you sure you want to remove <strong>{{ userToRemove.user.full_name }}</strong> from this {{ group.type.toLowerCase() }}?
         </span>
       </div>
       <template #footer>
-        <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="showRemoveDialog = false" />
-        <Button label="Remove" icon="pi pi-check" class="p-button-danger" @click="confirmRemoval" />
+        <Button variant="ghost" @click="showRemoveDialog = false">
+          <TimesIcon class="w-4 h-4 mr-2" />
+          Cancel
+        </Button>
+        <Button variant="destructive" @click="confirmRemoval">
+          <CheckIcon class="w-4 h-4 mr-2" />
+          Remove
+        </Button>
       </template>
     </Dialog>
   </div>
@@ -152,11 +163,11 @@
 import { ref, computed, onMounted } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { useToast } from 'primevue/usetoast'
-import { FilterMatchMode } from 'primevue/api'
+import { Search as SearchIcon, Eye as EyeIcon, Trash as TrashIcon, TriangleAlert as ExclamationTriangleIcon, X as TimesIcon, Check as CheckIcon } from 'lucide-vue-next'
 
 import DataTable from '@Shared/components/volt/DataTable.vue'
 import Column from 'primevue/column'
-import Button from '@Shared/components/volt/Button.vue'
+import { Button } from '@/components/ui/button'
 import InputText from '@Shared/components/volt/InputText.vue'
 import Dropdown from '@Shared/components/volt/Select.vue'
 import Checkbox from '@Shared/components/volt/Checkbox.vue'

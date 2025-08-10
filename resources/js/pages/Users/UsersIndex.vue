@@ -5,21 +5,22 @@ import {ref, computed, onMounted} from "vue";
 import Card from "@Shared/components/volt/Card.vue";
 import DataTable from "@Shared/components/volt/DataTable.vue";
 import Column from "primevue/column";
-import Button from "@Shared/components/volt/Button.vue";
+import { Button } from "@/components/ui/button";
 import Badge from "@Shared/components/volt/Badge.vue";
 import Avatar from "@Shared/components/volt/Avatar.vue";
-import InputText from "@Shared/components/volt/InputText.vue";
+import { Input } from "@/components/ui/input";
 import Dropdown from "@Shared/components/volt/Select.vue";
 import Dialog from "@Shared/components/volt/Dialog.vue";
 import {
-    MagnifyingGlassIcon,
-    UserIcon,
-    EnvelopeIcon,
-    PhoneIcon,
-    MapPinIcon,
-    CalendarIcon,
-    LanguageIcon
-} from "@heroicons/vue/24/outline/index.js";
+    Search as MagnifyingGlassIcon,
+    User as UserIcon,
+    Mail as EnvelopeIcon,
+    Phone as PhoneIcon,
+    MapPin as MapPinIcon,
+    Calendar as CalendarIcon,
+    Languages as LanguageIcon,
+    MessageCircle as TelegramIcon
+} from "lucide-vue-next";
 
 const props = defineProps({
     users: Array,
@@ -82,7 +83,7 @@ const getContactMethods = (user) => {
         });
     }
     if (user.telegram_username) {
-        methods.push({ type: 'telegram', value: `@${user.telegram_username}`, icon: 'pi pi-telegram' });
+        methods.push({ type: 'telegram', value: `@${user.telegram_username}`, icon: TelegramIcon });
     }
     return methods;
 };
@@ -107,7 +108,7 @@ defineOptions({layout: AppLayout})
                     <div class="flex flex-col sm:flex-row gap-4 lg:min-w-96">
                         <div class="relative flex-1">
                             <MagnifyingGlassIcon class="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-green-200" />
-                            <InputText
+                            <Input
                                 v-model="searchTerm"
                                 @input="performSearch"
                                 placeholder="Search by name, email, or department..."
@@ -214,24 +215,23 @@ defineOptions({layout: AppLayout})
                                 <div class="flex space-x-2">
                                     <Button 
                                         v-if="slotProps.data.email"
-                                        icon="pi pi-envelope" 
-                                        size="small" 
-                                        severity="secondary" 
-                                        text 
-                                        rounded
+                                        size="sm" 
+                                        variant="ghost"
                                         :title="`Email ${slotProps.data.name}`"
                                         @click="window.location.href = `mailto:${slotProps.data.email}`"
-                                    />
+                                    >
+                                        <EnvelopeIcon class="w-4 h-4" />
+                                    </Button>
                                     <Button 
                                         v-if="slotProps.data.telegram_username"
-                                        icon="pi pi-telegram" 
-                                        size="small" 
-                                        severity="info" 
-                                        text 
-                                        rounded
+                                        size="sm" 
+                                        variant="ghost"
                                         :title="`Telegram @${slotProps.data.telegram_username}`"
                                         @click="window.open(`https://t.me/${slotProps.data.telegram_username}`, '_blank')"
-                                    />
+                                        class="text-blue-600 hover:text-blue-700"
+                                    >
+                                        <TelegramIcon class="w-4 h-4" />
+                                    </Button>
                                 </div>
                             </template>
                         </Column>
@@ -239,12 +239,13 @@ defineOptions({layout: AppLayout})
                         <Column header="Actions" style="min-width: 100px">
                             <template #body="slotProps">
                                 <Button 
-                                    label="View Profile"
-                                    icon="pi pi-user" 
-                                    size="small" 
-                                    severity="secondary" 
+                                    size="sm" 
+                                    variant="secondary" 
                                     @click="viewUserProfile(slotProps.data)"
-                                />
+                                >
+                                    <UserIcon class="w-4 h-4 mr-2" />
+                                    View Profile
+                                </Button>
                             </template>
                         </Column>
                     </DataTable>

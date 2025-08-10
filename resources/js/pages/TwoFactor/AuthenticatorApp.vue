@@ -4,9 +4,9 @@ import SettingsSubHeader from "@Shared/components/Settings/SettingsSubHeader.vue
 import {Head} from "@inertiajs/vue3";
 import PrimaryButton from "@Shared/components/PrimaryButton.vue";
 import {useForm} from 'laravel-precognition-vue-inertia'
-import InputText from "@Shared/components/volt/InputText.vue";
+import { Input } from "@/components/ui/input";
 import InlineMessage from "@Shared/components/volt/Message.vue";
-import Button from "@Shared/components/volt/Button.vue";
+import { Button } from "@/components/ui/button";
 import {watch} from "vue";
 
 const props = defineProps({
@@ -67,10 +67,10 @@ watch(enableForm, (value) => {
             </div>
             <div class="flex flex-col gap-2">
                 <label for="code">{{ $trans('code') }}</label>
-                <InputText id="code"
+                <Input id="code"
                            type="number"
                            @change="enableForm.validate('code')"
-                           :invalid="enableForm.invalid('code')"
+                           :class="{ 'border-red-500': enableForm.invalid('code') }"
                            v-model.trim.lazy="enableForm.code"
                 />
                 <InlineMessage v-if="enableForm.invalid('code')" severity="error">{{ enableForm.errors.code }}
@@ -78,11 +78,13 @@ watch(enableForm, (value) => {
             </div>
             <div class="flex justify-end">
                 <Button
-                    :loading="enableForm.processing"
+                    :disabled="enableForm.processing"
                     type="submit"
                     class="block"
-                    :label="$trans('submit')"
-                />
+                >
+                    <i v-if="enableForm.processing" class="pi pi-spin pi-spinner mr-2"></i>
+                    {{ $trans('submit') }}
+                </Button>
             </div>
         </form>
     </div>
@@ -94,11 +96,11 @@ watch(enableForm, (value) => {
         <form @submit.prevent="deactivateTotp" class="space-y-6">
             <div class="flex flex-col gap-2">
                 <label for="password">{{ $trans('password') }}</label>
-                <InputText id="password"
+                <Input id="password"
                            type="password"
                            autocomplete="password"
                            @change="deleteForm.validate('password')"
-                           :invalid="deleteForm.invalid('password')"
+                           :class="{ 'border-red-500': deleteForm.invalid('password') }"
                            v-model.trim.lazy="deleteForm.password"
                 />
                 <InlineMessage v-if="deleteForm.invalid('password')" severity="error">{{ deleteForm.errors.password }}

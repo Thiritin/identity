@@ -9,7 +9,7 @@
     </div>
 
     <!-- Form section -->
-    <div class="px-8 pb-8">
+    <div>
         <!-- Error display -->
         <div v-if="$page.props.flash?.error" class="mb-6 animate-slide-in">
             <div class="bg-red-50 border border-red-200 rounded-xl p-4">
@@ -87,8 +87,8 @@
 
 <script setup>
 import { Head, Link } from '@inertiajs/vue3'
-import { ExclamationTriangleIcon, CheckCircleIcon } from '@heroicons/vue/24/outline'
-import Logo from './Logo.vue'
+import { TriangleAlert as ExclamationTriangleIcon, CheckCircle as CheckCircleIcon } from 'lucide-vue-next'
+import Logo from '../components/Logo.vue'
 import AuthLayout from '@Shared/layouts/AuthLayout.vue'
 import { useForm } from 'laravel-precognition-vue-inertia'
 

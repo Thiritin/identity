@@ -25,7 +25,7 @@
 <script setup>
 import {computed, defineProps} from 'vue'
 import {usePage, Head} from '@inertiajs/vue3'
-import {ChevronRightIcon} from "@heroicons/vue/24/outline";
+import {ChevronRight as ChevronRightIcon} from "lucide-vue-next";
 
 const props = defineProps({
     apps: Array,
