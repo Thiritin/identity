@@ -175,7 +175,7 @@ test('non staff user only sees groups they are member of', function () {
         'name' => 'Regular Group',
         'type' => GroupTypeEnum::Default,
     ]);
-    
+
     // Add non-staff user to only the regular group (not department)
     $this->nonStaffUser->groups()->attach($regularGroup->id, ['level' => GroupUserLevel::Member]);
 
@@ -236,7 +236,7 @@ test('staff config missing prevents access', function () {
 test('user with view_full_staff_details scope can see email addresses', function () {
     // Add a user to the department to test
     $this->department1->users()->attach($this->staffUser->id, ['level' => GroupUserLevel::Member]);
-    
+
     $token = $this->staffUser->createToken('test-token', ['groups.read', 'view_full_staff_details']);
 
     $response = $this->withHeaders([
@@ -246,7 +246,7 @@ test('user with view_full_staff_details scope can see email addresses', function
 
     $response->assertOk();
     $data = $response->json('data');
-    
+
     // Should contain email addresses
     expect($data)->toBeArray();
     expect($data[0]['email'])->not->toBeNull();
@@ -257,7 +257,7 @@ test('user with view_full_staff_details scope can see email addresses', function
 test('user without view_full_staff_details scope cannot see email addresses', function () {
     // Add a user to the department to test
     $this->department1->users()->attach($this->staffUser->id, ['level' => GroupUserLevel::Member]);
-    
+
     $token = $this->staffUser->createToken('test-token', ['groups.read']);
 
     $response = $this->withHeaders([
@@ -267,7 +267,7 @@ test('user without view_full_staff_details scope cannot see email addresses', fu
 
     $response->assertOk();
     $data = $response->json('data');
-    
+
     // Should NOT contain email addresses but should have other fields
     expect($data)->toBeArray();
     expect($data[0]['email'])->toBeNull();

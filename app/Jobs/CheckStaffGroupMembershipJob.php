@@ -29,11 +29,11 @@ class CheckStaffGroupMembershipJob implements ShouldQueue
     public function handle(): void
     {
         $staffGroupId = config('groups.staff');
-        
+
         if (empty($staffGroupId)) {
             return;
         }
-        
+
         $staffGroup = \App\Models\Group::findOrFail($staffGroupId);
         $isMemberInAnyDepartment = $this->user->groups()->where('type', 'department')->exists();
         if ($isMemberInAnyDepartment) {

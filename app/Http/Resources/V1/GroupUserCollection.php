@@ -17,7 +17,7 @@ class GroupUserCollection extends ResourceCollection
         return [
             'data' => $this->collection->map(function ($user) use ($request) {
                 $hasFullStaffDetails = $request->user() && $request->user()->scopeCheck('view_full_staff_details');
-                
+
                 return [
                     'user_id' => $user->hashid,
                     'group_id' => $user->pivot->group->hashid,
