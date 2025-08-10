@@ -88,12 +88,6 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
           AWS_BUCKET_AVATARS: test-bucket
           AWS_ENDPOINT: http://localhost:9000
-          FILESYSTEM_DRIVER: local
-          AWS_ACCESS_KEY_ID: test
-          AWS_SECRET_ACCESS_KEY: test
-          AWS_DEFAULT_REGION: us-east-1
-          AWS_BUCKET_AVATARS: test-bucket
-          AWS_ENDPOINT: http://localhost:9000
 
   laravel-pint:
     runs-on: ubuntu-latest
