@@ -79,7 +79,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function inGroup(int $id): bool
     {
-        return $this->groups()->where('level', '!=', 'invited')->where('id', $id)->exists();
+        return $this->groups()->where('id', $id)->exists();
     }
 
     public function isStaff(): bool
@@ -129,6 +129,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             ->withPivot(
                 [
                     'level',
+                    'title',
                 ]
             );
     }
