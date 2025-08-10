@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
+
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\delete;
@@ -505,7 +506,7 @@ test('Get groups index without with_users parameter excludes user data', functio
 
     $group->users()->sync([
         $user->id => ['level' => GroupUserLevel::Member],
-        $member->id => ['level' => GroupUserLevel::Member]
+        $member->id => ['level' => GroupUserLevel::Member],
     ]);
 
     $response = get(route('api.v1.groups.index'));
@@ -525,7 +526,7 @@ test('Get groups index with with_users=true includes user data without email whe
 
     $group->users()->sync([
         $user->id => ['level' => GroupUserLevel::Member],
-        $member->id => ['level' => GroupUserLevel::Admin]
+        $member->id => ['level' => GroupUserLevel::Admin],
     ]);
 
     $response = get(route('api.v1.groups.index', ['with_users' => true]));
@@ -551,7 +552,7 @@ test('Get groups index with with_users=true includes user data with email when v
 
     $group->users()->sync([
         $user->id => ['level' => GroupUserLevel::Member],
-        $member->id => ['level' => GroupUserLevel::Admin]
+        $member->id => ['level' => GroupUserLevel::Admin],
     ]);
 
     $response = get(route('api.v1.groups.index', ['with_users' => true]));
@@ -577,7 +578,7 @@ test('Get groups index with with_users=false does not include user data', functi
 
     $group->users()->sync([
         $user->id => ['level' => GroupUserLevel::Member],
-        $member->id => ['level' => GroupUserLevel::Admin]
+        $member->id => ['level' => GroupUserLevel::Admin],
     ]);
 
     $response = get(route('api.v1.groups.index', ['with_users' => false]));
@@ -597,7 +598,7 @@ test('Get single group show endpoint does not support with_users parameter', fun
 
     $group->users()->sync([
         $user->id => ['level' => GroupUserLevel::Member],
-        $member->id => ['level' => GroupUserLevel::Admin]
+        $member->id => ['level' => GroupUserLevel::Admin],
     ]);
 
     // Test that show endpoint doesn't include users even with with_users parameter
@@ -657,4 +658,3 @@ test('Get groups index with with_users handles null avatar gracefully', function
     $response->assertSuccessful();
     $response->assertJsonPath('data.0.users.0.avatar', null);
 });
-

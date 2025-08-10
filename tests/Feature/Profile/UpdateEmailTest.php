@@ -14,7 +14,7 @@ class UpdateEmailTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testCanUpdateEmail()
+    public function test_can_update_email()
     {
         Notification::fake();
         Mail::fake();
@@ -31,7 +31,7 @@ class UpdateEmailTest extends TestCase
         Notification::assertSentTimes(UpdateEmailNotification::class, 1);
     }
 
-    public function testCanUseSignedRouteToUpdateEmail()
+    public function test_can_use_signed_route_to_update_email()
     {
         $user = $this->makeAuthSession();
         $oldMail = $user->email;
@@ -51,7 +51,7 @@ class UpdateEmailTest extends TestCase
 
     }
 
-    public function testSignedUrlSafe()
+    public function test_signed_url_safe()
     {
         $this->makeAuthSession();
         $response = $this->get(route('settings.update-profile.email.update'));

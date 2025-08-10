@@ -8,5 +8,5 @@ class AppLoginEvent
 {
     use Dispatchable;
 
-    public function __construct(readonly public string $clientId, readonly public string $userId) {}
+    public function __construct(public readonly string $clientId, public readonly string $userId) {}
 }

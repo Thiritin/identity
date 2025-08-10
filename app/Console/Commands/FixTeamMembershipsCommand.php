@@ -15,15 +15,16 @@ class FixTeamMembershipsCommand extends Command
     public function handle()
     {
         $isDryRun = $this->option('dry-run');
-        
+
         if ($isDryRun) {
             $this->info('DRY RUN MODE - No changes will be made');
         }
 
         // Get staff group
         $staffGroup = Group::where('system_name', 'staff')->first();
-        if (!$staffGroup) {
+        if (! $staffGroup) {
             $this->error('Staff group not found!');
+
             return 1;
         }
 
@@ -39,10 +40,10 @@ class FixTeamMembershipsCommand extends Command
             ->select([
                 'teams.id as team_id',
                 'teams.name as team_name',
-                'departments.id as dept_id', 
+                'departments.id as dept_id',
                 'departments.name as dept_name',
                 'users.id as user_id',
-                'users.name as user_name'
+                'users.name as user_name',
             ])
             ->get();
 
@@ -64,20 +65,20 @@ class FixTeamMembershipsCommand extends Command
                 ->where('group_id', $membership->dept_id)
                 ->where('user_id', $membership->user_id)
                 ->exists();
-            
-            if (!$isDepartmentMember) {
+
+            if (! $isDepartmentMember) {
                 $this->warn("  User {$membership->user_name} (ID: {$membership->user_id}) is NOT in department {$membership->dept_name}");
-                
-                if (!$isDryRun) {
+
+                if (! $isDryRun) {
                     // Add user to department with 'member' level
                     DB::table('group_user')->insertOrIgnore([
                         'group_id' => $membership->dept_id,
                         'user_id' => $membership->user_id,
-                        'level' => 'member'
+                        'level' => 'member',
                     ]);
-                    $this->info("    ✓ Added to department");
+                    $this->info('    ✓ Added to department');
                 } else {
-                    $this->info("    → Would add to department");
+                    $this->info('    → Would add to department');
                 }
                 $addedToDepartment++;
             } else {
@@ -89,20 +90,20 @@ class FixTeamMembershipsCommand extends Command
                 ->where('group_id', $staffGroup->id)
                 ->where('user_id', $membership->user_id)
                 ->exists();
-            
-            if (!$isStaffMember) {
+
+            if (! $isStaffMember) {
                 $this->warn("  User {$membership->user_name} (ID: {$membership->user_id}) is NOT in staff group");
-                
-                if (!$isDryRun) {
+
+                if (! $isDryRun) {
                     // Add user to staff with 'member' level
                     DB::table('group_user')->insertOrIgnore([
                         'group_id' => $staffGroup->id,
                         'user_id' => $membership->user_id,
-                        'level' => 'member'
+                        'level' => 'member',
                     ]);
-                    $this->info("    ✓ Added to staff");
+                    $this->info('    ✓ Added to staff');
                 } else {
-                    $this->info("    → Would add to staff");
+                    $this->info('    → Would add to staff');
                 }
                 $addedToStaff++;
             } else {

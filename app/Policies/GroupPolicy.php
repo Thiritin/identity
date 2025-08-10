@@ -33,9 +33,10 @@ class GroupPolicy
         // Handle Sanctum token authentication (auth:sanctum middleware)
         // When using Sanctum, no specific guard is active, so we check for API scopes
         if (auth()->check() && $user->currentAccessToken()) {
-            if (!$user->scopeCheck('groups.read')) {
+            if (! $user->scopeCheck('groups.read')) {
                 return Response::deny('Insufficient permissions, groups.read is missing');
             }
+
             return true;
         }
 
