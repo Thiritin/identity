@@ -10,7 +10,7 @@ class FixTeamMembershipsCommand extends Command
 {
     protected $signature = 'fix:team-memberships {--dry-run : Show what would be done without making changes}';
 
-    protected $description = 'Ensures all team members are also members of their parent department and the staff group';
+    protected $description = 'Ensures all department and team members are also members of the staff group';
 
     public function handle()
     {
@@ -49,8 +49,25 @@ class FixTeamMembershipsCommand extends Command
 
         $this->info("Found {$teamMemberships->count()} team memberships to process");
 
+        // Get all department members (including those not in teams)
+        $departmentMemberships = DB::table('groups as departments')
+            ->join('group_user as dept_membership', 'dept_membership.group_id', '=', 'departments.id')
+            ->join('users', 'users.id', '=', 'dept_membership.user_id')
+            ->where('departments.type', 'department')
+            ->select([
+                'departments.id as dept_id',
+                'departments.name as dept_name',
+                'users.id as user_id',
+                'users.name as user_name',
+            ])
+            ->distinct()
+            ->get();
+
+        $this->info("Found {$departmentMemberships->count()} department memberships to process");
+
         $addedToDepartment = 0;
         $addedToStaff = 0;
+        $processedUsers = [];
         $currentTeam = null;
 
         foreach ($teamMemberships as $membership) {
@@ -85,6 +102,51 @@ class FixTeamMembershipsCommand extends Command
                 $this->info("  User {$membership->user_name} is already in department {$membership->dept_name}");
             }
 
+            // Check if user is member of staff (and not already processed)
+            if (!in_array($membership->user_id, $processedUsers)) {
+                $isStaffMember = DB::table('group_user')
+                    ->where('group_id', $staffGroup->id)
+                    ->where('user_id', $membership->user_id)
+                    ->exists();
+
+                if (! $isStaffMember) {
+                    $this->warn("  User {$membership->user_name} (ID: {$membership->user_id}) is NOT in staff group");
+
+                    if (! $isDryRun) {
+                        // Add user to staff with 'member' level
+                        DB::table('group_user')->insertOrIgnore([
+                            'group_id' => $staffGroup->id,
+                            'user_id' => $membership->user_id,
+                            'level' => 'member',
+                        ]);
+                        $this->info('    ✓ Added to staff');
+                    } else {
+                        $this->info('    → Would add to staff');
+                    }
+                    $addedToStaff++;
+                } else {
+                    $this->info("  User {$membership->user_name} is already in staff group");
+                }
+                $processedUsers[] = $membership->user_id;
+            }
+        }
+
+        // Now process department members (those not in teams but directly in departments)
+        $this->info("\nProcessing department-only members:");
+        $currentDept = null;
+        
+        foreach ($departmentMemberships as $membership) {
+            // Show department header when we switch departments
+            if ($currentDept !== $membership->dept_name) {
+                $this->info("Processing department: {$membership->dept_name}");
+                $currentDept = $membership->dept_name;
+            }
+
+            // Skip if user was already processed (was in a team)
+            if (in_array($membership->user_id, $processedUsers)) {
+                continue;
+            }
+
             // Check if user is member of staff
             $isStaffMember = DB::table('group_user')
                 ->where('group_id', $staffGroup->id)
@@ -106,9 +168,8 @@ class FixTeamMembershipsCommand extends Command
                     $this->info('    → Would add to staff');
                 }
                 $addedToStaff++;
-            } else {
-                $this->info("  User {$membership->user_name} is already in staff group");
             }
+            $processedUsers[] = $membership->user_id;
         }
 
         $this->info('Summary:');
