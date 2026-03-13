@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9/ubi-minimal:9.6 AS php-base
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.7 AS php-base
 
 LABEL maintainer="ThunderAl <community@thunderal.net>" \
       org.opencontainers.image.authors="ThunderAl <community@thunderal.net>" \
