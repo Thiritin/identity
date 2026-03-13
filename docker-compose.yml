@@ -37,7 +37,7 @@ services:
       - traefik.http.routers.app.entrypoints=web
 
   traefik:
-    image: 'traefik:v2.3'
+    image: 'traefik:v2.11'
     command:
       - '--api=true'
       - '--api.insecure=true'
