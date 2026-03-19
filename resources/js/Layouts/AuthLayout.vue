@@ -18,7 +18,19 @@
     </VueCookieAcceptDecline>
     <div :class="{ dark: darkMode }">
         <div class="bg-white flex page dark:text-primary-300 dark:bg-primary-900">
-            <ArtistNotice url="https://www.furaffinity.net/user/chromamancer" name="Chromamancer"/>
+            <!-- Background & Artist Notice -->
+            <div class="hidden lg:block relative w-0 flex-auto">
+                <div
+                    class="absolute inset-0 object-right h-full w-full object-cover bg-primary-600 auth-background"
+                >
+                    <div
+                        class="absolute bottom-2 left-2 text-sm text-primary-200 bg-black px-2 py-1 rounded shadow"
+                    >
+                        Artwork by
+                        <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
+                    </div>
+                </div>
+            </div>
             <!-- Page Content -->
             <div
                 class="!min-h-[calc(100dvh)] min-h-screen
@@ -57,12 +69,11 @@ const user = usePage().props.user;
 import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
 import 'vue-cookie-accept-decline/dist/vue-cookie-accept-decline.css'
 import AuthFooter from "../Components/Auth/AuthFooter.vue";
-import ArtistNotice from "../Components/Auth/ArtistNotice.vue";
 import AuthHeader from "../Components/Auth/AuthHeader.vue";
 import {usePage} from "@inertiajs/vue3";
 
 export default {
-    components: {AuthHeader, ArtistNotice, AuthFooter, VueCookieAcceptDecline},
+    components: {AuthHeader, AuthFooter, VueCookieAcceptDecline},
     data() {
         return {
             animated: true,
@@ -131,5 +142,14 @@ export default {
     opacity: 0;
 }
 
+.auth-background {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url('../../../assets/fantastic_furry_festival.jpg');
+}
+
+.page * {
+    @apply transition-colors;
+}
 
 </style>
