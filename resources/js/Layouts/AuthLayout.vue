@@ -145,7 +145,7 @@ export default {
 .auth-background {
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url('../../../assets/fantastic_furry_festival.jpg');
+    background-image: url('../../assets/fantastic_furry_festival.jpg');
 }
 
 .page * {
