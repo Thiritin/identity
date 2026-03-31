@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Enums\GroupUserLevel;
+use App\Models\Group;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -28,9 +29,9 @@ class CheckStaffGroupMembershipJob implements ShouldQueue
 
     public function handle(): void
     {
-        $staffGroup = \App\Models\Group::where('system_name', 'staff')->first();
+        $staffGroup = Group::where('system_name', 'staff')->first();
 
-        if (!$staffGroup) {
+        if (! $staffGroup) {
             return;
         }
 

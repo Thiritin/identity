@@ -103,7 +103,7 @@ class FixTeamMembershipsCommand extends Command
             }
 
             // Check if user is member of staff (and not already processed)
-            if (!in_array($membership->user_id, $processedUsers)) {
+            if (! in_array($membership->user_id, $processedUsers)) {
                 $isStaffMember = DB::table('group_user')
                     ->where('group_id', $staffGroup->id)
                     ->where('user_id', $membership->user_id)
@@ -134,7 +134,7 @@ class FixTeamMembershipsCommand extends Command
         // Now process department members (those not in teams but directly in departments)
         $this->info("\nProcessing department-only members:");
         $currentDept = null;
-        
+
         foreach ($departmentMemberships as $membership) {
             // Show department header when we switch departments
             if ($currentDept !== $membership->dept_name) {

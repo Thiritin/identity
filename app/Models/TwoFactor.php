@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\TwoFactorTypeEnum;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TwoFactor extends Model
@@ -18,7 +19,7 @@ class TwoFactor extends Model
         'secret' => 'encrypted',
     ];
 
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

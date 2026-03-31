@@ -372,7 +372,7 @@ return [
     // A list of classes that will never be serialized (e.g. a common service container class)
     'serialization_blackbox' => [
         Container::class,
-        \Illuminate\Foundation\Application::class,
+        Illuminate\Foundation\Application::class,
         Application::class,
     ],
 

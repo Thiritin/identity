@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 
 class YubicoService
@@ -22,7 +23,7 @@ class YubicoService
         $signature = $this->generateSignature($requestParams);
         $requestParams['h'] = $signature;
         // Validate Yubikey
-        $response = \Illuminate\Support\Facades\Http::get('https://api.yubico.com/wsapi/2.0/verify', $requestParams);
+        $response = Http::get('https://api.yubico.com/wsapi/2.0/verify', $requestParams);
         $body = $response->body();
         $responseData = $this->convertResponseToArray($body);
 

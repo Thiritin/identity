@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\App;
+use App\Models\Group;
 use Auth;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Support\Facades\Cache;
@@ -26,7 +27,7 @@ class DashboardController extends Controller
         })->orderBy('priority')->get(['id', 'name', 'description', 'icon', 'url']);
 
         $staffGroupId = Cache::rememberForever('staff-group-id', function () {
-            return \App\Models\Group::where('system_name', 'staff')->firstOrFail()->id;
+            return Group::where('system_name', 'staff')->firstOrFail()->id;
         });
 
         $isStaff = $user->groups->contains('id', $staffGroupId);

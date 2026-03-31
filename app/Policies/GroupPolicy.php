@@ -61,8 +61,8 @@ class GroupPolicy
         // Provide specific error messages based on the situation
         if (! $inGroup && ($group->type === GroupTypeEnum::Department || $group->type === GroupTypeEnum::Team)) {
             $staffGroup = Group::where('system_name', 'staff')->first();
-            
-            if (!$staffGroup) {
+
+            if (! $staffGroup) {
                 return Response::deny('Staff group is not configured. Please contact administrator.');
             }
 

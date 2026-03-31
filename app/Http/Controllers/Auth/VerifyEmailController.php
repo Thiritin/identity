@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\EmailVerificationRequest;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -35,7 +36,7 @@ class VerifyEmailController extends Controller
 
     public function resend(Request $request)
     {
-        $success = \Illuminate\Support\Facades\RateLimiter::attempt($request->user()->id . ':resend-verification-email',
+        $success = RateLimiter::attempt($request->user()->id . ':resend-verification-email',
             1,
             function () use ($request) {
                 if ($request->user()->hasVerifiedEmail()) {

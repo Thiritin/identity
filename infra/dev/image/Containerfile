@@ -14,7 +14,7 @@ WORKDIR /var/www/html
 # PHP version to be installed
 # See: https://rpms.remirepo.net/wizard/
 # WARNING: PHP 8.2 have only security only support until December 2026
-ARG PHP_VERSION=8.3
+ARG PHP_VERSION=8.5
 
 # list of all PHP packages to be installed
 ARG PHP_PACKAGES="php-cli composer php-intl php-json php-mbstring php-mysqlnd php-opcache php-pdo php-gd php-redis php-xml php-swoole php-zip php-sodium php-bcmath"
@@ -40,8 +40,9 @@ RUN set -xe; \
       rpm -i --nodigest c-ares.rpm; rm -f c-ares.rpm; \
     \
     echo "==> Installing PHP $PHP_VERSION and extensions"; \
-    microdnf module enable --nodocs -y php:remi-$PHP_VERSION; \
-    microdnf install -y --nodocs $PHP_PACKAGES; \
+    microdnf module disable -y php; \
+    microdnf module enable -y php:remi-$PHP_VERSION; \
+    microdnf install -y --nodocs --setopt=ubi-9-appstream-rpms.excludepkgs=php* $PHP_PACKAGES; \
     setcap "cap_net_bind_service=+ep" "/usr/bin/php"; \
     \
     echo "==> Installing NodeJs"; \

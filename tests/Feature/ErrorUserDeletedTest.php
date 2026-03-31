@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -19,7 +20,7 @@ test('If user is deleted, system should reject consent', function () {
 });
 
 test('If user exists, consent should be forwarded', function () {
-    $user = \App\Models\User::factory()->create();
+    $user = User::factory()->create();
     Http::fake([
         config('services.hydra.admin') . '/admin/oauth2/auth/requests/consent?challenge=*' => Http::response([
             'subject' => $user->hashid(),

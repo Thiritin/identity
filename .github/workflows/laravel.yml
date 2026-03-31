@@ -15,7 +15,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: testing
+          MYSQL_DATABASE: idp-test
         ports:
           - 3306:3306
         options: >-
@@ -65,7 +65,7 @@ jobs:
           echo "DB_CONNECTION=mysql" >> .env
           echo "DB_HOST=127.0.0.1" >> .env
           echo "DB_PORT=3306" >> .env
-          echo "DB_DATABASE=testing" >> .env
+          echo "DB_DATABASE=idp-test" >> .env
           echo "DB_USERNAME=root" >> .env
           echo "DB_PASSWORD=password" >> .env
           echo "CACHE_DRIVER=array" >> .env

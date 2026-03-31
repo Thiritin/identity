@@ -85,8 +85,8 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function isStaff(): bool
     {
         $staffGroup = Group::where('system_name', 'staff')->first();
-        
-        if (!$staffGroup) {
+
+        if (! $staffGroup) {
             return false;
         }
 

@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources\V1;
 
+use App\Models\GroupUser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-/** @see \App\Models\GroupUser */
+/** @see GroupUser */
 class GroupUserCollection extends ResourceCollection
 {
     /**

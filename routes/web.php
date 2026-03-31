@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\ChooseController;
 use App\Http\Controllers\Auth\ConsentController;
+use App\Http\Controllers\Auth\ErrorController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\FrontChannelLogoutController;
 use App\Http\Controllers\Auth\LoginController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\UpdateEmailController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
@@ -22,11 +24,11 @@ Route::prefix('auth')->name('auth.')->group(function () {
         ->name('login.submit');
 
     Route::get('two-factor',
-        [\App\Http\Controllers\TwoFactorController::class, 'show'])
+        [TwoFactorController::class, 'show'])
         ->middleware('signed')->name('two-factor');
 
     Route::post('two-factor',
-        [\App\Http\Controllers\TwoFactorController::class, 'submit'])
+        [TwoFactorController::class, 'submit'])
         ->middleware(['signed', HandlePrecognitiveRequests::class])
         ->name('two-factor.submit');
 
@@ -60,7 +62,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
 });
 
 // Error
-Route::get('auth/error', App\Http\Controllers\Auth\ErrorController::class)->name('auth.error');
+Route::get('auth/error', ErrorController::class)->name('auth.error');
 
 // E-Mail First Sign Up
 Route::prefix('auth')->group(function () {
