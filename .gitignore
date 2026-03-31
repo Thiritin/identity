@@ -20,3 +20,7 @@ yarn-error.log
 logs/
 CLAUDE.md
 config.json
+.DS_Store
+.mcp.json
+.playwright-mcp/
+boost.json
