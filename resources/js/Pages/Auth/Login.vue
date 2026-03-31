@@ -82,13 +82,12 @@ import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import FormInput from '@/Auth/Form/AuthFormInput.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
-import {Head, Link} from '@inertiajs/vue3'
+import {Head, Link, useForm} from '@inertiajs/vue3'
 import {ref} from 'vue'
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Checkbox from 'primevue/checkbox';
 import InlineMessage from 'primevue/inlinemessage';
-import {useForm} from 'laravel-precognition-vue-inertia';
 
 defineOptions({
     layout: AuthLayout

@@ -6,7 +6,7 @@ import TabComponent from "./TabComponent.vue";
 import Button from 'primevue/button';
 
 import {computed, ref} from "vue";
-import {useForm} from "laravel-precognition-vue-inertia";
+import {useForm} from "@inertiajs/vue3";
 import {MdEditor} from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 

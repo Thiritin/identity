@@ -138,7 +138,7 @@
 </template>
 
 <script setup>
-import {Head, Link, usePage} from '@inertiajs/vue3'
+import {Head, Link, useForm, usePage} from '@inertiajs/vue3'
 import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
 import SettingsHeader from '@/Components/Settings/SettingsHeader.vue'
 import SettingsSubHeader from '@/Components/Settings/SettingsSubHeader.vue'
@@ -148,7 +148,6 @@ import PrimaryButton from '@/Components/PrimaryButton.vue'
 import AvatarModal from '@/Profile/AvatarModal.vue'
 import {computed, ref} from "vue";
 import BaseAlert from "@/Components/BaseAlert.vue";
-import {useForm} from 'laravel-precognition-vue-inertia';
 import InputText from "primevue/inputtext";
 import InlineMessage from "primevue/inlinemessage";
 import Button from "primevue/button";

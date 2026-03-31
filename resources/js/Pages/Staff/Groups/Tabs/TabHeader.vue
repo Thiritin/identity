@@ -8,7 +8,7 @@ import {Head, Link, usePage} from "@inertiajs/vue3";
 import Dialog from 'primevue/dialog';
 import {ref, watch} from "vue";
 import SelectButton from 'primevue/selectbutton';
-import {useForm} from "laravel-precognition-vue-inertia";
+import {useForm} from "@inertiajs/vue3";
 import {useToast} from "primevue/usetoast";
 
 const props = defineProps({

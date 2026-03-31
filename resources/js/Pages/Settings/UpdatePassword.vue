@@ -81,7 +81,7 @@ import SettingsHeader from "@/Components/Settings/SettingsHeader.vue";
 import BaseInput from "@/Components/BaseInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import PasswordInfoBox from "../../Auth/PasswordInfoBox.vue";
-import {useForm} from 'laravel-precognition-vue-inertia'
+import {useForm} from '@inertiajs/vue3'
 import InputText from "primevue/inputtext";
 import InlineMessage from "primevue/inlinemessage";
 import Button from "primevue/button";

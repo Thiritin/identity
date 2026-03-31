@@ -1,9 +1,8 @@
 <script setup>
 import SettingsHeader from "@/Components/Settings/SettingsHeader.vue";
 import SettingsSubHeader from "@/Components/Settings/SettingsSubHeader.vue";
-import {Head} from "@inertiajs/vue3";
+import {Head, useForm} from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import {useForm} from 'laravel-precognition-vue-inertia'
 import InputText from "primevue/inputtext";
 import InlineMessage from "primevue/inlinemessage";
 import Button from "primevue/button";

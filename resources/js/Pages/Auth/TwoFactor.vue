@@ -2,8 +2,7 @@
 
 import {computed, ref} from "vue";
 import LoginScreenWelcome from "@/Auth/LoginScreenWelcome.vue";
-import {Head} from "@inertiajs/vue3";
-import {useForm} from 'laravel-precognition-vue-inertia'
+import {Head, useForm} from "@inertiajs/vue3";
 import InputText from "primevue/inputtext";
 import InlineMessage from "primevue/inlinemessage";
 import Button from "primevue/button";

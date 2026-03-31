@@ -7,7 +7,7 @@ import ListItem from "@/Components/ListItem.vue";
 import BaseButton from "@/Components/BaseButton.vue";
 import InputText from "primevue/inputtext";
 import InlineMessage from "primevue/inlinemessage";
-import {useForm} from 'laravel-precognition-vue-inertia'
+import {useForm} from '@inertiajs/vue3'
 import Button from "primevue/button";
 
 const disableKeyId = ref(null)

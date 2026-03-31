@@ -72,11 +72,10 @@ import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import FormInput from '@/Auth/Form/AuthFormInput.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import PasswordInfoBox from '@/Auth/PasswordInfoBox.vue'
-import {Head, Link} from '@inertiajs/vue3'
+import {Head, Link, useForm} from '@inertiajs/vue3'
 import InputText from "primevue/inputtext";
 import InlineMessage from "primevue/inlinemessage";
 import Button from "primevue/button";
-import {useForm} from 'laravel-precognition-vue-inertia';
 
 defineOptions({layout: AuthLayout});
 const props = defineProps({
