@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  checks: write
+  contents: read
+
 jobs:
   laravel-tests:
     runs-on: ubuntu-latest
@@ -96,12 +100,11 @@ jobs:
         run: vendor/bin/pest --log-junit reports/junit.xml
 
       - name: Test Report
-        uses: dorny/test-reporter@v2
+        uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          name: Pest Tests
-          path: reports/junit.xml
-          reporter: java-junit
+          files: reports/junit.xml
+          check_name: Pest Tests
 
   laravel-pint:
     runs-on: ubuntu-latest
