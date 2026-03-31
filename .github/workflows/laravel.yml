@@ -93,7 +93,7 @@ jobs:
         run: php artisan config:clear
 
       - name: Execute Tests
-        run: vendor/bin/pest --parallel --processes=4 --log-junit reports/junit.xml
+        run: vendor/bin/pest --log-junit reports/junit.xml
 
       - name: Test Report
         uses: dorny/test-reporter@v2
