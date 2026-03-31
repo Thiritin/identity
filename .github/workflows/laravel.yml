@@ -93,7 +93,15 @@ jobs:
         run: php artisan config:clear
 
       - name: Execute Tests
-        run: vendor/bin/pest --parallel --processes=4
+        run: vendor/bin/pest --parallel --processes=4 --log-junit reports/junit.xml
+
+      - name: Test Report
+        uses: dorny/test-reporter@v2
+        if: always()
+        with:
+          name: Pest Tests
+          path: reports/junit.xml
+          reporter: java-junit
 
   laravel-pint:
     runs-on: ubuntu-latest
