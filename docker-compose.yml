@@ -132,7 +132,8 @@ services:
       DSN: "mysql://root:${DB_PASSWORD}@tcp(mysql:3306)/hydra?parseTime=true&tls=skip-verify&max_conns=20&max_idle_conns=4"
       SECRETS_SYSTEM: '${HYDRA_SECRET_KEY}'
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     command: migrate sql -e --yes
     restart: on-failure
 

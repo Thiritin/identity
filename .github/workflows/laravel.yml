@@ -10,14 +10,28 @@ jobs:
   laravel-tests:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: testing
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, mysql, pdo_mysql
+          php-version: '8.5'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, bcmath, soap, intl, gd, exif, iconv, imagick, mysql, pdo_mysql
           coverage: none
 
       - name: Setup Node.js
@@ -28,7 +42,7 @@ jobs:
 
       - name: Cache Composer packages
         id: composer-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: vendor
           key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
@@ -48,13 +62,16 @@ jobs:
         run: |
           cp .env.example .env
           echo "APP_ENV=testing" >> .env
-          echo "DB_CONNECTION=sqlite" >> .env
-          echo "DB_DATABASE=:memory:" >> .env
+          echo "DB_CONNECTION=mysql" >> .env
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_PORT=3306" >> .env
+          echo "DB_DATABASE=testing" >> .env
+          echo "DB_USERNAME=root" >> .env
+          echo "DB_PASSWORD=password" >> .env
           echo "CACHE_DRIVER=array" >> .env
           echo "QUEUE_CONNECTION=sync" >> .env
           echo "SESSION_DRIVER=array" >> .env
           echo "MAIL_MAILER=array" >> .env
-          echo "PARALLEL_TESTING=true" >> .env
           echo "FILESYSTEM_DRIVER=local" >> .env
           echo "AWS_ACCESS_KEY_ID=test" >> .env
           echo "AWS_SECRET_ACCESS_KEY=test" >> .env
@@ -73,28 +90,19 @@ jobs:
 
       - name: Execute Tests
         run: vendor/bin/pest --parallel --processes=4
-        env:
-          APP_ENV: testing
-          DB_CONNECTION: sqlite
-          DB_DATABASE: ":memory:"
-          CACHE_DRIVER: array
-          QUEUE_CONNECTION: sync
-          SESSION_DRIVER: array
-          MAIL_MAILER: array
-          PARALLEL_TESTING: "true"
-          FILESYSTEM_DRIVER: local
-          AWS_ACCESS_KEY_ID: test
-          AWS_SECRET_ACCESS_KEY: test
-          AWS_DEFAULT_REGION: us-east-1
-          AWS_BUCKET_AVATARS: test-bucket
-          AWS_ENDPOINT: http://localhost:9000
 
   laravel-pint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: "Laravel Pint"
-        uses: aglipanci/laravel-pint-action@2.3.1
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          testMode: true
-          pintVersion: 1.18.1
+          php-version: '8.5'
+          coverage: none
+
+      - name: Install Composer Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: "Laravel Pint"
+        run: vendor/bin/pint --test

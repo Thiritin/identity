@@ -13,6 +13,7 @@ beforeEach(function () {
     // Create staff group
     $this->staffGroup = Group::factory()->create([
         'name' => 'Staff',
+        'system_name' => 'staff',
         'type' => GroupTypeEnum::Default,
     ]);
 
@@ -217,8 +218,8 @@ test('expired token is rejected', function () {
 });
 
 test('staff config missing prevents access', function () {
-    // Clear staff group config
-    config(['groups.staff' => null]);
+    // Remove the staff group from the database entirely so system_name lookup fails
+    $this->staffGroup->delete();
 
     $token = $this->staffUser->createToken('test-token', ['groups.read']);
 
