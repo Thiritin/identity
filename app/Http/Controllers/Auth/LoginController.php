@@ -48,6 +48,13 @@ class LoginController extends Controller
 
     public function submit(LoginRequest $request)
     {
+        \Log::info('Login attempt', [
+            'ip' => $request->ip(),
+            'x-forwarded-for' => $request->header('X-Forwarded-For'),
+            'x-real-ip' => $request->header('X-Real-IP'),
+            'remote_addr' => $request->server('REMOTE_ADDR'),
+        ]);
+
         $loginData = [
             'email' => $request->get('email'),
             'password' => $request->get('password'),
