@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp:1.9-php8.3-bookworm as base
+FROM dunglas/frankenphp:latest-php8.4-bookworm as base
 WORKDIR /app
 
 ENV COMPOSER_MEMORY_LIMIT=-1

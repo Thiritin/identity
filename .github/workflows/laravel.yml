@@ -78,6 +78,10 @@ jobs:
           echo "AWS_DEFAULT_REGION=us-east-1" >> .env
           echo "AWS_BUCKET_AVATARS=test-bucket" >> .env
           echo "AWS_ENDPOINT=http://localhost:9000" >> .env
+          # Override .env.testing DB host for CI (Docker service uses 127.0.0.1)
+          sed -i 's/DB_HOST=mysql/DB_HOST=127.0.0.1/' .env.testing
+          sed -i 's/DB_USERNAME=idp/DB_USERNAME=root/' .env.testing
+          sed -i 's/DB_PASSWORD=idp/DB_PASSWORD=password/' .env.testing
 
       - name: Generate Application Key
         run: php artisan key:generate
