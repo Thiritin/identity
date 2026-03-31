@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-permissions:
-  checks: write
-  contents: read
-
 jobs:
   laravel-tests:
     runs-on: ubuntu-latest
@@ -97,14 +93,36 @@ jobs:
         run: php artisan config:clear
 
       - name: Execute Tests
-        run: vendor/bin/pest --log-junit reports/junit.xml
-
-      - name: Test Report
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: reports/junit.xml
-          check_name: Pest Tests
+        run: |
+          vendor/bin/pest --log-junit reports/junit.xml
+          echo "### Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          php -r '
+            $xml = simplexml_load_file("reports/junit.xml");
+            $suite = $xml->testsuite;
+            $tests = (int)$suite["tests"];
+            $failures = (int)$suite["failures"];
+            $errors = (int)$suite["errors"];
+            $skipped = (int)$suite["skipped"];
+            $passed = $tests - $failures - $errors - $skipped;
+            $time = round((float)$suite["time"], 2);
+            $icon = ($failures + $errors > 0) ? "❌" : "✅";
+            echo "| Status | Passed | Failed | Errors | Skipped | Time |\n";
+            echo "|--------|--------|--------|--------|---------|------|\n";
+            echo "| $icon | $passed | $failures | $errors | $skipped | {$time}s |\n\n";
+            echo "#### Test Suites\n\n";
+            echo "| Suite | Tests | Passed | Failed | Time |\n";
+            echo "|-------|-------|--------|--------|------|\n";
+            foreach ($suite->testsuite as $child) {
+              $name = (string)$child["name"];
+              $t = (int)$child["tests"];
+              $f = (int)$child["failures"] + (int)$child["errors"];
+              $p = $t - $f - (int)$child["skipped"];
+              $dur = round((float)$child["time"], 2);
+              $si = $f > 0 ? "❌" : "✅";
+              echo "| $si $name | $t | $p | $f | {$dur}s |\n";
+            }
+          ' >> $GITHUB_STEP_SUMMARY
 
   laravel-pint:
     runs-on: ubuntu-latest
