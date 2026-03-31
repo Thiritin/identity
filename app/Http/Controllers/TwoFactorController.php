@@ -59,7 +59,7 @@ class TwoFactorController extends Controller
                 throw ValidationException::withMessages(['code' => 'Invalid Yubikey code.']);
             }
         } elseif ($data['method'] === 'totp') {
-            if (! $this->verifyTOTP($data, $twoFactors)) {
+            if (! $this->verifyTOTP($data, $twoFactors, $user)) {
                 throw ValidationException::withMessages(['code' => 'Invalid TOTP code.']);
             }
         } else {
@@ -96,12 +96,18 @@ class TwoFactorController extends Controller
         return $success;
     }
 
-    public function verifyTOTP($data, Collection $twoFactors): bool
+    public function verifyTOTP($data, Collection $twoFactors, $user): bool
     {
+        $limitKey = 'totp-verify-' . $user->id;
+        if (RateLimiter::tooManyAttempts($limitKey, 10)) {
+            throw ValidationException::withMessages(['code' => 'Too many attempts. Please try again later.']);
+        }
+        RateLimiter::hit($limitKey, 120);
+
         $factorModel = $twoFactors->first();
         $success = (new TwoFactorAuth())->verifyCode($factorModel->secret, $data['code']);
         if ($success) {
-            // Update last used at
+            RateLimiter::clear($limitKey);
             $factorModel->update(['last_used_at' => now()]);
         }
 

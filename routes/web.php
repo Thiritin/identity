@@ -18,7 +18,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
         'login.view'
     );
     Route::post('login', [LoginController::class, 'submit'])
-        ->middleware([HandlePrecognitiveRequests::class])
+        ->middleware([HandlePrecognitiveRequests::class, 'throttle:5,1'])
         ->name('login.submit');
 
     Route::get('two-factor',
@@ -39,12 +39,12 @@ Route::prefix('auth')->name('auth.')->group(function () {
         // Register
         Route::inertia('register', 'Auth/Register')->name('register.view');
         Route::post('register', RegisterController::class)
-            ->middleware(['guest', HandlePrecognitiveRequests::class])
+            ->middleware(['guest', HandlePrecognitiveRequests::class, 'throttle:5,1'])
             ->name('register.store');
         // Password Reset
         Route::inertia('forgot-password', 'Auth/ForgotPassword')->name('forgot-password.view');
         Route::post('forgot-password', ForgotPasswordController::class)
-            ->middleware([HandlePrecognitiveRequests::class])
+            ->middleware([HandlePrecognitiveRequests::class, 'throttle:5,1'])
             ->name('forgot-password.store');
         // Set new Password
         Route::get('password-reset', [PasswordResetController::class, 'view'])->name('password-reset.view');
