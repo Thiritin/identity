@@ -6,8 +6,8 @@ use App\Models\Group;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -17,10 +17,10 @@ class GroupsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('type')
                     ->required(),
 

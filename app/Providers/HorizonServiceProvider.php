@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Auth;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Horizon\Horizon;
 use Laravel\Horizon\HorizonApplicationServiceProvider;
@@ -34,7 +35,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     protected function gate()
     {
         Gate::define('viewHorizon', function ($user = null) {
-            return \Auth::guard('admin')->user()->hasRole('superadmin') && \Auth::guard('admin')->check();
+            return Auth::guard('admin')->user()->hasRole('superadmin') && Auth::guard('admin')->check();
         });
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\GroupResource\Pages;
 
 use App\Filament\Resources\GroupResource;
-use Filament\Pages\Actions\CreateAction;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListGroups extends ListRecords

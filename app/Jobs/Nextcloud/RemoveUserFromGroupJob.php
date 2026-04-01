@@ -6,11 +6,13 @@ use App\Enums\GroupTypeEnum;
 use App\Models\Group;
 use App\Models\User;
 use App\Services\NextcloudService;
+use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class RemoveUserFromGroupJob implements ShouldQueue
 {
@@ -43,7 +45,7 @@ class RemoveUserFromGroupJob implements ShouldQueue
                 'user_hashid' => $this->user->hashid,
                 'group_type' => $this->groupType->value,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Failed to remove user from Nextcloud group', [
                 'group_id' => $this->group->id,
                 'group_hashid' => $this->group->hashid,
@@ -57,7 +59,7 @@ class RemoveUserFromGroupJob implements ShouldQueue
         }
     }
 
-    public function failed(\Throwable $exception): void
+    public function failed(Throwable $exception): void
     {
         Log::error('Remove user from Nextcloud group job failed permanently', [
             'group_id' => $this->group->id,

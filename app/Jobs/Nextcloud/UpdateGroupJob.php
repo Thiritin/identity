@@ -6,11 +6,13 @@ use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
 use App\Models\Group;
 use App\Services\NextcloudService;
+use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class UpdateGroupJob implements ShouldQueue
 {
@@ -78,7 +80,7 @@ class UpdateGroupJob implements ShouldQueue
                 'group_hashid' => $this->group->hashid,
                 'changed_fields' => $this->changedFields,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Failed to update Nextcloud group', [
                 'group_id' => $this->group->id,
                 'group_hashid' => $this->group->hashid,
@@ -90,7 +92,7 @@ class UpdateGroupJob implements ShouldQueue
         }
     }
 
-    public function failed(\Throwable $exception): void
+    public function failed(Throwable $exception): void
     {
         Log::error('Nextcloud group update job failed permanently', [
             'group_id' => $this->group->id,

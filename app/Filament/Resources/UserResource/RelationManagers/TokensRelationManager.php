@@ -4,10 +4,16 @@ namespace App\Filament\Resources\UserResource\RelationManagers;
 
 use App\Services\Hydra\Client;
 use Carbon\Carbon;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -22,52 +28,52 @@ class TokensRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('abilities'),
+                TextColumn::make('name'),
+                TextColumn::make('abilities'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\Action::make('Create')->action(function ($livewire, array $data) {
+                Action::make('Create')->action(function ($livewire, array $data) {
                     $expiresAt = ! is_null($data['expires_at']) ? Carbon::parse($data['expires_at']) : null;
                     $token = $livewire->ownerRecord->createToken($data['name'], $data['abilities'], $expiresAt);
                     Cache::put('admin.accessKeyTmp.' . $token->accessToken->id, $token->plainTextToken, now()->addMinutes(3));
-                })->form([
-                    Forms\Components\TextInput::make('name'),
-                    Forms\Components\Select::make('abilities')->options(static function () {
+                })->schema([
+                    TextInput::make('name'),
+                    Select::make('abilities')->options(static function () {
                         return collect((new Client())->getScopes())->mapWithKeys(fn ($v) => [$v => $v]);
                     })->multiple(),
-                    Forms\Components\DateTimePicker::make('expires_at'),
+                    DateTimePicker::make('expires_at'),
                 ]),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                DeleteBulkAction::make(),
             ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('abilities')->options(static function () {
+                Select::make('abilities')->options(static function () {
                     return collect((new Client())->getScopes())->mapWithKeys(fn ($v) => [$v => $v]);
                 })->multiple(),
-                Forms\Components\TextInput::make('token')
+                TextInput::make('token')
                     ->disabled()
                     ->visible(fn (PersonalAccessToken $record) => Cache::has('admin.accessKeyTmp.' . $record->id))
                     ->hint('Will be hidden 3 minutes after access token creation.')
                     ->formatStateUsing(function (PersonalAccessToken $record) {
                         return Cache::get('admin.accessKeyTmp.' . $record->id);
                     }),
-                Forms\Components\DateTimePicker::make('expires_at'),
+                DateTimePicker::make('expires_at'),
             ]);
     }
 }
