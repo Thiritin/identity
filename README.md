@@ -26,13 +26,14 @@ Podman is also supported, but you need to set up the podman socket and command t
    docker compose exec -it -u sail laravel.test <command>
    ```
    (further commands will have a sail and pure docker-compose version)
-6. Run `sail artisan migrate` or `docker compose exec -it -u sail laravel.test php artisan migrate`.
-7. Run `sail artisan db:seed` or `docker compose exec -it -u sail laravel.test php artisan db:seed`.
-8. Run `sail npm install` or `docker compose exec -it -u sail laravel.test npm install`.
-9. Run `sail npm run dev` or `docker compose exec -it -u sail laravel.test npm run dev`.  
-   (you can run this command locally. it may speed up HMR and file watching on some systems)
-10. Add `identity.eurofurence.localhost` to your hosts file and forward them to `127.0.0.1`.
-11. You can now go to http://identity.eurofurence.localhost.    
+6. Run `sail composer install` or `docker compose exec -it -u sail laravel.test php composer install`.
+7. Run `sail artisan migrate` or `docker compose exec -it -u sail laravel.test php artisan migrate`.
+8. Run `sail artisan db:seed` or `docker compose exec -it -u sail laravel.test php artisan db:seed`.
+9. Run `sail npm install` or `docker compose exec -it -u sail laravel.test npm install`.
+10. Run `sail npm run dev` or `docker compose exec -it -u sail laravel.test npm run dev`.  
+    (you can run this command locally. it may speed up HMR and file watching on some systems)
+11. Add `identity.eurofurence.localhost` to your hosts file and forward them to `127.0.0.1`.
+12. You can now go to http://identity.eurofurence.localhost.    
     it may take a while to load first time.  
     Default credentials are: `identity@eurofurence.localhost`, `admin` (unless you changed them in `.env`).
 
