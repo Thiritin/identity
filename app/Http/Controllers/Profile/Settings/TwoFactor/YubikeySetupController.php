@@ -40,10 +40,14 @@ class YubikeySetupController extends Controller
         }
         RateLimiter::hit($limitKey, 120);
         $yubico = new YubicoService();
-        $yubico->verify($request->input('code'));
+        $otp = strtolower($request->input('code'));
+        $yubico->verify($otp);
 
         // Check if the Yubikey is already registered
-        if ($request->user()->twoFactors()->where('identifier', $yubico->identifier)->exists()) {
+        $already_exists = $request->user()->twoFactors()
+            ->whereRaw('LOWER(identifier) = ?', [$yubico->identifier])
+            ->exists();
+        if ($already_exists) {
             throw ValidationException::withMessages(['code' => 'This Yubikey is already registered.']);
         }
         // Create the Yubikey

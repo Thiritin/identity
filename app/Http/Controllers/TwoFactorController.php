@@ -74,9 +74,9 @@ class TwoFactorController extends Controller
     public function verifyYubikey($data, Collection $twoFactors, $user): bool
     {
         // Get the first 12 characters of the code
-        $identifier = substr($data['code'], 0, 12);
+        $identifier = strtolower(substr($data['code'], 0, 12));
         // Find the identifier in $collection
-        $twoFactor = $twoFactors->firstWhere('identifier', $identifier);
+        $twoFactor = $twoFactors->firstWhere(fn($factor) => strtolower($factor->identifier) === $identifier);
         if ($twoFactor === null) {
             throw ValidationException::withMessages(['code' => 'This Yubikey is not known.']);
         }
