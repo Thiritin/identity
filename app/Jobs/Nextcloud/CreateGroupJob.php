@@ -4,11 +4,13 @@ namespace App\Jobs\Nextcloud;
 
 use App\Models\Group;
 use App\Services\NextcloudService;
+use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class CreateGroupJob implements ShouldQueue
 {
@@ -48,7 +50,7 @@ class CreateGroupJob implements ShouldQueue
                 'group_hashid' => $this->group->hashid,
                 'is_team_group' => $this->isTeamGroup,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Failed to create Nextcloud group', [
                 'group_id' => $this->group->id,
                 'group_hashid' => $this->group->hashid,
@@ -59,7 +61,7 @@ class CreateGroupJob implements ShouldQueue
         }
     }
 
-    public function failed(\Throwable $exception): void
+    public function failed(Throwable $exception): void
     {
         Log::error('Nextcloud group creation job failed permanently', [
             'group_id' => $this->group->id,

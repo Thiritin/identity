@@ -7,11 +7,13 @@ use App\Enums\GroupUserLevel;
 use App\Models\Group;
 use App\Models\User;
 use App\Services\NextcloudService;
+use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class AddUserToGroupJob implements ShouldQueue
 {
@@ -46,7 +48,7 @@ class AddUserToGroupJob implements ShouldQueue
                 'level' => $this->level->value,
                 'acl_management' => $allowAclManagement && $this->group->type !== GroupTypeEnum::Team,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Failed to add user to Nextcloud group', [
                 'group_id' => $this->group->id,
                 'group_hashid' => $this->group->hashid,
@@ -60,7 +62,7 @@ class AddUserToGroupJob implements ShouldQueue
         }
     }
 
-    public function failed(\Throwable $exception): void
+    public function failed(Throwable $exception): void
     {
         Log::error('Add user to Nextcloud group job failed permanently', [
             'group_id' => $this->group->id,

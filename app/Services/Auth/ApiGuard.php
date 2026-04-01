@@ -3,6 +3,7 @@
 namespace App\Services\Auth;
 
 use App\Services\Hydra\Client;
+use Exception;
 use Hashids;
 use Illuminate\Auth\TokenGuard;
 
@@ -43,7 +44,7 @@ class ApiGuard extends TokenGuard
             $response = $hydra->getToken($token);
 
             // Handle exception case (when Hydra is not available or connection fails)
-            if ($response instanceof \Exception) {
+            if ($response instanceof Exception) {
                 return null;
             }
 
@@ -76,7 +77,7 @@ class ApiGuard extends TokenGuard
         $response = $hydra->getToken($credentials[$this->inputKey]);
 
         // Handle exception case (when Hydra is not available or connection fails)
-        if ($response instanceof \Exception) {
+        if ($response instanceof Exception) {
             return false;
         }
 

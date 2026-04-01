@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
-use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Form;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\Column;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Spatie\Activitylog\Models\Activity;
@@ -22,9 +22,9 @@ class ActionsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('description')->formatStateUsing(fn (string $state
+                TextColumn::make('description')->formatStateUsing(fn (string $state
                 ) => __('activity.' . $state)),
-                Tables\Columns\TextColumn::make('subject.name')
+                TextColumn::make('subject.name')
                     ->formatStateUsing(static function (Column $column, $state): ?string {
                         $record = $column->getRecord();
                         $record->load('subject', 'causer');
@@ -34,7 +34,7 @@ class ActionsRelationManager extends RelationManager
                     ->description(fn (Activity $record): string => ($record->subject_type ?? $record->causer_type)),
 
                 // TextColumn::make('changes'),
-                Tables\Columns\TextColumn::make('created_at')->label('Date')->dateTime()->description(function (
+                TextColumn::make('created_at')->label('Date')->dateTime()->description(function (
                     Activity $record
                 ) {
                     return $record->created_at->since();
@@ -42,7 +42,7 @@ class ActionsRelationManager extends RelationManager
             ])
             ->filters([
                 Filter::make('created_at')
-                    ->form([
+                    ->schema([
                         DatePicker::make('from'),
                         DatePicker::make('until'),
                     ])
@@ -63,11 +63,11 @@ class ActionsRelationManager extends RelationManager
             ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('description')
+        return $schema
+            ->components([
+                TextInput::make('description')
                     ->required()
                     ->maxLength(255),
             ]);

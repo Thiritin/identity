@@ -3,11 +3,13 @@
 namespace App\Jobs\Nextcloud;
 
 use App\Services\NextcloudService;
+use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class DeleteGroupJob implements ShouldQueue
 {
@@ -31,7 +33,7 @@ class DeleteGroupJob implements ShouldQueue
                 'group_id' => $this->groupId,
                 'group_hashid' => $this->groupHashid,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Failed to delete Nextcloud group', [
                 'group_id' => $this->groupId,
                 'group_hashid' => $this->groupHashid,
@@ -42,7 +44,7 @@ class DeleteGroupJob implements ShouldQueue
         }
     }
 
-    public function failed(\Throwable $exception): void
+    public function failed(Throwable $exception): void
     {
         Log::error('Nextcloud group deletion job failed permanently', [
             'group_id' => $this->groupId,
