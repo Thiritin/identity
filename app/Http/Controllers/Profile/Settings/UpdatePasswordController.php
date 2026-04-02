@@ -13,7 +13,10 @@ class UpdatePasswordController extends Controller
     {
         $data = $request->validated();
 
-        $request->user()->update(['password' => Hash::make($data['password'])]);
+        $request->user()->update([
+            'password' => Hash::make($data['password']),
+            'password_changed_at' => now(),
+        ]);
 
         return redirect()->route('settings.security')->with('message', 'password_updated');
     }
