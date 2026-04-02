@@ -29,15 +29,24 @@
                 </div>
                 <ChevronRight class="h-5 w-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300" />
             </Link>
-            <div class="flex items-center justify-between py-4 opacity-50">
+            <Link :href="route('settings.security.passkeys')"
+                  class="flex items-center justify-between py-4 group">
                 <div class="flex items-center gap-3">
-                    <Fingerprint class="h-5 w-5 text-gray-400" />
+                    <Fingerprint class="h-5 w-5 text-gray-400 dark:text-gray-500" />
                     <div>
                         <p class="font-medium text-gray-900 dark:text-gray-100">{{ $t('security_passkeys') }}</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $t('security_coming_soon') }}</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            {{ passkeyCount > 0 ? $t('security_passkeys_count', { count: passkeyCount }) : $t('security_passkeys_none') }}
+                        </p>
                     </div>
                 </div>
-            </div>
+                <div class="flex items-center gap-2">
+                    <Badge :variant="passkeyCount > 0 ? 'default' : 'secondary'">
+                        {{ passkeyCount > 0 ? $t('security_enabled') : $t('security_disabled') }}
+                    </Badge>
+                    <ChevronRight class="h-5 w-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300" />
+                </div>
+            </Link>
         </div>
 
         <!-- Two-Factor Section -->
@@ -110,15 +119,24 @@
                     </div>
                 </div>
             </div>
-            <div class="flex items-center justify-between py-4 opacity-50">
+            <Link :href="route('settings.security.security-keys')"
+                  class="flex items-center justify-between py-4 group">
                 <div class="flex items-center gap-3">
-                    <ShieldCheck class="h-5 w-5 text-gray-400" />
+                    <ShieldCheck class="h-5 w-5 text-gray-400 dark:text-gray-500" />
                     <div>
                         <p class="font-medium text-gray-900 dark:text-gray-100">{{ $t('security_security_keys') }}</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $t('security_coming_soon') }}</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            {{ securityKeyCount > 0 ? $t('security_security_keys_count', { count: securityKeyCount }) : $t('security_security_keys_none') }}
+                        </p>
                     </div>
                 </div>
-            </div>
+                <div class="flex items-center gap-2">
+                    <Badge :variant="securityKeyCount > 0 ? 'default' : 'secondary'">
+                        {{ securityKeyCount > 0 ? $t('security_enabled') : $t('security_disabled') }}
+                    </Badge>
+                    <ChevronRight class="h-5 w-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300" />
+                </div>
+            </Link>
         </div>
     </div>
 </template>
@@ -137,6 +155,8 @@ defineProps({
     yubikeyCount: Number,
     backupCodesEnabled: Boolean,
     backupCodesCount: Number,
+    passkeyCount: Number,
+    securityKeyCount: Number,
 })
 </script>
 

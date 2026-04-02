@@ -22,11 +22,19 @@ class SecurityController extends Controller
         $yubikeyCount = $user->twoFactors()
             ->where('type', TwoFactorTypeEnum::YUBIKEY)
             ->count();
+        $passkeyCount = $user->twoFactors()
+            ->where('type', TwoFactorTypeEnum::PASSKEY)
+            ->count();
+        $securityKeyCount = $user->twoFactors()
+            ->where('type', TwoFactorTypeEnum::SECURITY_KEY)
+            ->count();
 
         return Inertia::render('Settings/Security', [
             'totpEnabled' => $totp !== null,
             'totpLastUsed' => $totp?->last_used_at?->diffForHumans(),
             'yubikeyCount' => $yubikeyCount,
+            'passkeyCount' => $passkeyCount,
+            'securityKeyCount' => $securityKeyCount,
             'passwordChangedAt' => $user->password_changed_at?->diffForHumans(),
             'backupCodesEnabled' => $backupCodeService->hasBackupCodes($user),
             'backupCodesCount' => $backupCodeService->remainingCount($user),
