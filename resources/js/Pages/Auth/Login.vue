@@ -28,7 +28,13 @@
         </div>
         <div class="space-y-4">
             <div class="flex flex-col gap-2">
-                <label for="email" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('email') }}</label>
+                <div class="flex items-center justify-between">
+                    <label for="email" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('email') }}</label>
+                    <Link
+                        :href="route('auth.login.view')"
+                        class="text-xs text-gray-500 hover:text-gray-700 dark:text-primary-400 dark:hover:text-primary-300"
+                    >{{ $trans('change') }}</Link>
+                </div>
                 <Input id="email"
                     :model-value="email"
                     disabled
@@ -54,13 +60,14 @@
             </div>
             <div class="relative flex items-start">
                 <div class="flex items-center h-5">
-                    <Checkbox id="remember" :checked="form.remember" @update:checked="form.remember = $event" />
+                    <Checkbox id="remember" :checked="form.remember" @update:checked="val => { console.log('checkbox changed:', val, typeof val); form.remember = val }" />
                 </div>
                 <div class="ml-3 text-sm">
                     <label
                         class="font-medium text-gray-700 dark:text-primary-300"
                         for="remember"
                     >{{ $trans('remember_me') }}</label>
+                    <span class="ml-2 text-xs text-gray-400">[debug: {{ form.remember }}]</span>
                 </div>
             </div>
         </div>
@@ -68,7 +75,7 @@
             :disabled="form.processing"
             type="submit"
             class="w-full"
-        >{{ $trans('sign_in') }}</Button>
+        >{{ $trans('sign_in') }} <ArrowRight class="size-4" /></Button>
     </form>
 </template>
 <script setup>
@@ -79,6 +86,7 @@ import { Head, Link, useForm } from '@inertiajs/vue3'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 import { Checkbox } from '@/Components/ui/checkbox'
+import { ArrowRight } from 'lucide-vue-next'
 
 defineOptions({
     layout: AuthLayout,
