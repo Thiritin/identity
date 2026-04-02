@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Profile;
 
 use App\Enums\TwoFactorTypeEnum;
 use App\Http\Controllers\Controller;
+use App\Models\App;
+use App\Models\OauthSession;
 use App\Services\BackupCodeService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -28,6 +30,7 @@ class SecurityController extends Controller
             'passwordChangedAt' => $user->password_changed_at?->diffForHumans(),
             'backupCodesEnabled' => $backupCodeService->hasBackupCodes($user),
             'backupCodesCount' => $backupCodeService->remainingCount($user),
+            'sessionCount' => $user->oauthSessions()->count(),
         ]);
     }
 
@@ -91,8 +94,24 @@ class SecurityController extends Controller
     {
         $user = Auth::user();
 
+        $appNames = App::whereNotNull('client_id')
+            ->pluck('name', 'client_id');
+
+        $sessions = $user->oauthSessions()
+            ->orderByDesc('last_seen_at')
+            ->get()
+            ->map(fn (OauthSession $session) => [
+                'id' => $session->id,
+                'session_id' => $session->session_id,
+                'ip_address' => $session->ip_address,
+                'user_agent' => $session->user_agent,
+                'app_name' => $appNames[$session->last_client_id] ?? $session->last_client_id,
+                'authenticated_at' => $session->authenticated_at?->diffForHumans(),
+                'last_seen_at' => $session->last_seen_at?->diffForHumans(),
+            ]);
+
         return Inertia::render('Settings/Security/Sessions', [
-            'sessions' => [],
+            'sessions' => $sessions,
             'currentSessionId' => Session::get('hydra_session_id'),
         ]);
     }
