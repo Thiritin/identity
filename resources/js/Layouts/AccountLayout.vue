@@ -31,7 +31,11 @@
                                 </component>
                             </template>
                         </div>
-                        <div class="w-full rounded-xl rounded-b-none bg-white/95 px-6 py-8 shadow-2xl backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 sm:px-10 sm:py-10">
+                        <div class="w-full rounded-xl rounded-b-none shadow-2xl"
+                             :class="isProfile
+                                 ? 'bg-transparent'
+                                 : 'bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-8 sm:px-10 sm:py-10'"
+                        >
                             <slot />
                         </div>
                     </div>
@@ -78,6 +82,22 @@
                         <component :is="tab.icon" class="h-5 w-5" />
                         {{ tab.name }}
                     </Link>
+                    <Link
+                        v-if="user.isStaff"
+                        :href="route('staff.dashboard')"
+                        class="flex-1 flex flex-col items-center gap-1 py-2 text-xs font-medium text-gray-400 dark:text-gray-500"
+                    >
+                        <BookUser class="h-5 w-5" />
+                        Directory
+                    </Link>
+                    <a
+                        v-if="user.isAdmin"
+                        href="/admin"
+                        class="flex-1 flex flex-col items-center gap-1 py-2 text-xs font-medium text-gray-400 dark:text-gray-500"
+                    >
+                        <Settings class="h-5 w-5" />
+                        Admin
+                    </a>
                     <a
                         :href="route('auth.logout')"
                         class="flex-1 flex flex-col items-center gap-1 py-2 text-xs font-medium text-gray-400 dark:text-gray-500 transition-colors"
@@ -95,7 +115,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { Link, usePage, router } from '@inertiajs/vue3'
-import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness } from 'lucide-vue-next'
+import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness, BookUser, Settings } from 'lucide-vue-next'
 import { Toaster } from '@/Components/ui/sonner'
 import { toast } from 'vue-sonner'
 
@@ -117,6 +137,8 @@ function isActive(routeName) {
     return route().current(routeName)
 }
 
+const isProfile = computed(() => isActive('settings.profile'))
+
 const tabs = computed(() => [
     { name: 'Apps', route: 'dashboard', href: route('dashboard'), icon: LayoutGrid, active: isActive('dashboard') },
     { name: 'Profile', route: 'settings.profile', href: route('settings.profile'), icon: UserRound, active: isActive('settings.profile') },
@@ -126,7 +148,10 @@ const tabs = computed(() => [
 const rightTabs = computed(() => {
     const items = []
     if (user.value.isStaff) {
-        items.push({ name: 'Staff', href: route('staff.dashboard'), icon: BriefcaseBusiness, external: false })
+        items.push({ name: 'Directory', href: route('staff.dashboard'), icon: BookUser, external: false })
+    }
+    if (user.value.isAdmin) {
+        items.push({ name: 'Admin', href: '/admin', icon: Settings, external: true })
     }
     items.push({ name: 'Logout', href: route('auth.logout'), icon: LogOut, external: true })
     return items
