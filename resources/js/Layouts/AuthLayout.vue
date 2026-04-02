@@ -53,13 +53,6 @@ export default {
             navigation: {
                 main: [
                     {
-                        name: 'Create Account',
-                        link: route('auth.login.view'),
-                        newTab: false,
-                        visible: () => usePage().props.user === null,
-                    },
-
-                    {
                         name: 'Support',
                         href: 'https://help.eurofurence.org/contact/',
                         newTab: true,
