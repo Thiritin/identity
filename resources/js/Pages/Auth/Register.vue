@@ -1,12 +1,14 @@
 <template>
     <Head title="Register"/>
-    <Logo></Logo>
-    <LoginScreenWelcome
-        :sub-title="$trans('register_subtitle')"
-        :title="$trans('register_title')"
-        class="mb-10"
-    />
-    <form class="space-y-3" @submit.prevent="submit">
+    <div class="text-center">
+        <Logo class="mx-auto"></Logo>
+        <LoginScreenWelcome
+            :sub-title="$trans('register_subtitle')"
+            :title="$trans('register_title')"
+            class="mb-10"
+        />
+    </div>
+    <form class="space-y-4" @submit.prevent="submit">
         <div class="flex flex-col gap-2">
             <label for="username">{{ $trans('username') }}</label>
             <Input id="username"
@@ -50,17 +52,18 @@
             />
             <p v-if="form.invalid('password_confirmation')" class="text-sm text-destructive">{{ form.errors.password_confirmation }}</p>
         </div>
-        <div class="flex flex-row justify-between pt-10">
-            <Link
-                :href="route('auth.login.view')"
-                class="text-gray-700 dark:text-gray-300"
-            >
-                {{ $trans('register_back_to_login') }}
-            </Link>
+        <div class="pt-4 space-y-3">
             <Button
                 :disabled="form.processing"
                 type="submit"
+                class="w-full"
             >{{ $trans('register_button') }}</Button>
+            <Link
+                :href="route('auth.login.view')"
+                class="block text-center text-xs text-gray-500 hover:text-gray-700 dark:text-primary-400 dark:hover:text-primary-300"
+            >
+                {{ $trans('register_back_to_login') }}
+            </Link>
         </div>
     </form>
 </template>
