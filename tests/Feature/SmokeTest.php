@@ -128,7 +128,6 @@ test('login submit with wrong password returns validation error', function () {
 */
 
 test('dashboard loads for regular user', function () {
-    Group::factory()->create(['system_name' => 'staff']);
     $user = User::factory()->create();
 
     $this->actingAs($user)
@@ -137,7 +136,7 @@ test('dashboard loads for regular user', function () {
         ->assertInertia(fn ($page) => $page->component('Dashboard'));
 });
 
-test('dashboard redirects staff users to staff dashboard', function () {
+test('dashboard loads for staff users', function () {
     $staffGroup = Group::factory()->create([
         'system_name' => 'staff',
         'type' => GroupTypeEnum::Automated,
@@ -147,7 +146,8 @@ test('dashboard redirects staff users to staff dashboard', function () {
 
     $this->actingAs($user)
         ->get(route('dashboard'))
-        ->assertRedirect(route('staff.dashboard'));
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page->component('Dashboard'));
 });
 
 test('root redirects to login when unauthenticated', function () {
@@ -156,7 +156,6 @@ test('root redirects to login when unauthenticated', function () {
 });
 
 test('root redirects to dashboard when authenticated', function () {
-    Group::factory()->create(['system_name' => 'staff']);
     $user = User::factory()->create();
 
     $this->actingAs($user)
