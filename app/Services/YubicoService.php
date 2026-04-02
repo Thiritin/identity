@@ -13,6 +13,7 @@ class YubicoService
 
     public function verify(string $otp): bool
     {
+        $otp = strtolower($otp);
         $this->nonce = bin2hex(random_bytes(16));
 
         $requestParams = [
@@ -48,7 +49,7 @@ class YubicoService
             throw ValidationException::withMessages(['code' => $errorMessage]);
         }
         // Get the first 12 characters of the OTP
-        $this->identifier = substr($responseData['otp'], 0, 12);
+        $this->identifier = strtolower(substr($responseData['otp'], 0, 12));
 
         return true;
     }
