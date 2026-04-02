@@ -17,8 +17,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Sanctum\HasApiTokens;
-use Mtvs\EloquentHashids\HasHashid;
-use Mtvs\EloquentHashids\HashidRouting;
+use App\Models\Concerns\HasHashid;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -29,7 +28,6 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     use HasApiTokens;
     use HasFactory;
     use HasHashid;
-    use HashidRouting;
     use LogsActivity;
     use Notifiable;
 
@@ -42,6 +40,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'name',
         'email',
         'password',
+        'password_changed_at',
         'profile_photo_path',
         'is_admin',
         'preferences',
@@ -66,6 +65,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password_changed_at' => 'datetime',
         'is_admin' => 'boolean',
         'preferences' => 'array',
     ];
@@ -75,10 +75,6 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
      *
      * @var array
      */
-    protected $appends = [
-        'hashid',
-    ];
-
     public function inGroup(int $id): bool
     {
         return $this->groups()->where('id', $id)->exists();
