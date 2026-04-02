@@ -86,5 +86,6 @@
     "edit_group": "Edit Group",
     "too_many_attempts_email_verification": "You can resend the verification email every 30 seconds.",
     "two_factor_auth": "Two Factor Setup",
-    "change_password": "Change Password"
+    "change_password": "Change Password",
+    "continue": "Continue"
 }
