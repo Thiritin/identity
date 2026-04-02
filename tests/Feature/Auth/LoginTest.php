@@ -18,7 +18,7 @@ test('User login success', function () {
             'redirect_to' => 'https://success.com',
         ]),
     ]);
-    $response = post(route('auth.login.submit'), [
+    $response = post(route('auth.login.password.submit'), [
         'login_challenge' => 'test',
         'remember' => true,
         'email' => $user->email,
@@ -33,7 +33,7 @@ test('User false password error', function () {
     $user = User::factory()->create([
         'password' => Hash::make($password),
     ]);
-    $response = postJson(route('auth.login.submit'), [
+    $response = postJson(route('auth.login.password.submit'), [
         'login_challenge' => 'test',
         'remember' => true,
         'email' => $user->email,
@@ -48,7 +48,7 @@ test('User false email error', function () {
     $user = User::factory()->create([
         'password' => Hash::make($password),
     ]);
-    $response = postJson(route('auth.login.submit'), [
+    $response = postJson(route('auth.login.password.submit'), [
         'login_challenge' => 'test',
         'remember' => true,
         'email' => 'falsemail@test.de',
@@ -64,7 +64,7 @@ test('User false email formatting error', function () {
     $user = User::factory()->create([
         'password' => Hash::make($password),
     ]);
-    $response = postJson(route('auth.login.submit'), [
+    $response = postJson(route('auth.login.password.submit'), [
         'login_challenge' => 'test',
         'remember' => true,
         'email' => 'falsemai2121ltest.de',

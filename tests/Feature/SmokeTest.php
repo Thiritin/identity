@@ -18,7 +18,8 @@ uses(RefreshDatabase::class, InteractsWithHydra::class);
 */
 
 test('register page loads', function () {
-    $this->get(route('auth.register.view'))
+    $this->withSession(['auth.email_flow.email' => 'test@example.com'])
+        ->get(route('auth.register.view'))
         ->assertSuccessful()
         ->assertInertia(fn ($page) => $page->component('Auth/Register'));
 });
@@ -50,38 +51,9 @@ test('health endpoint returns ok', function () {
 */
 
 test('login page loads with valid login challenge', function () {
-    Http::fake([
-        '*/admin/clients*' => Http::response([
-            'client_id' => 'smoke-test-client',
-            'client_name' => 'smoke-test',
-            'client_secret' => 'test-secret',
-            'redirect_uris' => ['http://localhost:9999/callback'],
-            'grant_types' => ['authorization_code'],
-            'response_types' => ['code'],
-            'scope' => 'openid email profile',
-            'token_endpoint_auth_method' => 'client_secret_post',
-        ]),
-        '*/oauth2/auth*' => Http::response('', 302, [
-            'Location' => 'http://localhost/login?login_challenge=test-challenge-123',
-        ]),
-        '*/admin/oauth2/auth/requests/login*' => Http::response([
-            'challenge' => 'test-challenge-123',
-            'client' => ['client_id' => 'smoke-test-client'],
-            'request_url' => 'http://localhost',
-            'requested_scope' => ['openid', 'email', 'profile'],
-            'skip' => false,
-            'subject' => '',
-        ]),
-    ]);
-
-    $this->createHydraClient();
-    $challenge = $this->getLoginChallenge();
-
-    $this->get(route('auth.login.view', ['login_challenge' => $challenge]))
+    $this->get(route('auth.login.view', ['login_challenge' => 'test-challenge-123']))
         ->assertSuccessful()
-        ->assertInertia(fn ($page) => $page->component('Auth/Login'));
-
-    $this->deleteHydraClient();
+        ->assertInertia(fn ($page) => $page->component('Auth/Email'));
 });
 
 test('login page without challenge redirects to portal login', function () {
@@ -147,7 +119,7 @@ test('login submit with valid credentials returns redirect', function () {
         ]);
     });
 
-    $response = $this->post(route('auth.login.submit'), [
+    $response = $this->post(route('auth.login.password.submit'), [
         'login_challenge' => $challenge,
         'email' => $user->email,
         'password' => $password,
@@ -191,7 +163,7 @@ test('login submit with wrong password returns validation error', function () {
         'password' => Hash::make('CorrectPassword123!'),
     ]);
 
-    $this->postJson(route('auth.login.submit'), [
+    $this->postJson(route('auth.login.password.submit'), [
         'login_challenge' => $challenge,
         'email' => $user->email,
         'password' => 'WrongPassword123!',
