@@ -5,6 +5,7 @@ use App\Http\Controllers\Profile\Settings\TwoFactor\TotpSetupController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\TwoFactorController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\YubikeySetupController;
 use App\Http\Controllers\Profile\Settings\UpdatePasswordController;
+use App\Http\Controllers\Profile\SecurityController;
 use App\Http\Controllers\Profile\StoreAvatarController;
 use App\Http\Controllers\Profile\UpdatePreferencesController;
 use App\Http\Controllers\Profile\UpdateProfileController;
@@ -24,6 +25,8 @@ Route::inertia('/settings/update-password', 'Settings/UpdatePassword')->name('se
 Route::post('/settings/update-password', UpdatePasswordController::class)
     ->middleware([HandlePrecognitiveRequests::class])
     ->name('settings.update-password.store');
+
+Route::get('/settings/security', SecurityController::class)->name('settings.security');
 
 Route::get('/settings/two-factor',
     TwoFactorController::class)->name('settings.two-factor');
