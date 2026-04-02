@@ -15,6 +15,7 @@
                 id="email"
                 type="email"
                 autocomplete="email"
+                placeholder="me@example.org"
                 @change="form.validate('email')"
                 :class="{ 'border-destructive': form.invalid('email') }"
                 v-model.trim.lazy="form.email"
