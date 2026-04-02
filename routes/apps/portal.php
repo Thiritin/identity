@@ -6,6 +6,7 @@ use App\Http\Controllers\Profile\Settings\TwoFactor\TwoFactorController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\YubikeySetupController;
 use App\Http\Controllers\Profile\Settings\UpdatePasswordController;
 use App\Http\Controllers\Profile\StoreAvatarController;
+use App\Http\Controllers\Profile\UpdatePreferencesController;
 use App\Http\Controllers\Profile\UpdateProfileController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
@@ -48,3 +49,6 @@ Route::delete('/settings/two-factor/yubikey/destroy', [YubikeySetupController::c
 
 Route::post('/profile/avatar/store', StoreAvatarController::class)
     ->name('profile.avatar.store');
+
+Route::post('/settings/preferences', UpdatePreferencesController::class)
+    ->name('settings.preferences.update');
