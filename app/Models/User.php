@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\GroupTypeEnum;
+use App\Enums\GroupUserLevel;
+use App\Enums\StaffProfileVisibility;
 use App\Models\Concerns\HasHashid;
 use App\Notifications\PasswordResetQueuedNotification;
 use App\Notifications\UpdateEmailNotification;
@@ -254,5 +257,41 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function getHashidsConnection(): string
     {
         return 'user';
+    }
+
+    /**
+     * Check if a viewer can see a specific PII field on this user's staff profile.
+     */
+    public function canViewStaffField(string $field, User $viewer): bool
+    {
+        $visibility = $this->staff_profile_visibility[$field] ?? null;
+        $level = StaffProfileVisibility::tryFrom($visibility) ?? StaffProfileVisibility::AllStaff;
+
+        return match ($level) {
+            StaffProfileVisibility::AllStaff => $viewer->isStaff(),
+            StaffProfileVisibility::MyDepartments => $this->sharesGroupWith($viewer),
+            StaffProfileVisibility::LeadsAndDirectors => $viewer->hasStaffLevel(GroupUserLevel::leadOrManagerLevels()),
+            StaffProfileVisibility::DirectorsOnly => $viewer->hasStaffLevel([GroupUserLevel::Director, GroupUserLevel::DivisionDirector]),
+        };
+    }
+
+    public function sharesGroupWith(User $other): bool
+    {
+        $myGroupIds = $this->groups()
+            ->whereIn('groups.type', [
+                GroupTypeEnum::Department->value,
+                GroupTypeEnum::Division->value,
+                GroupTypeEnum::Team->value,
+            ])
+            ->pluck('groups.id');
+
+        return $other->groups()->whereIn('groups.id', $myGroupIds)->exists();
+    }
+
+    public function hasStaffLevel(array $levels): bool
+    {
+        return $this->groups()
+            ->wherePivotIn('level', array_map(fn ($l) => $l->value, $levels))
+            ->exists();
     }
 }
