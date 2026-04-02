@@ -3,6 +3,14 @@
 namespace App\Providers;
 
 use App\Events\AppLoginEvent;
+use App\Events\GroupCreated;
+use App\Events\GroupDeleted;
+use App\Events\GroupUpdated;
+use App\Events\GroupUserAdded;
+use App\Events\GroupUserRemoved;
+use App\Events\GroupUserUpdated;
+use App\Listeners\AssignGroupOwner;
+use App\Listeners\CheckStaffGroupMembership;
 use App\Listeners\LogFailedLoginListener;
 use App\Listeners\LogUserAppLoginListener;
 use App\Listeners\LogUserLockoutListener;
@@ -10,6 +18,12 @@ use App\Listeners\LogUserLoginListener;
 use App\Listeners\LogUserPasswordResetListener;
 use App\Listeners\LogUserRegisteredListener;
 use App\Listeners\LogUserVerifiedListener;
+use App\Listeners\Nextcloud\AddUserToNextcloudGroup;
+use App\Listeners\Nextcloud\CreateNextcloudGroup;
+use App\Listeners\Nextcloud\DeleteNextcloudGroup;
+use App\Listeners\Nextcloud\RemoveUserFromNextcloudGroup;
+use App\Listeners\Nextcloud\UpdateNextcloudGroup;
+use App\Listeners\Nextcloud\UpdateUserNextcloudGroupLevel;
 use App\Models\App;
 use App\Models\Group;
 use App\Models\GroupUser;
@@ -54,6 +68,27 @@ class EventServiceProvider extends ServiceProvider
         ],
         AppLoginEvent::class => [
             LogUserAppLoginListener::class,
+        ],
+        GroupUserAdded::class => [
+            CheckStaffGroupMembership::class,
+            AddUserToNextcloudGroup::class,
+        ],
+        GroupUserUpdated::class => [
+            UpdateUserNextcloudGroupLevel::class,
+        ],
+        GroupUserRemoved::class => [
+            CheckStaffGroupMembership::class,
+            RemoveUserFromNextcloudGroup::class,
+        ],
+        GroupCreated::class => [
+            AssignGroupOwner::class,
+            CreateNextcloudGroup::class,
+        ],
+        GroupUpdated::class => [
+            UpdateNextcloudGroup::class,
+        ],
+        GroupDeleted::class => [
+            DeleteNextcloudGroup::class,
         ],
     ];
 
