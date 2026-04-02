@@ -11,10 +11,12 @@ use App\Services\Hydra\Client;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
@@ -160,6 +162,19 @@ class AppResource extends Resource
                         ->description('These settings control the visibility of the app on the dashboard. This is NOT access control in any way.')
                         ->columns(1)
                         ->schema([
+                            Select::make('category_id')
+                                ->relationship('category', 'name')
+                                ->placeholder('Uncategorized')
+                                ->nullable(),
+                            Toggle::make('pinned')
+                                ->hint('Show at top of dashboard'),
+                            FileUpload::make('image')
+                                ->disk('public')
+                                ->directory('app-images')
+                                ->image()
+                                ->imageEditor()
+                                ->maxSize(2048)
+                                ->hint('Square image, PNG/JPG/WebP, max 2MB'),
                             DateTimePicker::make('starts_at')->hint('UTC')->nullable(),
                             DateTimePicker::make('ends_at')->hint('UTC')->nullable(),
                             TextInput::make('priority')->required()->default('1000')->numeric()->minValue('1')->maxValue('10000')->hint('Sets order of dashboard apps'),
