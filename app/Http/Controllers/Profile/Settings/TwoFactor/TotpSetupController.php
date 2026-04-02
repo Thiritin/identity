@@ -40,6 +40,26 @@ class TotpSetupController extends Controller
 
     }
 
+    public function setup(): \Illuminate\Http\JsonResponse
+    {
+        $tfa = $this->createTwoFactorAuth();
+
+        $secret = Cache::remember('user-' . auth()->user()->id . '-two-factor-user-cache', now()->addHour(),
+            function () use ($tfa) {
+                $secret = $tfa->createSecret();
+
+                return [
+                    'secret' => $secret,
+                    'qrCode' => $tfa->getQRCodeImageAsDataUri(config('app.name') . '-' . auth()->user()->name, $secret),
+                ];
+            });
+
+        return response()->json([
+            'secret' => $secret['secret'],
+            'qr_code' => $secret['qrCode'],
+        ]);
+    }
+
     // Add new totp device
     public function store(TotpStoreRequest $request)
     {

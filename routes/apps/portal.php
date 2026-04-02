@@ -36,6 +36,8 @@ Route::post('/settings/two-factor/totp/store',
     [TotpSetupController::class, 'store'])
     ->middleware([HandlePrecognitiveRequests::class])
     ->name('settings.two-factor.totp.store');
+Route::get('/settings/two-factor/totp/setup', [TotpSetupController::class, 'setup'])
+    ->name('settings.two-factor.totp.setup');
 Route::delete('/settings/two-factor/totp/destroy',
     [TotpSetupController::class, 'destroy'])
     ->middleware([HandlePrecognitiveRequests::class])
