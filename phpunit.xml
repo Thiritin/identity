@@ -25,6 +25,8 @@
     <server name="AWS_DEFAULT_REGION" value="us-east-1"/>
     <server name="AWS_BUCKET_AVATARS" value="test-bucket"/>
     <server name="AWS_ENDPOINT" value="http://localhost:9000"/>
+    <server name="ALTCHA_TESTING_BYPASS" value="valid"/>
+    <server name="ALTCHA_HMAC_KEY" value="testing-key"/>
   </php>
   <source>
     <include>

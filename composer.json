@@ -21,6 +21,7 @@
         "filament/tables": "^4.0",
         "firebase/php-jwt": "^6.0|^7.0",
         "genl/matice": "^1.1",
+        "grantholle/laravel-altcha": "^2.2",
         "guzzlehttp/guzzle": "^7.5",
         "inertiajs/inertia-laravel": "^1.0|^2.0",
         "intervention/image": "^2.7.2",

@@ -17,6 +17,7 @@ test('Create a new Account', function () {
         'username' => 'Test',
         'email' => 'test@eurofurence.org',
         'password' => 'OSANR&dbb^0GDp^19UiSxRlM3Wm',
+        'altcha' => config('altcha.testing_bypass'),
     ]);
     $response->assertRedirect(route('login.apps.redirect', ['app' => 'portal']));
     Event::assertDispatched(Registered::class);
