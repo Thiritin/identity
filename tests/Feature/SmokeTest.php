@@ -282,6 +282,26 @@ test('yubikey setup redirects to security yubikey', function () {
         ->assertRedirect('/settings/security/yubikey');
 });
 
+test('passkeys settings page loads', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->withSession(['auth.password_confirmed_at' => time()])
+        ->get(route('settings.security.passkeys'))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page->component('Settings/Security/Passkeys'));
+});
+
+test('security keys settings page loads', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->withSession(['auth.password_confirmed_at' => time()])
+        ->get(route('settings.security.security-keys'))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page->component('Settings/Security/SecurityKeys'));
+});
+
 /*
 |--------------------------------------------------------------------------
 | Settings Pages redirect unauthenticated users
@@ -293,6 +313,8 @@ test('settings pages require authentication', function (string $url) {
 })->with([
     'profile' => '/settings/profile',
     'security' => '/settings/security',
+    'passkeys' => '/settings/security/passkeys',
+    'security-keys' => '/settings/security/security-keys',
 ]);
 
 /*
