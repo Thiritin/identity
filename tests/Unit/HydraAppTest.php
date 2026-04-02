@@ -70,7 +70,7 @@ class HydraAppTest extends TestCase
     public function test_update_hydra_app()
     {
         Http::fake([
-            'http://localhost:4445/admin/clients' => [
+            '*/admin/clients' => Http::response([
                 'client_id' => '2b83b3ea-7021-455f-b07d-9c00c74436f2',
                 'client_name' => 'Test',
                 'client_secret' => 'mM~CL93svezjf-5Yr3xG51u6jm',
@@ -112,8 +112,8 @@ class HydraAppTest extends TestCase
                 'refresh_token_grant_id_token_lifespan' => null,
                 'refresh_token_grant_access_token_lifespan' => null,
                 'refresh_token_grant_refresh_token_lifespan' => null,
-            ],
-            'http://localhost:4445/admin/clients/2b83b3ea-7021-455f-b07d-9c00c74436f2' => [
+            ]),
+            '*/admin/clients/2b83b3ea-7021-455f-b07d-9c00c74436f2' => Http::response([
                 'client_id' => '2b83b3ea-7021-455f-b07d-9c00c74436f2',
                 'client_name' => 'New',
                 'client_secret' => null,
@@ -155,7 +155,7 @@ class HydraAppTest extends TestCase
                 'refresh_token_grant_id_token_lifespan' => null,
                 'refresh_token_grant_access_token_lifespan' => null,
                 'refresh_token_grant_refresh_token_lifespan' => null,
-            ],
+            ]),
         ]);
 
         $initialApp = new App();

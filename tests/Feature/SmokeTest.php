@@ -6,6 +6,7 @@ use App\Models\App;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\Traits\InteractsWithHydra;
 
 uses(RefreshDatabase::class, InteractsWithHydra::class);
@@ -55,6 +56,30 @@ test('health endpoint returns ok', function () {
 */
 
 test('login page loads with valid login challenge', function () {
+    Http::fake([
+        '*/admin/clients*' => Http::response([
+            'client_id' => 'smoke-test-client',
+            'client_name' => 'smoke-test',
+            'client_secret' => 'test-secret',
+            'redirect_uris' => ['http://localhost:9999/callback'],
+            'grant_types' => ['authorization_code'],
+            'response_types' => ['code'],
+            'scope' => 'openid email profile',
+            'token_endpoint_auth_method' => 'client_secret_post',
+        ]),
+        '*/oauth2/auth*' => Http::response('', 302, [
+            'Location' => 'http://localhost/login?login_challenge=test-challenge-123',
+        ]),
+        '*/admin/oauth2/auth/requests/login*' => Http::response([
+            'challenge' => 'test-challenge-123',
+            'client' => ['client_id' => 'smoke-test-client'],
+            'request_url' => 'http://localhost',
+            'requested_scope' => ['openid', 'email', 'profile'],
+            'skip' => false,
+            'subject' => '',
+        ]),
+    ]);
+
     $this->createHydraClient();
     $challenge = $this->getLoginChallenge();
 
@@ -71,7 +96,47 @@ test('login page without challenge redirects to choose', function () {
 });
 
 test('login submit with valid credentials returns redirect', function () {
-    $hydraClient = $this->createHydraClient();
+    $loginRequestResponse = [
+        'challenge' => 'test-challenge-123',
+        'client' => ['client_id' => 'smoke-test-client'],
+        'request_url' => 'http://localhost',
+        'requested_scope' => ['openid', 'email', 'profile'],
+        'skip' => false,
+        'subject' => '',
+    ];
+
+    Http::fake(function ($request) use ($loginRequestResponse) {
+        if (str_contains($request->url(), '/admin/clients')) {
+            return Http::response([
+                'client_id' => 'smoke-test-client',
+                'client_name' => 'smoke-test',
+                'client_secret' => 'test-secret',
+                'redirect_uris' => ['http://localhost:9999/callback'],
+                'grant_types' => ['authorization_code'],
+                'response_types' => ['code'],
+                'scope' => 'openid email profile',
+                'token_endpoint_auth_method' => 'client_secret_post',
+            ]);
+        }
+
+        if (str_contains($request->url(), '/requests/login/accept')) {
+            return Http::response(['redirect_to' => 'http://localhost/consent']);
+        }
+
+        if (str_contains($request->url(), '/requests/login')) {
+            return Http::response($loginRequestResponse);
+        }
+
+        if (str_contains($request->url(), '/oauth2/auth')) {
+            return Http::response('', 302, [
+                'Location' => 'http://localhost/login?login_challenge=test-challenge-123',
+            ]);
+        }
+
+        return Http::response('', 200);
+    });
+
+    $this->createHydraClient();
     $challenge = $this->getLoginChallenge();
 
     $password = 'TestPassword123!';
@@ -79,11 +144,9 @@ test('login submit with valid credentials returns redirect', function () {
         'password' => Hash::make($password),
     ]);
 
-    // Create an App record matching the Hydra client so checkEmailVerification works
-    // Use withoutEvents to skip AppObserver which would try to create a second Hydra client
-    App::withoutEvents(function () use ($hydraClient, $user) {
+    App::withoutEvents(function () use ($user) {
         App::create([
-            'client_id' => $hydraClient['client_id'],
+            'client_id' => 'smoke-test-client',
             'name' => 'smoke-test',
             'system_name' => 'portal',
             'user_id' => $user->id,
@@ -97,13 +160,36 @@ test('login submit with valid credentials returns redirect', function () {
         'remember' => false,
     ]);
 
-    // Successful login redirects to Hydra's consent flow
     $response->assertRedirect();
 
     $this->deleteHydraClient();
 });
 
 test('login submit with wrong password returns validation error', function () {
+    Http::fake([
+        '*/admin/clients*' => Http::response([
+            'client_id' => 'smoke-test-client',
+            'client_name' => 'smoke-test',
+            'client_secret' => 'test-secret',
+            'redirect_uris' => ['http://localhost:9999/callback'],
+            'grant_types' => ['authorization_code'],
+            'response_types' => ['code'],
+            'scope' => 'openid email profile',
+            'token_endpoint_auth_method' => 'client_secret_post',
+        ]),
+        '*/oauth2/auth*' => Http::response('', 302, [
+            'Location' => 'http://localhost/login?login_challenge=test-challenge-123',
+        ]),
+        '*/admin/oauth2/auth/requests/login*' => Http::response([
+            'challenge' => 'test-challenge-123',
+            'client' => ['client_id' => 'smoke-test-client'],
+            'request_url' => 'http://localhost',
+            'requested_scope' => ['openid', 'email', 'profile'],
+            'skip' => false,
+            'subject' => '',
+        ]),
+    ]);
+
     $this->createHydraClient();
     $challenge = $this->getLoginChallenge();
 
