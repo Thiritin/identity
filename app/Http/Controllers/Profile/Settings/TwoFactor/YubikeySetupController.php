@@ -53,7 +53,7 @@ class YubikeySetupController extends Controller
             'type' => 'yubikey',
         ]);
 
-        return redirect()->route('settings.two-factor.yubikey');
+        return redirect()->route('settings.security');
     }
 
     // Delete Yubikey
@@ -68,7 +68,7 @@ class YubikeySetupController extends Controller
         // Delete totp device
         auth()->user()->twoFactors()->where('id', $request->input('keyId'))->delete();
 
-        return redirect()->route('settings.two-factor');
+        return redirect()->route('settings.security');
     }
 
     // Thanks to Randall Wilk randall@randallwilk.dev, taken from rawilk/yubikey-u2f

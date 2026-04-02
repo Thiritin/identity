@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\App;
-use App\Models\Group;
 use Auth;
 use Illuminate\Contracts\Database\Query\Builder;
-use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -25,16 +23,6 @@ class DashboardController extends Controller
                 $q->whereDate('ends_at', '>=', now())->orWhereNull('ends_at');
             });
         })->orderBy('priority')->get(['id', 'name', 'description', 'icon', 'url']);
-
-        $staffGroupId = Cache::rememberForever('staff-group-id', function () {
-            return Group::where('system_name', 'staff')->firstOrFail()->id;
-        });
-
-        $isStaff = $user->groups->contains('id', $staffGroupId);
-        // if staff redirect to staffnet dashboard
-        if ($isStaff) {
-            return redirect()->route('staff.dashboard');
-        }
 
         return Inertia::render('Dashboard', [
             'apps' => $apps,
