@@ -48,8 +48,10 @@ class HandleInertiaRequests extends Middleware
                 'id' => $request->user()->hashId(),
                 'avatar' => ($request->user()->profile_photo_path) ? Storage::disk('s3-avatars')->url($request->user()->profile_photo_path) : null,
                 'isAdmin' => $request->user()->hasRole(['admin', 'superadmin']),
+                'isStaff' => $request->user()->isStaff(),
                 'roles' => $request->user()->getRoleNames(),
                 'language' => 'en',
+                'preferences' => $request->user()->preferences ?? [],
                 'departments' => $request->user()->groups()
                     ->where('type', 'department')
                     ->limit(10)
