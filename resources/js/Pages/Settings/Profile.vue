@@ -92,7 +92,7 @@
             <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">{{ $t('staff_profile') }}</h3>
             <p class="text-xs text-gray-500 dark:text-gray-400 mb-5">{{ $t('staff_profile_personal') }}</p>
 
-            <form @submit.prevent="submitStaffProfile" class="space-y-5">
+            <form @submit.prevent="submitStaffProfile" class="space-y-4">
                 <!-- Firstname / Lastname -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -113,35 +113,36 @@
                     </div>
                 </div>
 
-                <!-- Birthdate -->
-                <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <label for="birthdate" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_birthdate') }}</label>
-                        <VisibilityPicker field="birthdate" />
+                <!-- Birthdate / Phone -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label for="birthdate" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_birthdate') }}</label>
+                            <VisibilityPicker field="birthdate" />
+                        </div>
+                        <Input id="birthdate" type="date" v-model="staffForm.birthdate" class="w-full" />
+                        <p v-if="staffForm.errors.birthdate" class="text-xs text-destructive mt-1">{{ staffForm.errors.birthdate }}</p>
                     </div>
-                    <Input id="birthdate" type="date" v-model="staffForm.birthdate" class="w-full" />
-                    <p v-if="staffForm.errors.birthdate" class="text-xs text-destructive mt-1">{{ staffForm.errors.birthdate }}</p>
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label for="phone" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_phone') }}</label>
+                            <VisibilityPicker field="phone" />
+                        </div>
+                        <Input id="phone" type="tel" v-model="staffForm.phone" class="w-full" />
+                        <p v-if="staffForm.errors.phone" class="text-xs text-destructive mt-1">{{ staffForm.errors.phone }}</p>
+                    </div>
                 </div>
 
-                <!-- Phone -->
-                <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <label for="phone" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_phone') }}</label>
-                        <VisibilityPicker field="phone" />
-                    </div>
-                    <Input id="phone" type="tel" v-model="staffForm.phone" class="w-full" />
-                    <p v-if="staffForm.errors.phone" class="text-xs text-destructive mt-1">{{ staffForm.errors.phone }}</p>
-                </div>
-
-                <!-- Telegram (read-only) -->
+                <!-- Telegram (read-only button) -->
                 <div>
                     <div class="flex items-center justify-between mb-1">
                         <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_telegram') }}</label>
                         <VisibilityPicker field="telegram" />
                     </div>
-                    <div class="flex items-center h-9 px-3 rounded-md border border-input bg-muted text-sm text-muted-foreground">
+                    <Button type="button" variant="outline" class="w-full justify-start font-normal text-muted-foreground" disabled>
+                        <MessageCircle class="h-4 w-4 mr-2 opacity-50" />
                         {{ staffProfile?.telegram_username ? '@' + staffProfile.telegram_username : $t('staff_profile_telegram_not_linked') }}
-                    </div>
+                    </Button>
                 </div>
 
                 <!-- Eurofurence History -->
@@ -189,8 +190,26 @@
                             <p v-if="staffForm.errors.credit_as" class="text-xs text-destructive mt-1">{{ staffForm.errors.credit_as }}</p>
                         </div>
                         <div>
-                            <label for="spoken_languages" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_spoken_languages') }}</label>
-                            <Input id="spoken_languages" :model-value="staffForm.spoken_languages.join(', ')" @change="e => staffForm.spoken_languages = e.target.value.split(',').map(s => s.trim()).filter(Boolean)" class="w-full" placeholder="en, de, fr" />
+                            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_spoken_languages') }}</label>
+                            <div class="flex flex-wrap items-center gap-1.5 min-h-9 px-3 py-1.5 rounded-md border border-input bg-transparent text-sm">
+                                <span
+                                    v-for="(lang, i) in staffForm.spoken_languages"
+                                    :key="i"
+                                    class="inline-flex items-center gap-1 rounded-md bg-primary/10 text-primary px-2 py-0.5 text-xs font-medium"
+                                >
+                                    {{ lang }}
+                                    <button type="button" class="hover:text-destructive" @click="staffForm.spoken_languages.splice(i, 1)">
+                                        <X class="h-3 w-3" />
+                                    </button>
+                                </span>
+                                <input
+                                    class="flex-1 min-w-16 bg-transparent outline-none text-sm placeholder:text-muted-foreground"
+                                    :placeholder="staffForm.spoken_languages.length === 0 ? 'en, de, fr...' : ''"
+                                    @keydown.enter.prevent="addLanguage($event)"
+                                    @keydown.,.prevent="addLanguage($event)"
+                                    @keydown.backspace="removeLastLanguage($event)"
+                                />
+                            </div>
                             <p v-if="staffForm.errors.spoken_languages" class="text-xs text-destructive mt-1">{{ staffForm.errors.spoken_languages }}</p>
                         </div>
                     </div>
@@ -253,7 +272,7 @@ import {
     DropdownMenu, DropdownMenuContent, DropdownMenuLabel,
     DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/Components/ui/dropdown-menu'
-import { Camera, Pencil, Check, X, Globe, Users, Shield, Lock } from 'lucide-vue-next'
+import { Camera, Pencil, Check, X, Globe, Users, Shield, Lock, MessageCircle } from 'lucide-vue-next'
 import { trans } from 'laravel-vue-i18n'
 
 const props = defineProps({
@@ -363,6 +382,20 @@ function submitCreditAs() {
     })
 }
 
+function addLanguage(e) {
+    const value = e.target.value.trim().toLowerCase()
+    if (value && !staffForm.spoken_languages.includes(value)) {
+        staffForm.spoken_languages.push(value)
+    }
+    e.target.value = ''
+}
+
+function removeLastLanguage(e) {
+    if (e.target.value === '' && staffForm.spoken_languages.length > 0) {
+        staffForm.spoken_languages.pop()
+    }
+}
+
 function getVisibility(field) {
     return staffForm.visibility[field] ?? 'all_staff'
 }
@@ -390,7 +423,10 @@ const VisibilityPicker = (pickerProps) => {
                     type: 'button',
                     title: `${trans('staff_profile_visibility')}: ${trans(opt.label)}`,
                     class: 'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors',
-                }, [h(opt.icon, { class: 'h-3.5 w-3.5' })]),
+                }, [
+                    h(opt.icon, { class: 'h-3 w-3' }),
+                    h('span', { class: 'text-[10px] leading-none' }, trans(opt.label)),
+                ]),
             }),
             h(DropdownMenuContent, { align: 'end', class: 'w-52' }, {
                 default: () => [
