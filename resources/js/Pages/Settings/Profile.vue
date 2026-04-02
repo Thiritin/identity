@@ -1,87 +1,77 @@
 <template>
-    <Head title="Edit Profile" />
+    <Head title="Profile" />
     <AvatarModal ref="avatarModal" :file="file" :url="previewUrl" />
 
-    <div class="mb-4" v-if="showEmailVerify || showEmailTooMany">
-        <BaseAlert
-            v-if="showEmailVerify"
-            message="We have sent you a verification email to confirm your change."
-            title="Please check your email."
-        />
-        <BaseAlert
-            v-if="showEmailTooMany"
-            message="Please try again in 15 minutes."
-            title="Too many requests"
-        />
-    </div>
-
-    <form @submit.prevent="submitForm">
-        <div class="space-y-5">
-            <!-- Avatar row -->
-            <div class="flex items-center gap-4">
-                <div class="h-16 w-16 shrink-0 rounded-full overflow-hidden bg-gray-100">
+    <!-- Profile hero (glassy) -->
+    <div class="relative overflow-hidden bg-white/40 dark:bg-white/5 backdrop-blur-xl rounded-t-xl px-6 py-5 sm:px-10">
+        <!-- Staff gradient overlay -->
+        <div v-if="$page.props.user.isStaff" class="absolute inset-0 bg-gradient-to-t from-amber-500/25 to-transparent pointer-events-none" />
+        <!-- Staff badge -->
+        <span v-if="$page.props.user.isStaff" class="absolute top-3 right-3 bg-amber-500 text-white text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md shadow-sm">
+            Staff
+        </span>
+        <div class="relative flex items-center gap-4">
+            <!-- Avatar (clickable, overlapping left) -->
+            <div class="relative group cursor-pointer shrink-0 -ml-2" @click="triggerAvatarUpload">
+                <div class="h-16 w-16 rounded-full overflow-hidden ring-3 ring-white/50 dark:ring-white/15 shadow-lg">
                     <AvatarImage class="w-full h-full" :avatar="$page.props.user.avatar" />
                 </div>
-                <div>
-                    <div class="relative">
-                        <label for="avatar" class="inline-flex cursor-pointer items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
-                            Change avatar
-                        </label>
-                        <input
-                            id="avatar"
-                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            name="avatar"
-                            type="file"
-                            accept="image/png,image/jpeg,image/jpg"
-                            @change="onFileChange($event)"
-                        />
-                    </div>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $t('profile_avatar_notice') }}</p>
-                    <span v-show="errors.image" class="text-xs text-destructive">{{ errors.image }}</span>
+                <div class="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                    <Camera class="h-5 w-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
+                <input
+                    ref="avatarInput"
+                    class="hidden"
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg"
+                    @change="onFileChange($event)"
+                />
             </div>
 
-            <!-- Email -->
-            <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
-                <label for="email" class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 sm:shrink-0">{{ $t('email') }}</label>
-                <div class="flex-1">
-                    <Input id="email"
-                        placeholder="me@example.org"
-                        type="email"
-                        autocomplete="email"
-                        @change="form.validate('email')"
-                        :class="{ 'border-destructive': form.invalid('email') }"
-                        v-model.trim.lazy="form.email"
-                    />
-                    <p v-if="form.invalid('email')" class="mt-1 text-sm text-destructive">{{ form.errors.email }}</p>
+            <!-- Name + member since -->
+            <div class="min-w-0 flex-1">
+                <div class="group flex items-center gap-2">
+                    <template v-if="!editingName">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">
+                            {{ form.name || 'Username' }}
+                        </h2>
+                        <button
+                            type="button"
+                            class="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 shrink-0"
+                            @click="startEditingName"
+                        >
+                            <Pencil class="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" />
+                        </button>
+                    </template>
+                    <template v-else>
+                        <form @submit.prevent="submitName" class="flex items-center gap-2">
+                            <Input
+                                ref="nameInput"
+                                type="text"
+                                v-model.trim="form.name"
+                                class="text-base font-semibold h-8 w-48"
+                                @keydown.escape="cancelEditingName"
+                            />
+                            <Button size="sm" type="submit" :disabled="form.processing" class="h-8 w-8 p-0">
+                                <Check class="h-3.5 w-3.5" />
+                            </Button>
+                            <Button size="sm" variant="ghost" type="button" @click="cancelEditingName" class="h-8 w-8 p-0">
+                                <X class="h-3.5 w-3.5" />
+                            </Button>
+                        </form>
+                    </template>
                 </div>
-            </div>
-
-            <!-- Username -->
-            <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
-                <label for="name" class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 sm:shrink-0">Username</label>
-                <div class="flex-1">
-                    <Input id="name"
-                        type="text"
-                        autocomplete="name"
-                        @change="form.validate('name')"
-                        :class="{ 'border-destructive': form.invalid('name') }"
-                        v-model.trim.lazy="form.name"
-                        aria-describedby="name-help"
-                    />
-                    <small id="name-help" class="mt-1 block text-xs text-gray-500 dark:text-gray-400">This is not your badge name.</small>
-                    <p v-if="form.invalid('name')" class="mt-1 text-sm text-destructive">{{ form.errors.name }}</p>
-                </div>
-            </div>
-
-            <div class="flex justify-end">
-                <Button :disabled="form.processing" type="submit">{{ $t('save') }}</Button>
+                <p v-if="form.invalid('name')" class="text-sm text-destructive">{{ form.errors.name }}</p>
+                <p v-else class="text-xs text-gray-500 dark:text-gray-400">
+                    Member since {{ $page.props.user.memberSince }}
+                </p>
+                <span v-show="errors.image" class="text-xs text-destructive">{{ errors.image }}</span>
             </div>
         </div>
-    </form>
+    </div>
 
     <!-- Preferences -->
-    <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
+    <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10">
         <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">Preferences</h3>
         <div class="flex items-center justify-between">
             <div>
@@ -101,32 +91,32 @@
 import { Head, useForm, usePage, router } from '@inertiajs/vue3'
 import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
 import AvatarModal from '@/Profile/AvatarModal.vue'
-import { computed, ref } from 'vue'
-import BaseAlert from '@/Components/BaseAlert.vue'
+import { nextTick, ref } from 'vue'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 import { Switch } from '@/Components/ui/switch/index.js'
+import { Camera, Pencil, Check, X } from 'lucide-vue-next'
 
 const props = defineProps({
     errors: Object,
-    flash: Object,
 })
 
+const page = usePage()
+
 const form = useForm('post', route('settings.update-profile.update'), {
-    name: usePage().props.user.name,
-    email: usePage().props.user.email,
+    name: page.props.user.name,
 })
 
 const file = ref(null)
 const previewUrl = ref(null)
 const avatarModal = ref(null)
+const avatarInput = ref(null)
+const nameInput = ref(null)
+const editingName = ref(false)
+const originalName = ref(page.props.user.name)
 
-const nsfwContent = ref(usePage().props.user.preferences?.nsfw_content ?? false)
-
-function togglePreference(key, value) {
-    router.post(route('settings.preferences.update'), { key, value }, {
-        preserveScroll: true,
-    })
+function triggerAvatarUpload() {
+    avatarInput.value.click()
 }
 
 function onFileChange(e) {
@@ -136,12 +126,37 @@ function onFileChange(e) {
     URL.revokeObjectURL(file.value)
 }
 
-function submitForm() {
-    form.post(route('settings.update-profile.update'))
+function startEditingName() {
+    originalName.value = form.name
+    editingName.value = true
+    nextTick(() => {
+        nameInput.value?.$el?.focus()
+    })
 }
 
-const showEmailVerify = computed(() => props.flash.message === 'emailVerify')
-const showEmailTooMany = computed(() => props.flash.message === 'emailTooMany')
+function cancelEditingName() {
+    form.name = originalName.value
+    form.clearErrors('name')
+    editingName.value = false
+}
+
+function submitName() {
+    form.post(route('settings.update-profile.update'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            editingName.value = false
+            originalName.value = form.name
+        },
+    })
+}
+
+const nsfwContent = ref(page.props.user.preferences?.nsfw_content ?? false)
+
+function togglePreference(key, value) {
+    router.post(route('settings.preferences.update'), { key, value }, {
+        preserveScroll: true,
+    })
+}
 </script>
 
 <script>
