@@ -8,7 +8,7 @@ use App\Notifications\VerifyEmailQueuedNotification;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -45,6 +45,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'email',
         'password',
         'profile_photo_path',
+        'preferences',
     ];
 
     /**
@@ -66,6 +67,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'preferences' => 'array',
     ];
 
     /**
@@ -136,9 +138,9 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             );
     }
 
-    public function twoFactors(): HasOne
+    public function twoFactors(): HasMany
     {
-        return $this->hasOne(TwoFactor::class);
+        return $this->hasMany(TwoFactor::class);
     }
 
     public function resetTwoFactorAuth()
