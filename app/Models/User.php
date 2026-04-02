@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\App;
+use App\Models\Concerns\HasHashid;
 use App\Notifications\PasswordResetQueuedNotification;
 use App\Notifications\UpdateEmailNotification;
+use App\Services\Hydra\Client as HydraClient;
+use App\Services\Hydra\HydraRequestException;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,9 +17,9 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\Concerns\HasHashid;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -68,6 +70,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'password_changed_at' => 'datetime',
         'is_admin' => 'boolean',
         'preferences' => 'array',
+        'suspended_at' => 'datetime',
     ];
 
     /**
@@ -147,6 +150,45 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         $this->twoFactors()->delete();
     }
 
+    public function isSuspended(): bool
+    {
+        return $this->suspended_at !== null;
+    }
+
+    public function suspend(): void
+    {
+        $this->suspended_at = now();
+        $this->remember_token = null;
+        $this->save();
+
+        $this->tokens()->delete();
+
+        try {
+            (new HydraClient())->invalidateAllSessions($this->hashid);
+        } catch (HydraRequestException $e) {
+            Log::warning('Failed to invalidate Hydra sessions during suspension', [
+                'user' => $this->hashid,
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        activity()
+            ->on($this)
+            ->by(auth()->user())
+            ->log('user-suspended');
+    }
+
+    public function unsuspend(): void
+    {
+        $this->suspended_at = null;
+        $this->save();
+
+        activity()
+            ->on($this)
+            ->by(auth()->user())
+            ->log('user-unsuspended');
+    }
+
     public function appCan(string $scope)
     {
         $auth = Auth::guard('api');
@@ -174,7 +216,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function canAccessPanel($panel): bool
     {
-        return $this->is_admin;
+        return $this->is_admin && ! $this->isSuspended();
     }
 
     public function getActivitylogOptions(): LogOptions

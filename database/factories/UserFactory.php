@@ -29,4 +29,18 @@ class UserFactory extends Factory
             'password' => Hash::make($this->faker->password),
         ];
     }
+
+    public function admin(): static
+    {
+        return $this->state(fn () => [
+            'is_admin' => true,
+        ]);
+    }
+
+    public function suspended(): static
+    {
+        return $this->state(fn () => [
+            'suspended_at' => now(),
+        ]);
+    }
 }
