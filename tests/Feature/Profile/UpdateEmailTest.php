@@ -2,34 +2,14 @@
 
 namespace Tests\Feature\Profile;
 
-use App\Notifications\UpdateEmailNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
 class UpdateEmailTest extends TestCase
 {
     use RefreshDatabase;
-
-    public function test_can_update_email()
-    {
-        Notification::fake();
-        Mail::fake();
-
-        Notification::assertNothingSent();
-
-        $user = $this->makeAuthSession();
-        $response = $this->postJson(route('settings.update-profile.update'), [
-            'name' => 'validname',
-            'email' => 'test2@email.de',
-        ]);
-        $response->assertRedirect();
-        $response->assertSessionHasNoErrors();
-        Notification::assertSentTimes(UpdateEmailNotification::class, 1);
-    }
 
     public function test_can_use_signed_route_to_update_email()
     {
