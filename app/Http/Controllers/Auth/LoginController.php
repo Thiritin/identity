@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\TwoFactorTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\App;
@@ -126,7 +127,7 @@ class LoginController extends Controller
                 return Redirect::route('login.apps.redirect', ['app' => 'portal']);
             }
 
-            if ($user->twoFactors()->exists()) {
+            if ($user->twoFactors()->whereIn('type', [TwoFactorTypeEnum::TOTP, TwoFactorTypeEnum::YUBIKEY, TwoFactorTypeEnum::SECURITY_KEY])->exists()) {
                 return Redirect::signedRoute('auth.two-factor', [
                     'login_challenge' => $loginChallenge,
                     'user' => $user->hashid,

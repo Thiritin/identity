@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TwoFactorTypeEnum;
 use App\Models\User;
 use App\Services\Hydra\Client;
 use App\Services\YubicoService;
@@ -20,6 +21,7 @@ class TwoFactorController extends Controller
     {
         $request->validate(['login_challenge' => 'required|string', 'user' => 'required|string']);
         $twoFactors = User::findByHashidOrFail($request->get('user'))->twoFactors()
+            ->whereIn('type', [TwoFactorTypeEnum::TOTP, TwoFactorTypeEnum::YUBIKEY, TwoFactorTypeEnum::SECURITY_KEY])
             ->orderBy('last_used_at', 'desc')->get(['id', 'type', 'last_used_at']);
         if ($twoFactors->count() === 0) {
             return redirect()->route('auth.error', ['error' => 'no_two_factor']);
