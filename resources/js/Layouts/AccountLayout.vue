@@ -44,7 +44,7 @@
                     <!-- Footer: artwork left, legal right -->
                     <div class="w-full flex items-center justify-between bg-black/40 backdrop-blur-sm rounded-b-xl px-4 py-2 text-xs text-white/70">
                         <div>
-                            Artwork by
+                            {{ $t('footer_artwork_by') }}
                             <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
                         </div>
                         <nav class="flex flex-wrap gap-x-4 gap-y-1">
@@ -88,20 +88,52 @@
                         class="flex-1 flex flex-col items-center gap-1 py-2 text-xs font-medium text-gray-400 dark:text-gray-500 transition-colors"
                     >
                         <LogOut class="h-5 w-5" />
-                        Logout
+                        {{ $t('tab_logout') }}
                     </a>
                 </div>
             </nav>
         </div>
+        <!-- Sudo mode: confirm password modal -->
+        <Dialog :open="passwordConfirmRequired">
+            <DialogContent :show-close-button="false" @interact-outside.prevent @escape-key-down.prevent>
+                <DialogHeader>
+                    <DialogTitle>{{ $t('security_confirm_password_title') }}</DialogTitle>
+                    <DialogDescription>{{ $t('security_confirm_password_subtitle') }}</DialogDescription>
+                </DialogHeader>
+                <form @submit.prevent="submitConfirmPassword">
+                    <div class="flex flex-col gap-2">
+                        <Input
+                            type="password"
+                            v-model="confirmForm.password"
+                            :placeholder="$t('password')"
+                            autocomplete="current-password"
+                            :class="{ 'border-destructive': confirmForm.errors.password }"
+                        />
+                        <p v-if="confirmForm.errors.password" class="text-sm text-destructive">
+                            {{ confirmForm.errors.password }}
+                        </p>
+                    </div>
+                    <DialogFooter class="mt-4">
+                        <Button type="submit" :disabled="confirmForm.processing">
+                            {{ $t('security_confirm_password_submit') }}
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
         <Toaster rich-colors position="top-center" />
     </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
-import { Link, usePage } from '@inertiajs/vue3'
+import { Link, usePage, useForm } from '@inertiajs/vue3'
 import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness, BookUser, Settings } from 'lucide-vue-next'
 import { Toaster } from '@/Components/ui/sonner'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/Components/ui/dialog'
+import { Input } from '@/Components/ui/input'
+import { Button } from '@/Components/ui/button'
+import { trans } from 'laravel-vue-i18n'
 
 const page = usePage()
 const user = computed(() => page.props.user)
@@ -116,27 +148,27 @@ const isProfile = computed(() => isActive('settings.profile'))
 
 const tabs = computed(() => {
     const items = [
-        { name: 'Apps', route: 'dashboard', href: route('dashboard'), icon: LayoutGrid, active: isActive('dashboard') },
-        { name: 'Profile', route: 'settings.profile', href: route('settings.profile'), icon: UserRound, active: isActive('settings.profile') },
-        { name: 'Security', route: 'settings.security', href: route('settings.security'), icon: ShieldCheck, active: isActive('settings.security') || isActive('settings.security.*') },
+        { name: trans('tab_apps'), route: 'dashboard', href: route('dashboard'), icon: LayoutGrid, active: isActive('dashboard') },
+        { name: trans('tab_profile'), route: 'settings.profile', href: route('settings.profile'), icon: UserRound, active: isActive('settings.profile') },
+        { name: trans('tab_security'), route: 'settings.security', href: route('settings.security'), icon: ShieldCheck, active: isActive('settings.security') || isActive('settings.security.*') },
     ]
     if (user.value.isStaff) {
-        items.push({ name: 'Directory', route: 'staff.dashboard', href: route('staff.dashboard'), icon: BookUser, active: false })
+        items.push({ name: trans('tab_directory'), route: 'staff.dashboard', href: route('staff.dashboard'), icon: BookUser, active: false })
     }
     if (user.value.isAdmin) {
-        items.push({ name: 'Admin', route: null, href: '/admin', icon: Settings, active: false, external: true })
+        items.push({ name: trans('tab_admin'), route: null, href: '/admin', icon: Settings, active: false, external: true })
     }
     return items
 })
 
 const rightTabs = computed(() => [
-    { name: 'Logout', href: route('auth.logout'), icon: LogOut, external: true },
+    { name: trans('tab_logout'), href: route('auth.logout'), icon: LogOut, external: true },
 ])
 
 const footerLinks = [
-    { name: 'Support', href: 'https://help.eurofurence.org/contact/' },
-    { name: 'Imprint', href: 'https://help.eurofurence.org/legal/imprint' },
-    { name: 'Privacy', href: 'https://help.eurofurence.org/legal/privacy' },
+    { name: trans('footer_support_link'), href: 'https://help.eurofurence.org/contact/' },
+    { name: trans('footer_imprint'), href: 'https://help.eurofurence.org/legal/imprint' },
+    { name: trans('footer_privacy'), href: 'https://help.eurofurence.org/legal/privacy' },
 ]
 
 const darkMode = ref(window.matchMedia('(prefers-color-scheme: dark)').matches)
@@ -144,6 +176,19 @@ const darkMode = ref(window.matchMedia('(prefers-color-scheme: dark)').matches)
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
     darkMode.value = e.matches
 })
+
+const passwordConfirmRequired = computed(() => page.props.passwordConfirmRequired === true)
+
+const confirmForm = useForm('post', route('settings.security.confirm-password'), {
+    password: '',
+})
+
+function submitConfirmPassword() {
+    confirmForm.submit({
+        preserveScroll: true,
+        onSuccess: () => confirmForm.reset(),
+    })
+}
 </script>
 
 <style>
