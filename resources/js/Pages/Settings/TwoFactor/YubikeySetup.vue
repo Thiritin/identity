@@ -109,7 +109,7 @@ function submitDisableForm() {
             </div>
             <div class="flex justify-end gap-3">
                 <Button severity="secondary" size="small" @click="disableKeyId = null" secondary>Cancel</Button>
-                <Button size="small" primary>Submit</Button>
+                <Button size="small" primary type="submit">Submit</Button>
             </div>
         </form>
     </div>
