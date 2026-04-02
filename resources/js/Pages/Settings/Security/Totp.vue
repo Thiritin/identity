@@ -52,7 +52,7 @@
             </div>
 
             <!-- Step 2: Scan the Code -->
-            <div v-if="currentStep === 2">
+            <div v-else-if="currentStep === 2">
                 <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
                     {{ $t('totp_step2_instruction') }}
                 </p>
@@ -68,7 +68,7 @@
             </div>
 
             <!-- Step 3: Verify & Enable -->
-            <div v-if="currentStep === 3">
+            <div v-else-if="currentStep === 3">
                 <form @submit.prevent="submitTotpEnable" class="space-y-4">
                     <div class="flex flex-col gap-2">
                         <label for="totp_code">{{ $t('totp_verification_code') }}</label>
