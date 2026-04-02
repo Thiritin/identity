@@ -50,11 +50,11 @@ test('verify code activates account', function () {
     $this->withSession([
         'auth.verify_code' => [
             'user_id' => $user->id,
-            'code' => '123456',
+            'code' => 'ABC123',
             'expires_at' => now()->addMinutes(15),
         ],
     ])->post(route('auth.register.code.submit'), [
-        'code' => '123456',
+        'code' => 'abc123',
     ])->assertRedirect(route('login.apps.redirect', ['app' => 'portal']));
 
     expect($user->fresh()->email_verified_at)->not->toBeNull();
@@ -66,11 +66,11 @@ test('wrong code returns error', function () {
     $this->withSession([
         'auth.verify_code' => [
             'user_id' => $user->id,
-            'code' => '123456',
+            'code' => 'ABC123',
             'expires_at' => now()->addMinutes(15),
         ],
     ])->post(route('auth.register.code.submit'), [
-        'code' => '999999',
+        'code' => 'WRONG1',
     ])->assertSessionHasErrors('code');
 });
 
@@ -80,11 +80,11 @@ test('expired code returns error', function () {
     $this->withSession([
         'auth.verify_code' => [
             'user_id' => $user->id,
-            'code' => '123456',
+            'code' => 'ABC123',
             'expires_at' => now()->subMinutes(1),
         ],
     ])->post(route('auth.register.code.submit'), [
-        'code' => '123456',
+        'code' => 'ABC123',
     ])->assertSessionHasErrors('code');
 });
 

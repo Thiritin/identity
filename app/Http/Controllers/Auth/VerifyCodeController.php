@@ -40,7 +40,7 @@ class VerifyCodeController extends Controller
             return back()->withErrors(['code' => __('verify_code_expired')]);
         }
 
-        if ($request->code !== $verifyData['code']) {
+        if (strtoupper($request->code) !== $verifyData['code']) {
             return back()->withErrors(['code' => __('verify_code_invalid')]);
         }
 
@@ -67,7 +67,7 @@ class VerifyCodeController extends Controller
 
         $user = User::findOrFail($verifyData['user_id']);
 
-        $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $code = substr(str_shuffle(str_repeat('ABCDEFGHJKMNPQRSTUVWXYZ23456789', 3)), 0, 6);
         Session::put('auth.verify_code', [
             'user_id' => $user->id,
             'code' => $code,

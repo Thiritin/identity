@@ -21,11 +21,10 @@
                 id="code"
                 v-model="form.code"
                 type="text"
-                inputmode="numeric"
                 autocomplete="one-time-code"
                 maxlength="6"
-                placeholder="000000"
-                class="text-center text-2xl tracking-[0.5em] indent-[0.5em] font-mono w-52"
+                placeholder="XXXXXX"
+                class="text-center text-2xl tracking-[0.5em] indent-[0.5em] font-mono w-52 uppercase"
             />
             <Transition name="field-error">
                 <p v-if="form.errors.code" class="text-xs text-destructive">{{ form.errors.code }}</p>
@@ -63,7 +62,7 @@ const form = useForm('post', route('auth.register.code.submit'), {
 })
 
 watch(() => form.code, (value) => {
-    if (value && value.length === 6 && /^\d{6}$/.test(value) && !form.processing) {
+    if (value && value.length === 6 && /^[A-Za-z0-9]{6}$/.test(value) && !form.processing) {
         submit()
     }
 })
