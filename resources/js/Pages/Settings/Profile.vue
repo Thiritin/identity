@@ -201,14 +201,12 @@
                                 <thead>
                                     <tr class="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
                                         <th class="pb-2 font-medium">{{ $t('staff_profile_group_name') }}</th>
-                                        <th class="pb-2 font-medium">{{ $t('staff_profile_group_role') }}</th>
                                         <th class="pb-2 font-medium">{{ $t('staff_profile_group_credit_as') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(group, index) in groupMemberships" :key="group.id" class="border-b border-gray-100 dark:border-gray-800">
                                         <td class="py-2 pr-4">{{ group.name }}</td>
-                                        <td class="py-2 pr-4 text-gray-500 dark:text-gray-400">{{ group.title || group.level }}</td>
                                         <td class="py-2">
                                             <Input v-model="creditAsForm.groups[index].credit_as" :placeholder="staffForm?.credit_as || $t('staff_profile_credit_as')" class="h-8 w-full max-w-48 bg-white dark:bg-primary-950" />
                                         </td>
