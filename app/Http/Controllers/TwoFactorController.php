@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Enums\TwoFactorTypeEnum;
 use App\Models\User;
+use App\Services\BackupCodeService;
 use App\Services\Hydra\Client;
+use App\Services\WebAuthnService;
 use App\Services\YubicoService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Redirect;
@@ -39,6 +42,10 @@ class TwoFactorController extends Controller
                     'remember' => $request->get('remember'),
                 ],
                 now()->addMinutes(30)),
+            'securityKeyOptionsUrl' => URL::signedRoute('auth.two-factor.security-key.options', [
+                'login_challenge' => $request->get('login_challenge'),
+                'user' => $request->get('user'),
+            ], now()->addMinutes(30)),
         ]);
     }
 
@@ -47,8 +54,9 @@ class TwoFactorController extends Controller
         $data = $request->validate([
             'login_challenge' => 'required|string',
             'user' => 'required|string',
-            'code' => 'required|string',
-            'method' => 'required|string|in:yubikey,totp',
+            'code' => 'required_unless:method,security_key|string|nullable',
+            'method' => 'required|string|in:yubikey,totp,backup_code,security_key',
+            'credential' => 'required_if:method,security_key|string|nullable',
             'remember' => 'nullable|boolean',
         ]);
         $user = User::findByHashidOrFail($request->get('user'));
@@ -60,7 +68,11 @@ class TwoFactorController extends Controller
             ]);
         }
 
-        $twoFactors = $user->twoFactors()->where('type', $request->get('method'))->get();
+        $twoFactorType = $data['method'] === 'backup_code'
+            ? TwoFactorTypeEnum::BackupCodes
+            : TwoFactorTypeEnum::from($data['method']);
+
+        $twoFactors = $user->twoFactors()->where('type', $twoFactorType)->get();
         if ($twoFactors->count() === 0) {
             throw ValidationException::withMessages(['code' => 'Invalid two factor method.']);
         }
@@ -73,6 +85,15 @@ class TwoFactorController extends Controller
             if (! $this->verifyTOTP($data, $twoFactors, $user)) {
                 throw ValidationException::withMessages(['code' => 'Invalid TOTP code.']);
             }
+        } elseif ($data['method'] === 'backup_code') {
+            $backupCodeService = new BackupCodeService();
+            if (! $backupCodeService->verify($user, $data['code'])) {
+                throw ValidationException::withMessages(['code' => 'Invalid backup code.']);
+            }
+        } elseif ($data['method'] === 'security_key') {
+            if (! $this->verifySecurityKey($request, $user)) {
+                throw ValidationException::withMessages(['credential' => 'Invalid security key.']);
+            }
         } else {
             throw ValidationException::withMessages(['code' => 'Invalid two factor method.']);
         }
@@ -80,6 +101,37 @@ class TwoFactorController extends Controller
             $request->get('remember') ? '2592000' : '3600');
 
         return Inertia::location($url);
+    }
+
+    public function securityKeyOptions(Request $request): JsonResponse
+    {
+        $request->validate(['user' => 'required|string']);
+
+        $user = User::findByHashidOrFail($request->get('user'));
+
+        $webAuthnService = new WebAuthnService();
+        $options = $webAuthnService->generateAuthenticationOptions($user, TwoFactorTypeEnum::SECURITY_KEY);
+
+        return response()->json($options);
+    }
+
+    private function verifySecurityKey(Request $request, User $user): bool
+    {
+        $limitKey = 'security-key-verify-' . $user->id;
+        if (RateLimiter::tooManyAttempts($limitKey, 10)) {
+            throw ValidationException::withMessages(['credential' => 'Too many attempts. Please try again later.']);
+        }
+        RateLimiter::hit($limitKey, 120);
+
+        try {
+            $webAuthnService = new WebAuthnService();
+            $webAuthnService->verifyAuthentication($user, $request->input('credential'), TwoFactorTypeEnum::SECURITY_KEY);
+            RateLimiter::clear($limitKey);
+
+            return true;
+        } catch (\RuntimeException $e) {
+            return false;
+        }
     }
 
     public function verifyYubikey($data, Collection $twoFactors, $user): bool

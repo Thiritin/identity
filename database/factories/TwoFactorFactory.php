@@ -6,6 +6,7 @@ use App\Enums\TwoFactorTypeEnum;
 use App\Models\TwoFactor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 
 class TwoFactorFactory extends Factory
 {
@@ -40,7 +41,7 @@ class TwoFactorFactory extends Factory
         return $this->state(fn () => [
             'type' => TwoFactorTypeEnum::PASSKEY,
             'name' => $this->faker->word(),
-            'credential_id' => base64_encode(random_bytes(32)),
+            'credential_id' => Base64UrlSafe::encodeUnpadded(random_bytes(32)),
             'public_key' => json_encode(['type' => 'public-key', 'key' => base64_encode(random_bytes(65))]),
             'sign_count' => 0,
             'transports' => ['internal'],
@@ -53,7 +54,7 @@ class TwoFactorFactory extends Factory
         return $this->state(fn () => [
             'type' => TwoFactorTypeEnum::SECURITY_KEY,
             'name' => $this->faker->word(),
-            'credential_id' => base64_encode(random_bytes(32)),
+            'credential_id' => Base64UrlSafe::encodeUnpadded(random_bytes(32)),
             'public_key' => json_encode(['type' => 'public-key', 'key' => base64_encode(random_bytes(65))]),
             'sign_count' => 0,
             'transports' => ['usb'],

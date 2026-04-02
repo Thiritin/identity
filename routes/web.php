@@ -27,6 +27,14 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('login/password', [LoginController::class, 'submit'])
         ->middleware([HandlePrecognitiveRequests::class, ProtectAgainstSpam::class, 'throttle:10,1'])
         ->name('login.password.submit');
+    Route::get('login/passkey/options', [LoginController::class, 'passkeyOptions'])
+        ->name('login.passkey.options');
+    Route::post('login/passkey/verify', [LoginController::class, 'passkeyVerify'])
+        ->name('login.passkey.verify');
+
+    Route::get('two-factor/security-key/options', [TwoFactorController::class, 'securityKeyOptions'])
+        ->middleware('signed')
+        ->name('two-factor.security-key.options');
 
     Route::get('two-factor',
         [TwoFactorController::class, 'show'])

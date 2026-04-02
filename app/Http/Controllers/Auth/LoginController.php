@@ -8,7 +8,9 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Models\App;
 use App\Models\User;
 use App\Services\Hydra\Client;
+use App\Services\WebAuthnService;
 use GrantHolle\Altcha\Rules\ValidAltcha;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -70,10 +72,110 @@ class LoginController extends Controller
 
         $requiresPow = RateLimiter::tooManyAttempts('login-pow:' . $request->ip(), 3);
 
+        $user = User::where('email', $email)->first();
+        $hasPasskeys = $user ? $user->twoFactors()->where('type', TwoFactorTypeEnum::PASSKEY)->exists() : false;
+
         return Inertia::render('Auth/Login', [
             'email' => $email,
             'requiresPow' => $requiresPow,
+            'hasPasskeys' => $hasPasskeys,
         ]);
+    }
+
+    public function passkeyOptions(Request $request): JsonResponse
+    {
+        $email = Session::get('auth.email_flow.email');
+        $loginChallenge = Session::get('auth.login_challenge.challenge');
+
+        if (! $email || ! $loginChallenge) {
+            return response()->json(['error' => 'No active login session'], 400);
+        }
+
+        $user = User::where('email', $email)->first();
+        if (! $user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        $webAuthnService = new WebAuthnService();
+        $options = $webAuthnService->generateAuthenticationOptions($user, TwoFactorTypeEnum::PASSKEY);
+
+        return response()->json($options);
+    }
+
+    public function passkeyVerify(Request $request)
+    {
+        $request->validate([
+            'credential' => 'required|string',
+            'remember' => 'nullable|boolean',
+        ]);
+
+        $email = Session::get('auth.email_flow.email');
+        $loginChallenge = Session::get('auth.login_challenge.challenge');
+
+        if (! $email || ! $loginChallenge) {
+            return Redirect::route('auth.login.view');
+        }
+
+        $user = User::where('email', $email)->first();
+        if (! $user) {
+            throw ValidationException::withMessages(['credential' => 'User not found']);
+        }
+
+        if ($user->isSuspended()) {
+            return Redirect::route('auth.error', [
+                'error' => 'account_suspended',
+                'error_description' => trans('account_suspended'),
+            ]);
+        }
+
+        $limitKey = 'passkey-login-' . $user->id;
+        if (RateLimiter::tooManyAttempts($limitKey, 10)) {
+            throw ValidationException::withMessages(['credential' => 'Too many attempts. Please try again later.']);
+        }
+        RateLimiter::hit($limitKey, 120);
+
+        try {
+            $webAuthnService = new WebAuthnService();
+            $webAuthnService->verifyAuthentication($user, $request->input('credential'), TwoFactorTypeEnum::PASSKEY);
+        } catch (\RuntimeException $e) {
+            throw ValidationException::withMessages(['credential' => $e->getMessage()]);
+        }
+
+        RateLimiter::clear($limitKey);
+
+        $hydra = new Client();
+        $loginRequest = $hydra->getLoginRequest($loginChallenge);
+
+        if (isset($loginRequest['redirect_to'])) {
+            return Redirect::to($loginRequest['redirect_to']);
+        }
+
+        $emailVerified = $this->checkEmailVerification($loginRequest, $user);
+        if ($emailVerified === false) {
+            return Redirect::route('login.apps.redirect', ['app' => 'portal']);
+        }
+
+        // Check for 2FA (passkey replaces password only, not 2FA)
+        $has2fa = $user->twoFactors()
+            ->whereIn('type', [TwoFactorTypeEnum::TOTP, TwoFactorTypeEnum::YUBIKEY, TwoFactorTypeEnum::SECURITY_KEY])
+            ->exists();
+
+        if ($has2fa) {
+            return Redirect::signedRoute('auth.two-factor', [
+                'login_challenge' => $loginChallenge,
+                'user' => $user->hashid,
+                'remember' => $request->get('remember') ?? false,
+            ], now()->addMinutes(30));
+        }
+
+        $url = (new Client())->acceptLogin($user->hashId(), $loginChallenge,
+            $request->get('remember') ? '2592000' : '3600');
+
+        RateLimiter::clear('login-pow:' . $request->ip());
+        Session::forget('auth.email_flow');
+        Session::forget('auth.login_challenge');
+
+        return Inertia::location($url);
     }
 
     public function submit(LoginRequest $request)
