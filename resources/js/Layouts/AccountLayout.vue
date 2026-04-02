@@ -83,7 +83,11 @@ const tabs = [
     { name: 'Security', route: 'settings.security' },
 ]
 
+const currentUrl = computed(() => page.url)
+
 function isActive(routeName) {
+    // Access currentUrl.value to create reactive dependency on page URL changes
+    currentUrl.value
     return route().current(routeName)
 }
 

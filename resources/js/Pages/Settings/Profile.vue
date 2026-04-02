@@ -30,7 +30,7 @@
                 <div class="space-y-4">
 
                     <div class="flex flex-col gap-2">
-                        <label for="email">{{ $trans('email') }}</label>
+                        <label for="email">{{ $t('email') }}</label>
                         <Input id="email"
                                    placeholder="me@example.org"
                                    type="email"
@@ -42,7 +42,7 @@
                         <p v-if="form.invalid('email')" class="text-sm text-destructive">{{ form.errors.email }}</p>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <label for="name">{{ $trans('name') }}</label>
+                        <label for="name">{{ $t('name') }}</label>
                         <Input id="name"
                                    type="text"
                                    autocomplete="name"
@@ -101,7 +101,7 @@
                             <div
                                 class="text-gray-600 dark:text-primary-200 text-xs"
                             >
-                                {{ $trans('profile_avatar_notice') }}
+                                {{ $t('profile_avatar_notice') }}
                             </div>
                             <span
                                 v-show="errors.image"
@@ -119,7 +119,7 @@
                 <Button
                     :disabled="form.processing"
                     type="submit"
-                >{{ $trans('save') }}</Button>
+                >{{ $t('save') }}</Button>
             </div>
 
             <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
