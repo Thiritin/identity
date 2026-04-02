@@ -28,8 +28,15 @@ class LoginController extends Controller
             return Redirect::route('auth.login.view');
         }
 
-        $hydra = new Client();
-        $loginRequest = $hydra->getLoginRequest($loginChallenge);
+        try {
+            $hydra = new Client();
+            $loginRequest = $hydra->getLoginRequest($loginChallenge);
+        } catch (\Exception $e) {
+            Session::forget('auth.email_flow');
+            Session::forget('auth.login_challenge');
+
+            return Redirect::route('auth.login.view');
+        }
 
         // redirect_to key is added when login request expired.
         if (isset($loginRequest['redirect_to'])) {
@@ -150,7 +157,14 @@ class LoginController extends Controller
     private function checkEmailVerification($loginRequest, User|string $user)
     {
         // Get App
-        $clientModel = App::where('client_id', $loginRequest['client']['client_id'])->firstOrFail();
+        $clientModel = App::where('client_id', $loginRequest['client']['client_id'])->first();
+
+        if (! $clientModel) {
+            Session::forget('auth.email_flow');
+            Session::forget('auth.login_challenge');
+
+            return false;
+        }
         // Get User
         if (($user instanceof User) === false) {
             $user = User::findByHashidOrFail($user);
