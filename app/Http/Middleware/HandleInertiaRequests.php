@@ -45,7 +45,7 @@ class HandleInertiaRequests extends Middleware
         $user = null;
         if ($request->user()) {
             $user = array_merge([
-                'id' => $request->user()->hashId(),
+                'id' => $request->user()->hashid,
                 'avatar' => ($request->user()->profile_photo_path) ? Storage::disk('s3-avatars')->url($request->user()->profile_photo_path) : null,
                 'isAdmin' => $request->user()->is_admin,
                 'isStaff' => $request->user()->isStaff(),
