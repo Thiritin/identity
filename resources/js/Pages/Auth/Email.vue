@@ -1,34 +1,30 @@
 <template>
     <Head title="Login" />
-    <Logo />
-    <LoginScreenWelcome
-        :title="$trans('loginscreen_welcome')"
-        :sub-title="$trans('loginscreen_sign_in_to_continue')"
-        class="mb-10"
-    />
-    <form @submit.prevent="submit">
+    <div class="text-center">
+        <Logo class="mx-auto" />
+        <LoginScreenWelcome
+            :title="$trans('loginscreen_welcome')"
+            :sub-title="$trans('loginscreen_sign_in_to_continue')"
+            class="mb-10"
+        />
+    </div>
+    <form class="space-y-4" @submit.prevent="submit">
         <div class="flex flex-col gap-2">
-            <label for="email">{{ $trans('email') }}</label>
-            <div class="relative">
-                <Input
-                    id="email"
-                    type="email"
-                    autocomplete="email"
-                    @change="form.validate('email')"
-                    :class="{ 'border-destructive': form.invalid('email') }"
-                    class="pr-10"
-                    v-model.trim.lazy="form.email"
-                />
-                <button
-                    type="submit"
-                    :disabled="form.processing"
-                    class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-primary-500 hover:text-primary-700 hover:bg-primary-100 dark:text-primary-300 dark:hover:text-primary-100 dark:hover:bg-primary-800 disabled:opacity-50 transition-colors"
-                >
-                    <ArrowRight class="size-4" />
-                </button>
-            </div>
-            <p v-if="form.invalid('email')" class="text-sm text-destructive">{{ form.errors.email }}</p>
+            <label for="email" class="text-center">{{ $trans('email') }}</label>
+            <Input
+                id="email"
+                type="email"
+                autocomplete="email"
+                @change="form.validate('email')"
+                :class="{ 'border-destructive': form.invalid('email') }"
+                v-model.trim.lazy="form.email"
+            />
+            <p v-if="form.invalid('email')" class="text-sm text-destructive text-center">{{ form.errors.email }}</p>
         </div>
+        <Button :disabled="form.processing" type="submit" class="w-full">
+            {{ $trans('continue') }}
+            <ArrowRight class="size-4" />
+        </Button>
     </form>
 </template>
 <script setup>
@@ -37,6 +33,7 @@ import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import { Input } from '@/Components/ui/input'
+import { Button } from '@/Components/ui/button'
 import { ArrowRight } from 'lucide-vue-next'
 
 defineOptions({ layout: AuthLayout })
