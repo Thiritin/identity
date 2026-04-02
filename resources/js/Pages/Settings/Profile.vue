@@ -62,7 +62,7 @@
                     </template>
                 </div>
                 <p v-if="form.invalid('name')" class="text-sm text-destructive">{{ form.errors.name }}</p>
-                <p v-else class="text-xs text-gray-500 dark:text-gray-400">
+                <p v-else class="text-xs text-gray-700 dark:text-gray-200">
                     Member since {{ $page.props.user.memberSince }}
                 </p>
                 <span v-show="errors.image" class="text-xs text-destructive">{{ errors.image }}</span>
