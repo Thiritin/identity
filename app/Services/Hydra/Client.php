@@ -215,6 +215,26 @@ class Client
         }
     }
 
+    public function invalidateSession(string $sid): bool
+    {
+        $response = Http::hydraAdmin()->delete('/admin/oauth2/auth/sessions/login/' . $sid);
+
+        if ($response->failed()) {
+            Log::error('Hydra invalidateSession failed', [
+                'sid' => $sid,
+                'status' => $response->status(),
+                'body' => $response->json(),
+            ]);
+
+            throw new HydraRequestException(
+                'Failed to invalidate session.',
+                $response->status(),
+            );
+        }
+
+        return $response->successful();
+    }
+
     public function getToken(string $token, array $scopes = [])
     {
         try {

@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Profile\SecurityController;
 use App\Http\Controllers\Profile\Settings\ChangeEmailController;
 use App\Http\Controllers\Profile\Settings\ConfirmPasswordController;
+use App\Http\Controllers\Profile\Settings\SessionController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\BackupCodesController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\TotpSetupController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\YubikeySetupController;
@@ -64,10 +65,18 @@ Route::middleware('sudo')->group(function () {
     Route::post('/settings/two-factor/backup-codes/regenerate', [BackupCodesController::class, 'regenerate'])
         ->middleware([HandlePrecognitiveRequests::class])
         ->name('settings.two-factor.backup-codes.regenerate');
+
+    /** Sessions */
+    Route::get('/settings/security/sessions', [SecurityController::class, 'sessions'])->name('settings.security.sessions');
+    Route::delete('/settings/security/sessions/{session}', [SessionController::class, 'destroy'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('settings.security.sessions.destroy');
+    Route::delete('/settings/security/sessions', [SessionController::class, 'destroyOthers'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('settings.security.sessions.destroy-others');
 });
 
 Route::post('/settings/security/confirm-password', ConfirmPasswordController::class)
-    ->middleware('throttle:6,1')
     ->name('settings.security.confirm-password');
 
 Route::redirect('/settings/two-factor', '/settings/security', 301);

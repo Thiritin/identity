@@ -145,6 +145,11 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         return $this->hasMany(TwoFactor::class);
     }
 
+    public function oauthSessions(): HasMany
+    {
+        return $this->hasMany(OauthSession::class);
+    }
+
     public function resetTwoFactorAuth()
     {
         $this->twoFactors()->delete();

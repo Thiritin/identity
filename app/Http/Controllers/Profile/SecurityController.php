@@ -6,6 +6,7 @@ use App\Enums\TwoFactorTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Services\BackupCodeService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class SecurityController extends Controller
@@ -83,6 +84,16 @@ class SecurityController extends Controller
             'remainingCount' => $backupCodeService->remainingCount($user),
             'hasBackupCodes' => $backupCodeService->hasBackupCodes($user),
             'backupCodes' => session('backup_codes'),
+        ]);
+    }
+
+    public function sessions()
+    {
+        $user = Auth::user();
+
+        return Inertia::render('Settings/Security/Sessions', [
+            'sessions' => [],
+            'currentSessionId' => Session::get('hydra_session_id'),
         ]);
     }
 }
