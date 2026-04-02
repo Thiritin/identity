@@ -4,10 +4,17 @@
             <!-- Centered Content -->
             <div class="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
                 <div class="flex flex-col items-center gap-4">
-                    <div class="w-full max-w-screen-md rounded-xl bg-white/90 px-6 py-8 shadow-2xl backdrop-blur-sm dark:bg-primary-900/90 sm:px-10 sm:py-10">
+                    <div ref="card" class="auth-card w-full max-w-screen-md rounded-xl bg-white/90 px-6 py-8 shadow-2xl backdrop-blur-sm dark:bg-primary-900/90 sm:px-10 sm:py-10">
                         <!-- Slot Content -->
                         <div class="flex-1 w-full flex flex-col justify-center">
-                            <Transition name="page" mode="out-in" appear>
+                            <Transition
+                                name="page"
+                                mode="out-in"
+                                appear
+                                @before-leave="onBeforeLeave"
+                                @enter="onEnter"
+                                @after-enter="onAfterEnter"
+                            >
                                 <div :key="$page.url">
                                     <slot name="header">
                                         <AuthHeader v-if="!$page.props.hideUserInfo && user" class="mb-8"></AuthHeader>
@@ -35,9 +42,38 @@
     </div>
 </template>
 <script setup>
-import {usePage} from "@inertiajs/vue3";
+import { ref } from 'vue'
+import { usePage } from "@inertiajs/vue3"
 
-const user = usePage().props.user;
+const user = usePage().props.user
+const card = ref(null)
+let previousHeight = 0
+
+function onBeforeLeave() {
+    if (card.value) {
+        previousHeight = card.value.offsetHeight
+        card.value.style.height = previousHeight + 'px'
+    }
+}
+
+function onEnter() {
+    if (card.value) {
+        // Let the DOM render the new content to get its natural height
+        requestAnimationFrame(() => {
+            const newHeight = card.value.scrollHeight
+            card.value.style.height = previousHeight + 'px'
+            // Force reflow
+            card.value.offsetHeight
+            card.value.style.height = newHeight + 'px'
+        })
+    }
+}
+
+function onAfterEnter() {
+    if (card.value) {
+        card.value.style.height = ''
+    }
+}
 </script>
 <script>
 import AuthFooter from "../Components/Auth/AuthFooter.vue";
@@ -96,6 +132,11 @@ export default {
 }
 </script>
 <style>
+
+.auth-card {
+    transition: height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+    overflow: hidden;
+}
 
 .page-enter-active {
     transition: opacity 0.35s cubic-bezier(0.25, 0.1, 0.25, 1),
