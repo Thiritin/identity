@@ -1,45 +1,36 @@
 <template>
     <div :class="{ dark: darkMode }">
-        <div class="auth-background bg-primary-600 relative min-h-screen">
-            <div class="relative z-10 flex min-h-screen justify-center px-4 py-10 sm:py-14">
+        <!-- Desktop: background + folder tabs + card -->
+        <div class="hidden md:block auth-background bg-primary-600 relative min-h-screen">
+            <div class="relative z-10 flex min-h-screen justify-center px-4 py-10 lg:py-14">
                 <div class="flex flex-col items-center w-full max-w-3xl">
                     <!-- Folder Tabs + Card -->
                     <div class="w-full">
-                        <!-- Tabs row -->
                         <div class="flex px-2">
                             <Link
                                 v-for="tab in tabs"
                                 :key="tab.name"
-                                :href="route(tab.route)"
+                                :href="tab.href"
                                 class="relative px-6 py-3 text-center text-sm font-semibold transition-all rounded-t-xl -mb-px"
-                                :class="isActive(tab.route)
+                                :class="tab.active
                                     ? 'bg-white/95 text-primary-800 z-10 dark:bg-primary-900/95 dark:text-primary-100'
                                     : 'bg-black/20 text-white/80 hover:bg-black/30 hover:text-white backdrop-blur-sm'"
                             >
                                 <component :is="tab.icon" class="mx-auto mb-1 h-5 w-5" />
                                 {{ tab.name }}
                             </Link>
-                            <!-- Spacer -->
                             <div class="flex-1" />
-                            <!-- Right-side tabs -->
-                            <Link
-                                v-if="user.isStaff"
-                                :href="route('staff.dashboard')"
-                                class="relative px-6 py-3 text-center text-sm font-semibold transition-all rounded-t-xl -mb-px bg-black/20 text-white/80 hover:bg-black/30 hover:text-white backdrop-blur-sm"
-                            >
-                                <component :is="BriefcaseBusiness" class="mx-auto mb-1 h-5 w-5" />
-                                Staff
-                            </Link>
-                            <a
-                                :href="route('auth.logout')"
-                                class="relative px-6 py-3 text-center text-sm font-semibold transition-all rounded-t-xl -mb-px bg-black/20 text-white/80 hover:bg-black/30 hover:text-white backdrop-blur-sm"
-                            >
-                                <component :is="LogOut" class="mx-auto mb-1 h-5 w-5" />
-                                Logout
-                            </a>
+                            <template v-for="tab in rightTabs" :key="tab.name">
+                                <component
+                                    :is="tab.external ? 'a' : Link"
+                                    :href="tab.href"
+                                    class="relative px-6 py-3 text-center text-sm font-semibold transition-all rounded-t-xl -mb-px bg-black/20 text-white/80 hover:bg-black/30 hover:text-white backdrop-blur-sm"
+                                >
+                                    <component :is="tab.icon" class="mx-auto mb-1 h-5 w-5" />
+                                    {{ tab.name }}
+                                </component>
+                            </template>
                         </div>
-
-                        <!-- Content Card -->
                         <div class="w-full rounded-xl rounded-tl-none bg-white/95 px-6 py-8 shadow-2xl backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 sm:px-10 sm:py-10">
                             <slot />
                         </div>
@@ -47,12 +38,8 @@
 
                     <!-- Footer -->
                     <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mt-5 rounded-full bg-black/30 px-5 py-2 text-sm text-white/80 backdrop-blur-sm">
-                        <a href="https://help.eurofurence.org/contact/" target="_blank" class="hover:text-white transition-colors">Support</a>
-                        <a href="https://help.eurofurence.org/legal/imprint" target="_blank" class="hover:text-white transition-colors">Imprint</a>
-                        <a href="https://help.eurofurence.org/legal/privacy" target="_blank" class="hover:text-white transition-colors">Privacy</a>
+                        <a v-for="link in footerLinks" :key="link.name" :href="link.href" target="_blank" class="hover:text-white transition-colors">{{ link.name }}</a>
                     </div>
-
-                    <!-- Artist Notice -->
                     <div class="mt-2 text-sm text-white/80 bg-black/30 px-3 py-1 rounded-full backdrop-blur-sm">
                         Artwork by
                         <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
@@ -61,12 +48,51 @@
             </div>
             <Toaster />
         </div>
+
+        <!-- Mobile: clean layout + bottom nav -->
+        <div class="md:hidden min-h-screen pb-16 bg-white dark:bg-gray-950 dark:text-gray-300">
+            <!-- Mobile content -->
+            <div class="px-4 py-6">
+                <slot />
+            </div>
+
+            <!-- Mobile footer -->
+            <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 px-4 pb-6 text-xs text-gray-400">
+                <a v-for="link in footerLinks" :key="link.name" :href="link.href" target="_blank" class="hover:text-gray-600 dark:hover:text-gray-300 transition-colors">{{ link.name }}</a>
+            </div>
+
+            <!-- Bottom Navigation -->
+            <nav class="fixed bottom-0 inset-x-0 z-40 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 safe-bottom">
+                <div class="flex justify-around">
+                    <Link
+                        v-for="tab in tabs"
+                        :key="tab.name"
+                        :href="tab.href"
+                        class="flex-1 flex flex-col items-center gap-1 py-2 text-xs font-medium transition-colors"
+                        :class="tab.active
+                            ? 'text-primary-600 dark:text-primary-400'
+                            : 'text-gray-400 dark:text-gray-500'"
+                    >
+                        <component :is="tab.icon" class="h-5 w-5" />
+                        {{ tab.name }}
+                    </Link>
+                    <a
+                        :href="route('auth.logout')"
+                        class="flex-1 flex flex-col items-center gap-1 py-2 text-xs font-medium text-gray-400 dark:text-gray-500 transition-colors"
+                    >
+                        <LogOut class="h-5 w-5" />
+                        Logout
+                    </a>
+                </div>
+            </nav>
+            <Toaster />
+        </div>
     </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
-import { Link, usePage, router } from '@inertiajs/vue3'
+import { Link, usePage } from '@inertiajs/vue3'
 import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness } from 'lucide-vue-next'
 import { Toaster } from '@/Components/ui/sonner'
 
@@ -74,16 +100,31 @@ const page = usePage()
 const user = computed(() => page.props.user)
 const currentUrl = computed(() => page.url)
 
-const tabs = [
-    { name: 'Apps', route: 'dashboard', icon: LayoutGrid },
-    { name: 'Profile', route: 'settings.profile', icon: UserRound },
-    { name: 'Security', route: 'settings.security', icon: ShieldCheck },
-]
-
 function isActive(routeName) {
     currentUrl.value
     return route().current(routeName)
 }
+
+const tabs = computed(() => [
+    { name: 'Apps', route: 'dashboard', href: route('dashboard'), icon: LayoutGrid, active: isActive('dashboard') },
+    { name: 'Profile', route: 'settings.profile', href: route('settings.profile'), icon: UserRound, active: isActive('settings.profile') },
+    { name: 'Security', route: 'settings.security', href: route('settings.security'), icon: ShieldCheck, active: isActive('settings.security') },
+])
+
+const rightTabs = computed(() => {
+    const items = []
+    if (user.value.isStaff) {
+        items.push({ name: 'Staff', href: route('staff.dashboard'), icon: BriefcaseBusiness, external: false })
+    }
+    items.push({ name: 'Logout', href: route('auth.logout'), icon: LogOut, external: true })
+    return items
+})
+
+const footerLinks = [
+    { name: 'Support', href: 'https://help.eurofurence.org/contact/' },
+    { name: 'Imprint', href: 'https://help.eurofurence.org/legal/imprint' },
+    { name: 'Privacy', href: 'https://help.eurofurence.org/legal/privacy' },
+]
 
 const darkMode = ref(window.matchMedia('(prefers-color-scheme: dark)').matches)
 
@@ -97,5 +138,9 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e)
     background-repeat: no-repeat;
     background-size: cover;
     background-image: url('../../assets/fantastic_furry_festival.jpg');
+}
+
+.safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
 }
 </style>
