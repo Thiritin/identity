@@ -56,7 +56,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
             ->middleware(['throttle:15,1'])
             ->name('register.code.submit');
         Route::post('register/code/resend', [VerifyCodeController::class, 'resend'])
-            ->middleware(['throttle:5,1'])
+            ->middleware(['throttle:2,1'])
             ->name('register.code.resend');
         // Password Reset
         Route::inertia('forgot-password', 'Auth/ForgotPassword')->name('forgot-password.view');
