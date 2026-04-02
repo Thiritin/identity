@@ -1,16 +1,20 @@
 <template>
-    <div class='dark:text-primary-100'>
-        <span
-            class="block mb-2 text-xs">{{ $trans('password_requirements_title') }}</span>
-        <ul class="text-xs list-disc ml-4">
-            <li :class="{'text-red-600 dark:text-red-500 font-semibold': !correctLength}">{{ $trans('password_requirement_1') }}</li>
-            <li :class="{'text-red-600 dark:text-red-500 font-semibold': !correctLowerUpper}">{{ $trans('password_requirement_2') }}</li>
-            <li :class="{'text-red-600 dark:text-red-500 font-semibold': !correctNumber}">{{ $trans('password_requirement_3') }}</li>
-        </ul>
+    <div v-if="password !== null && password.length > 0" class="space-y-1.5">
+        <div
+            v-for="rule in rules"
+            :key="rule.label"
+            class="flex items-center gap-2 text-xs transition-colors"
+            :class="rule.passed ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-primary-400'"
+        >
+            <CircleCheck v-if="rule.passed" class="size-3.5 shrink-0" />
+            <Circle v-else class="size-3.5 shrink-0" />
+            <span>{{ $trans(rule.label) }}</span>
+        </div>
     </div>
 </template>
 <script setup>
-import {computed} from 'vue'
+import { computed } from 'vue'
+import { Circle, CircleCheck } from 'lucide-vue-next'
 
 const props = defineProps({
     password: {
@@ -18,34 +22,19 @@ const props = defineProps({
         default: '',
     },
 })
-const correctLength = computed(() => {
-    if (props.password === null) {
-        return false;
-    }
-    return props.password.length >= 8
-})
-const correctLowerUpper = computed(() => {
-    if (props.password === null) {
-        return false;
-    }
-    return props.password.match(/[a-z]/) && props.password.match(/[A-Z]/)
-})
-const correctNumber = computed(() => {
-    if (props.password === null) {
-        return false;
-    }
-    return props.password.match(/[0-9]/)
-})
 
-</script>
-<script>
-export default {
-    name: 'PasswordInfoBox',
-    props: {
-        password: {
-            type: String,
-            default: '',
-        },
-    }
-}
+const rules = computed(() => [
+    {
+        label: 'password_requirement_1',
+        passed: props.password !== null && props.password.length >= 8,
+    },
+    {
+        label: 'password_requirement_2',
+        passed: props.password !== null && /[a-z]/.test(props.password) && /[A-Z]/.test(props.password),
+    },
+    {
+        label: 'password_requirement_3',
+        passed: props.password !== null && /[0-9]/.test(props.password),
+    },
+])
 </script>
