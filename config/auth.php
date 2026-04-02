@@ -118,6 +118,8 @@ return [
     |
     */
 
+    'sudo_timeout' => env('AUTH_SUDO_TIMEOUT', 1800),
+
     'password_timeout' => 10800,
 
 ];
