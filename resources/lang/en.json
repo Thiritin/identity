@@ -279,5 +279,6 @@
     "security_backup_codes_add_primary": "Add a primary two-factor method to enable backup codes",
     "account_suspended": "Your account has been suspended. Please contact support.",
     "other": "Other",
-    "no_applications_available": "No applications available."
+    "no_applications_available": "No applications available.",
+    "registration_cta": "Go to Registration"
 }

@@ -3,34 +3,41 @@
 
     <TooltipProvider>
         <!-- Registration Hero -->
-        <a
+        <div
             v-if="registration"
-            :href="registration.url"
-            class="mb-8 flex items-center gap-5 rounded-2xl border border-primary-200 bg-primary-50 p-5 shadow-sm transition-colors hover:bg-primary-100 dark:border-primary-800 dark:bg-primary-950 dark:hover:bg-primary-900"
+            class="mb-8 overflow-hidden rounded-2xl bg-gradient-to-r from-primary-600 to-primary-500 p-6 shadow-lg dark:from-primary-800 dark:to-primary-700"
         >
-            <div class="h-16 w-16 shrink-0 overflow-hidden rounded-xl">
-                <img
-                    v-if="registration.image_url"
-                    :src="registration.image_url"
-                    :alt="registration.name"
-                    class="h-full w-full object-cover"
-                />
-                <div
-                    v-else
-                    class="flex h-full w-full items-center justify-center bg-primary-200 text-2xl font-bold text-primary-600 dark:bg-primary-800 dark:text-primary-300"
-                >
-                    {{ registration.name?.charAt(0)?.toUpperCase() }}
+            <div class="flex items-center gap-5">
+                <div class="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white/20 shadow-inner">
+                    <img
+                        v-if="registration.image_url"
+                        :src="registration.image_url"
+                        :alt="registration.name"
+                        class="h-full w-full object-cover"
+                    />
+                    <div
+                        v-else
+                        class="flex h-full w-full items-center justify-center text-2xl font-bold text-white/80"
+                    >
+                        {{ registration.name?.charAt(0)?.toUpperCase() }}
+                    </div>
                 </div>
+                <div class="min-w-0 flex-1">
+                    <h2 class="text-lg font-semibold text-white">
+                        {{ registration.name }}
+                    </h2>
+                    <p v-if="registration.description" class="text-sm text-white/80">
+                        {{ registration.description }}
+                    </p>
+                </div>
+                <a
+                    :href="registration.url"
+                    class="shrink-0 rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-primary-700 shadow-sm transition-colors hover:bg-white/90 dark:bg-white/95 dark:text-primary-800 dark:hover:bg-white/80"
+                >
+                    {{ $t('registration_cta') }}
+                </a>
             </div>
-            <div class="min-w-0">
-                <h2 class="text-lg font-semibold text-primary-900 dark:text-primary-100">
-                    {{ registration.name }}
-                </h2>
-                <p v-if="registration.description" class="text-sm text-primary-700 dark:text-primary-300">
-                    {{ registration.description }}
-                </p>
-            </div>
-        </a>
+        </div>
 
         <!-- Pinned Apps -->
         <div v-if="pinned.length" class="flex flex-wrap gap-6 pb-8">
