@@ -7,7 +7,6 @@
         class="mb-10"
     />
     <form class="space-y-12" @submit.prevent="submit">
-        <!-- Login Form -->
         <div>
             <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
                 {{ status }}
@@ -18,7 +17,6 @@
             >
                 <span>{{ $trans('wrong_login_details_message') }}</span>
             </div>
-
             <div
                 v-show="errors.general"
                 class="w-full mb-8 bg-white dark:bg-primary-500 shadow-md py-4 px-3 border-l-[4px] border-red-600"
@@ -30,21 +28,19 @@
             <div class="flex flex-col gap-2">
                 <label for="email">{{ $trans('email') }}</label>
                 <Input id="email"
-                           autocomplete="email"
-                           @change="form.validate('email')"
-                           :class="{ 'border-destructive': form.invalid('email') || errors.nouser }"
-                           v-model.trim.lazy="form.email"
+                    :model-value="email"
+                    disabled
+                    class="bg-muted"
                 />
-                <p v-if="form.invalid('email')" class="text-sm text-destructive">{{ form.errors.email }}</p>
             </div>
             <div class="flex flex-col gap-2">
                 <label for="password">{{ $trans('password') }}</label>
                 <Input id="password"
-                           type="password"
-                           autocomplete="current-password"
-                           @change="form.validate('password')"
-                           :class="{ 'border-destructive': form.invalid('password') || errors.nouser }"
-                           v-model.trim.lazy="form.password"
+                    type="password"
+                    autocomplete="current-password"
+                    @change="form.validate('password')"
+                    :class="{ 'border-destructive': form.invalid('password') || errors.nouser }"
+                    v-model.trim.lazy="form.password"
                 />
                 <p v-if="form.invalid('password')" class="text-sm text-destructive">{{ form.errors.password }}</p>
             </div>
@@ -56,8 +52,7 @@
                     <label
                         class="font-medium text-gray-700 dark:text-primary-300"
                         for="remember"
-                    >{{ $trans('remember_me') }}</label
-                    >
+                    >{{ $trans('remember_me') }}</label>
                 </div>
             </div>
         </div>
@@ -78,38 +73,31 @@
 <script setup>
 import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
-import FormInput from '@/Auth/Form/AuthFormInput.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
-import {Head, Link, useForm} from '@inertiajs/vue3'
-import {ref} from 'vue'
-import { Input } from '@/Components/ui/input';
-import { Button } from '@/Components/ui/button';
-import { Checkbox } from '@/Components/ui/checkbox';
+import { Head, Link, useForm } from '@inertiajs/vue3'
+import { Input } from '@/Components/ui/input'
+import { Button } from '@/Components/ui/button'
+import { Checkbox } from '@/Components/ui/checkbox'
 
 defineOptions({
-    layout: AuthLayout
+    layout: AuthLayout,
 })
 
 const props = defineProps({
     status: String,
-    errors: Object
+    errors: Object,
+    email: String,
+    loginChallenge: String,
 })
 
-const show = ref(true);
-const form = useForm('post', route('auth.login.submit'), {
-    email: null,
+const form = useForm('post', route('auth.login.password.submit'), {
+    email: props.email,
     password: null,
-    login_challenge: null,
+    login_challenge: props.loginChallenge,
     remember: false,
 })
 
 function submit() {
-    const urlParams = new URLSearchParams(window.location.search)
-    form
-        .transform((data) => ({
-            ...data,
-            login_challenge: urlParams.get('login_challenge'),
-        }))
-        .post(route('auth.login.submit'))
+    form.submit()
 }
 </script>

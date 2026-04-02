@@ -19,22 +19,26 @@ class LoginController extends Controller
 {
     public function view(Request $request)
     {
-        if ($request->missing('login_challenge')) {
-            return Redirect::route('auth.choose');
+        $email = Session::get('auth.email_flow.email');
+        $loginChallenge = Session::get('auth.email_flow.login_challenge');
+
+        if (! $email || ! $loginChallenge) {
+            return Redirect::route('auth.login.view');
         }
 
         $hydra = new Client();
-        $loginRequest = $hydra->getLoginRequest($request->get('login_challenge'));
+        $loginRequest = $hydra->getLoginRequest($loginChallenge);
 
         // redirect_to key is added when login request expired.
         if (isset($loginRequest['redirect_to'])) {
             return Redirect::to($loginRequest['redirect_to']);
         }
+
         // Check if user is allowed to skip login
         $subject = $this->shouldSkipLogin($loginRequest);
 
         if ($subject !== null) {
-            $emailVerified = $this->checkEmailVerification($loginRequest, $subject); // Check if user has verified email
+            $emailVerified = $this->checkEmailVerification($loginRequest, $subject);
             if ($emailVerified === false) {
                 return Redirect::route('login.apps.redirect', ['app' => 'portal']);
             }
@@ -44,7 +48,10 @@ class LoginController extends Controller
             return Redirect::to($hydra->acceptLogin($subject, $loginRequest['challenge'], null, $loginRequest));
         }
 
-        return Inertia::render('Auth/Login');
+        return Inertia::render('Auth/Login', [
+            'email' => $email,
+            'loginChallenge' => $loginChallenge,
+        ]);
     }
 
     public function submit(LoginRequest $request)
@@ -87,6 +94,8 @@ class LoginController extends Controller
 
             $url = (new Client())->acceptLogin($user->hashId(), $request->get('login_challenge'),
                 $request->get('remember') ? '2592000' : '3600');
+
+            Session::forget('auth.email_flow');
 
             return Inertia::location($url);
         }
