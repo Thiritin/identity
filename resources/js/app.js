@@ -1,6 +1,5 @@
 import './bootstrap'
 import '../css/app.css'
-import 'primeicons/primeicons.css'
 import 'github-markdown-css/github-markdown-light.css'
 
 // Import modules...
@@ -10,9 +9,6 @@ import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m'
 import {__, getLocale, locales, setLocale, trans, transChoice} from 'matice'
 import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers";
 import VueCookies from 'vue-cookies'
-import PrimeVue from 'primevue/config';
-import Aura from "./presets/aura";
-import ToastService from 'primevue/toastservice';
 
 
 import.meta.glob([
@@ -31,12 +27,7 @@ createInertiaApp({
         return createApp({render: () => h(App, props)})
             .use(plugin)
             .use(ZiggyVue)
-            .use(PrimeVue, {
-                unstyled: true,
-                pt: Aura,
-            })
             .use(VueCookies, {})
-            .use(ToastService)
             .mixin({methods: {route}})
             .mixin({
                 methods: {

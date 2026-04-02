@@ -2,7 +2,7 @@
     <div class="rounded-md bg-yellow-50 p-4 w-full">
         <div class="flex">
             <div class="flex-shrink-0">
-                <ExclamationTriangleIcon
+                <AlertTriangle
                     aria-hidden="true"
                     class="h-5 w-5 text-yellow-400"
                 />
@@ -18,12 +18,12 @@
 </template>
 
 <script>
-import {ExclamationTriangleIcon} from "@heroicons/vue/24/solid/index.js";
+import {AlertTriangle} from "lucide-vue-next";
 
 export default {
     name: 'BaseAlert',
     components: {
-        ExclamationTriangleIcon,
+        AlertTriangle,
     },
     props: {
         message: {

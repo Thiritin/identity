@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from "../../Layouts/AppLayout.vue";
-import {ChevronRightIcon} from "@heroicons/vue/24/outline/index.js";
+import {ChevronRight} from "lucide-vue-next";
 import {defineAsyncComponent} from "vue";
 import {Head} from '@inertiajs/vue3'
 import SiteHeader from "../../Components/Staff/SiteHeader.vue";
@@ -33,7 +33,7 @@ defineOptions({layout: AppLayout})
                     </div>
                 </div>
                 <div class="ml-auto">
-                    <ChevronRightIcon class="h-6 text-primary-600 dark:text-primary-400"></ChevronRightIcon>
+                    <ChevronRight class="h-6 text-primary-600 dark:text-primary-400"></ChevronRight>
                 </div>
             </a>
         </div>

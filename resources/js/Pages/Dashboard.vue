@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="ml-auto">
-                <ChevronRightIcon class="h-6 text-primary-600 dark:text-primary-400"></ChevronRightIcon>
+                <ChevronRight class="h-6 text-primary-600 dark:text-primary-400"></ChevronRight>
             </div>
         </a>
     </div>
@@ -25,7 +25,7 @@
 <script setup>
 import {computed, defineProps} from 'vue'
 import {usePage, Head} from '@inertiajs/vue3'
-import {ChevronRightIcon} from "@heroicons/vue/24/outline";
+import {ChevronRight} from "lucide-vue-next";
 
 const props = defineProps({
     apps: Array,

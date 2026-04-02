@@ -16,30 +16,27 @@
             <div v-else class="space-y-6">
                 <div class="flex flex-col gap-2 mt-4">
                     <label for="current_password">{{ $trans('current_password') }}</label>
-                    <InputText id="current_password"
-                               type="password"
-                               autocomplete="password"
-                               autofocus
-                               @change="form.validate('current_password')"
-                               :invalid="form.invalid('current_password')"
-                               v-model.trim.lazy="form.current_password"
+                    <Input id="current_password"
+                           type="password"
+                           autocomplete="password"
+                           autofocus
+                           @change="form.validate('current_password')"
+                           :class="{ 'border-destructive': form.invalid('current_password') }"
+                           v-model.trim.lazy="form.current_password"
                     />
-                    <InlineMessage v-if="form.invalid('current_password')"
-                                   severity="error">{{ form.errors.current_password }}
-                    </InlineMessage>
+                    <p v-if="form.invalid('current_password')" class="text-sm text-destructive">{{ form.errors.current_password }}</p>
                 </div>
 
                 <div class="flex flex-col gap-2">
                     <label for="password">{{ $trans('password') }}</label>
-                    <InputText id="password"
-                               type="password"
-                               autocomplete="password"
-                               @change="form.validate('password')"
-                               :invalid="form.invalid('password')"
-                               v-model.trim.lazy="form.password"
+                    <Input id="password"
+                           type="password"
+                           autocomplete="password"
+                           @change="form.validate('password')"
+                           :class="{ 'border-destructive': form.invalid('password') }"
+                           v-model.trim.lazy="form.password"
                     />
-                    <InlineMessage v-if="form.invalid('password')" severity="error">{{ form.errors.password }}
-                    </InlineMessage>
+                    <p v-if="form.invalid('password')" class="text-sm text-destructive">{{ form.errors.password }}</p>
                 </div>
 
                 <PasswordInfoBox
@@ -49,26 +46,23 @@
 
                 <div class="flex flex-col gap-2">
                     <label for="password_confirmation">{{ $trans('password_confirmation') }}</label>
-                    <InputText id="password_confirmation"
-                               type="password"
-                               autocomplete="password_confirmation"
-                               @change="form.validate('password_confirmation')"
-                               :invalid="form.invalid('password_confirmation')"
-                               v-model.trim.lazy="form.password_confirmation"
+                    <Input id="password_confirmation"
+                           type="password"
+                           autocomplete="password_confirmation"
+                           @change="form.validate('password_confirmation')"
+                           :class="{ 'border-destructive': form.invalid('password_confirmation') }"
+                           v-model.trim.lazy="form.password_confirmation"
                     />
-                    <InlineMessage v-if="form.invalid('password_confirmation')"
-                                   severity="error">{{ form.errors.password_confirmation }}
-                    </InlineMessage>
+                    <p v-if="form.invalid('password_confirmation')" class="text-sm text-destructive">{{ form.errors.password_confirmation }}</p>
                 </div>
 
 
                 <div class="flex justify-end">
                     <Button
-                        :loading="form.processing"
+                        :disabled="form.processing"
                         type="submit"
                         class="block"
-                        :label="$trans('submit')"
-                    />
+                    >{{ $trans('submit') }}</Button>
                 </div>
             </div>
         </form>
@@ -82,9 +76,8 @@ import BaseInput from "@/Components/BaseInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import PasswordInfoBox from "../../Auth/PasswordInfoBox.vue";
 import {useForm} from '@inertiajs/vue3'
-import InputText from "primevue/inputtext";
-import InlineMessage from "primevue/inlinemessage";
-import Button from "primevue/button";
+import { Input } from '@/Components/ui/input';
+import { Button } from '@/Components/ui/button';
 
 defineProps({
     errors: Object,

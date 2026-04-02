@@ -3,9 +3,8 @@ import SettingsHeader from "@/Components/Settings/SettingsHeader.vue";
 import SettingsSubHeader from "@/Components/Settings/SettingsSubHeader.vue";
 import {Head, useForm} from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import InputText from "primevue/inputtext";
-import InlineMessage from "primevue/inlinemessage";
-import Button from "primevue/button";
+import { Input } from '@/Components/ui/input';
+import { Button } from '@/Components/ui/button';
 import {watch} from "vue";
 
 const props = defineProps({
@@ -66,22 +65,20 @@ watch(enableForm, (value) => {
             </div>
             <div class="flex flex-col gap-2">
                 <label for="code">{{ $trans('code') }}</label>
-                <InputText id="code"
-                           type="number"
-                           @change="enableForm.validate('code')"
-                           :invalid="enableForm.invalid('code')"
-                           v-model.trim.lazy="enableForm.code"
+                <Input id="code"
+                       type="number"
+                       @change="enableForm.validate('code')"
+                       :class="{ 'border-destructive': enableForm.invalid('code') }"
+                       v-model.trim.lazy="enableForm.code"
                 />
-                <InlineMessage v-if="enableForm.invalid('code')" severity="error">{{ enableForm.errors.code }}
-                </InlineMessage>
+                <p v-if="enableForm.invalid('code')" class="text-sm text-destructive">{{ enableForm.errors.code }}</p>
             </div>
             <div class="flex justify-end">
                 <Button
-                    :loading="enableForm.processing"
+                    :disabled="enableForm.processing"
                     type="submit"
                     class="block"
-                    :label="$trans('submit')"
-                />
+                >{{ $trans('submit') }}</Button>
             </div>
         </form>
     </div>
@@ -93,15 +90,14 @@ watch(enableForm, (value) => {
         <form @submit.prevent="deactivateTotp" class="space-y-6">
             <div class="flex flex-col gap-2">
                 <label for="password">{{ $trans('password') }}</label>
-                <InputText id="password"
-                           type="password"
-                           autocomplete="password"
-                           @change="deleteForm.validate('password')"
-                           :invalid="deleteForm.invalid('password')"
-                           v-model.trim.lazy="deleteForm.password"
+                <Input id="password"
+                       type="password"
+                       autocomplete="password"
+                       @change="deleteForm.validate('password')"
+                       :class="{ 'border-destructive': deleteForm.invalid('password') }"
+                       v-model.trim.lazy="deleteForm.password"
                 />
-                <InlineMessage v-if="deleteForm.invalid('password')" severity="error">{{ deleteForm.errors.password }}
-                </InlineMessage>
+                <p v-if="deleteForm.invalid('password')" class="text-sm text-destructive">{{ deleteForm.errors.password }}</p>
             </div>
             <PrimaryButton @click="deactivateTotp" class="ml-auto block">Disable</PrimaryButton>
         </form>

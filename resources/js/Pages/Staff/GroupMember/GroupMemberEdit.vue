@@ -3,7 +3,7 @@ import {defineProps} from 'vue'
 import AppLayout from '../../../Layouts/AppLayout.vue'
 import SiteHeader from '../../../Components/Staff/SiteHeader.vue'
 import {Head, useForm} from '@inertiajs/vue3'
-import Dropdown from 'primevue/dropdown'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import PrimaryButton from '../../../Components/PrimaryButton.vue'
 
 defineOptions({layout: AppLayout})
@@ -32,9 +32,16 @@ const levels = [
             group: props.group.hashid,
             member: props.member.hashid,
         }))">
-                <!-- Prime Vue Edit Member form with one select input of level -->
-                <Dropdown v-model="form.level" :options="levels" option-value="value" optionLabel="name"
-                          class="w-full md:w-[14rem]"/>
+                <Select v-model="form.level">
+                    <SelectTrigger class="w-full md:w-56">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem v-for="level in levels" :key="level.value" :value="level.value">
+                            {{ level.name }}
+                        </SelectItem>
+                    </SelectContent>
+                </Select>
                 <div class="flex pt-2 justify-start">
                     <PrimaryButton type="submit" class="btn btn-primary w-full md:w-[14rem]">Update</PrimaryButton>
                 </div>

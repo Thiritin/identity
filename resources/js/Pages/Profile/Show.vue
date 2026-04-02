@@ -41,7 +41,7 @@
                                 :href="route('profile.edit')"
                                 class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none"
                             >
-                                <PencilIcon
+                                <Pencil
                                     aria-hidden="true"
                                     class="-ml-1 mr-2 h-5 w-5 text-gray-400"
                                 />
@@ -103,7 +103,7 @@
 </template>
 <script>
     import AppLayout from '@/Layouts/AppLayout.vue'
-    import { PencilIcon, PhoneIcon } from '@heroicons/vue/solid'
+    import { Pencil, Phone } from 'lucide-vue-next'
     import AvatarModal from '@/Profile/AvatarModal.vue'
     import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
 
@@ -117,8 +117,8 @@
         components: {
             AvatarImage,
             AvatarModal,
-            PencilIcon,
-            PhoneIcon,
+            Pencil,
+            Phone,
             AppLayout,
         },
         setup() {

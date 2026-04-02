@@ -1,4 +1,6 @@
-import {defineConfig} from 'vite';
+import { defineConfig } from 'vite';
+import path from 'node:path';
+import tailwindcss from '@tailwindcss/vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 
@@ -16,5 +18,11 @@ export default defineConfig({
                 },
             },
         }),
+        tailwindcss(),
     ],
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'resources/js'),
+        },
+    },
 });

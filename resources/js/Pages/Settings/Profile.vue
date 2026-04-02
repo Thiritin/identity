@@ -31,30 +31,28 @@
 
                     <div class="flex flex-col gap-2">
                         <label for="email">{{ $trans('email') }}</label>
-                        <InputText id="email"
-                                   placeholder="me@example.org"
-                                   type="email"
-                                   autocomplete="email"
-                                   @change="form.validate('email')"
-                                   :invalid="form.invalid('email')"
-                                   v-model.trim.lazy="form.email"
+                        <Input id="email"
+                               placeholder="me@example.org"
+                               type="email"
+                               autocomplete="email"
+                               @change="form.validate('email')"
+                               :class="{ 'border-destructive': form.invalid('email') }"
+                               v-model.trim.lazy="form.email"
                         />
-                        <InlineMessage v-if="form.invalid('email')" severity="error">{{ form.errors.email }}
-                        </InlineMessage>
+                        <p v-if="form.invalid('email')" class="text-sm text-destructive">{{ form.errors.email }}</p>
                     </div>
                     <div class="flex flex-col gap-2">
                         <label for="name">{{ $trans('name') }}</label>
-                        <InputText id="name"
-                                   type="text"
-                                   autocomplete="name"
-                                   @change="form.validate('name')"
-                                   :invalid="form.invalid('name')"
-                                   v-model.trim.lazy="form.name"
-                                   aria-describedby="name-help"
+                        <Input id="name"
+                               type="text"
+                               autocomplete="name"
+                               @change="form.validate('name')"
+                               :class="{ 'border-destructive': form.invalid('name') }"
+                               v-model.trim.lazy="form.name"
+                               aria-describedby="name-help"
                         />
                         <small id="name-help">This is not your badge name.</small>
-                        <InlineMessage v-if="form.invalid('name')" severity="error">{{ form.errors.name }}
-                        </InlineMessage>
+                        <p v-if="form.invalid('name')" class="text-sm text-destructive">{{ form.errors.name }}</p>
                     </div>
 
                 </div>
@@ -121,17 +119,16 @@
                 <Link :href="route('dashboard')">
                     <Button
                         type="button"
-                        :label="$trans('cancel')"
+                        variant="outline"
                         class="mr-2"
-                    />
+                    >{{ $trans('cancel') }}</Button>
                 </Link>
 
 
                 <Button
-                    :loading="form.processing"
+                    :disabled="form.processing"
                     type="submit"
-                    :label="$trans('save')"
-                />
+                >{{ $trans('save') }}</Button>
             </div>
         </div>
     </form>
@@ -148,9 +145,8 @@ import PrimaryButton from '@/Components/PrimaryButton.vue'
 import AvatarModal from '@/Profile/AvatarModal.vue'
 import {computed, ref} from "vue";
 import BaseAlert from "@/Components/BaseAlert.vue";
-import InputText from "primevue/inputtext";
-import InlineMessage from "primevue/inlinemessage";
-import Button from "primevue/button";
+import { Input } from '@/Components/ui/input';
+import { Button } from '@/Components/ui/button';
 
 const props = defineProps({
     errors: Object,

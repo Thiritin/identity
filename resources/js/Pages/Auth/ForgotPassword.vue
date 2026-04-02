@@ -16,12 +16,12 @@
 
             <div class="flex flex-col gap-2">
                 <label for="email">{{ $trans('email') }}</label>
-                <InputText id="email"
-                           :invalid="errors?.email"
+                <Input id="email"
+                           :class="{ 'border-destructive': form.invalid('email') }"
                            @change="form.validate('email')"
                            v-model.trim.lazy="form.email"
                 />
-                <InlineMessage v-if="form.invalid('email')" severity="error">{{ form.errors.email }}</InlineMessage>
+                <p v-if="form.invalid('email')" class="text-sm text-destructive">{{ form.errors.email }}</p>
             </div>
         </div>
         <div class="flex flex-row justify-between">
@@ -32,10 +32,9 @@
                 {{ $trans('back_to_login') }}
             </Link>
             <Button
-                :loading="form.processing"
+                :disabled="form.processing"
                 type="submit"
-                :label="$trans('send_reset_mail')"
-            />
+            >{{ $trans('send_reset_mail') }}</Button>
         </div>
     </form>
     <div v-else>
@@ -50,9 +49,8 @@ import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import FormInput from '@/Auth/Form/AuthFormInput.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import {Head, Link, useForm} from '@inertiajs/vue3'
-import InputText from "primevue/inputtext";
-import InlineMessage from "primevue/inlinemessage";
-import Button from "primevue/button";
+import { Input } from '@/Components/ui/input';
+import { Button } from '@/Components/ui/button';
 
 defineOptions({layout: AuthLayout});
 const props = defineProps({

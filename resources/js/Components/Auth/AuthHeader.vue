@@ -1,9 +1,9 @@
 <script setup>
 import {Link, router, usePage} from '@inertiajs/vue3'
-import {Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
 import AvatarImage from '../../Pages/Profile/AvatarImage.vue'
 import {computed} from 'vue'
-import {ChevronDownIcon, ChevronLeftIcon} from "@heroicons/vue/24/outline"
+import { ChevronDown, ChevronLeft } from 'lucide-vue-next'
 
 const props = defineProps({
     logout: Function,
@@ -43,13 +43,13 @@ function logout() {
 <template>
     <div class="relative">
         <!-- Profile dropdown -->
-        <Menu as="div">
+        <DropdownMenu>
             <div class="flex justify-between items-center gap-3">
                 <div
                     v-if="hideNavigationButtons()"
                     @click="goBackOnePage"
                     class="flex items-center gap-1 cursor-pointer dark:text-primary-200 dark:hover:text-primary-400 text-primary-600 hover:text-primary-800 rounded">
-                    <ChevronLeftIcon class="w-4 pt-1"></ChevronLeftIcon>
+                    <ChevronLeft class="w-4 pt-1"></ChevronLeft>
                     <div>
                         Back
                     </div>
@@ -57,57 +57,43 @@ function logout() {
                 <div v-else></div>
                 <div class="flex items-center gap-3">
                     <div class="text-gray-800 dark:text-primary-200">{{ user.name }}</div>
-                    <MenuButton>
-                        <span class="sr-only">Open user menu</span>
-                        <div class="flex items-center gap-2">
+                    <DropdownMenuTrigger as-child>
+                        <button type="button" class="flex items-center gap-2">
+                            <span class="sr-only">Open user menu</span>
                             <AvatarImage
                                 :avatar="$page.props.user.avatar"
                                 class="h-10 w-10 shadow drop-shadow rounded-full"
                             />
                             <div>
-                                <ChevronDownIcon
-                                    class="fill text-primary-700 dark:text-primary-400 h-4"></ChevronDownIcon>
+                                <ChevronDown
+                                    class="fill text-primary-700 dark:text-primary-400 h-4"></ChevronDown>
                             </div>
-                        </div>
-                    </MenuButton>
+                        </button>
+                    </DropdownMenuTrigger>
                 </div>
             </div>
-            <transition
-                enter-active-class="transition ease-out duration-100"
-                enter-from-class="transform opacity-0 scale-95"
-                enter-to-class="transform opacity-100 scale-100"
-                leave-active-class="transition ease-in duration-75"
-                leave-from-class="transform opacity-100 scale-100"
-                leave-to-class="transform opacity-0 scale-95"
-            >
-                <MenuItems
-                    class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg drop-shadow py-1 bg-white dark:bg-primary-600 ring-1 ring-black ring-opacity-5 focus:outline-none"
+            <DropdownMenuContent align="end" class="w-48">
+                <DropdownMenuItem
+                    v-for="item in profileNavMenu"
+                    :key="item"
+                    as-child
                 >
-                    <MenuItem
-                        v-for="item in profileNavMenu"
-                        :key="item"
-                        v-slot="{ active }"
-                    >
-                        <Link
-                            :class="[
-                                active ? 'bg-primary-800' : '',
-                                'block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300',
-                            ]"
-                            :href="item.route"
-                        >{{ $trans(item.name) }}
-                        </Link>
-                    </MenuItem>
-                    <MenuItem>
-                        <a
-                            class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
-                            href="#"
-                            @click="logout"
-                        >{{ $trans('logout') }}
-                        </a>
-                    </MenuItem>
-                </MenuItems>
-            </transition>
-        </Menu>
+                    <Link
+                        class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
+                        :href="item.route"
+                    >{{ $trans(item.name) }}
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem as-child>
+                    <a
+                        class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
+                        href="#"
+                        @click="logout"
+                    >{{ $trans('logout') }}
+                    </a>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
     </div>
 </template>
 

@@ -9,55 +9,50 @@
     <form class="space-y-3" @submit.prevent="submit">
         <div class="flex flex-col gap-2">
             <label for="username">{{ $trans('username') }}</label>
-            <InputText id="username"
+            <Input id="username"
                        type="text"
                        @change="form.validate('username')"
-                       :invalid="form.invalid('username')"
+                       :class="{ 'border-destructive': form.invalid('username') }"
                        v-model.trim.lazy="form.username"
             />
-            <InlineMessage v-if="form.invalid('username')" seveGrity="error">{{ form.errors.username }}
-            </InlineMessage>
+            <p v-if="form.invalid('username')" class="text-sm text-destructive">{{ form.errors.username }}</p>
         </div>
         <div class="flex flex-col gap-2">
             <label for="email">{{ $trans('email') }}</label>
-            <InputText id="email"
+            <Input id="email"
                        placeholder="me@example.org"
                        type="email"
                        autocomplete="email"
                        @change="form.validate('email')"
-                       :invalid="form.invalid('email')"
+                       :class="{ 'border-destructive': form.invalid('email') }"
                        v-model.trim.lazy="form.email"
             />
-            <InlineMessage v-if="form.invalid('email')" severity="error">{{ form.errors.email }}
-            </InlineMessage>
+            <p v-if="form.invalid('email')" class="text-sm text-destructive">{{ form.errors.email }}</p>
         </div>
         <div class="flex flex-col gap-2">
             <label for="password">{{ $trans('password') }}</label>
-            <InputText id="password"
+            <Input id="password"
                        type="password"
                        autocomplete="password"
                        @change="form.validate('password')"
-                       :invalid="form.invalid('password')"
+                       :class="{ 'border-destructive': form.invalid('password') }"
                        v-model.trim.lazy="form.password"
             />
-            <InlineMessage v-if="form.invalid('password')" severity="error">{{ form.errors.password }}
-            </InlineMessage>
+            <p v-if="form.invalid('password')" class="text-sm text-destructive">{{ form.errors.password }}</p>
         </div>
         <PasswordInfoBox
             :password="form.password"
         />
         <div class="flex flex-col gap-2">
             <label for="password_confirmation">{{ $trans('password_confirmation') }}</label>
-            <InputText id="password_confirmation"
+            <Input id="password_confirmation"
                        type="password"
                        autocomplete="password"
                        @change="form.validate('password_confirmation')"
-                       :invalid="form.invalid('password_confirmation')"
+                       :class="{ 'border-destructive': form.invalid('password_confirmation') }"
                        v-model.trim.lazy="form.password_confirmation"
             />
-            <InlineMessage v-if="form.invalid('password_confirmation')"
-                           severity="error">{{ form.errors.password_confirmation }}
-            </InlineMessage>
+            <p v-if="form.invalid('password_confirmation')" class="text-sm text-destructive">{{ form.errors.password_confirmation }}</p>
         </div>
         <div class="flex flex-row justify-between pt-10">
             <Link
@@ -67,10 +62,9 @@
                 {{ $trans('register_back_to_login') }}
             </Link>
             <Button
-                :loading="form.processing"
+                :disabled="form.processing"
                 type="submit"
-                :label="$trans('register_button')"
-            />
+            >{{ $trans('register_button') }}</Button>
         </div>
     </form>
 </template>
@@ -81,9 +75,8 @@ import FormInput from '@/Auth/Form/AuthFormInput.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import {Head, Link, useForm} from '@inertiajs/vue3'
 import PasswordInfoBox from '@/Auth/PasswordInfoBox.vue'
-import InputText from "primevue/inputtext";
-import InlineMessage from "primevue/inlinemessage";
-import Button from "primevue/button";
+import { Input } from '@/Components/ui/input';
+import { Button } from '@/Components/ui/button';
 
 // Convert vue2 to vue3
 defineOptions({

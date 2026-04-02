@@ -3,7 +3,7 @@
 import AppLayout from "../../../../Layouts/AppLayout.vue";
 import TabHeader from "./TabHeader.vue";
 import TabComponent from "./TabComponent.vue";
-import Button from 'primevue/button';
+import { Button } from '@/Components/ui/button';
 
 import {computed, ref} from "vue";
 import {useForm} from "@inertiajs/vue3";
@@ -49,7 +49,7 @@ const showDescriptionLabel = computed(() => {
         subtitle="Info"
         :can-edit="canEdit"
     ></TabHeader>
-    <TabComponent :active-index="0" :group="group"></TabComponent>
+    <TabComponent active-tab="info" :group="group"></TabComponent>
     <!-- Body -->
     <div class="p-4 max-w-screen-md mx-auto pt-8">
         <!-- Description Field -->
@@ -101,13 +101,13 @@ const showDescriptionLabel = computed(() => {
                        class="text-red-500 text-xs font-semibold">{{ form.errors.description }}</small>
                 <div class="mt-2 flex gap-3 justify-end">
                     <Button
-                        size="small"
-                        severity="danger"
+                        size="sm"
+                        variant="destructive"
                         @click="editModeEnabled = false;form.reset()">Cancel
                     </Button>
                     <Button
-                        size="small"
-                        :loading="form.processing" @click="submit()">Save
+                        size="sm"
+                        :disabled="form.processing" @click="submit()">Save
                     </Button>
                 </div>
             </div>

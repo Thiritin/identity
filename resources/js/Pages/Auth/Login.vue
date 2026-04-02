@@ -29,29 +29,28 @@
         <div class="space-y-4">
             <div class="flex flex-col gap-2">
                 <label for="email">{{ $trans('email') }}</label>
-                <InputText id="email"
+                <Input id="email"
                            autocomplete="email"
                            @change="form.validate('email')"
-                           :invalid="form.invalid('email') || errors.nouser"
+                           :class="{ 'border-destructive': form.invalid('email') || errors.nouser }"
                            v-model.trim.lazy="form.email"
                 />
-                <InlineMessage v-if="form.invalid('email')" severity="error">{{ form.errors.email }}</InlineMessage>
+                <p v-if="form.invalid('email')" class="text-sm text-destructive">{{ form.errors.email }}</p>
             </div>
             <div class="flex flex-col gap-2">
                 <label for="password">{{ $trans('password') }}</label>
-                <InputText id="password"
+                <Input id="password"
                            type="password"
                            autocomplete="current-password"
                            @change="form.validate('password')"
-                           :invalid="form.invalid('password') || errors.nouser"
+                           :class="{ 'border-destructive': form.invalid('password') || errors.nouser }"
                            v-model.trim.lazy="form.password"
                 />
-                <InlineMessage v-if="form.invalid('password')" severity="error">{{ form.errors.password }}
-                </InlineMessage>
+                <p v-if="form.invalid('password')" class="text-sm text-destructive">{{ form.errors.password }}</p>
             </div>
             <div class="relative flex items-start">
                 <div class="flex items-center h-5">
-                    <Checkbox input-id="remember" :binary="true" v-model="form.remember" name="remember"/>
+                    <Checkbox id="remember" :checked="form.remember" @update:checked="form.remember = $event" />
                 </div>
                 <div class="ml-3 text-sm">
                     <label
@@ -70,10 +69,9 @@
                 {{ $trans('forgot_password_btn') }}
             </Link>
             <Button
-                :loading="form.processing"
+                :disabled="form.processing"
                 type="submit"
-                :label="$trans('sign_in')"
-            />
+            >{{ $trans('sign_in') }}</Button>
         </div>
     </form>
 </template>
@@ -84,10 +82,9 @@ import FormInput from '@/Auth/Form/AuthFormInput.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import {Head, Link, useForm} from '@inertiajs/vue3'
 import {ref} from 'vue'
-import InputText from 'primevue/inputtext';
-import Button from 'primevue/button';
-import Checkbox from 'primevue/checkbox';
-import InlineMessage from 'primevue/inlinemessage';
+import { Input } from '@/Components/ui/input';
+import { Button } from '@/Components/ui/button';
+import { Checkbox } from '@/Components/ui/checkbox';
 
 defineOptions({
     layout: AuthLayout

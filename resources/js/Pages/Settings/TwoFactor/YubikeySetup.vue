@@ -5,10 +5,10 @@ import {Head} from "@inertiajs/vue3";
 import {ref} from "vue";
 import ListItem from "@/Components/ListItem.vue";
 import BaseButton from "@/Components/BaseButton.vue";
-import InputText from "primevue/inputtext";
-import InlineMessage from "primevue/inlinemessage";
+import { Input } from '@/Components/ui/input';
+import { Button } from '@/Components/ui/button';
+import { Trash2 } from 'lucide-vue-next';
 import {useForm} from '@inertiajs/vue3'
-import Button from "primevue/button";
 
 const disableKeyId = ref(null)
 const showCreateField = ref(false)
@@ -54,38 +54,35 @@ function submitDisableForm() {
         <form @submit.prevent="submitForm()" class="space-y-4">
             <div class="flex flex-col gap-2">
                 <label for="code">{{ $trans('yubikey_otp') }}</label>
-                <InputText id="code"
-                           type="text"
-                           @keydown.enter.capture="null"
-                           autocomplete="code"
-                           @change="enableForm.validate('code')"
-                           :invalid="enableForm.invalid('code')"
-                           v-model.trim.lazy="enableForm.code"
+                <Input id="code"
+                       type="text"
+                       @keydown.enter.capture="null"
+                       autocomplete="code"
+                       @change="enableForm.validate('code')"
+                       :class="{ 'border-destructive': enableForm.invalid('code') }"
+                       v-model.trim.lazy="enableForm.code"
                 />
-                <InlineMessage v-if="enableForm.invalid('code')" severity="error">{{ enableForm.errors.code }}
-                </InlineMessage>
+                <p v-if="enableForm.invalid('code')" class="text-sm text-destructive">{{ enableForm.errors.code }}</p>
             </div>
             <div class="flex flex-col gap-2">
                 <label for="name">Name / Identifier</label>
-                <InputText id="name"
-                           type="text"
-                           placeholder="Work, Home, etc."
-                           autocomplete="name"
-                           @change="enableForm.validate('name')"
-                           :invalid="enableForm.invalid('name')"
-                           v-model.trim.lazy="enableForm.name"
+                <Input id="name"
+                       type="text"
+                       placeholder="Work, Home, etc."
+                       autocomplete="name"
+                       @change="enableForm.validate('name')"
+                       :class="{ 'border-destructive': enableForm.invalid('name') }"
+                       v-model.trim.lazy="enableForm.name"
                 />
-                <InlineMessage v-if="enableForm.invalid('name')" severity="error">{{ enableForm.errors.name }}
-                </InlineMessage>
+                <p v-if="enableForm.invalid('name')" class="text-sm text-destructive">{{ enableForm.errors.name }}</p>
             </div>
 
             <div class="flex justify-end">
                 <Button
-                    :loading="enableForm.processing"
+                    :disabled="enableForm.processing"
                     type="submit"
                     class="block"
-                    :label="$trans('submit')"
-                />
+                >{{ $trans('submit') }}</Button>
             </div>
         </form>
     </div>
@@ -97,19 +94,18 @@ function submitDisableForm() {
         <form @submit.prevent="submitDisableForm" class="space-y-6">
             <div class="flex flex-col gap-2">
                 <label for="password">Current Password</label>
-                <InputText id="password"
-                           type="password"
-                           autocomplete="password"
-                           @change="disableForm.validate('password')"
-                           :invalid="disableForm.invalid('password')"
-                           v-model.trim.lazy="disableForm.password"
+                <Input id="password"
+                       type="password"
+                       autocomplete="password"
+                       @change="disableForm.validate('password')"
+                       :class="{ 'border-destructive': disableForm.invalid('password') }"
+                       v-model.trim.lazy="disableForm.password"
                 />
-                <InlineMessage v-if="disableForm.invalid('password')" severity="error">{{ disableForm.errors.password }}
-                </InlineMessage>
+                <p v-if="disableForm.invalid('password')" class="text-sm text-destructive">{{ disableForm.errors.password }}</p>
             </div>
             <div class="flex justify-end gap-3">
-                <Button severity="secondary" size="small" @click="disableKeyId = null" secondary>Cancel</Button>
-                <Button size="small" primary>Submit</Button>
+                <Button variant="secondary" size="sm" @click="disableKeyId = null">Cancel</Button>
+                <Button size="sm">Submit</Button>
             </div>
         </form>
     </div>
@@ -125,7 +121,9 @@ function submitDisableForm() {
                     <div class="text-sm">{{ key.last_used_at }}</div>
                 </div>
                 <div>
-                    <Button link @click="disableKeyId = key.id" size="small" icon="pi pi-trash"/>
+                    <Button variant="ghost" size="sm" @click="disableKeyId = key.id">
+                        <Trash2 class="h-4 w-4" />
+                    </Button>
                 </div>
             </ListItem>
         </div>
