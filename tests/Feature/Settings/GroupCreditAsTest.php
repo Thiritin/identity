@@ -94,10 +94,15 @@ it('validates credit_as max length', function () {
         ->assertSessionHasErrors('groups.0.credit_as');
 });
 
-it('validates groups is required array', function () {
+it('accepts empty groups array', function () {
     [$user] = createStaffUserWithGroups();
 
     $this->actingAs($user)
-        ->post(route('settings.staff-profile.credit-as'), [])
-        ->assertSessionHasErrors('groups');
+        ->post(route('settings.staff-profile.credit-as'), [
+            'credit_as' => 'MyName',
+        ])
+        ->assertRedirect();
+
+    $user->refresh();
+    expect($user->credit_as)->toBe('MyName');
 });

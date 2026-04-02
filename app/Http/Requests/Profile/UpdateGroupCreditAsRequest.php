@@ -16,7 +16,8 @@ class UpdateGroupCreditAsRequest extends FormRequest
         $userGroupIds = $this->user()->groups()->pluck('groups.id')->toArray();
 
         return [
-            'groups' => ['required', 'array'],
+            'credit_as' => ['nullable', 'string', 'max:100'],
+            'groups' => ['nullable', 'array'],
             'groups.*.group_id' => ['required', 'integer', 'in:' . implode(',', $userGroupIds)],
             'groups.*.credit_as' => ['nullable', 'string', 'max:100'],
         ];
