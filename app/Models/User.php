@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\App;
 use App\Notifications\PasswordResetQueuedNotification;
 use App\Notifications\UpdateEmailNotification;
 use Filament\Models\Contracts\FilamentUser;
@@ -133,6 +134,11 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
                     'title',
                 ]
             );
+    }
+
+    public function apps(): HasMany
+    {
+        return $this->hasMany(App::class);
     }
 
     public function twoFactors(): HasMany
