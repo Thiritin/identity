@@ -4,7 +4,6 @@ namespace App\Services\Auth;
 
 use App\Services\Hydra\Client;
 use Exception;
-use Hashids;
 use Illuminate\Auth\TokenGuard;
 
 class ApiGuard extends TokenGuard
@@ -59,8 +58,12 @@ class ApiGuard extends TokenGuard
                 $this->token_use = $response['token_use'];
                 $this->scopes = explode(' ', $response['scope']);
                 $user = $this->provider->retrieveByCredentials([
-                    'id' => Hashids::connection('user')->decode($response['sub']),
+                    'hashid' => $response['sub'],
                 ]);
+
+                if ($user && $user->isSuspended()) {
+                    return $this->user = null;
+                }
             }
         }
 

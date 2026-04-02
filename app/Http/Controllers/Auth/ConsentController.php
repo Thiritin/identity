@@ -30,6 +30,19 @@ class ConsentController extends Controller
                 return redirect($response['redirect_to']);
             }
 
+            if ($user->isSuspended()) {
+                $response = $hydra->rejectConsentRequest(
+                    $consentRequest,
+                    'access_denied',
+                    'The user account has been suspended.',
+                    trans('account_suspended'),
+                    'User account is suspended.',
+                    403
+                );
+
+                return redirect($response['redirect_to']);
+            }
+
             $this->recordSession($consentRequest, $user);
 
             $response = $hydra->acceptConsentRequest($consentRequest, $user);

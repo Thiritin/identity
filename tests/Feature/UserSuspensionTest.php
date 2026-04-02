@@ -1,8 +1,14 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\URL;
 use Spatie\Activitylog\Models\Activity;
+
+uses(RefreshDatabase::class);
 
 it('isSuspended returns false for active users', function () {
     $user = User::factory()->create();
@@ -86,4 +92,128 @@ it('canAccessPanel allows active admins', function () {
     $user = User::factory()->admin()->create();
 
     expect($user->canAccessPanel(null))->toBeTrue();
+});
+
+it('blocks suspended user on skip-login path', function () {
+    Http::fake([
+        '*/admin/oauth2/auth/requests/login*' => Http::response([
+            'skip' => true,
+            'subject' => 'skip-hashid',
+            'client' => ['client_id' => 'test'],
+        ]),
+    ]);
+
+    $user = User::factory()->suspended()->create(['hashid' => 'skip-hashid']);
+
+    session(['auth.login_challenge.challenge' => 'test-challenge']);
+    session(['auth.email_flow.email' => $user->email]);
+
+    $response = $this->get(route('auth.login.password.view'));
+
+    $response->assertRedirect(route('auth.error', [
+        'error' => 'account_suspended',
+        'error_description' => trans('account_suspended'),
+    ]));
+});
+
+it('blocks suspended user on attemptLogin path', function () {
+    Http::fake([
+        '*/admin/oauth2/auth/requests/login*' => Http::response([
+            'skip' => false,
+            'subject' => '',
+            'client' => ['client_id' => 'test'],
+        ]),
+    ]);
+
+    $user = User::factory()->suspended()->create([
+        'password' => Hash::make('password123'),
+    ]);
+
+    session(['auth.login_challenge.challenge' => 'test-challenge']);
+    session(['auth.email_flow.email' => $user->email]);
+
+    $response = $this->post(route('auth.login.password.submit'), [
+        'email' => $user->email,
+        'password' => 'password123',
+        'remember' => false,
+    ]);
+
+    $response->assertRedirect(route('auth.error', [
+        'error' => 'account_suspended',
+        'error_description' => trans('account_suspended'),
+    ]));
+});
+
+it('blocks suspended user on TwoFactor submit', function () {
+    $user = User::factory()->suspended()->create();
+    $user->twoFactors()->create([
+        'type' => 'totp',
+        'secret' => 'test-secret',
+    ]);
+
+    $url = URL::signedRoute('auth.two-factor.submit', [
+        'login_challenge' => 'test-challenge',
+        'user' => $user->hashid,
+        'remember' => false,
+    ], now()->addMinutes(30));
+
+    $response = $this->post($url, [
+        'login_challenge' => 'test-challenge',
+        'user' => $user->hashid,
+        'code' => '123456',
+        'method' => 'totp',
+        'remember' => false,
+    ]);
+
+    $response->assertRedirect(route('auth.error', [
+        'error' => 'account_suspended',
+        'error_description' => trans('account_suspended'),
+    ]));
+});
+
+it('blocks suspended user in ConsentController', function () {
+    Http::fake([
+        '*/admin/oauth2/auth/requests/consent*' => Http::sequence()
+            ->push([
+                'subject' => 'consent-hashid',
+                'challenge' => 'consent-challenge',
+                'requested_scope' => ['openid'],
+                'requested_access_token_audience' => [],
+                'client' => ['client_id' => 'test'],
+            ])
+            ->push(['redirect_to' => 'https://example.com/callback']),
+    ]);
+
+    $user = User::factory()->suspended()->create(['hashid' => 'consent-hashid']);
+
+    $response = $this->get(route('auth.consent', ['consent_challenge' => 'consent-challenge']));
+
+    $response->assertRedirect();
+});
+
+it('returns null from ApiGuard for suspended user', function () {
+    $user = User::factory()->suspended()->create(['hashid' => 'api-guard-hashid']);
+
+    Http::fake([
+        '*/admin/oauth2/introspect*' => Http::response([
+            'active' => true,
+            'sub' => 'api-guard-hashid',
+            'aud' => [],
+            'client_id' => 'test',
+            'exp' => time() + 3600,
+            'iat' => time(),
+            'nbf' => time(),
+            'iss' => 'test',
+            'token_type' => 'Bearer',
+            'token_use' => 'access_token',
+            'scope' => 'openid',
+        ]),
+    ]);
+
+    $guard = app('auth')->guard('api');
+    $request = Request::create('/api/v1/userinfo', 'GET');
+    $request->headers->set('Authorization', 'Bearer test-token');
+    $guard->setRequest($request);
+
+    expect($guard->user())->toBeNull();
 });
