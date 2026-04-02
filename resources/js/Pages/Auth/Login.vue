@@ -9,6 +9,9 @@
         />
     </div>
     <form class="space-y-6" @submit.prevent="submit">
+        <Transition name="field-error">
+            <p v-if="$page.props.errors.throttle" class="text-xs text-destructive">{{ $page.props.errors.throttle }}</p>
+        </Transition>
         <div class="space-y-4">
             <FormField
                 id="email"

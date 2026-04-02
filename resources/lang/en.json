@@ -89,5 +89,6 @@
     "change_password": "Change Password",
     "continue": "Continue",
     "enter_email_to_continue": "Please enter your email",
-    "change": "Change"
+    "change": "Change",
+    "too_many_attempts": "Too many attempts. Please try again in :seconds seconds."
 }

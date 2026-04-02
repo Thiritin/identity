@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
@@ -62,6 +63,14 @@ class Handler extends ExceptionHandler
         $request,
         Throwable $e
     ): Response|JsonResponse|\Symfony\Component\HttpFoundation\Response|RedirectResponse {
+        if ($e instanceof ThrottleRequestsException && $request->header('X-Inertia')) {
+            $retryAfter = $e->getHeaders()['Retry-After'] ?? 60;
+
+            return back()->withErrors([
+                'throttle' => __('too_many_attempts', ['seconds' => $retryAfter]),
+            ]);
+        }
+
         $response = parent::render($request, $e);
         $status = $response->getStatusCode();
 

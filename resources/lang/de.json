@@ -2,5 +2,6 @@
     "loginscreen_sign_in_to_continue": "test",
     "continue": "Weiter",
     "enter_email_to_continue": "Bitte gib deine E-Mail ein",
-    "change": "Ändern"
+    "change": "Ändern",
+    "too_many_attempts": "Zu viele Versuche. Bitte versuche es in :seconds Sekunden erneut."
 }
