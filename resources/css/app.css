@@ -7,6 +7,8 @@
  * Source of truth: tailwind.config.js hex values.
  */
 @theme {
+    --color-primary: #005953;
+    --color-primary-foreground: #FFFFFF;
     --color-primary-100: #E6EFEE;
     --color-primary-200: #CBDEDD;
     --color-primary-300: #AEC6C4;
