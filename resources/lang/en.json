@@ -228,6 +228,9 @@
     "staff_edit_member": "Edit",
     "staff_edit_member_title": "Edit a member",
     "staff_member_label": "Member",
+    "staff_team_lead_label": "Team Lead",
+    "staff_director_label": "Director",
+    "staff_division_director_label": "Division Director",
     "staff_moderator_label": "Moderator",
     "staff_admin_label": "Admin",
     "staff_update": "Update",
@@ -266,5 +269,11 @@
     "security_confirm_password_title": "Confirm Password",
     "security_confirm_password_subtitle": "Please enter your password to continue",
     "security_confirm_password_submit": "Confirm",
-    "security_confirm_password_error": "The password is incorrect."
+    "security_confirm_password_error": "The password is incorrect.",
+    "security_email": "Email Address",
+    "security_email_subtitle": "Change the email address associated with your account",
+    "security_email_new": "New email address",
+    "security_email_save": "Update Email",
+    "security_email_sent": "We've sent a verification link to your new email address. Please check your inbox.",
+    "security_email_rate_limited": "Too many attempts. Please try again later."
 }

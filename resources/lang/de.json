@@ -228,6 +228,9 @@
     "staff_edit_member": "Bearbeiten",
     "staff_edit_member_title": "Mitglied bearbeiten",
     "staff_member_label": "Mitglied",
+    "staff_team_lead_label": "Teamleitung",
+    "staff_director_label": "Direktor",
+    "staff_division_director_label": "Divisionsdirektor",
     "staff_moderator_label": "Moderator",
     "staff_admin_label": "Admin",
     "staff_update": "Aktualisieren",
@@ -266,5 +269,11 @@
     "security_confirm_password_title": "Passwort bestätigen",
     "security_confirm_password_subtitle": "Bitte gib dein Passwort ein, um fortzufahren",
     "security_confirm_password_submit": "Bestätigen",
-    "security_confirm_password_error": "Das Passwort ist falsch."
+    "security_confirm_password_error": "Das Passwort ist falsch.",
+    "security_email": "E-Mail-Adresse",
+    "security_email_subtitle": "Ändere die E-Mail-Adresse deines Kontos",
+    "security_email_new": "Neue E-Mail-Adresse",
+    "security_email_save": "E-Mail aktualisieren",
+    "security_email_sent": "Wir haben einen Bestätigungslink an deine neue E-Mail-Adresse gesendet. Bitte überprüfe dein Postfach.",
+    "security_email_rate_limited": "Zu viele Versuche. Bitte versuche es später erneut."
 }
