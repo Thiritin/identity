@@ -9,6 +9,7 @@ use App\Http\Controllers\Profile\Settings\TwoFactor\BackupCodesController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\TotpSetupController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\YubikeySetupController;
 use App\Http\Controllers\Profile\Settings\UpdatePasswordController;
+use App\Http\Controllers\Profile\ShowProfileController;
 use App\Http\Controllers\Profile\StoreAvatarController;
 use App\Http\Controllers\Profile\UpdatePreferencesController;
 use App\Http\Controllers\Profile\UpdateProfileController;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/dashboard', DashboardController::class)->name('dashboard');
 // Forward / to /dashboard
 Route::redirect('/', '/dashboard');
-Route::inertia('/settings/profile', 'Settings/Profile')->name('settings.profile');
+Route::get('/settings/profile', ShowProfileController::class)->name('settings.profile');
 Route::post('/settings/profile/update', UpdateProfileController::class)
     ->middleware([HandlePrecognitiveRequests::class])
     ->name('settings.update-profile.update');
