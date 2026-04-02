@@ -75,5 +75,8 @@
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
     --ring: 0 0% 83.1%;
+}
+
+.dark, .dark * {
     --color-destructive: #ef4444;
 }
