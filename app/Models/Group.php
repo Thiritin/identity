@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
+use App\Models\Concerns\HasHashid;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,8 +13,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Mtvs\EloquentHashids\HasHashid;
-use Mtvs\EloquentHashids\HashidRouting;
 
 /**
  * App\Models\Group.
@@ -41,7 +40,8 @@ class Group extends Model
 {
     use HasFactory;
     use HasHashid;
-    use HashidRouting;
+
+    public const FUNCTION_GROUP_SYSTEM_NAMES = ['devops', 'staff', 'directors'];
 
     protected $appends = ['hashid', 'logo_url'];
 
@@ -59,6 +59,8 @@ class Group extends Model
                 [
                     'level',
                     'title',
+                    'can_manage_members',
+                    'credit_as',
                 ]
             );
     }
@@ -66,7 +68,11 @@ class Group extends Model
     public function owner()
     {
         return $this->hasOneThrough(User::class, GroupUser::class, 'group_id', 'id', 'id', 'user_id')
-            ->where('level', GroupUserLevel::Owner)
+            ->whereIn('level', [
+                GroupUserLevel::DivisionDirector->value,
+                GroupUserLevel::Director->value,
+                GroupUserLevel::TeamLead->value,
+            ])
             ->select(['name']);
     }
 
@@ -102,12 +108,27 @@ class Group extends Model
 
     public function isAdmin(User $user)
     {
+        return $this->canManageMembers($user);
+    }
+
+    public function canManageMembers(User $user): bool
+    {
         $member = $this->users->find($user);
         if (! $member) {
             return false;
         }
 
-        return $member->pivot->level == GroupUserLevel::Admin || $member->pivot->level == GroupUserLevel::Owner;
+        $level = $member->pivot->level instanceof GroupUserLevel
+            ? $member->pivot->level
+            : GroupUserLevel::from($member->pivot->level);
+
+        return (bool) $member->pivot->can_manage_members
+            || $level->isLeadRole();
+    }
+
+    public function isFunctionGroup(): bool
+    {
+        return in_array((string) $this->system_name, self::FUNCTION_GROUP_SYSTEM_NAMES, true);
     }
 
     public function children()

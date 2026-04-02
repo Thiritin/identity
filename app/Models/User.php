@@ -46,6 +46,15 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'profile_photo_path',
         'is_admin',
         'preferences',
+        'firstname',
+        'lastname',
+        'birthdate',
+        'phone',
+        'spoken_languages',
+        'credit_as',
+        'first_eurofurence',
+        'first_year_staff',
+        'staff_profile_visibility',
     ];
 
     /**
@@ -58,6 +67,13 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'two_factor_recovery_codes',
         'two_factor_secret',
         'remember_token',
+        'firstname',
+        'lastname',
+        'birthdate',
+        'phone',
+        'telegram_id',
+        'telegram_username',
+        'staff_profile_visibility',
     ];
 
     /**
@@ -71,6 +87,11 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'is_admin' => 'boolean',
         'preferences' => 'array',
         'suspended_at' => 'datetime',
+        'birthdate' => 'date',
+        'spoken_languages' => 'array',
+        'staff_profile_visibility' => 'array',
+        'first_eurofurence' => 'integer',
+        'first_year_staff' => 'integer',
     ];
 
     /**
@@ -131,6 +152,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
                 [
                     'level',
                     'title',
+                    'credit_as',
                 ]
             );
     }
