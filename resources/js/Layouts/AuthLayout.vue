@@ -25,7 +25,7 @@
                         />
                     </div>
                     <!-- Artist Notice -->
-                    <div class="text-sm text-primary-200">
+                    <div class="text-sm text-primary-200 bg-black/40 px-3 py-1 rounded-full">
                         Artwork by
                         <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
                     </div>
