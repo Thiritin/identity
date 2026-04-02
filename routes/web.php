@@ -21,11 +21,11 @@ use Spatie\Honeypot\ProtectAgainstSpam;
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('login', [EmailController::class, 'view'])->name('login.view');
     Route::post('login', [EmailController::class, 'submit'])
-        ->middleware([HandlePrecognitiveRequests::class, ProtectAgainstSpam::class, 'throttle:5,1'])
+        ->middleware([HandlePrecognitiveRequests::class, ProtectAgainstSpam::class, 'throttle:15,1'])
         ->name('login.submit');
     Route::get('login/password', [LoginController::class, 'view'])->name('login.password.view');
     Route::post('login/password', [LoginController::class, 'submit'])
-        ->middleware([HandlePrecognitiveRequests::class, ProtectAgainstSpam::class, 'throttle:5,1'])
+        ->middleware([HandlePrecognitiveRequests::class, ProtectAgainstSpam::class, 'throttle:10,1'])
         ->name('login.password.submit');
 
     Route::get('two-factor',
@@ -49,14 +49,14 @@ Route::prefix('auth')->name('auth.')->group(function () {
             ->name('register.store');
         Route::get('register/verify', [RegisterVerifyController::class, 'view'])->name('register.verify');
         Route::post('register/verify', [RegisterVerifyController::class, 'submit'])
-            ->middleware(['throttle:5,1'])
+            ->middleware(['throttle:15,1'])
             ->name('register.verify.submit');
         Route::get('register/code', [VerifyCodeController::class, 'view'])->name('register.code');
         Route::post('register/code', [VerifyCodeController::class, 'submit'])
-            ->middleware(['throttle:10,1'])
+            ->middleware(['throttle:15,1'])
             ->name('register.code.submit');
         Route::post('register/code/resend', [VerifyCodeController::class, 'resend'])
-            ->middleware(['throttle:3,1'])
+            ->middleware(['throttle:5,1'])
             ->name('register.code.resend');
         // Password Reset
         Route::inertia('forgot-password', 'Auth/ForgotPassword')->name('forgot-password.view');
