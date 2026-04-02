@@ -9,6 +9,9 @@
         />
     </div>
     <form class="space-y-4" @submit.prevent="submit">
+        <Transition name="field-error">
+            <p v-if="$page.props.errors.throttle" class="text-xs text-destructive text-center">{{ $page.props.errors.throttle }}</p>
+        </Transition>
         <FormField
             id="username"
             :label="$trans('username')"
@@ -84,3 +87,16 @@ function submit() {
     form.submit()
 }
 </script>
+<style scoped>
+.field-error-enter-active {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.field-error-leave-active {
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.field-error-enter-from,
+.field-error-leave-to {
+    opacity: 0;
+    transform: translateY(-4px);
+}
+</style>
