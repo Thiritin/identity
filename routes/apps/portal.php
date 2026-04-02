@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Profile\SecurityController;
+use App\Http\Controllers\Profile\Settings\AppsController;
 use App\Http\Controllers\Profile\Settings\ChangeEmailController;
 use App\Http\Controllers\Profile\Settings\ConfirmPasswordController;
 use App\Http\Controllers\Profile\Settings\SessionController;
@@ -123,3 +124,15 @@ Route::post('/profile/avatar/store', StoreAvatarController::class)
 
 Route::post('/settings/preferences', UpdatePreferencesController::class)
     ->name('settings.preferences.update');
+
+/** App Management (developers only) */
+Route::middleware('developer')->prefix('settings/apps')->name('settings.apps.')->group(function () {
+    Route::get('/', [AppsController::class, 'index'])->name('index');
+    Route::get('/create', [AppsController::class, 'create'])->name('create');
+    Route::post('/', [AppsController::class, 'store'])->name('store');
+    Route::get('/{app}', [AppsController::class, 'show'])->name('show');
+    Route::get('/{app}/edit', [AppsController::class, 'edit'])->name('edit');
+    Route::put('/{app}', [AppsController::class, 'update'])->name('update');
+    Route::delete('/{app}', [AppsController::class, 'destroy'])->name('destroy');
+    Route::post('/{app}/regenerate-secret', [AppsController::class, 'regenerateSecret'])->name('regenerate-secret');
+});

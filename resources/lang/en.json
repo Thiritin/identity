@@ -195,6 +195,7 @@
     "two_factor_active": "Active",
     "continue_to_dashboard": "Continue to Dashboard",
     "tab_apps": "Apps",
+    "tab_my_apps": "My Apps",
     "tab_profile": "Profile",
     "tab_security": "Security",
     "tab_directory": "Directory",
@@ -360,5 +361,16 @@
     "security_security_keys_none": "No security keys configured",
     "security_security_keys_subtitle": "Physical security keys for two-factor authentication",
     "two_factor_method_security_key": "Security Key",
-    "two_factor_switch_to_security_key": "Use a security key"
+    "two_factor_switch_to_security_key": "Use a security key",
+    "security_sessions_header": "Sessions",
+    "security_sessions_subtitle": "Manage your active sessions across apps",
+    "security_sessions_active_count": ":count active session(s)",
+    "security_sessions_empty": "No active sessions found",
+    "security_sessions_current": "Current session",
+    "security_sessions_end": "End session",
+    "security_sessions_end_all": "End all other sessions",
+    "security_sessions_end_confirm": "Are you sure you want to end this session? The device will be signed out.",
+    "security_sessions_end_all_confirm": "Are you sure you want to end all other sessions? All other devices will be signed out.",
+    "security_sessions_ended": "Session ended successfully",
+    "security_sessions_all_ended": "All other sessions ended"
 }

@@ -195,6 +195,7 @@
     "two_factor_active": "Aktiv",
     "continue_to_dashboard": "Weiter zum Dashboard",
     "tab_apps": "Apps",
+    "tab_my_apps": "Meine Apps",
     "tab_profile": "Profil",
     "tab_security": "Sicherheit",
     "tab_directory": "Verzeichnis",
@@ -360,5 +361,16 @@
     "security_security_keys_none": "Keine Sicherheitsschlüssel eingerichtet",
     "security_security_keys_subtitle": "Physische Sicherheitsschlüssel für Zwei-Faktor-Authentifizierung",
     "two_factor_method_security_key": "Sicherheitsschlüssel",
-    "two_factor_switch_to_security_key": "Sicherheitsschlüssel verwenden"
+    "two_factor_switch_to_security_key": "Sicherheitsschlüssel verwenden",
+    "security_sessions_header": "Sitzungen",
+    "security_sessions_subtitle": "Verwalte deine aktiven Sitzungen",
+    "security_sessions_active_count": ":count aktive Sitzung(en)",
+    "security_sessions_empty": "Keine aktiven Sitzungen gefunden",
+    "security_sessions_current": "Aktuelle Sitzung",
+    "security_sessions_end": "Sitzung beenden",
+    "security_sessions_end_all": "Alle anderen Sitzungen beenden",
+    "security_sessions_end_confirm": "Bist du sicher, dass du diese Sitzung beenden möchtest? Das Gerät wird abgemeldet.",
+    "security_sessions_end_all_confirm": "Bist du sicher, dass du alle anderen Sitzungen beenden möchtest?",
+    "security_sessions_ended": "Sitzung erfolgreich beendet",
+    "security_sessions_all_ended": "Alle anderen Sitzungen beendet"
 }
