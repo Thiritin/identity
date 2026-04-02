@@ -23,7 +23,7 @@ class GroupUserResource extends JsonResource
             'name' => $this->name,
             'email' => $hasFullStaffDetails ? $this->email : null,
             'avatar' => $this->profile_photo_path,
-            'level' => $this->pivot->level,
+            'level' => $this->pivot->can_manage_members ? 'admin' : 'member',
         ];
     }
 }

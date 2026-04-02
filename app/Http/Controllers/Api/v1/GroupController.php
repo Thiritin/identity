@@ -27,7 +27,7 @@ class GroupController extends Controller
         }
 
         if ($request->boolean('with_users')) {
-            $selectFields = ['users.id', 'users.name', 'users.profile_photo_path', 'group_user.level'];
+            $selectFields = ['users.id', 'users.name', 'users.profile_photo_path', 'group_user.level', 'group_user.can_manage_members'];
             if ($request->user()->tokenCan('view_full_staff_details')) {
                 $selectFields[] = 'users.email';
             }

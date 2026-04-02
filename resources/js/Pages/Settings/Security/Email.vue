@@ -11,7 +11,7 @@
             {{ currentEmail }}
         </SettingsSubHeader>
 
-        <form @submit.prevent="submitEmail" class="space-y-4 max-w-md">
+        <form @submit.prevent="submitEmail" class="space-y-4">
             <div class="flex flex-col gap-2">
                 <label for="email">{{ $t('security_email_new') }}</label>
                 <Input id="email" type="email" autocomplete="email"

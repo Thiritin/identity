@@ -26,7 +26,7 @@ test('Create Group success as Admin', function () {
         ['groups.read', 'groups.update', 'groups.delete']
     );
 
-    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Owner]]);
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true]]);
     $data = [
         'type' => 'none',
         'name' => 'Testgroup',
@@ -38,7 +38,7 @@ test('Create Group success as Admin', function () {
     ]);
 });
 
-test('Create Group and validate user is set as owner', function () {
+test('Create Group and validate user is set as director', function () {
     $user = Sanctum::actingAs(
         User::factory()->admin()->create(),
         ['groups.read', 'groups.update', 'groups.delete']
@@ -51,8 +51,8 @@ test('Create Group and validate user is set as owner', function () {
     $request = postJson(route('api.v1.groups.store'), $data);
     $request->assertSuccessful();
     assertDatabaseHas('group_user', [
-        'level' => 'owner',
-        'group_id' => Hashids::connection('group')->decode($request->json('data')['id'])[0],
+        'level' => 'director',
+        'group_id' => Group::where('hashid', $request->json('data')['id'])->first()->id,
         'user_id' => $user->id,
     ]);
 });
@@ -65,7 +65,7 @@ test('Create Group fails as non Admin', function () {
         ['groups.read', 'groups.update', 'groups.delete']
     );
 
-    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Owner]]);
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true]]);
     $data = [
         'type' => 'none',
         'name' => 'Testgroup',
@@ -86,14 +86,15 @@ test('Update Group success as Admin', function () {
         ['groups.read', 'groups.update', 'groups.delete']
     );
 
-    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Owner]]);
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true]]);
     $data = [
         'type' => 'none',
         'name' => 'Testgroup',
     ];
-    // Assert $user is level owner in group
+    // Assert user has manager rights in group
     assertDatabaseHas('group_user', [
-        'level' => 'owner',
+        'level' => 'member',
+        'can_manage_members' => true,
         'group_id' => $group->id,
         'user_id' => $user->id,
 
@@ -134,7 +135,7 @@ test('Update Group fails as moderator', function () {
         ['groups.read', 'groups.update', 'groups.delete']
     );
 
-    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Moderator]]);
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member]]);
     $data = [
         'type' => 'none',
         'name' => 'Testgroup',
@@ -155,7 +156,7 @@ test('Update Group success as Owner', function () {
         ['groups.read', 'groups.update', 'groups.delete']
     );
 
-    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Owner]]);
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true]]);
     $data = [
         'type' => 'none',
         'name' => 'Testgroup',
@@ -181,7 +182,7 @@ test('Delete Group success as Owner', function () {
     assertDatabaseHas('groups', [
         'logo' => $group->logo,
     ]);
-    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Owner]]);
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true]]);
     $request = delete(route('api.v1.groups.destroy', $group));
     $request->assertSuccessful();
     assertDatabaseMissing('groups', [
@@ -244,7 +245,7 @@ test('Add member to group as admin via email', function () {
         'email' => $userToBeInvited->email,
         'level' => 'member',
     ];
-    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Admin]]);
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true]]);
 
     $request = post(route('api.v1.groups.users.store', $group), $data);
     $request->assertSuccessful();
@@ -274,7 +275,7 @@ test('Adding the same email twice should cause an error', function () {
         'email' => $userToBeInvited->email,
         'level' => 'member',
     ];
-    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Admin]]);
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true]]);
 
     $request = post(route('api.v1.groups.users.store', $group), $data);
     $request->assertSuccessful();
@@ -306,7 +307,7 @@ test('Add member to group as admin via id', function () {
         'id' => $userToBeInvited->hashid,
         'level' => 'member',
     ];
-    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Admin]]);
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true]]);
 
     $request = post(route('api.v1.groups.users.store', $group), $data);
     $request->assertSessionHasNoErrors();
@@ -337,7 +338,7 @@ test('Fail add member when specifying both id and email', function () {
         'email' => $userToBeInvited->email,
         'level' => 'member',
     ];
-    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Admin]]);
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true]]);
 
     $request = postJson(route('api.v1.groups.users.store', $group), $data, ['Accept' => 'application/json']);
     $request->assertJsonValidationErrorFor('id');
@@ -356,7 +357,7 @@ test('Add member to group as admin without correct scope', function () {
         'email' => $userToBeInvited->email,
         'level' => 'member',
     ];
-    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Admin]]);
+    $group->users()->sync([$user->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true]]);
 
     $request = post(route('api.v1.groups.users.store', $group), $data);
     $request->assertForbidden();
@@ -389,7 +390,7 @@ test('Remove member to group as admin', function () {
     );
     $userToBeDeleted = User::factory()->create();
     $group->users()->sync([
-        $user->id => ['level' => GroupUserLevel::Admin],
+        $user->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true],
         $userToBeDeleted->id => ['level' => GroupUserLevel::Member],
     ]);
 
@@ -414,7 +415,7 @@ test('Get list of members as admin', function () {
     );
     $userToBeDeleted = User::factory()->create();
     $group->users()->sync([
-        $user->id => ['level' => GroupUserLevel::Admin],
+        $user->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true],
         $userToBeDeleted->id => ['level' => GroupUserLevel::Member],
     ]);
 
@@ -423,7 +424,7 @@ test('Get list of members as admin', function () {
     $request->assertJsonFragment([
         'user_id' => $user->hashid,
         'group_id' => $group->hashid,
-        'level' => GroupUserLevel::Admin,
+        'level' => 'admin',
     ]);
 });
 
@@ -520,7 +521,7 @@ test('Get groups index with with_users=true includes user data without email whe
 
     $group->users()->sync([
         $user->id => ['level' => GroupUserLevel::Member],
-        $member->id => ['level' => GroupUserLevel::Admin],
+        $member->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true],
     ]);
 
     $response = get(route('api.v1.groups.index', ['with_users' => true]));
@@ -546,7 +547,7 @@ test('Get groups index with with_users=true includes user data with email when v
 
     $group->users()->sync([
         $user->id => ['level' => GroupUserLevel::Member],
-        $member->id => ['level' => GroupUserLevel::Admin],
+        $member->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true],
     ]);
 
     $response = get(route('api.v1.groups.index', ['with_users' => true]));
@@ -572,7 +573,7 @@ test('Get groups index with with_users=false does not include user data', functi
 
     $group->users()->sync([
         $user->id => ['level' => GroupUserLevel::Member],
-        $member->id => ['level' => GroupUserLevel::Admin],
+        $member->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true],
     ]);
 
     $response = get(route('api.v1.groups.index', ['with_users' => false]));
@@ -592,7 +593,7 @@ test('Get single group show endpoint does not support with_users parameter', fun
 
     $group->users()->sync([
         $user->id => ['level' => GroupUserLevel::Member],
-        $member->id => ['level' => GroupUserLevel::Admin],
+        $member->id => ['level' => GroupUserLevel::Member, 'can_manage_members' => true],
     ]);
 
     // Test that show endpoint doesn't include users even with with_users parameter

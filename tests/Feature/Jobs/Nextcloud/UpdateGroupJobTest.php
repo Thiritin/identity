@@ -54,7 +54,7 @@ it('creates folder and adds all users when folder is new', function () {
     $adminUser = User::factory()->create();
 
     $group->users()->attach($memberUser, ['level' => GroupUserLevel::Member]);
-    $group->users()->attach($adminUser, ['level' => GroupUserLevel::Admin]);
+    $group->users()->attach($adminUser, ['level' => GroupUserLevel::Member, 'can_manage_members' => true]);
 
     (new UpdateGroupJob($group, ['nextcloud_folder_name' => null], ['nextcloud_folder_name']))->handle();
 

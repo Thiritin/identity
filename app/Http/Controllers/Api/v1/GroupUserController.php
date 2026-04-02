@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Enums\GroupUserLevel;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GroupUserStoreRequest;
 use App\Http\Resources\V1\GroupUserCollection;
@@ -26,14 +27,35 @@ class GroupUserController extends Controller
             $this->authorize('view', $group);
         }
 
-        $selectFields = ['users.id', 'users.name', 'users.profile_photo_path', 'group_user.level', 'group_user.title'];
+        $selectFields = ['users.id', 'users.name', 'users.profile_photo_path', 'group_user.level', 'group_user.can_manage_members', 'group_user.title'];
         if ($request->user()->tokenCan('view_full_staff_details')) {
             $selectFields[] = 'users.email';
         }
 
         return new GroupUserCollection(QueryBuilder::for($group->users())
             ->select($selectFields)
-            ->allowedFilters(AllowedFilter::exact('level', 'group_user.level'))
+            ->allowedFilters([
+                AllowedFilter::callback('level', function ($query, $value) {
+                    $values = is_array($value) ? $value : [$value];
+
+                    $hasAdmin = in_array('admin', $values, true);
+                    $hasMember = in_array('member', $values, true);
+
+                    if (! $hasAdmin && ! $hasMember) {
+                        return;
+                    }
+
+                    $query->where(function ($innerQuery) use ($values) {
+                        if (in_array('admin', $values, true)) {
+                            $innerQuery->orWhere('group_user.can_manage_members', true);
+                        }
+
+                        if (in_array('member', $values, true)) {
+                            $innerQuery->orWhere('group_user.can_manage_members', false);
+                        }
+                    });
+                }),
+            ])
             ->simplePaginate(100));
     }
 
@@ -65,7 +87,12 @@ class GroupUserController extends Controller
             throw ValidationException::withMessages([$useField => 'User is already in the group']);
         }
 
-        $group->users()->attach($user, ['level' => $request->validationData()['level']]);
+        $requestedLevel = $request->validationData()['level'] ?? 'member';
+
+        $group->users()->attach($user, [
+            'level' => GroupUserLevel::Member,
+            'can_manage_members' => $requestedLevel === 'admin',
+        ]);
 
         return new GroupUserResource($group->users()->find($user->id));
     }

@@ -9,6 +9,21 @@ use Illuminate\Support\Facades\Auth;
 
 class AssignGroupOwner
 {
+    private function initialLevel(GroupCreated $event): GroupUserLevel
+    {
+        $group = $event->group;
+
+        if ($group->isFunctionGroup()) {
+            return GroupUserLevel::Member;
+        }
+
+        return match ($group->type) {
+            GroupTypeEnum::Division => GroupUserLevel::DivisionDirector,
+            GroupTypeEnum::Team => GroupUserLevel::TeamLead,
+            default => GroupUserLevel::Director,
+        };
+    }
+
     public function handle(GroupCreated $event): void
     {
         $group = $event->group;
@@ -24,7 +39,8 @@ class AssignGroupOwner
         }
 
         $group->users()->attach($user, [
-            'level' => GroupUserLevel::Owner,
+            'level' => $this->initialLevel($event),
+            'can_manage_members' => true,
         ]);
     }
 }

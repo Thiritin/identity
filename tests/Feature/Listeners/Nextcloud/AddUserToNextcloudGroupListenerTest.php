@@ -38,7 +38,7 @@ it('dispatches AddUserToGroupJob when parent has nextcloud folder', function () 
     $parent = Group::factory()->create(['nextcloud_folder_name' => 'Parent Folder']);
     $group = Group::factory()->create(['parent_id' => $parent->id]);
     $user = User::factory()->create();
-    $group->users()->attach($user, ['level' => GroupUserLevel::Admin]);
+    $group->users()->attach($user, ['level' => GroupUserLevel::Member, 'can_manage_members' => true]);
     $groupUser = GroupUser::where('user_id', $user->id)->where('group_id', $group->id)->first();
 
     $listener = $this->partialMock(AddUserToNextcloudGroup::class, function ($mock) {

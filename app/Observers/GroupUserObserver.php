@@ -17,7 +17,7 @@ class GroupUserObserver
 
     public function updated(GroupUser $groupUser): void
     {
-        if ($groupUser->isDirty('level')) {
+        if ($groupUser->isDirty('level') || $groupUser->isDirty('can_manage_members')) {
             $original = $groupUser->getOriginal('level');
             $oldLevel = $original instanceof GroupUserLevel ? $original : GroupUserLevel::from($original);
             GroupUserUpdated::dispatch($groupUser, $oldLevel);

@@ -7,7 +7,7 @@
                         <img class="h-10 w-auto" src="../../assets/ef.svg"
                              alt="Eurofurence"/>
                         <div>
-                            <div class='font-medium font-sm text-primary-100'>Staff Dashboard</div>
+                            <div class='font-medium font-sm text-primary-100'>{{ $t('staff_dashboard') }}</div>
                         </div>
                     </div>
                     <nav class="flex flex-1 flex-col">
@@ -37,7 +37,7 @@
                     <img class="h-10 w-auto" src="../../assets/ef.svg"
                          alt="Eurofurence"/>
                     <div>
-                        <div class='font-medium font-sm dark:text-primary-300'>Staff Dashboard</div>
+                        <div class='font-medium font-sm dark:text-primary-300'>{{ $t('staff_dashboard') }}</div>
                     </div>
                 </div>
                 <nav class="flex flex-1 flex-col">
@@ -94,7 +94,7 @@
                 <span class="sr-only">Open sidebar</span>
                 <MenuIcon class="h-6 w-6" aria-hidden="true"/>
             </button>
-            <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">Dashboard</div>
+            <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">{{ $t('dashboard') }}</div>
             <DropdownMenu>
                 <DropdownMenuTrigger as-child>
                     <a href="#">
@@ -129,8 +129,8 @@
 
         <main class="lg:pl-72">
             <slot></slot>
-            <Toaster />
         </main>
+        <Toaster rich-colors />
     </div>
 </template>
 
@@ -143,6 +143,7 @@ import {Link, usePage} from "@inertiajs/vue3";
 import StaffMainMenu from "../Components/Staff/Menu/StaffMainMenu.vue";
 import StaffTeamMenu from "../Components/Staff/Menu/StaffTeamMenu.vue";
 import { Toaster } from '@/Components/ui/sonner'
+import { trans } from 'laravel-vue-i18n'
 
 function updateNavigation() {
     navigation.forEach(item => {
@@ -153,19 +154,19 @@ function updateNavigation() {
 
 let navigationSource = reactive([
     {
-        name: 'Dashboard',
+        name: trans('dashboard'),
         href: route('staff.dashboard'),
         icon: Home,
         currentEval: () => route().current('staff.dashboard')
     },
     {
-        name: 'Apps',
+        name: trans('apps'),
         href: route('staff.apps.index'),
         icon: Code,
         currentEval: () => route().current('staff.apps.*')
     },
     {
-        name: 'Departments',
+        name: trans('staff_departments'),
         href: route('staff.groups.index'),
         icon: Users,
         currentEval: () => route().current('staff.groups.index')

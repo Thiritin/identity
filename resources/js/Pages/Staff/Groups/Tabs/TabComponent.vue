@@ -31,13 +31,13 @@ function navigateTab(value) {
     <Tabs :model-value="activeTab" @update:model-value="navigateTab">
         <TabsList>
             <TabsTrigger value="info">
-                <Box class="mr-2 h-4 w-4" /> Info
+                <Box class="mr-2 h-4 w-4" /> {{ $t('staff_tab_info') }}
             </TabsTrigger>
             <TabsTrigger value="members">
-                <Users class="mr-2 h-4 w-4" /> Members
+                <Users class="mr-2 h-4 w-4" /> {{ $t('staff_tab_members') }}
             </TabsTrigger>
             <TabsTrigger v-if="group.parent_id === null" value="teams">
-                <LayoutGrid class="mr-2 h-4 w-4" /> Teams
+                <LayoutGrid class="mr-2 h-4 w-4" /> {{ $t('staff_tab_teams') }}
             </TabsTrigger>
         </TabsList>
     </Tabs>

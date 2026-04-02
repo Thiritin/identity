@@ -26,13 +26,14 @@ class UpdateUserGroupLevelJob implements ShouldQueue
         public Group $group,
         public User $user,
         public GroupUserLevel $newLevel,
-        public GroupUserLevel $oldLevel
+        public GroupUserLevel $oldLevel,
+        public bool $canManageMembers = false
     ) {}
 
     public function handle(): void
     {
         try {
-            $allowAclManagement = in_array($this->newLevel, [GroupUserLevel::Admin, GroupUserLevel::Owner]);
+            $allowAclManagement = $this->canManageMembers || $this->newLevel->canManageAcl();
             NextcloudService::setManageAcl($this->group, $this->user, $allowAclManagement);
 
             Log::info('User group level updated in Nextcloud successfully', [

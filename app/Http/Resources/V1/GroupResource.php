@@ -35,7 +35,7 @@ class GroupResource extends JsonResource
                         'user_id' => $user->hashid,
                         'username' => $user->name,
                         'email' => $hasFullStaffDetails ? $user->email : null,
-                        'level' => $user->pivot->level,
+                        'level' => $user->pivot->can_manage_members ? 'admin' : 'member',
                         'avatar' => $user->profile_photo_path ? Storage::disk('s3-avatars')->url($user->profile_photo_path) : null,
                     ];
                 });

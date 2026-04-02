@@ -12,7 +12,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <SiteHeader class="mb-4" title="Departments" />
+    <SiteHeader class="mb-4" :title="$t('staff_departments')" />
 
     <!-- Department list -->
     <ul role="list" class="divide-y divide-gray-900/5" v-if="groups.length">
@@ -25,7 +25,7 @@ const props = defineProps({
     </ul>
     <!-- No Team created info message -->
     <div v-else class="flex items-center justify-center h-96">
-        <p class="text-gray-400">No departments created yet.</p>
+        <p class="text-gray-400">{{ $t('staff_no_departments') }}</p>
     </div>
 </template>
 

@@ -24,11 +24,5 @@ export default {
         title: String,
         description: String,
     },
-
-    methods: {
-        submit() {
-            this.form.post(this.route('verification.send'))
-        },
-    },
 }
 </script>

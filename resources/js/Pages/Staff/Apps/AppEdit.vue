@@ -5,9 +5,8 @@ import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Checkbox } from '@/Components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/Components/ui/dialog';
-import { Link, useForm, usePage, router } from '@inertiajs/vue3';
+import { Link, useForm, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import { toast } from 'vue-sonner';
 
 defineOptions({ layout: AppLayout });
 
@@ -57,14 +56,7 @@ function toggleScope(scope) {
 function submit() {
     form.redirect_uris = form.redirect_uris.filter(uri => uri.trim() !== '');
     form.post_logout_redirect_uris = form.post_logout_redirect_uris.filter(uri => uri.trim() !== '');
-    form.put(route('staff.apps.update', props.app.id), {
-        onSuccess: () => {
-            const msg = usePage().props.flash?.message;
-            if (msg) {
-                toast.success(msg);
-            }
-        },
-    });
+    form.put(route('staff.apps.update', props.app.id));
 }
 
 const showRegenerateDialog = ref(false);
@@ -110,7 +102,7 @@ async function copySecret() {
             <div class="flex gap-2">
                 <Input :model-value="newSecret" readonly class="flex-1 font-mono text-sm" />
                 <Button variant="outline" size="sm" @click="copySecret">
-                    {{ secretCopied ? $t('apps_secret_copied') : 'Copy' }}
+                    {{ secretCopied ? $t('apps_secret_copied') : $t('copy') }}
                 </Button>
             </div>
         </div>

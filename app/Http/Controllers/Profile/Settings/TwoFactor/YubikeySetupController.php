@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Profile\Settings\TwoFactor;
 
+use App\Enums\TwoFactorTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\YubikeyDestroyRequest;
 use App\Http\Requests\YubikeyStoreRequest;
+use App\Services\BackupCodeService;
 use App\Services\YubicoService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
@@ -53,6 +55,16 @@ class YubikeySetupController extends Controller
             'type' => 'yubikey',
         ]);
 
+        // Auto-generate backup codes if none exist
+        $backupCodeService = new BackupCodeService();
+        if (! $backupCodeService->hasBackupCodes($request->user())) {
+            $plaintextCodes = $backupCodeService->generate();
+            $backupCodeService->storeForUser($request->user(), $plaintextCodes);
+            session()->flash('backup_codes', $plaintextCodes);
+
+            return redirect()->route('settings.security.backup-codes');
+        }
+
         return redirect()->route('settings.security.yubikey');
     }
 
@@ -65,8 +77,16 @@ class YubikeySetupController extends Controller
         if (! Hash::check($data['password'], $userPassword)) {
             throw ValidationException::withMessages(['password' => 'Invalid password']);
         }
-        // Delete totp device
+        // Delete yubikey device
         auth()->user()->twoFactors()->where('id', $request->input('keyId'))->delete();
+
+        // Delete backup codes if no other 2FA methods remain
+        $remainingMethods = auth()->user()->twoFactors()
+            ->whereIn('type', [TwoFactorTypeEnum::TOTP, TwoFactorTypeEnum::YUBIKEY])
+            ->count();
+        if ($remainingMethods === 0) {
+            auth()->user()->twoFactors()->where('type', TwoFactorTypeEnum::BackupCodes)->delete();
+        }
 
         return redirect()->route('settings.security.yubikey');
     }

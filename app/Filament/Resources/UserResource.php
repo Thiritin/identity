@@ -8,7 +8,9 @@ use App\Filament\Resources\UserResource\Pages\ListUsers;
 use App\Filament\Resources\UserResource\RelationManagers\ActionsRelationManager;
 use App\Filament\Resources\UserResource\RelationManagers\GroupsRelationManager;
 use App\Filament\Resources\UserResource\RelationManagers\TokensRelationManager;
+use App\Filament\Resources\UserResource\Widgets\UserStatsWidget;
 use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -70,6 +72,7 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->withCount('twoFactors'))
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
@@ -87,6 +90,17 @@ class UserResource extends Resource
                     ->label('Admin')
                     ->boolean(),
 
+                IconColumn::make('two_factor_enabled')
+                    ->label('2FA')
+                    ->boolean()
+                    ->getStateUsing(fn (User $record): bool => $record->two_factors_count > 0),
+
+                IconColumn::make('suspended_at')
+                    ->label('Suspended')
+                    ->boolean()
+                    ->trueColor('danger')
+                    ->falseColor('success'),
+
                 TextColumn::make('groups_count')
                     ->label('Groups')
                     ->counts('groups')
@@ -99,6 +113,39 @@ class UserResource extends Resource
 
                 TernaryFilter::make('is_admin')
                     ->label('Admin'),
+
+                TernaryFilter::make('has_two_factor')
+                    ->label('2FA')
+                    ->queries(
+                        true: fn ($query) => $query->has('twoFactors'),
+                        false: fn ($query) => $query->doesntHave('twoFactors'),
+                    ),
+
+                TernaryFilter::make('suspended')
+                    ->label('Suspended')
+                    ->queries(
+                        true: fn ($query) => $query->whereNotNull('suspended_at'),
+                        false: fn ($query) => $query->whereNull('suspended_at'),
+                    ),
+            ])
+            ->recordActions([
+                Action::make('suspend')
+                    ->label('Suspend')
+                    ->icon('heroicon-o-no-symbol')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Suspend User')
+                    ->modalDescription('This will immediately revoke all sessions and block the user from logging in.')
+                    ->visible(fn (User $record): bool => ! $record->isSuspended() && $record->id !== auth()->id())
+                    ->action(fn (User $record) => $record->suspend()),
+
+                Action::make('unsuspend')
+                    ->label('Unsuspend')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->visible(fn (User $record): bool => $record->isSuspended())
+                    ->action(fn (User $record) => $record->unsuspend()),
             ])
             ->groupedBulkActions([
                 BulkAction::make('verify')
@@ -118,6 +165,13 @@ class UserResource extends Resource
             GroupsRelationManager::class,
             ActionsRelationManager::class,
             TokensRelationManager::class,
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            UserStatsWidget::class,
         ];
     }
 

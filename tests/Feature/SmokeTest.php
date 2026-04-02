@@ -7,6 +7,7 @@ use App\Models\Group;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Notification;
 use Tests\Traits\InteractsWithHydra;
 
 uses(RefreshDatabase::class, InteractsWithHydra::class);
@@ -265,20 +266,20 @@ test('two factor redirects to security', function () {
         ->assertRedirect('/settings/security');
 });
 
-test('totp setup redirects to security', function () {
+test('totp setup redirects to security totp', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
         ->get('/settings/two-factor/totp')
-        ->assertRedirect('/settings/security');
+        ->assertRedirect('/settings/security/totp');
 });
 
-test('yubikey setup redirects to security', function () {
+test('yubikey setup redirects to security yubikey', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
         ->get('/settings/two-factor/yubikey')
-        ->assertRedirect('/settings/security');
+        ->assertRedirect('/settings/security/yubikey');
 });
 
 /*
@@ -373,6 +374,8 @@ test('api groups index requires authentication', function () {
 */
 
 test('verify email page loads for unverified user', function () {
+    Notification::fake();
+
     $user = User::factory()->create([
         'email_verified_at' => null,
     ]);

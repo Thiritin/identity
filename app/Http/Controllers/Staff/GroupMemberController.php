@@ -20,26 +20,28 @@ class GroupMemberController extends Controller
         return Inertia::render('Staff/Groups/Tabs/MemberTab', [
             'group' => $group->loadCount('users')->only(['hashid', 'name', 'users_count', 'parent_id']),
             'parent' => $group->parent?->only(['hashid', 'name']),
-            // Sort Owner, Admin, Moderator, Member and then by name
+            // Sort managerial members first, then lead hierarchy, then by name.
             'users' => $group->users()
                 ->with([
                     'groups' => fn ($q) => $q->where('type', 'team')->where('parent_id', $group->id)->get(['id', 'name']),
                 ])
-                ->withPivot('level')->get(['id', 'name', 'profile_photo_path'])->map(fn ($user
+                ->withPivot('level', 'can_manage_members')->get(['id', 'name', 'profile_photo_path'])->map(fn ($user
                 ) => [
                     'id' => $user->hashid,
                     'name' => $user->name,
                     'profile_photo_path' => (is_null($user->profile_photo_path)) ? null : Storage::drive('s3-avatars')->url($user->profile_photo_path),
                     'level' => $user->pivot->level,
+                    'can_manage_members' => (bool) $user->pivot->can_manage_members,
                     'teams' => $user->groups->map(fn ($group) => [
                         'id' => $group->hashid,
                         'name' => $group->name,
                     ]),
                     'title' => $user->pivot->title,
                 ])->sortBy(fn ($user) => [
-                    $user['level'] === 'owner' ? 0 : 1,
-                    $user['level'] === 'admin' ? 1 : 2,
-                    $user['level'] === 'moderator' ? 2 : 3,
+                    ! $user['can_manage_members'] ? 1 : 0,
+                    $user['level'] === 'division_director' ? 0 : 1,
+                    $user['level'] === 'director' ? 1 : 2,
+                    $user['level'] === 'team_lead' ? 2 : 3,
                     $user['name'],
                 ]),
             'canEdit' => $request->user()->can('update', $group),
@@ -112,7 +114,7 @@ class GroupMemberController extends Controller
         $pivot = $group->users()->find($member->id)->pivot;
         $pivot->update($data);
 
-        return to_route('staff.groups.members.index', ['group' => $group->hashid()]);
+        return to_route('staff.groups.members.index', ['group' => $group->hashid]);
     }
 
     /**

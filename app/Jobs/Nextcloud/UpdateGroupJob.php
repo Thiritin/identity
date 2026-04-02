@@ -53,8 +53,15 @@ class UpdateGroupJob implements ShouldQueue
                     foreach ($this->group->users as $user) {
                         NextcloudService::addUserToGroup($this->group, $user);
 
-                        // Set ACL for admins and owners
-                        if (in_array($user->pivot->level, [GroupUserLevel::Admin, GroupUserLevel::Owner])) {
+                        // Set ACL for members with management rights.
+                        $userLevel = $user->pivot->level instanceof GroupUserLevel
+                            ? $user->pivot->level
+                            : GroupUserLevel::from($user->pivot->level);
+
+                        $hasManagementAcl = (bool) $user->pivot->can_manage_members
+                            || $userLevel->canManageAcl();
+
+                        if ($hasManagementAcl) {
                             NextcloudService::setManageAcl($this->group, $user, true);
                         }
                     }

@@ -22,6 +22,11 @@ class AddUserToNextcloudGroup
             return;
         }
 
-        AddUserToGroupJob::dispatch($group, $event->groupUser->user, $event->groupUser->level);
+        AddUserToGroupJob::dispatch(
+            $group,
+            $event->groupUser->user,
+            $event->groupUser->level,
+            (bool) $event->groupUser->can_manage_members,
+        );
     }
 }

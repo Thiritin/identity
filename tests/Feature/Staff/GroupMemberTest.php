@@ -12,7 +12,7 @@ use function Pest\Laravel\patchJson;
 
 uses(RefreshDatabase::class);
 
-test('Update member level to admin', function (GroupUserLevel $groupUserLevel) {
+test('Update member level to director', function (GroupUserLevel $groupUserLevel) {
     $group = Group::factory()->create();
     $staffGroup = Group::factory()->create([
         'system_name' => 'staff',
@@ -36,14 +36,14 @@ test('Update member level to admin', function (GroupUserLevel $groupUserLevel) {
 
     $response = patchJson(
         route('staff.groups.members.update', ['group' => $group, 'member' => $userToBeUpdated]),
-        ['level' => GroupUserLevel::Admin->value],
+        ['level' => GroupUserLevel::Director->value],
     );
 
     $response->assertRedirect(route('staff.groups.members.index', ['group' => $group]));
 
     expect($group->users()->find($userToBeUpdated)->pivot->level)
-        ->toBe(GroupUserLevel::Admin);
+        ->toBe(GroupUserLevel::Director);
 })->with([
-    'as owner of group' => GroupUserLevel::Owner,
-    'as admin of group' => GroupUserLevel::Admin,
+    'as director of group' => GroupUserLevel::Director,
+    'as team lead of group' => GroupUserLevel::TeamLead,
 ]);

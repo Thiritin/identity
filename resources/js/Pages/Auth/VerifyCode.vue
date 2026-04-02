@@ -43,6 +43,13 @@
         >
             {{ $t('verify_code_resend') }}
         </button>
+        <a
+            v-if="showLogout"
+            :href="route('auth.logout')"
+            class="block w-full text-center text-xs text-gray-500 hover:text-gray-700 dark:text-primary-400 dark:hover:text-primary-300"
+        >
+            {{ $t('logout') }}
+        </a>
     </form>
 </template>
 <script setup>
@@ -57,7 +64,13 @@ import { ArrowRight } from 'lucide-vue-next'
 
 defineOptions({ layout: AuthLayout })
 
-const form = useForm('post', route('auth.register.code.submit'), {
+const props = defineProps({
+    submitRoute: { type: String, default: 'auth.register.code.submit' },
+    resendRoute: { type: String, default: 'auth.register.code.resend' },
+    showLogout: { type: Boolean, default: false },
+})
+
+const form = useForm('post', route(props.submitRoute), {
     code: null,
 })
 
@@ -67,7 +80,7 @@ watch(() => form.code, (value) => {
     }
 })
 
-const resendForm = useForm('post', route('auth.register.code.resend'), {})
+const resendForm = useForm('post', route(props.resendRoute), {})
 
 function submit() {
     form.submit()

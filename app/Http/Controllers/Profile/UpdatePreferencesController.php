@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdatePreferencesRequest;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
 
 class UpdatePreferencesController extends Controller
 {
-    public function __invoke(UpdatePreferencesRequest $request): JsonResponse
+    public function __invoke(UpdatePreferencesRequest $request): RedirectResponse
     {
         $data = $request->validated();
         $user = $request->user();
@@ -17,6 +18,9 @@ class UpdatePreferencesController extends Controller
         $preferences[$data['key']] = $data['value'];
         $user->update(['preferences' => $preferences]);
 
-        return response()->json(['status' => 'ok']);
+        return Inertia::flash('toast', [
+            'type' => 'success',
+            'message' => __('preferences_saved'),
+        ])->back();
     }
 }

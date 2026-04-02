@@ -3,8 +3,8 @@
         <div class="bg-primary-600 auth-background relative min-h-screen dark:text-primary-300">
             <!-- Centered Content -->
             <div class="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
-                <div class="flex flex-col items-center gap-4 w-full max-w-md">
-                    <div ref="card" class="auth-card w-full max-w-md rounded-xl bg-white/90 px-6 py-8 shadow-2xl backdrop-blur-sm dark:bg-primary-900/90 sm:px-10 sm:py-10">
+                <div class="flex flex-col items-center w-full max-w-md">
+                    <div ref="card" class="auth-card w-full max-w-md rounded-xl rounded-b-none bg-white/90 px-6 py-8 shadow-2xl backdrop-blur-sm dark:bg-primary-900/90 sm:px-10 sm:py-10">
                         <!-- Slot Content -->
                         <div class="flex-1 w-full flex flex-col justify-center">
                             <Transition
@@ -23,16 +23,18 @@
                                 </div>
                             </Transition>
                         </div>
-                        <!-- Footer Content -->
-                        <AuthFooter
-                            class="pt-8"
-                            :navigation="navigation"
-                        />
                     </div>
-                    <!-- Artist Notice -->
-                    <div class="text-sm text-primary-200 bg-black/40 px-3 py-1 rounded-full">
-                        Artwork by
-                        <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
+                    <!-- Footer: artwork left, legal right -->
+                    <div class="w-full max-w-md flex items-center justify-between bg-black/40 backdrop-blur-sm rounded-b-xl px-4 py-2 text-xs text-white/70">
+                        <div>
+                            {{ $t('footer_artwork_by') }}
+                            <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
+                        </div>
+                        <nav class="flex flex-wrap gap-x-4 gap-y-1">
+                            <a v-for="item in visibleNavigation" :key="item.name" :href="item.href" target="_blank" class="hover:text-white transition-colors">
+                                {{ $t(item.name) }}
+                            </a>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -40,11 +42,19 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { usePage } from "@inertiajs/vue3"
 
 const user = usePage().props.user
 const card = ref(null)
+
+const navigation = [
+    { name: 'footer_support', href: 'https://help.eurofurence.org/contact/' },
+    { name: 'footer_legal_notice', href: 'https://help.eurofurence.org/legal/imprint' },
+    { name: 'footer_privacy_policy', href: 'https://help.eurofurence.org/legal/privacy' },
+]
+
+const visibleNavigation = computed(() => navigation)
 const darkMode = ref(window.matchMedia('(prefers-color-scheme: dark)').matches)
 
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
@@ -93,44 +103,10 @@ function onAfterEnter() {
 }
 </script>
 <script>
-import AuthFooter from "../Components/Auth/AuthFooter.vue";
 import AuthHeader from "../Components/Auth/AuthHeader.vue";
-import {usePage} from "@inertiajs/vue3";
 
 export default {
-    components: {AuthHeader, AuthFooter},
-    data() {
-        return {
-            animated: true,
-            navigation: {
-                main: [
-                    {
-                        name: 'footer_support',
-                        href: 'https://help.eurofurence.org/contact/',
-                        newTab: true,
-                        visible: () => true,
-                    },
-
-                    {
-                        name: 'footer_legal_notice',
-                        href: 'https://help.eurofurence.org/legal/imprint',
-                        newTab: true,
-                        visible: () => true,
-                    },
-
-                    {
-                        name: 'footer_privacy_policy',
-                        href: 'https://help.eurofurence.org/legal/privacy',
-                        newTab: true,
-                        visible: () => true,
-                    },
-                ],
-            },
-        }
-    },
-    mounted() {
-        this.animated = true;
-    },
+    components: {AuthHeader},
 }
 </script>
 <style>

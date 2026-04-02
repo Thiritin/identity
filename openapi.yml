@@ -4,6 +4,10 @@ servers:
     url: 'https://identity.eurofurence.org/api/v1'
   - description: Local
     url: 'https://identity.eurofurence.localhost/api/v1'
+  - description: Production v2
+    url: 'https://identity.eurofurence.org/api/v2'
+  - description: Local v2
+    url: 'https://identity.eurofurence.localhost/api/v2'
 info:
   version: 1.0.0
   title: Eurofurence Identity
@@ -33,6 +37,8 @@ info:
     - `groups.write`: Write access to group information (create/update)
     - `groups.delete`: Delete access to group information
     - `view_full_staff_details`: Access to full staff details including email addresses in group and user listings. Without this scope, email addresses are filtered out of API responses for privacy protection.
+    - `metadata.read`: Read access to per-app user metadata
+    - `metadata.write`: Write access to per-app user metadata
     - `read`: General read access
     - `write`: General write access
   x-logo:
@@ -45,6 +51,8 @@ tags:
   - name: Groups
     description: Endpoints related the Group resource
   - name: Group Memberships
+  - name: User Metadata
+    description: Per-app key-value metadata storage for users. Metadata is scoped by OAuth client_id, ensuring apps can only access their own data.
 security:
   - OpenID:
       - openid
@@ -57,6 +65,8 @@ security:
       - groups.write
       - groups.delete
       - view_full_staff_details
+      - metadata.read
+      - metadata.write
   - AccessToken:
       - read
       - write
@@ -64,6 +74,8 @@ security:
       - groups.write
       - groups.delete
       - view_full_staff_details
+      - metadata.read
+      - metadata.write
 paths:
   /userinfo:
     get:
@@ -631,6 +643,146 @@ paths:
       tags:
         - Group Memberships
       operationId: deleteGroupUser
+  /metadata:
+    get:
+      summary: List all metadata
+      description: Returns all key-value pairs stored by the authenticated app for the current user.
+      security:
+        - OpenID:
+            - metadata.read
+        - AccessToken:
+            - metadata.read
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Metadata'
+          description: OK
+      tags:
+        - User Metadata
+      operationId: getMetadata
+  '/metadata/{key}':
+    get:
+      summary: Get metadata value
+      description: Returns a single metadata value by key.
+      security:
+        - OpenID:
+            - metadata.read
+        - AccessToken:
+            - metadata.read
+      parameters:
+        - in: path
+          name: key
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9._-]+$'
+          description: The metadata key
+          required: true
+          example: billing.address.city
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Metadata'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: Not Found!
+          description: Not Found
+      tags:
+        - User Metadata
+      operationId: getMetadataKey
+    put:
+      summary: Create or update metadata
+      description: Creates a new metadata key or updates an existing one (upsert). Returns 201 on create, 200 on update.
+      security:
+        - OpenID:
+            - metadata.write
+        - AccessToken:
+            - metadata.write
+      parameters:
+        - in: path
+          name: key
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9._-]+$'
+          description: The metadata key
+          required: true
+          example: billing.address.city
+      requestBody:
+        description: The metadata value to store
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetadataValue'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Metadata'
+          description: OK
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Metadata'
+          description: Created
+      tags:
+        - User Metadata
+      operationId: putMetadataKey
+    delete:
+      summary: Delete metadata
+      description: Deletes a metadata key-value pair.
+      security:
+        - OpenID:
+            - metadata.write
+        - AccessToken:
+            - metadata.write
+      parameters:
+        - in: path
+          name: key
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9._-]+$'
+          description: The metadata key
+          required: true
+          example: billing.address.city
+      responses:
+        '204':
+          description: No Content
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: Not Found!
+          description: Not Found
+      tags:
+        - User Metadata
+      operationId: deleteMetadataKey
 components:
   schemas:
     Userinfo:
@@ -929,6 +1081,26 @@ components:
           nullable: true
           description: The user's custom title within this group
           example: "Senior Developer"
+    Metadata:
+      type: object
+      properties:
+        key:
+          type: string
+          description: The metadata key
+          example: billing.address.city
+        value:
+          type: string
+          description: The metadata value (max 64KB)
+          example: Berlin
+    MetadataValue:
+      type: object
+      properties:
+        value:
+          type: string
+          description: The metadata value to store (max 64KB)
+          example: Berlin
+      required:
+        - value
     Error:
       type: object
       properties:

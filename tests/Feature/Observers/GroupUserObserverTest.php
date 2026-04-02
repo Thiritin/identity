@@ -32,7 +32,7 @@ it('dispatches GroupUserUpdated when user level changes', function () {
 
     Event::fake([GroupUserUpdated::class]);
 
-    $group->users()->updateExistingPivot($user, ['level' => GroupUserLevel::Admin]);
+    $group->users()->updateExistingPivot($user, ['level' => GroupUserLevel::Member, 'can_manage_members' => true]);
 
     Event::assertDispatched(GroupUserUpdated::class, function ($event) use ($user) {
         return $event->groupUser->user_id === $user->id

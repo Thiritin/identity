@@ -56,7 +56,7 @@ async function copyClientId() {
             <div class="flex gap-2">
                 <Input :model-value="clientSecret" readonly class="flex-1 font-mono text-sm" />
                 <Button variant="outline" size="sm" @click="copySecret">
-                    {{ secretCopied ? $t('apps_secret_copied') : 'Copy' }}
+                    {{ secretCopied ? $t('apps_secret_copied') : $t('copy') }}
                 </Button>
             </div>
         </div>
@@ -66,7 +66,7 @@ async function copyClientId() {
             <div class="flex gap-2">
                 <Input :model-value="app.client_id" readonly class="flex-1 font-mono text-sm" />
                 <Button variant="outline" size="sm" @click="copyClientId">
-                    {{ clientIdCopied ? $t('apps_secret_copied') : 'Copy' }}
+                    {{ clientIdCopied ? $t('apps_secret_copied') : $t('copy') }}
                 </Button>
             </div>
         </div>

@@ -13,8 +13,8 @@
     --color-primary-foreground: #FFFFFF;
     --color-destructive: #dc2626;
     --color-destructive-foreground: #FFFFFF;
-    --color-muted: #f5f5f4;
-    --color-muted-foreground: #737373;
+    --color-muted: hsl(0 0% 96.1%);
+    --color-muted-foreground: hsl(0 0% 45.1%);
     --color-primary-100: #E6EFEE;
     --color-primary-200: #CBDEDD;
     --color-primary-300: #AEC6C4;
@@ -38,24 +38,6 @@
     --color-surface-900: #1F2937;
     --color-surface-950: #111827;
 
-    --color-background: initial;
-    --color-foreground: initial;
-    --color-card: initial;
-    --color-card-foreground: initial;
-    --color-popover: initial;
-    --color-popover-foreground: initial;
-    --color-secondary: initial;
-    --color-secondary-foreground: initial;
-    --color-accent: initial;
-    --color-accent-foreground: initial;
-    --color-border: initial;
-    --color-input: initial;
-    --color-ring: initial;
-}
-
-/* shadcn/vue design tokens */
-:root {
-    --radius: 0.5rem;
     --color-background: hsl(0 0% 100%);
     --color-foreground: hsl(0 0% 3.9%);
     --color-card: hsl(0 0% 100%);
@@ -71,7 +53,14 @@
     --color-ring: hsl(0 0% 3.9%);
 }
 
+/* shadcn/vue design tokens */
+:root {
+    --radius: 0.5rem;
+}
+
 .dark {
+    --color-muted: hsl(0 0% 14.9%);
+    --color-muted-foreground: hsl(0 0% 63.9%);
     --color-background: hsl(0 0% 3.9%);
     --color-foreground: hsl(0 0% 98%);
     --color-card: hsl(0 0% 3.9%);

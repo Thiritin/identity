@@ -17,6 +17,6 @@ class UpdateProfileRequest extends FormRequest
                 'alpha_dash',
                 'unique:users,name,' . Auth::id(),
             ],
-];
+        ];
     }
 }

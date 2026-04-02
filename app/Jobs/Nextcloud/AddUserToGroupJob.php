@@ -26,7 +26,8 @@ class AddUserToGroupJob implements ShouldQueue
     public function __construct(
         public Group $group,
         public User $user,
-        public GroupUserLevel $level
+        public GroupUserLevel $level,
+        public bool $canManageMembers = false
     ) {}
 
     public function handle(): void
@@ -34,8 +35,8 @@ class AddUserToGroupJob implements ShouldQueue
         try {
             NextcloudService::addUserToGroup($this->group, $this->user);
 
-            // Set ACL management permissions for admins and owners (but not for team groups)
-            $allowAclManagement = in_array($this->level, [GroupUserLevel::Admin, GroupUserLevel::Owner]);
+            // Set ACL management permissions for all lead roles and legacy manager roles.
+            $allowAclManagement = $this->canManageMembers || $this->level->canManageAcl();
             if ($allowAclManagement && $this->group->type !== GroupTypeEnum::Team) {
                 NextcloudService::setManageAcl($this->group, $this->user, true);
             }

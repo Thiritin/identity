@@ -10,10 +10,10 @@
                     class="mx-auto h-24 fill-current text-primary-600 dark:text-primary-300"
                 />
                 <h2 class="font-medium text-xl pt-4 dark:text-primary-300">
-                    Open Authentication Standard
+                    {{ $t('dev_open_auth_title') }}
                 </h2>
                 <p class="dark:text-primary-300">
-                    We are using OpenID Connect and Oauth2 for Authentication.
+                    {{ $t('dev_open_auth_desc') }}
                 </p>
             </Card>
 
@@ -24,11 +24,10 @@
                     class="mx-auto h-24 fill-current text-primary-600 dark:text-primary-300"
                 />
                 <h2 class="font-medium text-xl pt-4 dark:text-primary-300">
-                    We love Open Source
+                    {{ $t('dev_open_source_title') }}
                 </h2>
                 <p class="dark:text-primary-300">
-                    We publish most of our code under the MIT License on our
-                    GitHub free for everyone to use.
+                    {{ $t('dev_open_source_desc') }}
                 </p>
             </Card>
 
@@ -39,18 +38,17 @@
                     class="mx-auto h-24 fill-current text-primary-600 dark:text-primary-300"
                 />
                 <h2 class="font-medium text-xl pt-4 dark:text-primary-300">
-                    Managed Servers
+                    {{ $t('dev_managed_servers_title') }}
                 </h2>
                 <p class="dark:text-primary-300">
-                    We run our own Kubernetes system. You don't need to worry
-                    about deploying your project.
+                    {{ $t('dev_managed_servers_desc') }}
                 </p>
             </Card>
         </div>
     </div>
     <div class="mb-8">
-        <h3 class="font-semibold text-2xl">Our Projects</h3>
-        <p class="mb-3">Below you can see a grasp overview of our projects.</p>
+        <h3 class="font-semibold text-2xl">{{ $t('dev_our_projects') }}</h3>
+        <p class="mb-3">{{ $t('dev_our_projects_desc') }}</p>
         <Card v-for="project in projects" class="mb-4">
             <div
                 class="md:flex justify-start items-center px-3 md:px-6 py-2 gap-4"
@@ -83,20 +81,20 @@
     </div>
 
     <div>
-        <h3 class="font-semibold text-2xl">Want to add something?</h3>
+        <h3 class="font-semibold text-2xl">{{ $t('dev_want_to_add') }}</h3>
         <p class="mb-3">
-            We are open to new integrations and projects, get in touch with us!
+            {{ $t('dev_want_to_add_desc') }}
         </p>
         <Card class="mb-4 p-4 text-center">
-            <p class="text-lg">Write us an email to</p>
+            <p class="text-lg">{{ $t('dev_email_us') }}</p>
             <p class="text-xl font-semibold">identity@eurofurence.org</p>
             <p>
-                Meanwhile feel free to checkout the
+                {{ $t('dev_checkout_docs') }}
                 <a
                     class="text-blue-700 hover:underline"
                     href="https://docs.identity.eurofurence.org/"
                     target="_blank"
-                    >Identity Documentation</a
+                    >{{ $t('dev_identity_docs') }}</a
                 >.
             </p>
         </Card>

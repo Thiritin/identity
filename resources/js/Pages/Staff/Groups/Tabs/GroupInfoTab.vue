@@ -46,7 +46,7 @@ const showDescriptionLabel = computed(() => {
     <TabHeader
         :parent="parent"
         :group="group"
-        subtitle="Info"
+        :subtitle="$t('staff_tab_info')"
         :can-edit="canEdit"
     ></TabHeader>
     <TabComponent active-tab="info" :group="group"></TabComponent>
@@ -55,14 +55,14 @@ const showDescriptionLabel = computed(() => {
         <!-- Description Field -->
         <div>
             <!-- Title -->
-            <h2 v-if="showDescriptionLabel" class="text-lg font-semibold text-gray-800">Description</h2>
+            <h2 v-if="showDescriptionLabel" class="text-lg font-semibold text-gray-800">{{ $t('staff_description') }}</h2>
             <!-- Description -->
             <div v-if="!editModeEnabled">
                 <div v-if="group.description" class="mt-2 text-gray-600 markdown-body break-words" v-html="descriptionHtml"/>
-                <p v-else class="mt-2 text-gray-600">No description available</p>
+                <p v-else class="mt-2 text-gray-600">{{ $t('staff_no_description') }}</p>
                 <!-- Edit Link -->
                 <a v-if="canEdit" @click="editModeEnabled = true" href="#"
-                   class="text-primary font-bold text-xs mt-2">Edit</a>
+                   class="text-primary font-bold text-xs mt-2">{{ $t('staff_edit') }}</a>
             </div>
             <!-- Edit Mode use Primevue -->
             <div v-else>
@@ -103,11 +103,11 @@ const showDescriptionLabel = computed(() => {
                     <Button
                         size="sm"
                         variant="destructive"
-                        @click="editModeEnabled = false;form.reset()">Cancel
+                        @click="editModeEnabled = false;form.reset()">{{ $t('cancel') }}
                     </Button>
                     <Button
                         size="sm"
-                        :disabled="form.processing" @click="submit()">Save
+                        :disabled="form.processing" @click="submit()">{{ $t('save') }}
                     </Button>
                 </div>
             </div>

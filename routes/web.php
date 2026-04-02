@@ -39,6 +39,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
 
     Route::get('consent', ConsentController::class)->name('consent');
     Route::get('logout', LogoutController::class)->name('logout');
+    Route::inertia('logged-out', 'Auth/LoggedOut')->name('logged-out');
 
     Route::middleware('guest:web')->group(function () {
         Route::redirect('choose/login', '/auth/portal/login', 301)->name('oidc.login');
@@ -80,23 +81,15 @@ Route::prefix('auth')->name('auth.')->group(function () {
 // Error
 Route::get('auth/error', ErrorController::class)->name('auth.error');
 
-// E-Mail First Sign Up
-Route::prefix('auth')->group(function () {
-    Route::get('verify', [VerifyEmailController::class, 'view'])->middleware('auth')->name('verification.notice');
-    Route::get('verify/logout', [
-        VerifyEmailController::class,
-        'logout',
-    ])->middleware('auth')->name('verification.logout');
-    Route::post('verify', [
-        VerifyEmailController::class,
-        'resend',
-    ])->middleware(['auth'])->name('verification.send');
-
-    Route::get('verify/{id}/{hash}', [
-        VerifyEmailController::class,
-        'verify',
-    ])->middleware(['signed'])
-        ->name('verification.verify');
+// Email Verification (code-based)
+Route::prefix('auth')->middleware('auth')->group(function () {
+    Route::get('verify', [VerifyEmailController::class, 'view'])->name('verification.notice');
+    Route::post('verify', [VerifyEmailController::class, 'submit'])
+        ->middleware('throttle:5,5')
+        ->name('verification.submit');
+    Route::post('verify/resend', [VerifyEmailController::class, 'resend'])
+        ->middleware('throttle:2,1')
+        ->name('verification.resend');
 });
 
 Route::get('/settings/profile/update/email', UpdateEmailController::class)->name(

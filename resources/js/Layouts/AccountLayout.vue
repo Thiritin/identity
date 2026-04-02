@@ -165,11 +165,11 @@ const rightTabs = computed(() => [
     { name: trans('tab_logout'), href: route('auth.logout'), icon: LogOut, external: true },
 ])
 
-const footerLinks = [
+const footerLinks = computed(() => [
     { name: trans('footer_support_link'), href: 'https://help.eurofurence.org/contact/' },
     { name: trans('footer_imprint'), href: 'https://help.eurofurence.org/legal/imprint' },
     { name: trans('footer_privacy'), href: 'https://help.eurofurence.org/legal/privacy' },
-]
+])
 
 const darkMode = ref(window.matchMedia('(prefers-color-scheme: dark)').matches)
 

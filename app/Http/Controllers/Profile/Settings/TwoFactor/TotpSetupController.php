@@ -6,6 +6,7 @@ use App\Enums\TwoFactorTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TwoFactor\TotpDestroyRequest;
 use App\Http\Requests\TwoFactor\TotpStoreRequest;
+use App\Services\BackupCodeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
@@ -86,6 +87,16 @@ class TotpSetupController extends Controller
         // Clear cache
         Cache::forget('user-' . auth()->user()->id . '-two-factor-user-cache');
 
+        // Auto-generate backup codes if none exist
+        $backupCodeService = new BackupCodeService();
+        if (! $backupCodeService->hasBackupCodes(auth()->user())) {
+            $plaintextCodes = $backupCodeService->generate();
+            $backupCodeService->storeForUser(auth()->user(), $plaintextCodes);
+            session()->flash('backup_codes', $plaintextCodes);
+
+            return redirect()->route('settings.security.backup-codes');
+        }
+
         return redirect()->route('settings.security.totp');
     }
 
@@ -100,6 +111,14 @@ class TotpSetupController extends Controller
         }
         // Delete totp device
         auth()->user()->twoFactors()->whereType(TwoFactorTypeEnum::TOTP)->delete();
+
+        // Delete backup codes if no other 2FA methods remain
+        $remainingMethods = auth()->user()->twoFactors()
+            ->whereIn('type', [TwoFactorTypeEnum::TOTP, TwoFactorTypeEnum::YUBIKEY])
+            ->count();
+        if ($remainingMethods === 0) {
+            auth()->user()->twoFactors()->where('type', TwoFactorTypeEnum::BackupCodes)->delete();
+        }
 
         return redirect()->route('settings.security.totp');
 

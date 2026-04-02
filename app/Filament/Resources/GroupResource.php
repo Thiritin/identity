@@ -45,7 +45,7 @@ class GroupResource extends Resource
                                 ->content(fn (?Group $record): string => $record?->id ?? '-'),
                             Placeholder::make('hashid')
                                 ->label('Public ID')
-                                ->content(fn (?Group $record): string => $record?->hashid() ?? '-'),
+                                ->content(fn (?Group $record): string => $record?->hashid ?? '-'),
                         ]),
                         TextInput::make('system_name')
                             ->label('System Name')
@@ -71,6 +71,7 @@ class GroupResource extends Resource
                         Select::make('type')->options([
                             GroupTypeEnum::Default->value => 'Default',
                             GroupTypeEnum::Automated->value => 'Automated',
+                            GroupTypeEnum::Division->value => 'Division',
                             GroupTypeEnum::Department->value => 'Department',
                             GroupTypeEnum::Team->value => 'Team',
                         ])->required(),
@@ -100,6 +101,7 @@ class GroupResource extends Resource
                     ->color(fn (GroupTypeEnum $state): string => match ($state) {
                         GroupTypeEnum::Default => 'gray',
                         GroupTypeEnum::Automated => 'info',
+                        GroupTypeEnum::Division => 'primary',
                         GroupTypeEnum::Department => 'success',
                         GroupTypeEnum::Team => 'warning',
                     })

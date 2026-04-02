@@ -83,6 +83,11 @@ class Handler extends ExceptionHandler
             return $response;
         }
 
+        // Filament (admin panel) uses Blade/Livewire, not Inertia
+        if ($request->is('admin/*', 'admin', 'livewire/*')) {
+            return $response;
+        }
+
         if (! in_array($status, [401, 402, 403, 404, 405, 500, 503])) {
             return $response;
         }

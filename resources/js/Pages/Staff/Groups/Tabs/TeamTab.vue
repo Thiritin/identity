@@ -60,7 +60,7 @@ const form = useForm({})
         <TabHeader
             :parent="parent"
             :group="group"
-            subtitle="Teams"
+            :subtitle="$t('staff_tab_teams')"
             :can-edit="canEdit"
         ></TabHeader>
         <TabComponent active-tab="teams" :group="group"></TabComponent>
@@ -75,31 +75,29 @@ const form = useForm({})
         </ul>
         <!-- No Team created info message -->
         <div v-else class="flex items-center justify-center h-96">
-            <p class="text-gray-400">No teams created yet.</p>
+            <p class="text-gray-400">{{ $t('staff_no_teams') }}</p>
         </div>
 
         <!-- Delete modal -->
         <Dialog v-model:open="deleteModal.visible">
             <DialogContent class="max-w-[25rem]">
                 <DialogHeader>
-                    <DialogTitle>Remove user from department</DialogTitle>
+                    <DialogTitle>{{ $t('staff_remove_user_title') }}</DialogTitle>
                 </DialogHeader>
-                <span class="text-muted-foreground block mb-5">Really remove {{
-                        deleteModal.user.name
-                    }}?</span>
+                <span class="text-muted-foreground block mb-5">{{ $t('staff_remove_user_confirm', { name: deleteModal.user.name }) }}</span>
 
                 <form action="#" method="post"
                       @submit.prevent="deleteUser">
                     <DialogFooter>
                         <Button type="button"
                                 variant="secondary"
-                                @click="deleteModal.visible = false">Cancel</Button>
+                                @click="deleteModal.visible = false">{{ $t('cancel') }}</Button>
 
                         <Button
                             type="submit"
                             :disabled="form.processing"
                             variant="destructive">
-                            Remove<span class="sr-only">, {{ deleteModal.user.name }}</span>
+                            {{ $t('staff_remove') }}<span class="sr-only">, {{ deleteModal.user.name }}</span>
                         </Button>
                     </DialogFooter>
                 </form>

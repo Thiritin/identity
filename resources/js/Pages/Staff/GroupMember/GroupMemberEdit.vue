@@ -3,6 +3,7 @@ import {defineProps} from 'vue'
 import AppLayout from '../../../Layouts/AppLayout.vue'
 import SiteHeader from '../../../Components/Staff/SiteHeader.vue'
 import {Head, useForm} from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import PrimaryButton from '../../../Components/PrimaryButton.vue'
 
@@ -16,15 +17,16 @@ const form = useForm({
     level: props.member.pivot.level,
 })
 const levels = [
-    {name: 'Member', value: 'member'},
-    {name: 'Moderator', value: 'moderator'},
-    {name: 'Admin', value: 'admin'},
+    {name: trans('staff_member_label'), value: 'member'},
+    {name: trans('staff_team_lead_label'), value: 'team_lead'},
+    {name: trans('staff_director_label'), value: 'director'},
+    {name: trans('staff_division_director_label'), value: 'division_director'},
 ]
 </script>
 
 <template>
-    <Head title="Edit a member"></Head>
-    <SiteHeader :title="`${group.name} - Edit a member - ${member.name}`"></SiteHeader>
+    <Head :title="$t('staff_edit_member_title')"></Head>
+    <SiteHeader :title="`${group.name} - ${$t('staff_edit_member_title')} - ${member.name}`"></SiteHeader>
 
     <div>
         <div class="max-w-sm mx-auto mt-12">
@@ -43,7 +45,7 @@ const levels = [
                     </SelectContent>
                 </Select>
                 <div class="flex pt-2 justify-start">
-                    <PrimaryButton type="submit" class="btn btn-primary w-full md:w-[14rem]">Update</PrimaryButton>
+                    <PrimaryButton type="submit" class="btn btn-primary w-full md:w-[14rem]">{{ $t('staff_update') }}</PrimaryButton>
                 </div>
             </form>
         </div>

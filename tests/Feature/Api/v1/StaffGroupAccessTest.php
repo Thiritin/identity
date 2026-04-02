@@ -151,7 +151,7 @@ test('staff user can access group members with sanctum token', function () {
 
 test('staff user gets all departments in index with sanctum token', function () {
     // Add staff user to one department to test the filtering logic
-    $this->staffUser->groups()->attach($this->department2->id, ['level' => GroupUserLevel::Admin]);
+    $this->staffUser->groups()->attach($this->department2->id, ['level' => GroupUserLevel::Member, 'can_manage_members' => true]);
 
     $token = $this->staffUser->createToken('test-token', ['groups.read']);
 

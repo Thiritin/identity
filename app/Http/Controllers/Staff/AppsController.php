@@ -66,8 +66,12 @@ class AppsController extends Controller
                 $app->deleteQuietly();
             }
 
-            return redirect()->route('staff.apps.index')
-                ->with('message', 'Failed to create app. Please try again.');
+            Inertia::flash('toast', [
+                'type' => 'error',
+                'message' => 'Failed to create app. Please try again.',
+            ]);
+
+            return redirect()->route('staff.apps.index');
         }
 
         $app->refresh();
@@ -147,8 +151,12 @@ class AppsController extends Controller
             'name' => $validated['client_name'],
         ]);
 
-        return redirect()->route('staff.apps.edit', $app)
-            ->with('message', __('apps_updated'));
+        Inertia::flash('toast', [
+            'type' => 'success',
+            'message' => __('apps_updated'),
+        ]);
+
+        return redirect()->route('staff.apps.edit', $app);
     }
 
     public function destroy(App $app)

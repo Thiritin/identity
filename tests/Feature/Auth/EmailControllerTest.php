@@ -25,6 +25,25 @@ test('email page with valid login_challenge validates and redirects', function (
     expect(session('auth.login_challenge.client_id'))->toBe('test-client');
 });
 
+test('email page with skip login challenge redirects directly to auto login flow', function () {
+    Http::fake([
+        '*/admin/oauth2/auth/requests/login*' => Http::response([
+            'challenge' => 'test-challenge',
+            'client' => ['client_id' => 'test-client', 'client_name' => 'Test App'],
+            'request_url' => 'http://localhost',
+            'requested_scope' => ['openid'],
+            'skip' => true,
+            'subject' => 'user-hashid',
+        ]),
+    ]);
+
+    $this->get(route('auth.login.view', ['login_challenge' => 'test-challenge']))
+        ->assertRedirect(route('auth.login.password.view'));
+
+    expect(session('auth.login_challenge.skip'))->toBeTrue();
+    expect(session('auth.login_challenge.subject'))->toBe('user-hashid');
+});
+
 test('email page renders when login_challenge in session', function () {
     $this->withSession([
         'auth.login_challenge' => [

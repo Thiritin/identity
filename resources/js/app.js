@@ -4,11 +4,13 @@ import 'github-markdown-css/github-markdown-light.css'
 
 // Import modules...
 import {createApp, h} from 'vue'
-import {createInertiaApp} from '@inertiajs/vue3'
+import {createInertiaApp, router} from '@inertiajs/vue3'
 import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m'
 import {i18nVue} from 'laravel-vue-i18n'
 import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers";
 import VueCookies from 'vue-cookies'
+import {toast} from 'vue-sonner'
+import 'vue-sonner/style.css'
 
 
 import.meta.glob([
@@ -17,9 +19,16 @@ import.meta.glob([
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Identity'
 
+router.on('flash', (event) => {
+    const t = event.detail.flash.toast
+    if (t) {
+        t.type === 'error' ? toast.error(t.message) : toast.success(t.message)
+    }
+})
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue', { eager: true })),
     progress: {
         color: '#4B5563',
     },

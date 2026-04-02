@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 uses(RefreshDatabase::class);
 
-it('assigns authenticated user as owner of new group', function () {
+it('assigns authenticated user as director of new group', function () {
     $user = User::factory()->create();
 
     $group = Group::withoutEvents(fn () => Group::factory()->create());
@@ -21,7 +21,7 @@ it('assigns authenticated user as owner of new group', function () {
     $listener = new AssignGroupOwner();
     $listener->handle(new GroupCreated($group));
 
-    expect($group->users()->where('user_id', $user->id)->wherePivot('level', GroupUserLevel::Owner)->exists())->toBeTrue();
+    expect($group->users()->where('user_id', $user->id)->wherePivot('level', GroupUserLevel::Director)->exists())->toBeTrue();
 });
 
 it('does not assign owner when no authenticated user', function () {

@@ -10,7 +10,7 @@
         <UserBox :user="$page.props.user"/>
         <div class="flex justify-end">
             <PrimaryButton class="ml-auto" :href="route('dashboard')">
-                Continue to Dashboard
+                {{ $t('continue_to_dashboard') }}
             </PrimaryButton>
         </div>
     </div>

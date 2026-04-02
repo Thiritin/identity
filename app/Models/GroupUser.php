@@ -15,6 +15,7 @@ class GroupUser extends Pivot
 
     protected $casts = [
         'level' => GroupUserLevel::class,
+        'can_manage_members' => 'boolean',
     ];
 
     public function user()
@@ -27,23 +28,19 @@ class GroupUser extends Pivot
         return $this->hasOne(Group::class, 'id', 'group_id');
     }
 
-    public function isOwner(): bool
-    {
-        return $this->level === GroupUserLevel::Owner;
-    }
-
     public function isAdmin(): bool
     {
-        return $this->isOwner() || $this->level === GroupUserLevel::Admin;
-    }
-
-    public function isModerator(): bool
-    {
-        return $this->isAdmin() || $this->level === GroupUserLevel::Moderator;
+        return $this->canManageMembers();
     }
 
     public function isMember(): bool
     {
-        return $this->isModerator() || $this->level === GroupUserLevel::Member;
+        return true;
+    }
+
+    public function canManageMembers(): bool
+    {
+        return $this->can_manage_members
+            || $this->level->isLeadRole();
     }
 }

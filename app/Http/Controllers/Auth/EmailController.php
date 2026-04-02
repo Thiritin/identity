@@ -40,11 +40,19 @@ class EmailController extends Controller
                 ]);
             }
 
+            if (($loginRequest['skip'] ?? false) === true) {
+                return Redirect::route('auth.login.password.view');
+            }
+
             return Redirect::route('auth.login.view');
         }
 
         if (! Session::has('auth.login_challenge')) {
             return Redirect::route('login.apps.redirect', ['app' => 'portal']);
+        }
+
+        if (Session::get('auth.login_challenge.skip') === true) {
+            return Redirect::route('auth.login.password.view');
         }
 
         return Inertia::render('Auth/Email');
@@ -55,6 +63,10 @@ class EmailController extends Controller
         Session::put('auth.email_flow.email', $request->email);
 
         if (User::where('email', $request->email)->exists()) {
+            if ($request->filled('password')) {
+                Session::put('auth.email_flow.password', $request->password);
+            }
+
             return Redirect::route('auth.login.password.view');
         }
 

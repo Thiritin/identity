@@ -15,7 +15,7 @@ beforeEach(function () {
     config()->set('services.nextcloud.password', 'secret');
 });
 
-it('enables ACL management when promoted to admin', function () {
+it('enables ACL management when promoted to team lead', function () {
     Http::fake([
         '*' => Http::response('<ocs><meta><statuscode>200</statuscode></meta><data></data></ocs>', 200),
     ]);
@@ -23,7 +23,7 @@ it('enables ACL management when promoted to admin', function () {
     $group = Group::factory()->create(['nextcloud_folder_id' => 42]);
     $user = User::factory()->create();
 
-    (new UpdateUserGroupLevelJob($group, $user, GroupUserLevel::Admin, GroupUserLevel::Member))->handle();
+    (new UpdateUserGroupLevelJob($group, $user, GroupUserLevel::TeamLead, GroupUserLevel::Member))->handle();
 
     Http::assertSent(function ($request) use ($group, $user) {
         return str_contains($request->url(), "apps/groupfolders/folders/{$group->nextcloud_folder_id}/manageACL")
@@ -33,7 +33,7 @@ it('enables ACL management when promoted to admin', function () {
     });
 });
 
-it('enables ACL management when promoted to owner', function () {
+it('enables ACL management when member gets manager flag', function () {
     Http::fake([
         '*' => Http::response('<ocs><meta><statuscode>200</statuscode></meta><data></data></ocs>', 200),
     ]);
@@ -41,7 +41,7 @@ it('enables ACL management when promoted to owner', function () {
     $group = Group::factory()->create(['nextcloud_folder_id' => 42]);
     $user = User::factory()->create();
 
-    (new UpdateUserGroupLevelJob($group, $user, GroupUserLevel::Owner, GroupUserLevel::Member))->handle();
+    (new UpdateUserGroupLevelJob($group, $user, GroupUserLevel::Member, GroupUserLevel::Member, true))->handle();
 
     Http::assertSent(function ($request) use ($group) {
         return str_contains($request->url(), "apps/groupfolders/folders/{$group->nextcloud_folder_id}/manageACL")
@@ -57,7 +57,7 @@ it('disables ACL management when demoted to member', function () {
     $group = Group::factory()->create(['nextcloud_folder_id' => 42]);
     $user = User::factory()->create();
 
-    (new UpdateUserGroupLevelJob($group, $user, GroupUserLevel::Member, GroupUserLevel::Admin))->handle();
+    (new UpdateUserGroupLevelJob($group, $user, GroupUserLevel::Member, GroupUserLevel::TeamLead))->handle();
 
     Http::assertSent(function ($request) use ($group, $user) {
         return str_contains($request->url(), "apps/groupfolders/folders/{$group->nextcloud_folder_id}/manageACL")
@@ -66,7 +66,7 @@ it('disables ACL management when demoted to member', function () {
     });
 });
 
-it('disables ACL management when demoted to moderator', function () {
+it('disables ACL management when manager flag is removed', function () {
     Http::fake([
         '*' => Http::response('<ocs><meta><statuscode>200</statuscode></meta><data></data></ocs>', 200),
     ]);
@@ -74,7 +74,7 @@ it('disables ACL management when demoted to moderator', function () {
     $group = Group::factory()->create(['nextcloud_folder_id' => 42]);
     $user = User::factory()->create();
 
-    (new UpdateUserGroupLevelJob($group, $user, GroupUserLevel::Moderator, GroupUserLevel::Owner))->handle();
+    (new UpdateUserGroupLevelJob($group, $user, GroupUserLevel::Member, GroupUserLevel::Member, false))->handle();
 
     Http::assertSent(function ($request) use ($group) {
         return str_contains($request->url(), "apps/groupfolders/folders/{$group->nextcloud_folder_id}/manageACL")

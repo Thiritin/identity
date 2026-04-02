@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\GroupUserLevel;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -14,7 +13,8 @@ class GroupUserStoreRequest extends FormRequest
             'id' => 'required_without:email|prohibits:email',
             'email' => 'email|required_without:id|exists:users,email|prohibits:id',
             'level' => [
-                Rule::enum(GroupUserLevel::class),
+                'nullable',
+                Rule::in(['member', 'admin']),
             ],
         ];
     }

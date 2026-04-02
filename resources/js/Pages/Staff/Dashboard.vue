@@ -15,8 +15,8 @@ defineOptions({layout: AppLayout})
 
 <template>
     <div>
-        <SiteHeader class="mb-4" title="Dashboard"></SiteHeader>
-        <Head title="Dashboard"></Head>
+        <SiteHeader class="mb-4" :title="$t('dashboard')"></SiteHeader>
+        <Head :title="$t('dashboard')"></Head>
         <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-3 px-6">
             <a :href='app.url' v-for="app in apps"
                class="flex cursor-pointer drop-shadow duration-200 items-center bg-white hover:bg-gray-100 dark:bg-primary-600 hover:dark:bg-primary-500 rounded-lg shadow p-2 gap-3">
@@ -24,9 +24,9 @@ defineOptions({layout: AppLayout})
                     <component :is="loadIconComponent(app.icon)"
                                class='mx-auto h-12 min-w-[72px] fill-current text-primary-600 dark:text-primary-300'/>
                 </div>
-                <div>
+                <div class="min-w-0">
                     <div>
-                        <h2 class='font-medium text-xl dark:text-primary-300'>{{ app.name }}</h2>
+                        <h2 class='font-medium text-xl dark:text-primary-300 break-words'>{{ app.name }}</h2>
                     </div>
                     <div>
                         <p class='dark:text-primary-300'>{{ app.description }}</p>

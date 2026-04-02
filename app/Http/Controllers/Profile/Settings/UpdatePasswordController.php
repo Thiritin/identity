@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdatePasswordRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
+use Inertia\Inertia;
 
 class UpdatePasswordController extends Controller
 {
@@ -18,6 +19,9 @@ class UpdatePasswordController extends Controller
             'password_changed_at' => now(),
         ]);
 
-        return redirect()->route('settings.security.password')->with('message', 'password_updated');
+        return Inertia::flash('toast', [
+            'type' => 'success',
+            'message' => trans('password_updated'),
+        ])->back();
     }
 }

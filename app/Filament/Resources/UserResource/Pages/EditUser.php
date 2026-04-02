@@ -4,7 +4,9 @@ namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
 use App\Models\User;
+use App\Services\BackupCodeService;
 use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
 /**
@@ -26,6 +28,31 @@ class EditUser extends EditRecord
                 ->visible(fn (User $record) => $record->twoFactors()->exists())
                 ->action(function () {
                     $this->record->resetTwoFactorAuth();
+                }),
+
+            // Generate Backup Codes
+            Action::make('generateBackupCodes')
+                ->label('Generate Backup Codes')
+                ->color('warning')
+                ->requiresConfirmation()
+                ->modalHeading('Generate Backup Codes')
+                ->modalDescription('This will generate new backup codes for the user, invalidating any existing ones. Share these codes with the user securely.')
+                ->action(function () {
+                    $service = new BackupCodeService();
+                    $plaintextCodes = $service->generate();
+                    $service->storeForUser($this->record, $plaintextCodes);
+
+                    $formatted = array_map(
+                        fn (string $code) => BackupCodeService::formatForDisplay($code),
+                        $plaintextCodes
+                    );
+
+                    Notification::make()
+                        ->title('Backup Codes Generated')
+                        ->body(implode('  |  ', $formatted))
+                        ->success()
+                        ->persistent()
+                        ->send();
                 }),
         ];
     }

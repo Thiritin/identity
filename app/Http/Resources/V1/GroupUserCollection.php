@@ -25,7 +25,7 @@ class GroupUserCollection extends ResourceCollection
                     'name' => $user->name,
                     'email' => $hasFullStaffDetails ? $user->email : null,
                     'avatar' => $user->profile_photo_path,
-                    'level' => $user->pivot->level,
+                    'level' => $user->pivot->can_manage_members ? 'admin' : 'member',
                     'title' => $user->pivot->title,
                 ];
             }),

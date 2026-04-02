@@ -12,6 +12,14 @@
         <Transition name="field-error">
             <p v-if="$page.props.errors.throttle" class="text-xs text-destructive text-center">{{ $page.props.errors.throttle }}</p>
         </Transition>
+        <Transition name="field-error">
+            <div v-if="sessionExpired" class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-center space-y-2">
+                <p class="text-sm text-destructive">{{ $t('session_expired') }}</p>
+                <Button variant="outline" size="sm" @click="() => window.location.reload()">
+                    <RefreshCw class="size-3.5" /> {{ $t('reload_page') }}
+                </Button>
+            </div>
+        </Transition>
         <div class="space-y-4">
             <FormField
                 id="email"
@@ -85,12 +93,13 @@ import AuthLayout from '@/Layouts/AuthLayout.vue'
 import FormField from '@/Components/Auth/FormField.vue'
 import HoneypotFields from '@/Components/Auth/HoneypotFields.vue'
 import AltchaWidget from '@/Components/Auth/AltchaWidget.vue'
-import { Head, Link, useForm } from '@inertiajs/vue3'
+import { Head, Link, useForm, router } from '@inertiajs/vue3'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 import { Checkbox } from '@/Components/ui/checkbox'
-import { ArrowRight } from 'lucide-vue-next'
+import { ArrowRight, RefreshCw } from 'lucide-vue-next'
 import { useHoneypot } from '@/Composables/useHoneypot'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 defineOptions({
     layout: AuthLayout,
@@ -109,6 +118,23 @@ const form = useForm('post', route('auth.login.password.submit'), {
     remember: false,
     altcha: null,
     ...useHoneypot(),
+})
+
+const sessionExpired = ref(false)
+
+let removeInvalidListener = null
+
+onMounted(() => {
+    removeInvalidListener = router.on('invalid', (event) => {
+        if (event.detail.response.status === 419) {
+            event.preventDefault()
+            sessionExpired.value = true
+        }
+    })
+})
+
+onUnmounted(() => {
+    removeInvalidListener?.()
 })
 
 function submit() {

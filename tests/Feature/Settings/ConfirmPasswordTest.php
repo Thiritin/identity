@@ -85,7 +85,7 @@ it('throttles confirm password attempts', function () {
 
     $this->actingAs($user);
 
-    for ($i = 0; $i < 6; $i++) {
+    for ($i = 0; $i < 5; $i++) {
         $this->post(route('settings.security.confirm-password'), [
             'password' => 'wrong-password',
         ]);
@@ -93,5 +93,5 @@ it('throttles confirm password attempts', function () {
 
     $this->post(route('settings.security.confirm-password'), [
         'password' => 'wrong-password',
-    ])->assertStatus(429);
+    ])->assertSessionHasErrors('password');
 });

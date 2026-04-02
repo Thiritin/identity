@@ -17,10 +17,11 @@ return new class() extends Migration
         });
         Schema::table('group_user', function (Blueprint $table) {
             $table->dropColumn(['authorization_level', 'is_director', 'title']);
-            $table->enum('level', ['invited', 'banned', 'member', 'moderator', 'admin', 'owner'])
+            $table->enum('level', ['member', 'division_director', 'director', 'team_lead'])
                 ->index()
-                ->default('invited')
+                ->default('member')
                 ->after('user_id');
+            $table->boolean('can_manage_members')->default(false)->after('user_id');
         });
     }
 };

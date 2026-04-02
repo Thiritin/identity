@@ -105,22 +105,22 @@ const addVia = ref('staff');
             <div class="flex gap-2">
                 <Button
                     size="sm"
-                    @click="showEditTeamDialog = true">Edit Team</Button>
+                    @click="showEditTeamDialog = true">{{ $t('staff_edit_team') }}</Button>
                 <Button
                     size="sm"
-                    @click="showAddMemberDialog = true">Add User
+                    @click="showAddMemberDialog = true">{{ $t('staff_add_user') }}
                 </Button>
                 <Button
                     v-if="group.parent_id === null"
                     size="sm"
                     variant="outline"
-                    @click="showAddTeamDialog = true">Add Team
+                    @click="showAddTeamDialog = true">{{ $t('staff_add_team') }}
                 </Button>
                 <Button
                     v-if="group.parent_id !== null"
                     size="sm"
                     variant="destructive"
-                    @click="confirmDeleteTeamDialog = true">Delete Team
+                    @click="confirmDeleteTeamDialog = true">{{ $t('staff_delete_team') }}
                 </Button>
             </div>
         </template>
@@ -129,20 +129,20 @@ const addVia = ref('staff');
     <Dialog v-model:open="showAddMemberDialog">
         <DialogContent class="max-w-md">
             <DialogHeader>
-                <DialogTitle>Add Member</DialogTitle>
+                <DialogTitle>{{ $t('staff_add_member_title') }}</DialogTitle>
             </DialogHeader>
             <form @submit.prevent="submitUserForm" class="space-y-3">
-                <p>You can add existing <strong>Staff Members</strong> via the Dropdown to this Group. Non-Staff Members need to be added using the E-Mail.</p>
+                <p>{{ $t('staff_add_member_description') }}</p>
                 <ToggleGroup type="single" :model-value="addVia" @update:model-value="(v) => { if (v) addVia = v }" class="w-full grid grid-cols-2">
-                    <ToggleGroupItem value="staff">Staff List</ToggleGroupItem>
-                    <ToggleGroupItem value="email">Email</ToggleGroupItem>
+                    <ToggleGroupItem value="staff">{{ $t('staff_staff_list') }}</ToggleGroupItem>
+                    <ToggleGroupItem value="email">{{ $t('email') }}</ToggleGroupItem>
                 </ToggleGroup>
                 <!-- Select -->
                 <div v-if="staffMemberList.length && addVia === 'staff'">
-                    <label for="user_id">Staff Member</label>
+                    <label for="user_id">{{ $t('staff_staff_member') }}</label>
                     <Select v-model="addUserForm.user_id">
                         <SelectTrigger class="w-full">
-                            <SelectValue placeholder="Select a Staff Member" />
+                            <SelectValue :placeholder="$t('staff_select_staff_member')" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem v-for="member in staffMemberList" :key="member.id" :value="String(member.id)">
@@ -154,13 +154,13 @@ const addVia = ref('staff');
                 </div>
                 <!-- E-Mail -->
                 <div v-if="addVia === 'email'">
-                    <label for="email">E-Mail</label>
+                    <label for="email">{{ $t('email') }}</label>
                     <Input v-model="addUserForm.email" type="email" id="email" class="w-full"/>
                     <small class="text-red-500" v-if="addUserForm.errors.email">{{ addUserForm.errors.email }}</small>
                 </div>
                 <!-- Submit Button -->
                 <DialogFooter>
-                    <Button type="submit" class="w-full">Add Member</Button>
+                    <Button type="submit" class="w-full">{{ $t('staff_add_member_button') }}</Button>
                 </DialogFooter>
             </form>
         </DialogContent>
@@ -169,15 +169,15 @@ const addVia = ref('staff');
     <Dialog v-model:open="showAddTeamDialog">
         <DialogContent class="max-w-md">
             <DialogHeader>
-                <DialogTitle>Create a new Team</DialogTitle>
+                <DialogTitle>{{ $t('staff_create_team_title') }}</DialogTitle>
             </DialogHeader>
             <form @submit.prevent="submitTeamForm()" class="space-y-3">
-                <label for="name">Team Name</label>
+                <label for="name">{{ $t('staff_team_name') }}</label>
                 <Input v-model="addTeamForm.name" id="name" class="w-full"/>
                 <small class="text-red-500" v-if="addTeamForm.errors.name">{{ addTeamForm.errors.name }}</small>
                 <!-- Submit Button -->
                 <DialogFooter>
-                    <Button type="submit" class="w-full">Create Team</Button>
+                    <Button type="submit" class="w-full">{{ $t('staff_create_team_button') }}</Button>
                 </DialogFooter>
             </form>
         </DialogContent>
@@ -186,14 +186,14 @@ const addVia = ref('staff');
     <Dialog v-model:open="confirmDeleteTeamDialog">
         <DialogContent class="max-w-md">
             <DialogHeader>
-                <DialogTitle>Delete Team</DialogTitle>
+                <DialogTitle>{{ $t('staff_delete_team') }}</DialogTitle>
             </DialogHeader>
-            <p>Are you sure you want to delete this Team?</p>
+            <p>{{ $t('staff_delete_team_confirm') }}</p>
             <DialogFooter>
                 <Button
                     size="sm"
                     variant="secondary"
-                    @click="confirmDeleteTeamDialog = false">Cancel
+                    @click="confirmDeleteTeamDialog = false">{{ $t('cancel') }}
                 </Button>
                 <Button
                     size="sm"
@@ -204,7 +204,7 @@ const addVia = ref('staff');
                             confirmDeleteTeamDialog = false;
                             toast.success('Team deleted');
                         }
-                    })">Delete
+                    })">{{ $t('staff_delete') }}
                 </Button>
             </DialogFooter>
         </DialogContent>
@@ -213,15 +213,15 @@ const addVia = ref('staff');
     <Dialog v-model:open="showEditTeamDialog">
         <DialogContent class="max-w-md">
             <DialogHeader>
-                <DialogTitle>Edit Team Name</DialogTitle>
+                <DialogTitle>{{ $t('staff_edit_team_name_title') }}</DialogTitle>
             </DialogHeader>
             <form @submit.prevent="submitEditTeamForm()" class="space-y-3">
-                <label for="name">Team Name</label>
+                <label for="name">{{ $t('staff_team_name') }}</label>
                 <Input v-model="editTeamForm.name" id="name" class="w-full"/>
                 <small class="text-red-500" v-if="editTeamForm.errors.name">{{ editTeamForm.errors.name }}</small>
                 <!-- Submit Button -->
                 <DialogFooter>
-                    <Button type="submit" class="w-full">Save</Button>
+                    <Button type="submit" class="w-full">{{ $t('save') }}</Button>
                 </DialogFooter>
             </form>
         </DialogContent>

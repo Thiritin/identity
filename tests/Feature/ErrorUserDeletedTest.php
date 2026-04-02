@@ -26,7 +26,7 @@ test('If user exists, consent should be forwarded', function () {
             'redirect_to' => 'https://verified',
         ]),
         '*/admin/oauth2/auth/requests/consent*' => Http::response([
-            'subject' => $user->hashid(),
+            'subject' => $user->hashid,
             'challenge' => 'TEST123',
             'requested_scope' => ['openid'],
             'requested_access_token_audience' => ['https://localhost/'],

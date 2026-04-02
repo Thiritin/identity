@@ -22,6 +22,16 @@
             :error="form.errors.email"
             @change="form.validate('email')"
         />
+        <!-- Hidden password field for password manager autofill -->
+        <input
+            id="password"
+            type="password"
+            autocomplete="current-password"
+            v-model="passwordManagerPassword"
+            class="sr-only"
+            tabindex="-1"
+            aria-hidden="true"
+        />
         <HoneypotFields :honeypot="form" />
         <Button :disabled="form.processing" type="submit" class="w-full">
             {{ $t('continue') }}
@@ -39,15 +49,20 @@ import { Head, useForm } from '@inertiajs/vue3'
 import { Button } from '@/Components/ui/button'
 import { ArrowRight } from 'lucide-vue-next'
 import { useHoneypot } from '@/Composables/useHoneypot'
+import { ref } from 'vue'
 
 defineOptions({ layout: AuthLayout })
 
+const passwordManagerPassword = ref(null)
+
 const form = useForm('post', route('auth.login.submit'), {
     email: null,
+    password: null,
     ...useHoneypot(),
 })
 
 function submit() {
+    form.password = passwordManagerPassword.value
     form.submit()
 }
 </script>

@@ -103,7 +103,7 @@ class VerifyCodeController extends Controller
                 ]);
             }
 
-            $url = $hydra->acceptLogin($user->hashId(), $challengeData['challenge'], '3600');
+            $url = $hydra->acceptLogin($user->hashid, $challengeData['challenge'], '3600');
 
             Session::forget('auth.login_challenge');
             Session::forget('auth.email_flow');

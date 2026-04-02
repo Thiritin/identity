@@ -32,7 +32,7 @@ it('adds user to group', function () {
     });
 });
 
-it('sets ACL for admin on non-team group', function () {
+it('sets ACL for team lead on non-team group', function () {
     Http::fake([
         '*' => Http::response('<ocs><meta><statuscode>200</statuscode></meta><data></data></ocs>', 200),
     ]);
@@ -44,7 +44,7 @@ it('sets ACL for admin on non-team group', function () {
     ]);
     $user = User::factory()->create();
 
-    (new AddUserToGroupJob($group, $user, GroupUserLevel::Admin))->handle();
+    (new AddUserToGroupJob($group, $user, GroupUserLevel::TeamLead))->handle();
 
     Http::assertSent(function ($request) use ($group, $user) {
         return str_contains($request->url(), "apps/groupfolders/folders/{$group->nextcloud_folder_id}/manageACL")
@@ -53,7 +53,7 @@ it('sets ACL for admin on non-team group', function () {
     });
 });
 
-it('sets ACL for owner on non-team group', function () {
+it('sets ACL for manager-flagged member on non-team group', function () {
     Http::fake([
         '*' => Http::response('<ocs><meta><statuscode>200</statuscode></meta><data></data></ocs>', 200),
     ]);
@@ -65,7 +65,7 @@ it('sets ACL for owner on non-team group', function () {
     ]);
     $user = User::factory()->create();
 
-    (new AddUserToGroupJob($group, $user, GroupUserLevel::Owner))->handle();
+    (new AddUserToGroupJob($group, $user, GroupUserLevel::Member, true))->handle();
 
     Http::assertSent(function ($request) use ($group) {
         return str_contains($request->url(), "apps/groupfolders/folders/{$group->nextcloud_folder_id}/manageACL")
@@ -104,7 +104,7 @@ it('does not set ACL for team groups', function () {
     ]);
     $user = User::factory()->create();
 
-    (new AddUserToGroupJob($group, $user, GroupUserLevel::Admin))->handle();
+    (new AddUserToGroupJob($group, $user, GroupUserLevel::TeamLead))->handle();
 
     Http::assertNotSent(function ($request) use ($group) {
         return str_contains($request->url(), "apps/groupfolders/folders/{$group->nextcloud_folder_id}/manageACL");

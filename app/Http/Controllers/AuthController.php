@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
-use Vinkla\Hashids\Facades\Hashids;
 
 class AuthController extends Controller
 {
@@ -34,8 +35,19 @@ class AuthController extends Controller
         } catch (InvalidStateException $e) {
             return redirect()->route('login.apps.redirect', ['app' => $app]);
         }
-        $userid = Hashids::connection('user')->decode($userInfo->id)[0];
-        Auth::guard($this->getGuard($app))->loginUsingId($userid);
+        $user = User::where('hashid', $userInfo->id)->first();
+        if ($user === null) {
+            Log::error('User not found during login callback', [
+                'hashid' => $userInfo->id,
+                'app' => $app,
+            ]);
+
+            return redirect()->route('auth.error', [
+                'error' => 'user_not_found',
+                'error_description' => 'Your user account could not be found.',
+            ]);
+        }
+        Auth::guard($this->getGuard($app))->loginUsingId($user->id);
         Socialite::driver('idp-' . $app)->putToken(
             token: $userInfo->token,
             refreshToken: $userInfo->refreshToken,
@@ -59,10 +71,11 @@ class AuthController extends Controller
         Socialite::driver('idp-' . $app)->clearToken();
     }
 
-    private function checkApp($app)
+    private function checkApp($app): void
     {
         if (in_array($app, ['staff', 'portal', 'admin']) === false) {
-            abort(404);
+            Log::warning('Unknown app requested in auth flow', ['app' => $app]);
+            abort(404, "Unknown application: {$app}");
         }
     }
 

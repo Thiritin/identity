@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\v1\GroupController;
 use App\Http\Controllers\Api\v1\GroupUserController;
 use App\Http\Controllers\Api\v1\IntrospectionController;
 use App\Http\Controllers\Api\v1\UserinfoController;
+use App\Http\Controllers\Api\v2\MetadataController;
 use App\Http\Controllers\HealthController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,15 @@ Route::middleware('api')->prefix('v1/')->name('api.v1.')->group(function () {
      */
     // Introspect requires auth via client id + secret
     Route::post('introspect', IntrospectionController::class)->name('introspect');
+});
+
+Route::middleware('api')->prefix('v2/')->name('api.v2.')->group(function () {
+    Route::middleware('auth:api')->group(function () {
+        Route::get('metadata', [MetadataController::class, 'index'])->name('metadata.index');
+        Route::get('metadata/{key}', [MetadataController::class, 'show'])->name('metadata.show')->where('key', '[a-zA-Z0-9._-]+');
+        Route::put('metadata/{key}', [MetadataController::class, 'upsert'])->name('metadata.upsert')->where('key', '[a-zA-Z0-9._-]+');
+        Route::delete('metadata/{key}', [MetadataController::class, 'destroy'])->name('metadata.destroy')->where('key', '[a-zA-Z0-9._-]+');
+    });
 });
 
 // Health check endpoint - no authentication required

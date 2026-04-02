@@ -59,7 +59,7 @@ const form = useForm({})
         <TabHeader
             :parent="parent"
             :group="group"
-            subtitle="Members"
+            :subtitle="$t('staff_tab_members')"
             :can-edit="canEdit"
         ></TabHeader>
         <TabComponent active-tab="members" :group="group"></TabComponent>
@@ -84,14 +84,14 @@ const form = useForm({})
                                 @click="router.visit(route('staff.groups.members.edit', {group: group.hashid, member: user.id}))"
                                 variant="secondary"
                                 size="sm"
-                            >Edit<span class="sr-only">, {{ user.name }}</span></Button>
+                            >{{ $t('staff_edit_member') }}<span class="sr-only">, {{ user.name }}</span></Button>
 
                             <Button
                                 variant="destructive"
                                 size="sm"
                                 @click="showDeleteModal(group.hashid, user)"
                                 :aria-controls="deleteModal.visible ? 'dlg' : null"
-                                :aria-expanded="!!deleteModal.visible">Remove<span
+                                :aria-expanded="!!deleteModal.visible">{{ $t('staff_remove') }}<span
                                 class="sr-only">, {{ user.name }}</span>
                             </Button>
                         </div>
@@ -104,24 +104,22 @@ const form = useForm({})
         <Dialog v-model:open="deleteModal.visible">
             <DialogContent class="max-w-[25rem]">
                 <DialogHeader>
-                    <DialogTitle>Remove user from group</DialogTitle>
+                    <DialogTitle>{{ $t('staff_remove_user_group_title') }}</DialogTitle>
                 </DialogHeader>
-                <span class="text-muted-foreground block mb-5">Really remove {{
-                        deleteModal.user.name
-                    }}?</span>
+                <span class="text-muted-foreground block mb-5">{{ $t('staff_remove_user_confirm', { name: deleteModal.user.name }) }}</span>
 
                 <form action="#" method="post"
                       @submit.prevent="deleteUser">
                     <DialogFooter>
                         <Button type="button"
                                 variant="secondary"
-                                @click="deleteModal.visible = false">Cancel</Button>
+                                @click="deleteModal.visible = false">{{ $t('cancel') }}</Button>
 
                         <Button
                             type="submit"
                             :disabled="form.processing"
                             variant="destructive">
-                            Remove<span class="sr-only">, {{ deleteModal.user.name }}</span>
+                            {{ $t('staff_remove') }}<span class="sr-only">, {{ deleteModal.user.name }}</span>
                         </Button>
                     </DialogFooter>
                 </form>

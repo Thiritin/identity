@@ -24,7 +24,8 @@ class UpdateUserNextcloudGroupLevel
             $event->groupUser->group,
             $event->groupUser->user,
             $event->groupUser->level,
-            $event->oldLevel
+            $event->oldLevel,
+            (bool) $event->groupUser->can_manage_members,
         );
     }
 }

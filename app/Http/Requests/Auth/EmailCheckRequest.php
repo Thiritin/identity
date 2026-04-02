@@ -10,6 +10,7 @@ class EmailCheckRequest extends FormRequest
     {
         return [
             'email' => ['required', 'email', 'max:255'],
+            'password' => ['nullable', 'string'],
         ];
     }
 }

@@ -284,7 +284,12 @@ import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 import { Switch } from '@/Components/ui/switch/index.js'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
-import { Camera, Pencil, Check, X } from 'lucide-vue-next'
+import {
+    DropdownMenu, DropdownMenuContent, DropdownMenuLabel,
+    DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger,
+} from '@/Components/ui/dropdown-menu'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
+import { Camera, Pencil, Check, X, Globe, Users, Shield, Lock } from 'lucide-vue-next'
 
 const props = defineProps({
     errors: Object,
@@ -351,11 +356,16 @@ function togglePreference(key, value) {
 }
 
 const visibilityOptions = [
-    { value: 'all_staff', label: 'staff_profile_visibility_all_staff' },
-    { value: 'my_departments', label: 'staff_profile_visibility_my_departments' },
-    { value: 'leads_and_directors', label: 'staff_profile_visibility_leads_and_directors' },
-    { value: 'directors_only', label: 'staff_profile_visibility_directors_only' },
+    { value: 'all_staff', label: 'staff_profile_visibility_all_staff', icon: Globe },
+    { value: 'my_departments', label: 'staff_profile_visibility_my_departments', icon: Users },
+    { value: 'leads_and_directors', label: 'staff_profile_visibility_leads_and_directors', icon: Shield },
+    { value: 'directors_only', label: 'staff_profile_visibility_directors_only', icon: Lock },
 ]
+
+function getVisibilityOption(field) {
+    const value = staffForm.visibility[field] ?? 'all_staff'
+    return visibilityOptions.find(o => o.value === value) ?? visibilityOptions[0]
+}
 
 const staffForm = page.props.user.isStaff ? useForm({
     firstname: props.staffProfile?.firstname ?? null,

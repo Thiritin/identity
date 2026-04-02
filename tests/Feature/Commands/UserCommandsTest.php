@@ -95,7 +95,7 @@ test('user:disable-2fa removes two-factor auth', function () {
         ->expectsOutputToContain('Two-factor authentication disabled')
         ->assertSuccessful();
 
-    expect($user->fresh()->twoFactors)->toBeNull();
+    expect($user->fresh()->twoFactors)->toBeEmpty();
 });
 
 test('user:disable-2fa fails for nonexistent user', function () {

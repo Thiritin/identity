@@ -2,7 +2,7 @@
     <Head title="Two Factor"></Head>
     <SettingsHeader>{{ $t('two_factor') }}</SettingsHeader>
     <SettingsSubHeader
-        class="mb-4">Enabling two factor authentication secures your account by requiring a 2nd form of authentication for accessing your account.
+        class="mb-4">{{ $t('two_factor_description') }}
     </SettingsSubHeader>
     <div class="divide-y divide-gray-300">
         <ListItem
@@ -16,7 +16,7 @@
             </div>
             <div v-if="auth.active"
                  class="dark:bg-primary-900 dark:text-primary-100 bg-primary-500 text-white px-2 py-1 rounded-lg font-semibold text-sm">
-                Active
+                {{ $t('two_factor_active') }}
             </div>
         </ListItem>
     </div>

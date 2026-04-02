@@ -6,10 +6,15 @@ import vue from '@vitejs/plugin-vue';
 import i18n from 'laravel-vue-i18n/vite';
 
 export default defineConfig({
+    server: {
+        watch: {
+            ignored: ['**/app/**', '**/routes/**', '**/tests/**', '**/vendor/**', '**/database/**', '**/storage/**', '**/composer.*', '**/artisan'],
+        },
+    },
     plugins: [
         laravel({
             input: 'resources/js/app.js',
-            refresh: true,
+            refresh: false,
         }),
         vue({
             template: {

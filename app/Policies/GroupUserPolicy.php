@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Enums\GroupUserLevel;
 use App\Models\GroupUser;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -12,6 +11,27 @@ class GroupUserPolicy
 {
     use HandlesAuthorization;
 
+    private function userCanManageGroupMembers(User $user, GroupUser $groupUser): bool
+    {
+        $membership = GroupUser::whereUserId($user->id)
+            ->whereGroupId($groupUser->group_id)
+            ->first();
+
+        if ($membership?->canManageMembers()) {
+            return true;
+        }
+
+        if (! $groupUser->group?->parent_id) {
+            return false;
+        }
+
+        $parentMembership = GroupUser::whereUserId($user->id)
+            ->whereGroupId($groupUser->group->parent_id)
+            ->first();
+
+        return (bool) $parentMembership?->canManageMembers();
+    }
+
     public function view(User $user, GroupUser $groupUser): bool
     {
         return $user->scopeCheck('groups.read') && ($groupUser->isMember() || $groupUser->group->parent?->isMember($user));
@@ -19,30 +39,21 @@ class GroupUserPolicy
 
     public function update(User $user, GroupUser $groupUser): bool
     {
-        return $user->scopeCheck('groups.update') && ($groupUser->isAdmin() || $groupUser->group->isAdmin($user) || $groupUser->group->parent?->isAdmin($user));
+        return $user->scopeCheck('groups.update') && $this->userCanManageGroupMembers($user, $groupUser);
     }
 
     public function create(User $user, GroupUser $groupUser): bool
     {
-        return $user->scopeCheck('groups.update') && ($groupUser->isAdmin() || $groupUser->group->isAdmin($user) || $groupUser->group->parent?->isAdmin($user));
+        return $user->scopeCheck('groups.update') && $this->userCanManageGroupMembers($user, $groupUser);
     }
 
     public function delete(User $user, GroupUser $groupUser): Response
     {
-        if ($groupUser->level === GroupUserLevel::Owner) {
-            return Response::deny('Owners cannot be removed from group.');
-        }
-        if ($user->scopeCheck('groups.update') && $groupUser->isAdmin()) {
-            return Response::allow();
+        if (! $user->scopeCheck('groups.update')) {
+            return Response::deny('Insufficient permissions, groups.update is missing.');
         }
 
-        // check if user is of type admin
-        if ($groupUser->group->isAdmin($user)) {
-            return Response::allow();
-        }
-
-        // check if user is admin of parent group
-        if ($groupUser->group->parent && $groupUser->group->parent->isAdmin($user)) {
+        if ($this->userCanManageGroupMembers($user, $groupUser)) {
             return Response::allow();
         }
 

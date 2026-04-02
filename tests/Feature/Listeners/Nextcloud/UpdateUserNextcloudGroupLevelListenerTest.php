@@ -37,7 +37,7 @@ it('does not dispatch job when group has no nextcloud folder', function () {
 
     $group = Group::factory()->create();
     $user = User::factory()->create();
-    $group->users()->attach($user, ['level' => GroupUserLevel::Admin]);
+    $group->users()->attach($user, ['level' => GroupUserLevel::Member, 'can_manage_members' => true]);
     $groupUser = GroupUser::where('user_id', $user->id)->where('group_id', $group->id)->first();
 
     $listener = $this->partialMock(UpdateUserNextcloudGroupLevel::class, function ($mock) {
@@ -53,7 +53,7 @@ it('does not dispatch job when shouldHandle returns false', function () {
 
     $group = Group::factory()->create(['nextcloud_folder_name' => 'Test Folder']);
     $user = User::factory()->create();
-    $group->users()->attach($user, ['level' => GroupUserLevel::Admin]);
+    $group->users()->attach($user, ['level' => GroupUserLevel::Member, 'can_manage_members' => true]);
     $groupUser = GroupUser::where('user_id', $user->id)->where('group_id', $group->id)->first();
 
     $listener = new UpdateUserNextcloudGroupLevel();
