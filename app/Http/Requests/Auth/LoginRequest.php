@@ -12,6 +12,7 @@ class LoginRequest extends FormRequest
             'email' => 'required|email',
             'password' => 'required',
             'remember' => 'required|bool',
+            'altcha' => 'nullable|string',
         ];
     }
 }

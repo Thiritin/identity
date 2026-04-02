@@ -7,8 +7,10 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Models\App;
 use App\Models\User;
 use App\Services\Hydra\Client;
+use GrantHolle\Altcha\Rules\ValidAltcha;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
@@ -48,8 +50,11 @@ class LoginController extends Controller
             return Redirect::to($hydra->acceptLogin($subject, $loginRequest['challenge'], null, $loginRequest));
         }
 
+        $requiresPow = RateLimiter::tooManyAttempts('login-pow:' . $request->ip(), 3);
+
         return Inertia::render('Auth/Login', [
             'email' => $email,
+            'requiresPow' => $requiresPow,
         ]);
     }
 
@@ -61,6 +66,14 @@ class LoginController extends Controller
             'x-real-ip' => $request->header('X-Real-IP'),
             'remote_addr' => $request->server('REMOTE_ADDR'),
         ]);
+
+        if (RateLimiter::tooManyAttempts('login-pow:' . $request->ip(), 3)) {
+            $request->validate([
+                'altcha' => ['required', new ValidAltcha()],
+            ], [
+                'altcha.required' => trans('pow_required'),
+            ]);
+        }
 
         $loginData = [
             'email' => $request->get('email'),
@@ -100,11 +113,15 @@ class LoginController extends Controller
             $url = (new Client())->acceptLogin($user->hashId(), $loginChallenge,
                 $request->get('remember') ? '2592000' : '3600');
 
+            RateLimiter::clear('login-pow:' . $request->ip());
+
             Session::forget('auth.email_flow');
             Session::forget('auth.login_challenge');
 
             return Inertia::location($url);
         }
+
+        RateLimiter::hit('login-pow:' . $request->ip(), 60 * 60 * 24);
 
         throw ValidationException::withMessages(['nouser' => 'Wrong details']);
     }
