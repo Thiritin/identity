@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Middleware\HoneypotSpamResponder;
 use Spatie\Honeypot\SpamProtection;
-use Spatie\Honeypot\SpamResponder\BlankPageResponder;
 
 return [
     /*
@@ -27,7 +27,7 @@ return [
      * When this is activated, requests will be checked if
      * form is submitted faster than this amount of seconds
      */
-    'valid_from_timestamp' => env('HONEYPOT_VALID_FROM_TIMESTAMP', true),
+    'valid_from_timestamp' => env('HONEYPOT_VALID_FROM_TIMESTAMP', false),
 
     /*
      * This field contains the name of a form field that will be used to verify
@@ -49,7 +49,7 @@ return [
      * A valid responder is any class that implements
      * `Spatie\Honeypot\SpamResponder\SpamResponder`
      */
-    'respond_to_spam_with' => BlankPageResponder::class,
+    'respond_to_spam_with' => HoneypotSpamResponder::class,
 
     /*
      * When activated, requests will be checked if honeypot fields are missing,
