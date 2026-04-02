@@ -4,7 +4,7 @@
             <!-- Centered Content -->
             <div class="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
                 <div class="flex flex-col items-center gap-4">
-                    <div class="w-full max-w-md rounded-xl bg-white/90 p-8 shadow-2xl backdrop-blur-sm dark:bg-primary-900/90 sm:p-12">
+                    <div class="w-full max-w-screen-md rounded-xl bg-white/90 p-8 shadow-2xl backdrop-blur-sm dark:bg-primary-900/90 sm:p-12">
                         <!-- Slot Content -->
                         <div class="flex-1 w-full flex flex-col justify-center">
                             <Transition mode="out-in" appear>
