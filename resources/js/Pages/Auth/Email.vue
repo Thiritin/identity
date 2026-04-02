@@ -22,6 +22,7 @@
             :error="form.errors.email"
             @change="form.validate('email')"
         />
+        <HoneypotFields :honeypot="form" />
         <Button :disabled="form.processing" type="submit" class="w-full">
             {{ $trans('continue') }}
             <ArrowRight class="size-4" />
@@ -33,14 +34,17 @@ import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import FormField from '@/Components/Auth/FormField.vue'
+import HoneypotFields from '@/Components/Auth/HoneypotFields.vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import { Button } from '@/Components/ui/button'
 import { ArrowRight } from 'lucide-vue-next'
+import { useHoneypot } from '@/Composables/useHoneypot'
 
 defineOptions({ layout: AuthLayout })
 
 const form = useForm('post', route('auth.login.submit'), {
     email: null,
+    ...useHoneypot(),
 })
 
 function submit() {

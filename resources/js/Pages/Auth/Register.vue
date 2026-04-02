@@ -28,7 +28,7 @@
             id="password"
             :label="$trans('password')"
             type="password"
-            autocomplete="password"
+            autocomplete="new-password"
             v-model.trim.lazy="form.password"
             :error="form.errors.password"
             @change="form.validate('password')"
@@ -36,15 +36,7 @@
         <PasswordInfoBox
             :password="form.password"
         />
-        <FormField
-            id="password_confirmation"
-            :label="$trans('password_confirmation')"
-            type="password"
-            autocomplete="password"
-            v-model.trim.lazy="form.password_confirmation"
-            :error="form.errors.password_confirmation"
-            @change="form.validate('password_confirmation')"
-        />
+        <HoneypotFields :honeypot="form" />
         <div class="pt-4 space-y-3">
             <Button
                 :disabled="form.processing"
@@ -65,9 +57,11 @@ import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import FormField from '@/Components/Auth/FormField.vue'
+import HoneypotFields from '@/Components/Auth/HoneypotFields.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
 import PasswordInfoBox from '@/Auth/PasswordInfoBox.vue'
 import { Button } from '@/Components/ui/button'
+import { useHoneypot } from '@/Composables/useHoneypot'
 
 defineOptions({
     layout: AuthLayout,
@@ -82,7 +76,7 @@ const form = useForm('post', route('auth.register.store'), {
     email: props.email,
     username: null,
     password: null,
-    password_confirmation: null,
+    ...useHoneypot(),
 })
 
 function submit() {

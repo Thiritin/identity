@@ -37,7 +37,7 @@
         "robthree/twofactorauth": "^2.1",
         "sentry/sentry-laravel": "^4.7",
         "spatie/laravel-activitylog": "^4.7",
-        "spatie/laravel-permission": "^6.2.0",
+        "spatie/laravel-honeypot": "^4.7",
         "spatie/laravel-query-builder": "^5.1|^6.0",
         "stevebauman/purify": "^6.2",
         "tightenco/ziggy": "^1.0"

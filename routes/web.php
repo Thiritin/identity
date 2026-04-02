@@ -14,15 +14,16 @@ use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\UpdateEmailController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
+use Spatie\Honeypot\ProtectAgainstSpam;
 
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('login', [EmailController::class, 'view'])->name('login.view');
     Route::post('login', [EmailController::class, 'submit'])
-        ->middleware([HandlePrecognitiveRequests::class, 'throttle:5,1'])
+        ->middleware([HandlePrecognitiveRequests::class, ProtectAgainstSpam::class, 'throttle:5,1'])
         ->name('login.submit');
     Route::get('login/password', [LoginController::class, 'view'])->name('login.password.view');
     Route::post('login/password', [LoginController::class, 'submit'])
-        ->middleware([HandlePrecognitiveRequests::class, 'throttle:5,1'])
+        ->middleware([HandlePrecognitiveRequests::class, ProtectAgainstSpam::class, 'throttle:5,1'])
         ->name('login.password.submit');
 
     Route::get('two-factor',
@@ -42,7 +43,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
         // Register
         Route::get('register', [RegisterController::class, 'view'])->name('register.view');
         Route::post('register', RegisterController::class)
-            ->middleware(['guest', HandlePrecognitiveRequests::class, 'throttle:5,1'])
+            ->middleware(['guest', HandlePrecognitiveRequests::class, ProtectAgainstSpam::class, 'throttle:5,1'])
             ->name('register.store');
         // Password Reset
         Route::inertia('forgot-password', 'Auth/ForgotPassword')->name('forgot-password.view');

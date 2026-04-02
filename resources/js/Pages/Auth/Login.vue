@@ -58,6 +58,7 @@
                 </div>
             </div>
         </div>
+        <HoneypotFields :honeypot="form" />
         <Button
             :disabled="form.processing"
             type="submit"
@@ -76,11 +77,13 @@ import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import FormField from '@/Components/Auth/FormField.vue'
+import HoneypotFields from '@/Components/Auth/HoneypotFields.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 import { Checkbox } from '@/Components/ui/checkbox'
 import { ArrowRight } from 'lucide-vue-next'
+import { useHoneypot } from '@/Composables/useHoneypot'
 
 defineOptions({
     layout: AuthLayout,
@@ -98,6 +101,7 @@ const form = useForm('post', route('auth.login.password.submit'), {
     password: null,
     login_challenge: props.loginChallenge,
     remember: false,
+    ...useHoneypot(),
 })
 
 function submit() {
