@@ -7,9 +7,10 @@
                     <!-- Folder Tabs + Card -->
                     <div class="w-full">
                         <div class="flex px-2">
-                            <Link
+                            <component
                                 v-for="tab in tabs"
                                 :key="tab.name"
+                                :is="tab.external ? 'a' : Link"
                                 :href="tab.href"
                                 class="relative px-6 py-3 text-center text-sm font-semibold transition-all rounded-t-xl -mb-px"
                                 :class="tab.active
@@ -18,7 +19,7 @@
                             >
                                 <component :is="tab.icon" class="mx-auto mb-1 h-5 w-5" />
                                 {{ tab.name }}
-                            </Link>
+                            </component>
                             <div class="flex-1" />
                             <template v-for="tab in rightTabs" :key="tab.name">
                                 <component
@@ -52,7 +53,6 @@
                     </div>
                 </div>
             </div>
-            <Toaster />
         </div>
 
         <!-- Mobile: clean layout + bottom nav -->
@@ -70,9 +70,10 @@
             <!-- Bottom Navigation -->
             <nav class="fixed bottom-0 inset-x-0 z-40 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 safe-bottom">
                 <div class="flex justify-around">
-                    <Link
+                    <component
                         v-for="tab in tabs"
                         :key="tab.name"
+                        :is="tab.external ? 'a' : Link"
                         :href="tab.href"
                         class="flex-1 flex flex-col items-center gap-1 py-2 text-xs font-medium transition-colors"
                         :class="tab.active
@@ -81,23 +82,7 @@
                     >
                         <component :is="tab.icon" class="h-5 w-5" />
                         {{ tab.name }}
-                    </Link>
-                    <Link
-                        v-if="user.isStaff"
-                        :href="route('staff.dashboard')"
-                        class="flex-1 flex flex-col items-center gap-1 py-2 text-xs font-medium text-gray-400 dark:text-gray-500"
-                    >
-                        <BookUser class="h-5 w-5" />
-                        Directory
-                    </Link>
-                    <a
-                        v-if="user.isAdmin"
-                        href="/admin"
-                        class="flex-1 flex flex-col items-center gap-1 py-2 text-xs font-medium text-gray-400 dark:text-gray-500"
-                    >
-                        <Settings class="h-5 w-5" />
-                        Admin
-                    </a>
+                    </component>
                     <a
                         :href="route('auth.logout')"
                         class="flex-1 flex flex-col items-center gap-1 py-2 text-xs font-medium text-gray-400 dark:text-gray-500 transition-colors"
@@ -107,26 +92,16 @@
                     </a>
                 </div>
             </nav>
-            <Toaster />
         </div>
+        <Toaster rich-colors />
     </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { Link, usePage, router } from '@inertiajs/vue3'
+import { ref, computed } from 'vue'
+import { Link, usePage } from '@inertiajs/vue3'
 import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness, BookUser, Settings } from 'lucide-vue-next'
 import { Toaster } from '@/Components/ui/sonner'
-import { toast } from 'vue-sonner'
-
-const removeFlashListener = router.on('flash', (event) => {
-    const t = event.detail.flash.toast
-    if (t) {
-        t.type === 'error' ? toast.error(t.message) : toast.success(t.message)
-    }
-})
-
-onUnmounted(() => removeFlashListener())
 
 const page = usePage()
 const user = computed(() => page.props.user)
@@ -139,23 +114,24 @@ function isActive(routeName) {
 
 const isProfile = computed(() => isActive('settings.profile'))
 
-const tabs = computed(() => [
-    { name: 'Apps', route: 'dashboard', href: route('dashboard'), icon: LayoutGrid, active: isActive('dashboard') },
-    { name: 'Profile', route: 'settings.profile', href: route('settings.profile'), icon: UserRound, active: isActive('settings.profile') },
-    { name: 'Security', route: 'settings.security', href: route('settings.security'), icon: ShieldCheck, active: isActive('settings.security') || isActive('settings.security.*') },
-])
-
-const rightTabs = computed(() => {
-    const items = []
+const tabs = computed(() => {
+    const items = [
+        { name: 'Apps', route: 'dashboard', href: route('dashboard'), icon: LayoutGrid, active: isActive('dashboard') },
+        { name: 'Profile', route: 'settings.profile', href: route('settings.profile'), icon: UserRound, active: isActive('settings.profile') },
+        { name: 'Security', route: 'settings.security', href: route('settings.security'), icon: ShieldCheck, active: isActive('settings.security') || isActive('settings.security.*') },
+    ]
     if (user.value.isStaff) {
-        items.push({ name: 'Directory', href: route('staff.dashboard'), icon: BookUser, external: false })
+        items.push({ name: 'Directory', route: 'staff.dashboard', href: route('staff.dashboard'), icon: BookUser, active: false })
     }
     if (user.value.isAdmin) {
-        items.push({ name: 'Admin', href: '/admin', icon: Settings, external: true })
+        items.push({ name: 'Admin', route: null, href: '/admin', icon: Settings, active: false, external: true })
     }
-    items.push({ name: 'Logout', href: route('auth.logout'), icon: LogOut, external: true })
     return items
 })
+
+const rightTabs = computed(() => [
+    { name: 'Logout', href: route('auth.logout'), icon: LogOut, external: true },
+])
 
 const footerLinks = [
     { name: 'Support', href: 'https://help.eurofurence.org/contact/' },
