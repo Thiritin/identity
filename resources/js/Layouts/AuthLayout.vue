@@ -134,38 +134,24 @@ export default {
 <style>
 
 .auth-card {
-    transition: height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+    transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
 }
 
 .page-enter-active {
-    transition: opacity 0.35s cubic-bezier(0.25, 0.1, 0.25, 1),
-                transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .page-leave-active {
-    transition: opacity 0.2s cubic-bezier(0.25, 0.1, 0.25, 1),
-                transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+    transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .page-enter-from {
     opacity: 0;
-    transform: scale(0.97);
-}
-
-.page-enter-to {
-    opacity: 1;
-    transform: scale(1);
-}
-
-.page-leave-from {
-    opacity: 1;
-    transform: scale(1);
 }
 
 .page-leave-to {
     opacity: 0;
-    transform: scale(0.97);
 }
 
 .auth-background {

@@ -11,6 +11,10 @@
 @theme {
     --color-primary: #005953;
     --color-primary-foreground: #FFFFFF;
+    --color-destructive: #dc2626;
+    --color-destructive-foreground: #FFFFFF;
+    --color-muted: #f5f5f4;
+    --color-muted-foreground: #737373;
     --color-primary-100: #E6EFEE;
     --color-primary-200: #CBDEDD;
     --color-primary-300: #AEC6C4;

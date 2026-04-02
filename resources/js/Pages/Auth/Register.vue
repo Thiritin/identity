@@ -17,7 +17,7 @@
                 :class="{ 'border-destructive': form.invalid('username') }"
                 v-model.trim.lazy="form.username"
             />
-            <p v-if="form.invalid('username')" class="text-sm text-destructive">{{ form.errors.username }}</p>
+            <p v-if="form.invalid('username')" class="text-xs text-destructive">{{ form.errors.username }}</p>
         </div>
         <div class="flex flex-col gap-2">
             <label for="email" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('email') }}</label>
@@ -36,7 +36,7 @@
                 :class="{ 'border-destructive': form.invalid('password') }"
                 v-model.trim.lazy="form.password"
             />
-            <p v-if="form.invalid('password')" class="text-sm text-destructive">{{ form.errors.password }}</p>
+            <p v-if="form.invalid('password')" class="text-xs text-destructive">{{ form.errors.password }}</p>
         </div>
         <PasswordInfoBox
             :password="form.password"
@@ -50,7 +50,7 @@
                 :class="{ 'border-destructive': form.invalid('password_confirmation') }"
                 v-model.trim.lazy="form.password_confirmation"
             />
-            <p v-if="form.invalid('password_confirmation')" class="text-sm text-destructive">{{ form.errors.password_confirmation }}</p>
+            <p v-if="form.invalid('password_confirmation')" class="text-xs text-destructive">{{ form.errors.password_confirmation }}</p>
         </div>
         <div class="pt-4 space-y-3">
             <Button

@@ -50,7 +50,7 @@
                     :class="{ 'border-destructive': form.invalid('password') || errors.nouser }"
                     v-model.trim.lazy="form.password"
                 />
-                <p v-if="form.invalid('password')" class="text-sm text-destructive">{{ form.errors.password }}</p>
+                <p v-if="form.invalid('password')" class="text-xs text-destructive">{{ form.errors.password }}</p>
                 <Link
                     :href="route('auth.forgot-password.view')"
                     class="text-xs text-gray-500 hover:text-gray-700 dark:text-primary-400 dark:hover:text-primary-300"
@@ -60,7 +60,7 @@
             </div>
             <div class="relative flex items-start">
                 <div class="flex items-center h-5">
-                    <Checkbox id="remember" :checked="form.remember" @update:checked="val => { console.log('checkbox changed:', val, typeof val); form.remember = val }" />
+                    <Checkbox id="remember" v-model="form.remember" />
                 </div>
                 <div class="ml-3 text-sm">
                     <label

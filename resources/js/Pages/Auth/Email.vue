@@ -20,7 +20,7 @@
                 :class="{ 'border-destructive': form.invalid('email') }"
                 v-model.trim.lazy="form.email"
             />
-            <p v-if="form.invalid('email')" class="text-sm text-destructive text-center">{{ form.errors.email }}</p>
+            <p v-if="form.invalid('email')" class="text-xs text-destructive text-center">{{ form.errors.email }}</p>
         </div>
         <Button :disabled="form.processing" type="submit" class="w-full">
             {{ $trans('continue') }}

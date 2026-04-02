@@ -24,7 +24,7 @@
                     @change="form.validate('email')"
                     v-model.trim.lazy="form.email"
                 />
-                <p v-if="form.invalid('email')" class="text-sm text-destructive">{{ form.errors.email }}</p>
+                <p v-if="form.invalid('email')" class="text-xs text-destructive">{{ form.errors.email }}</p>
             </div>
         </div>
         <div class="space-y-3">
