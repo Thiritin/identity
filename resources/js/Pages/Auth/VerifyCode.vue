@@ -47,6 +47,7 @@
     </form>
 </template>
 <script setup>
+import { watch } from 'vue'
 import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
@@ -59,6 +60,12 @@ defineOptions({ layout: AuthLayout })
 
 const form = useForm('post', route('auth.register.code.submit'), {
     code: null,
+})
+
+watch(() => form.code, (value) => {
+    if (value && value.length === 6 && /^\d{6}$/.test(value) && !form.processing) {
+        submit()
+    }
 })
 
 const resendForm = useForm('post', route('auth.register.code.resend'), {})
