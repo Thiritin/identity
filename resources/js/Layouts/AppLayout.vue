@@ -136,7 +136,7 @@
 
 <script setup>
 import {computed, reactive, ref} from 'vue'
-import { Menu as MenuIcon, Home, Users, X } from 'lucide-vue-next'
+import { Menu as MenuIcon, Home, Users, X, Code } from 'lucide-vue-next'
 import { Sheet, SheetContent } from '@/Components/ui/sheet'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
 import {Link, usePage} from "@inertiajs/vue3";
@@ -157,6 +157,12 @@ let navigationSource = reactive([
         href: route('staff.dashboard'),
         icon: Home,
         currentEval: () => route().current('staff.dashboard')
+    },
+    {
+        name: 'Apps',
+        href: route('staff.apps.index'),
+        icon: Code,
+        currentEval: () => route().current('staff.apps.*')
     },
     {
         name: 'Departments',
