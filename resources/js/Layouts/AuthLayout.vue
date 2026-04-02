@@ -10,7 +10,6 @@
                             <Transition
                                 name="page"
                                 mode="out-in"
-                                appear
                                 @before-leave="onBeforeLeave"
                                 @enter="onEnter"
                                 @after-enter="onAfterEnter"
