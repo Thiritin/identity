@@ -6,25 +6,28 @@
         :sub-title="$trans('loginscreen_sign_in_to_continue')"
         class="mb-10"
     />
-    <form class="space-y-12" @submit.prevent="submit">
-        <div class="space-y-4">
-            <div class="flex flex-col gap-2">
-                <label for="email">{{ $trans('email') }}</label>
+    <form @submit.prevent="submit">
+        <div class="flex flex-col gap-2">
+            <label for="email">{{ $trans('email') }}</label>
+            <div class="relative">
                 <Input
                     id="email"
                     type="email"
                     autocomplete="email"
                     @change="form.validate('email')"
                     :class="{ 'border-destructive': form.invalid('email') }"
+                    class="pr-10"
                     v-model.trim.lazy="form.email"
                 />
-                <p v-if="form.invalid('email')" class="text-sm text-destructive">{{ form.errors.email }}</p>
+                <button
+                    type="submit"
+                    :disabled="form.processing"
+                    class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-primary-500 hover:text-primary-700 hover:bg-primary-100 dark:text-primary-300 dark:hover:text-primary-100 dark:hover:bg-primary-800 disabled:opacity-50 transition-colors"
+                >
+                    <ArrowRight class="size-4" />
+                </button>
             </div>
-        </div>
-        <div class="flex flex-row justify-end">
-            <Button :disabled="form.processing" type="submit">
-                {{ $trans('continue') }}
-            </Button>
+            <p v-if="form.invalid('email')" class="text-sm text-destructive">{{ form.errors.email }}</p>
         </div>
     </form>
 </template>
@@ -34,7 +37,7 @@ import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import { Input } from '@/Components/ui/input'
-import { Button } from '@/Components/ui/button'
+import { ArrowRight } from 'lucide-vue-next'
 
 defineOptions({ layout: AuthLayout })
 
