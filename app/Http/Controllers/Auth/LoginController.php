@@ -47,6 +47,16 @@ class LoginController extends Controller
         $subject = $this->shouldSkipLogin($loginRequest);
 
         if ($subject !== null) {
+            $skipUser = User::findByHashid($subject);
+            if ($skipUser && $skipUser->isSuspended()) {
+                return Redirect::route('auth.error', [
+                    'error' => 'account_suspended',
+                    'error_description' => trans('account_suspended'),
+                ]);
+            }
+        }
+
+        if ($subject !== null) {
             $emailVerified = $this->checkEmailVerification($loginRequest, $subject);
             if ($emailVerified === false) {
                 return Redirect::route('login.apps.redirect', ['app' => 'portal']);
@@ -95,6 +105,13 @@ class LoginController extends Controller
 
         if (Auth::once($loginData) === true) {
             $user = Auth::user();
+
+            if ($user->isSuspended()) {
+                return Redirect::route('auth.error', [
+                    'error' => 'account_suspended',
+                    'error_description' => trans('account_suspended'),
+                ]);
+            }
 
             $hydra = new Client();
             $loginRequest = $hydra->getLoginRequest($loginChallenge);

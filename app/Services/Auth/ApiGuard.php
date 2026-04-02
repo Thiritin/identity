@@ -96,4 +96,9 @@ class ApiGuard extends TokenGuard
     {
         return $this->audiences;
     }
+
+    public function getClientId(): string
+    {
+        return $this->client_id;
+    }
 }

@@ -8,6 +8,7 @@ use App\Services\YubicoService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -49,6 +50,14 @@ class TwoFactorController extends Controller
             'remember' => 'nullable|boolean',
         ]);
         $user = User::findByHashidOrFail($request->get('user'));
+
+        if ($user->isSuspended()) {
+            return Redirect::route('auth.error', [
+                'error' => 'account_suspended',
+                'error_description' => trans('account_suspended'),
+            ]);
+        }
+
         $twoFactors = $user->twoFactors()->where('type', $request->get('method'))->get();
         if ($twoFactors->count() === 0) {
             throw ValidationException::withMessages(['code' => 'Invalid two factor method.']);
