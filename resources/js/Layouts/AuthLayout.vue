@@ -11,6 +11,7 @@
                                 name="page"
                                 mode="out-in"
                                 @before-leave="onBeforeLeave"
+                                @leave="onLeave"
                                 @enter="onEnter"
                                 @after-enter="onAfterEnter"
                             >
@@ -55,16 +56,29 @@ function onBeforeLeave() {
     }
 }
 
-function onEnter() {
+function onLeave(el, done) {
+    // Keep card locked at previous height during leave
+    el.addEventListener('transitionend', done, { once: true })
+}
+
+function onEnter(el, done) {
     if (card.value) {
-        // Let the DOM render the new content to get its natural height
+        // New content is mounted but invisible (opacity 0)
+        // Measure what height the card needs
         requestAnimationFrame(() => {
             const newHeight = card.value.scrollHeight
+            // Ensure we start from the old height
             card.value.style.height = previousHeight + 'px'
             // Force reflow
             card.value.offsetHeight
+            // Animate to new height
             card.value.style.height = newHeight + 'px'
+
+            // Wait for both the content fade and card height to finish
+            el.addEventListener('transitionend', done, { once: true })
         })
+    } else {
+        done()
     }
 }
 
@@ -133,12 +147,12 @@ export default {
 <style>
 
 .auth-card {
-    transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
 }
 
 .page-enter-active {
-    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .page-leave-active {
