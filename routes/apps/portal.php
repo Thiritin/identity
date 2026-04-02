@@ -6,6 +6,8 @@ use App\Http\Controllers\Profile\Settings\ChangeEmailController;
 use App\Http\Controllers\Profile\Settings\ConfirmPasswordController;
 use App\Http\Controllers\Profile\Settings\SessionController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\BackupCodesController;
+use App\Http\Controllers\Profile\Settings\TwoFactor\PasskeySetupController;
+use App\Http\Controllers\Profile\Settings\TwoFactor\SecurityKeySetupController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\TotpSetupController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\YubikeySetupController;
 use App\Http\Controllers\Profile\Settings\UpdatePasswordController;
@@ -69,6 +71,30 @@ Route::middleware('sudo')->group(function () {
     Route::delete('/settings/two-factor/yubikey/destroy', [YubikeySetupController::class, 'destroy'])
         ->middleware([HandlePrecognitiveRequests::class])
         ->name('settings.two-factor.yubikey.destroy');
+
+    /** Passkeys */
+    Route::get('/settings/security/passkeys', [PasskeySetupController::class, 'index'])
+        ->name('settings.security.passkeys');
+    Route::get('/settings/two-factor/passkey/options', [PasskeySetupController::class, 'createOptions'])
+        ->name('settings.two-factor.passkey.options');
+    Route::post('/settings/two-factor/passkey/setup', [PasskeySetupController::class, 'store'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('settings.two-factor.passkey.store');
+    Route::delete('/settings/two-factor/passkey/destroy', [PasskeySetupController::class, 'destroy'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('settings.two-factor.passkey.destroy');
+
+    /** Security Keys */
+    Route::get('/settings/security/security-keys', [SecurityKeySetupController::class, 'index'])
+        ->name('settings.security.security-keys');
+    Route::get('/settings/two-factor/security-key/options', [SecurityKeySetupController::class, 'createOptions'])
+        ->name('settings.two-factor.security-key.options');
+    Route::post('/settings/two-factor/security-key/setup', [SecurityKeySetupController::class, 'store'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('settings.two-factor.security-key.store');
+    Route::delete('/settings/two-factor/security-key/destroy', [SecurityKeySetupController::class, 'destroy'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('settings.two-factor.security-key.destroy');
 
     /** Backup Codes */
     Route::post('/settings/two-factor/backup-codes/regenerate', [BackupCodesController::class, 'regenerate'])
