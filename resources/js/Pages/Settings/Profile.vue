@@ -151,7 +151,7 @@ import {computed, ref} from "vue";
 import BaseAlert from "@/Components/BaseAlert.vue";
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
-import { Switch } from '@/Components/ui/switch'
+import { Switch } from '@/Components/ui/switch/index.js'
 import { toast } from 'vue-sonner'
 
 const props = defineProps({
