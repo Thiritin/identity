@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\AccessTokenValidationMiddleware;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\EnsurePasswordIsConfirmed;
 use App\Http\Middleware\GroupMember;
 use App\Http\Middleware\GuardSwitcher;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -89,6 +90,7 @@ class Kernel extends HttpKernel
         'can' => Authorize::class,
         'guest' => RedirectIfAuthenticated::class,
         'password.confirm' => RequirePassword::class,
+        'sudo' => EnsurePasswordIsConfirmed::class,
         'signed' => ValidateSignature::class,
         'throttle' => ThrottleRequests::class,
         'verified' => EnsureEmailIsVerified::class,
