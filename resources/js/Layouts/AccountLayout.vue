@@ -3,23 +3,6 @@
         <div class="auth-background bg-primary-600 relative min-h-screen">
             <div class="relative z-10 flex min-h-screen justify-center px-4 py-10 sm:py-14">
                 <div class="flex flex-col items-center w-full max-w-3xl">
-                    <!-- Top bar: just logout -->
-                    <div class="flex w-full justify-end mb-4 px-1">
-                        <Link
-                            v-if="user.isStaff"
-                            :href="route('staff.dashboard')"
-                            class="text-sm text-white/80 hover:text-white transition-colors mr-4"
-                        >
-                            Staff Portal
-                        </Link>
-                        <a
-                            :href="route('auth.logout')"
-                            class="text-sm text-white/80 hover:text-white transition-colors"
-                        >
-                            Logout
-                        </a>
-                    </div>
-
                     <!-- Folder Tabs + Card -->
                     <div class="w-full">
                         <!-- Tabs row -->
@@ -36,6 +19,24 @@
                                 <component :is="tab.icon" class="mx-auto mb-1 h-5 w-5" />
                                 {{ tab.name }}
                             </Link>
+                            <!-- Spacer -->
+                            <div class="flex-1" />
+                            <!-- Right-side tabs -->
+                            <Link
+                                v-if="user.isStaff"
+                                :href="route('staff.dashboard')"
+                                class="relative px-6 py-3 text-center text-sm font-semibold transition-all rounded-t-xl -mb-px bg-black/20 text-white/80 hover:bg-black/30 hover:text-white backdrop-blur-sm"
+                            >
+                                <component :is="BriefcaseBusiness" class="mx-auto mb-1 h-5 w-5" />
+                                Staff
+                            </Link>
+                            <a
+                                :href="route('auth.logout')"
+                                class="relative px-6 py-3 text-center text-sm font-semibold transition-all rounded-t-xl -mb-px bg-black/20 text-white/80 hover:bg-black/30 hover:text-white backdrop-blur-sm"
+                            >
+                                <component :is="LogOut" class="mx-auto mb-1 h-5 w-5" />
+                                Logout
+                            </a>
                         </div>
 
                         <!-- Content Card -->
@@ -66,7 +67,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { Link, usePage, router } from '@inertiajs/vue3'
-import { LayoutGrid, UserRound, ShieldCheck } from 'lucide-vue-next'
+import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness } from 'lucide-vue-next'
 import { Toaster } from '@/Components/ui/sonner'
 
 const page = usePage()
