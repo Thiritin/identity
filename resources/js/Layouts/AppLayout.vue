@@ -245,12 +245,8 @@ const profileNavMenu = [
         route: route('settings.profile'),
     },
     {
-        name: 'change_password',
-        route: route('settings.update-password'),
-    },
-    {
-        name: 'two_factor_auth',
-        route: route('settings.two-factor'),
+        name: 'security',
+        route: route('settings.security'),
     },
 ]
 
