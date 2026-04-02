@@ -3,7 +3,7 @@
         <!-- Desktop: background + folder tabs + card -->
         <div class="hidden md:block auth-background bg-primary-600 relative min-h-screen">
             <div class="relative z-10 flex min-h-screen justify-center px-4 py-10 lg:py-14">
-                <div class="flex flex-col items-center w-full max-w-3xl">
+                <div class="flex flex-col items-center w-full max-w-4xl">
                     <!-- Folder Tabs + Card -->
                     <div class="w-full">
                         <div class="flex px-2">
@@ -32,12 +32,23 @@
                                 </component>
                             </template>
                         </div>
-                        <div class="w-full rounded-xl rounded-b-none shadow-2xl"
+                        <div ref="card" class="account-card w-full rounded-xl rounded-b-none shadow-2xl"
                              :class="isProfile
                                  ? 'bg-transparent'
                                  : 'bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-8 sm:px-10 sm:py-10'"
                         >
-                            <slot />
+                            <Transition
+                                name="page"
+                                mode="out-in"
+                                @before-leave="onBeforeLeave"
+                                @leave="onLeave"
+                                @enter="onEnter"
+                                @after-enter="onAfterEnter"
+                            >
+                                <div :key="page.url">
+                                    <slot />
+                                </div>
+                            </Transition>
                         </div>
                     </div>
 
@@ -138,6 +149,8 @@ import { trans } from 'laravel-vue-i18n'
 const page = usePage()
 const user = computed(() => page.props.user)
 const currentUrl = computed(() => page.url)
+const card = ref(null)
+let previousHeight = 0
 
 function isActive(routeName) {
     currentUrl.value
@@ -189,6 +202,38 @@ function submitConfirmPassword() {
         onSuccess: () => confirmForm.reset(),
     })
 }
+
+function onBeforeLeave() {
+    if (card.value) {
+        previousHeight = card.value.offsetHeight
+        card.value.style.height = previousHeight + 'px'
+    }
+}
+
+function onLeave(el, done) {
+    el.addEventListener('transitionend', done, { once: true })
+}
+
+function onEnter(el, done) {
+    if (card.value) {
+        requestAnimationFrame(() => {
+            card.value.style.height = 'auto'
+            const newHeight = card.value.offsetHeight
+            card.value.style.height = previousHeight + 'px'
+            card.value.offsetHeight // force reflow
+            card.value.style.height = newHeight + 'px'
+            el.addEventListener('transitionend', done, { once: true })
+        })
+    } else {
+        done()
+    }
+}
+
+function onAfterEnter() {
+    if (card.value) {
+        card.value.style.height = ''
+    }
+}
 </script>
 
 <style>
@@ -200,5 +245,26 @@ function submitConfirmPassword() {
 
 .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
+}
+
+.account-card {
+    transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.page-enter-active {
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-leave-active {
+    transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-enter-from {
+    opacity: 0;
+}
+
+.page-leave-to {
+    opacity: 0;
 }
 </style>
