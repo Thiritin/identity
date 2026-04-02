@@ -56,6 +56,7 @@ class HandleInertiaRequests extends Middleware
                     ->limit(10)
                     ->orderBy('name')
                     ->get(['id', 'name'])->values(),
+                'memberSince' => $request->user()->created_at?->translatedFormat('F Y'),
             ], $request->user()->only('name', 'email'));
         }
 
@@ -72,9 +73,6 @@ class HandleInertiaRequests extends Middleware
             'user' => Route::is(['auth.login.view']) ? null : $user,
             'hideUserInfo' => Route::is(['auth.login.view', 'verification.notice']),
             'staffMemberList' => $staffMembers,
-            'flash' => [
-                'message' => fn () => $request->session()->get('message'),
-            ],
         ]);
     }
 }
