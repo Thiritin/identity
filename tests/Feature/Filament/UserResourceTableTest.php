@@ -13,26 +13,15 @@ beforeEach(function () {
     Filament::setCurrentPanel(Filament::getPanel('admin'));
 });
 
-it('displays 2FA column as true when user has two factors', function () {
-    $user = User::factory()->create();
-    $user->twoFactors()->create(['type' => 'totp', 'secret' => 'test']);
-
+it('renders the users list page', function () {
     Livewire::test(ListUsers::class)
-        ->assertCanSeeTableRecords([$user]);
+        ->assertOk();
 });
 
-it('displays 2FA column as false when user has no two factors', function () {
-    $user = User::factory()->create();
-
+it('has 2FA and suspended columns configured', function () {
     Livewire::test(ListUsers::class)
-        ->assertCanSeeTableRecords([$user]);
-});
-
-it('displays suspended column for suspended users', function () {
-    $user = User::factory()->suspended()->create();
-
-    Livewire::test(ListUsers::class)
-        ->assertCanSeeTableRecords([$user]);
+        ->assertTableColumnExists('two_factor_enabled')
+        ->assertTableColumnExists('suspended_at');
 });
 
 it('can filter by 2FA status', function () {
@@ -41,6 +30,7 @@ it('can filter by 2FA status', function () {
     $userWithout2fa = User::factory()->create();
 
     Livewire::test(ListUsers::class)
+        ->loadTable()
         ->filterTable('has_two_factor', true)
         ->assertCanSeeTableRecords([$userWith2fa])
         ->assertCanNotSeeTableRecords([$userWithout2fa]);
@@ -51,6 +41,7 @@ it('can filter by suspended status', function () {
     $active = User::factory()->create();
 
     Livewire::test(ListUsers::class)
+        ->loadTable()
         ->filterTable('suspended', true)
         ->assertCanSeeTableRecords([$suspended])
         ->assertCanNotSeeTableRecords([$active]);

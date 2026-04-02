@@ -21,6 +21,7 @@ it('can suspend a user', function () {
     $user = User::factory()->create();
 
     Livewire::test(ListUsers::class)
+        ->loadTable()
         ->callAction(TestAction::make('suspend')->table($user));
 
     expect($user->refresh()->isSuspended())->toBeTrue();
@@ -30,6 +31,7 @@ it('can unsuspend a user', function () {
     $user = User::factory()->suspended()->create();
 
     Livewire::test(ListUsers::class)
+        ->loadTable()
         ->callAction(TestAction::make('unsuspend')->table($user));
 
     expect($user->refresh()->isSuspended())->toBeFalse();
@@ -37,6 +39,7 @@ it('can unsuspend a user', function () {
 
 it('hides suspend action for the current user', function () {
     Livewire::test(ListUsers::class)
+        ->loadTable()
         ->assertActionHidden(TestAction::make('suspend')->table($this->admin));
 });
 
@@ -44,6 +47,7 @@ it('hides unsuspend action for non-suspended users', function () {
     $user = User::factory()->create();
 
     Livewire::test(ListUsers::class)
+        ->loadTable()
         ->assertActionHidden(TestAction::make('unsuspend')->table($user));
 });
 
@@ -51,5 +55,6 @@ it('hides suspend action for suspended users', function () {
     $user = User::factory()->suspended()->create();
 
     Livewire::test(ListUsers::class)
+        ->loadTable()
         ->assertActionHidden(TestAction::make('suspend')->table($user));
 });

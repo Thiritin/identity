@@ -168,7 +168,7 @@ class LoginController extends Controller
             ], now()->addMinutes(30));
         }
 
-        $url = (new Client())->acceptLogin($user->hashId(), $loginChallenge,
+        $url = (new Client())->acceptLogin($user->hashid, $loginChallenge,
             $request->get('remember') ? '2592000' : '3600');
 
         RateLimiter::clear('login-pow:' . $request->ip());
@@ -237,7 +237,7 @@ class LoginController extends Controller
                 ], now()->addMinutes(30));
             }
 
-            $url = (new Client())->acceptLogin($user->hashId(), $loginChallenge,
+            $url = (new Client())->acceptLogin($user->hashid, $loginChallenge,
                 $request->get('remember') ? '2592000' : '3600');
 
             RateLimiter::clear('login-pow:' . $request->ip());
