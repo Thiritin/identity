@@ -24,3 +24,4 @@ config.json
 .mcp.json
 .playwright-mcp/
 boost.json
+docs/
