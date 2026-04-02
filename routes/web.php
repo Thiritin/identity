@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Auth\ChooseController;
 use App\Http\Controllers\Auth\ConsentController;
+use App\Http\Controllers\Auth\EmailController;
 use App\Http\Controllers\Auth\ErrorController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\FrontChannelLogoutController;
@@ -16,12 +16,14 @@ use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->name('auth.')->group(function () {
-    Route::get('login', [LoginController::class, 'view'])->name(
-        'login.view'
-    );
-    Route::post('login', [LoginController::class, 'submit'])
+    Route::get('login', [EmailController::class, 'view'])->name('login.view');
+    Route::post('login', [EmailController::class, 'submit'])
         ->middleware([HandlePrecognitiveRequests::class, 'throttle:5,1'])
         ->name('login.submit');
+    Route::get('login/password', [LoginController::class, 'view'])->name('login.password.view');
+    Route::post('login/password', [LoginController::class, 'submit'])
+        ->middleware([HandlePrecognitiveRequests::class, 'throttle:5,1'])
+        ->name('login.password.submit');
 
     Route::get('two-factor',
         [TwoFactorController::class, 'show'])
@@ -36,10 +38,9 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('logout', LogoutController::class)->name('logout');
 
     Route::middleware('guest:web')->group(function () {
-        Route::get('choose', ChooseController::class)->name('choose');
         Route::redirect('choose/login', '/auth/portal/login', 301)->name('oidc.login');
         // Register
-        Route::inertia('register', 'Auth/Register')->name('register.view');
+        Route::get('register', [RegisterController::class, 'view'])->name('register.view');
         Route::post('register', RegisterController::class)
             ->middleware(['guest', HandlePrecognitiveRequests::class, 'throttle:5,1'])
             ->name('register.store');
