@@ -10,7 +10,7 @@
     </div>
     <form class="space-y-4" @submit.prevent="submit">
         <div class="flex flex-col gap-2">
-            <label for="email">{{ $trans('email') }}</label>
+            <label for="email" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('email') }}</label>
             <Input
                 id="email"
                 type="email"

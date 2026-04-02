@@ -28,7 +28,7 @@
         </div>
         <div class="space-y-4">
             <div class="flex flex-col gap-2">
-                <label for="email">{{ $trans('email') }}</label>
+                <label for="email" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('email') }}</label>
                 <Input id="email"
                     :model-value="email"
                     disabled
@@ -36,7 +36,7 @@
                 />
             </div>
             <div class="flex flex-col gap-2">
-                <label for="password">{{ $trans('password') }}</label>
+                <label for="password" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('password') }}</label>
                 <Input id="password"
                     type="password"
                     autocomplete="current-password"

@@ -10,7 +10,7 @@
     </div>
     <form class="space-y-4" @submit.prevent="submit">
         <div class="flex flex-col gap-2">
-            <label for="username">{{ $trans('username') }}</label>
+            <label for="username" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('username') }}</label>
             <Input id="username"
                 type="text"
                 @change="form.validate('username')"
@@ -20,7 +20,7 @@
             <p v-if="form.invalid('username')" class="text-sm text-destructive">{{ form.errors.username }}</p>
         </div>
         <div class="flex flex-col gap-2">
-            <label for="email">{{ $trans('email') }}</label>
+            <label for="email" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('email') }}</label>
             <Input id="email"
                 :model-value="email"
                 disabled
@@ -28,7 +28,7 @@
             />
         </div>
         <div class="flex flex-col gap-2">
-            <label for="password">{{ $trans('password') }}</label>
+            <label for="password" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('password') }}</label>
             <Input id="password"
                 type="password"
                 autocomplete="password"
@@ -42,7 +42,7 @@
             :password="form.password"
         />
         <div class="flex flex-col gap-2">
-            <label for="password_confirmation">{{ $trans('password_confirmation') }}</label>
+            <label for="password_confirmation" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('password_confirmation') }}</label>
             <Input id="password_confirmation"
                 type="password"
                 autocomplete="password"
