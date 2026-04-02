@@ -53,7 +53,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
             ->name('register.verify.submit');
         Route::get('register/code', [VerifyCodeController::class, 'view'])->name('register.code');
         Route::post('register/code', [VerifyCodeController::class, 'submit'])
-            ->middleware(['throttle:15,1'])
+            ->middleware(['throttle:5,5'])
             ->name('register.code.submit');
         Route::post('register/code/resend', [VerifyCodeController::class, 'resend'])
             ->middleware(['throttle:2,1'])
