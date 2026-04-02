@@ -64,6 +64,18 @@ it('loads the password page', function () {
         );
 });
 
+it('loads the email page', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('settings.security.email'))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->component('Settings/Security/Email')
+            ->has('currentEmail')
+        );
+});
+
 it('loads the totp page', function () {
     $user = User::factory()->create();
 
@@ -92,6 +104,7 @@ it('loads the yubikey page', function () {
 it('requires authentication for all security pages', function () {
     $this->get(route('settings.security'))->assertRedirect();
     $this->get(route('settings.security.password'))->assertRedirect();
+    $this->get(route('settings.security.email'))->assertRedirect();
     $this->get(route('settings.security.totp'))->assertRedirect();
     $this->get(route('settings.security.yubikey'))->assertRedirect();
 });
