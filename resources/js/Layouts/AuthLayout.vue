@@ -4,7 +4,7 @@
             <!-- Centered Content -->
             <div class="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
                 <div class="flex flex-col items-center gap-4">
-                    <div ref="card" class="auth-card w-full max-w-screen-md rounded-xl bg-white/90 px-6 py-8 shadow-2xl backdrop-blur-sm dark:bg-primary-900/90 sm:px-10 sm:py-10">
+                    <div ref="card" class="auth-card w-full max-w-md rounded-xl bg-white/90 px-6 py-8 shadow-2xl backdrop-blur-sm dark:bg-primary-900/90 sm:px-10 sm:py-10">
                         <!-- Slot Content -->
                         <div class="flex-1 w-full flex flex-col justify-center">
                             <Transition
