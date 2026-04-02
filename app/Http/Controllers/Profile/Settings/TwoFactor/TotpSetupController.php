@@ -6,6 +6,7 @@ use App\Enums\TwoFactorTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TwoFactor\TotpDestroyRequest;
 use App\Http\Requests\TwoFactor\TotpStoreRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -40,7 +41,7 @@ class TotpSetupController extends Controller
 
     }
 
-    public function setup(): \Illuminate\Http\JsonResponse
+    public function setup(): JsonResponse
     {
         $tfa = $this->createTwoFactorAuth();
 
@@ -85,7 +86,7 @@ class TotpSetupController extends Controller
         // Clear cache
         Cache::forget('user-' . auth()->user()->id . '-two-factor-user-cache');
 
-        return redirect()->route('settings.security');
+        return redirect()->route('settings.security.totp');
     }
 
     // Delete totp device
@@ -100,7 +101,7 @@ class TotpSetupController extends Controller
         // Delete totp device
         auth()->user()->twoFactors()->whereType(TwoFactorTypeEnum::TOTP)->delete();
 
-        return redirect()->route('settings.security');
+        return redirect()->route('settings.security.totp');
 
     }
 

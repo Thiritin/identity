@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Profile\SecurityController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\TotpSetupController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\YubikeySetupController;
 use App\Http\Controllers\Profile\Settings\UpdatePasswordController;
-use App\Http\Controllers\Profile\SecurityController;
 use App\Http\Controllers\Profile\StoreAvatarController;
 use App\Http\Controllers\Profile\UpdatePreferencesController;
 use App\Http\Controllers\Profile\UpdateProfileController;
@@ -25,11 +25,14 @@ Route::post('/settings/update-password', UpdatePasswordController::class)
     ->middleware([HandlePrecognitiveRequests::class])
     ->name('settings.update-password.store');
 
-Route::get('/settings/security', SecurityController::class)->name('settings.security');
+Route::get('/settings/security', [SecurityController::class, 'index'])->name('settings.security');
+Route::get('/settings/security/password', [SecurityController::class, 'password'])->name('settings.security.password');
+Route::get('/settings/security/totp', [SecurityController::class, 'totp'])->name('settings.security.totp');
+Route::get('/settings/security/yubikey', [SecurityController::class, 'yubikey'])->name('settings.security.yubikey');
 
 Route::redirect('/settings/two-factor', '/settings/security', 301);
 /** Two Factor */
-Route::redirect('/settings/two-factor/totp', '/settings/security', 301);
+Route::redirect('/settings/two-factor/totp', '/settings/security/totp', 301);
 Route::post('/settings/two-factor/totp/store',
     [TotpSetupController::class, 'store'])
     ->middleware([HandlePrecognitiveRequests::class])
@@ -41,7 +44,7 @@ Route::delete('/settings/two-factor/totp/destroy',
     ->middleware([HandlePrecognitiveRequests::class])
     ->name('settings.two-factor.totp.destroy');
 /** Yubico */
-Route::redirect('/settings/two-factor/yubikey', '/settings/security', 301);
+Route::redirect('/settings/two-factor/yubikey', '/settings/security/yubikey', 301);
 Route::post('/settings/two-factor/yubikey/setup', [YubikeySetupController::class, 'store'])
     ->middleware([HandlePrecognitiveRequests::class])
     ->name('settings.two-factor.yubikey.store');

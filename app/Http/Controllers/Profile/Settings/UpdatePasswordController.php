@@ -18,6 +18,6 @@ class UpdatePasswordController extends Controller
             'password_changed_at' => now(),
         ]);
 
-        return redirect()->route('settings.security')->with('message', 'password_updated');
+        return redirect()->route('settings.security.password')->with('message', 'password_updated');
     }
 }

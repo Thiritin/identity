@@ -31,18 +31,20 @@
                                 </component>
                             </template>
                         </div>
-                        <div class="w-full rounded-xl rounded-tl-none bg-white/95 px-6 py-8 shadow-2xl backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 sm:px-10 sm:py-10">
+                        <div class="w-full rounded-xl rounded-b-none bg-white/95 px-6 py-8 shadow-2xl backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 sm:px-10 sm:py-10">
                             <slot />
                         </div>
                     </div>
 
-                    <!-- Footer -->
-                    <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mt-5 rounded-full bg-black/30 px-5 py-2 text-sm text-white/80 backdrop-blur-sm">
-                        <a v-for="link in footerLinks" :key="link.name" :href="link.href" target="_blank" class="hover:text-white transition-colors">{{ link.name }}</a>
-                    </div>
-                    <div class="mt-2 text-sm text-white/80 bg-black/30 px-3 py-1 rounded-full backdrop-blur-sm">
-                        Artwork by
-                        <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
+                    <!-- Footer: artwork left, legal right -->
+                    <div class="w-full flex items-center justify-between bg-black/40 backdrop-blur-sm rounded-b-xl px-4 py-2 text-xs text-white/70">
+                        <div>
+                            Artwork by
+                            <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
+                        </div>
+                        <nav class="flex flex-wrap gap-x-4 gap-y-1">
+                            <a v-for="link in footerLinks" :key="link.name" :href="link.href" target="_blank" class="hover:text-white transition-colors">{{ link.name }}</a>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -91,10 +93,20 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { Link, usePage } from '@inertiajs/vue3'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { Link, usePage, router } from '@inertiajs/vue3'
 import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness } from 'lucide-vue-next'
 import { Toaster } from '@/Components/ui/sonner'
+import { toast } from 'vue-sonner'
+
+const removeFlashListener = router.on('flash', (event) => {
+    const t = event.detail.flash.toast
+    if (t) {
+        t.type === 'error' ? toast.error(t.message) : toast.success(t.message)
+    }
+})
+
+onUnmounted(() => removeFlashListener())
 
 const page = usePage()
 const user = computed(() => page.props.user)
@@ -108,7 +120,7 @@ function isActive(routeName) {
 const tabs = computed(() => [
     { name: 'Apps', route: 'dashboard', href: route('dashboard'), icon: LayoutGrid, active: isActive('dashboard') },
     { name: 'Profile', route: 'settings.profile', href: route('settings.profile'), icon: UserRound, active: isActive('settings.profile') },
-    { name: 'Security', route: 'settings.security', href: route('settings.security'), icon: ShieldCheck, active: isActive('settings.security') },
+    { name: 'Security', route: 'settings.security', href: route('settings.security'), icon: ShieldCheck, active: isActive('settings.security') || isActive('settings.security.*') },
 ])
 
 const rightTabs = computed(() => {
