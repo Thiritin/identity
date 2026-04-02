@@ -18,7 +18,7 @@
             type="email"
             autocomplete="email"
             placeholder="me@example.org"
-            v-model.trim.lazy="form.email"
+            v-model.trim="form.email"
             :error="form.errors.email"
             @change="form.validate('email')"
         />
