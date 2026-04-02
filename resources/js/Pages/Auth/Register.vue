@@ -22,9 +22,9 @@
         <div class="flex flex-col gap-2">
             <label for="email" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('email') }}</label>
             <Input id="email"
-                :model-value="email"
-                disabled
-                class="bg-muted"
+                v-model="form.email"
+                type="email"
+                autocomplete="email"
             />
         </div>
         <div class="flex flex-col gap-2">
