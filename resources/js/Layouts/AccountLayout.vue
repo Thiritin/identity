@@ -93,7 +93,7 @@
                 </div>
             </nav>
         </div>
-        <Toaster rich-colors />
+        <Toaster rich-colors position="top-center" />
     </div>
 </template>
 
