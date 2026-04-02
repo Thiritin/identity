@@ -28,17 +28,11 @@
         </div>
         <div class="space-y-4">
             <div class="flex flex-col gap-2">
-                <div class="flex items-center justify-between">
-                    <label for="email" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('email') }}</label>
-                    <Link
-                        :href="route('auth.login.view')"
-                        class="text-xs text-gray-500 hover:text-gray-700 dark:text-primary-400 dark:hover:text-primary-300"
-                    >{{ $trans('change') }}</Link>
-                </div>
+                <label for="email" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('email') }}</label>
                 <Input id="email"
-                    :model-value="email"
-                    disabled
-                    class="bg-muted"
+                    v-model="form.email"
+                    type="email"
+                    autocomplete="email"
                 />
             </div>
             <div class="flex flex-col gap-2">
@@ -67,7 +61,6 @@
                         class="font-medium text-gray-700 dark:text-primary-300"
                         for="remember"
                     >{{ $trans('remember_me') }}</label>
-                    <span class="ml-2 text-xs text-gray-400">[debug: {{ form.remember }}]</span>
                 </div>
             </div>
         </div>
