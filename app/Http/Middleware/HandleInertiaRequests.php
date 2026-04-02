@@ -47,9 +47,8 @@ class HandleInertiaRequests extends Middleware
             $user = array_merge([
                 'id' => $request->user()->hashId(),
                 'avatar' => ($request->user()->profile_photo_path) ? Storage::disk('s3-avatars')->url($request->user()->profile_photo_path) : null,
-                'isAdmin' => $request->user()->hasRole(['admin', 'superadmin']),
-                'roles' => $request->user()->getRoleNames(),
-                'language' => 'en',
+                'isAdmin' => $request->user()->is_admin,
+                'language' => app()->getLocale(),
                 'departments' => $request->user()->groups()
                     ->where('type', 'department')
                     ->limit(10)
@@ -67,6 +66,7 @@ class HandleInertiaRequests extends Middleware
         }
 
         return array_merge(parent::share($request), [
+            'locale' => app()->getLocale(),
             'user' => Route::is(['auth.login.view']) ? null : $user,
             'hideUserInfo' => Route::is(['auth.login.view', 'verification.notice']),
             'staffMemberList' => $staffMembers,

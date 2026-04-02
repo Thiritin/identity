@@ -2,8 +2,8 @@
     <Head title="Email Verified"></Head>
     <Logo></Logo>
     <LoginScreenWelcome
-        :sub-title="$trans('verifysuccess_subtitle')"
-        :title="$trans('verifysuccess_title')"
+        :sub-title="$t('verifysuccess_subtitle')"
+        :title="$t('verifysuccess_title')"
         class="mb-6"
     />
     <div class="space-y-8">

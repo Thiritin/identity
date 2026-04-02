@@ -1,12 +1,9 @@
 <script setup>
-import ToogleDarkMode from '../ToogleDarkMode.vue'
 import {Link} from '@inertiajs/vue3'
 import {computed} from "vue";
 
 const props = defineProps({
     navigation: Object,
-    darkMode: Boolean,
-    toggleDarkMode: Function,
 })
 
 const visibleNavigation = computed(() => {
@@ -26,7 +23,7 @@ const visibleNavigation = computed(() => {
                 :target="[item.newTab ? '_blank' : '_top']"
                 class="text-sm text-gray-500 hover:text-gray-900 dark:hover:text-gray-400"
             >
-                {{ item.name }}
+                {{ $t(item.name) }}
             </Link>
             <a
                 v-else
@@ -34,13 +31,9 @@ const visibleNavigation = computed(() => {
                 :target="[item.newTab ? '_blank' : '_top']"
                 class="text-sm text-gray-500 hover:text-gray-900 dark:hover:text-gray-400"
             >
-                {{ item.name }}
+                {{ $t(item.name) }}
             </a>
         </template>
-        <toogleDarkMode
-            :dark-mode="darkMode"
-            :toggle-dark-mode="toggleDarkMode"
-        />
     </nav>
 </template>
 

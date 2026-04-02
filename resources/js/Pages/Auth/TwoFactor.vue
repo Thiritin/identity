@@ -85,7 +85,7 @@ const selectedMethod = ref(props.lastUsedMethod);
                         :disabled="form.processing"
                         type="submit"
                         class="block"
-                    >{{ $trans('login') }}</Button>
+                    >{{ $t('login') }}</Button>
                 </div>
                 <div v-if="otherMethodAvailable" @click="toggleMethod"
                      class="flex justify-end hover:underline text-sm cursor-pointer">

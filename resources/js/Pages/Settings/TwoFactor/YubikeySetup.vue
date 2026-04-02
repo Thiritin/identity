@@ -53,7 +53,7 @@ function submitDisableForm() {
         </SettingsSubHeader>
         <form @submit.prevent="submitForm()" class="space-y-4">
             <div class="flex flex-col gap-2">
-                <label for="code">{{ $trans('yubikey_otp') }}</label>
+                <label for="code">{{ $t('yubikey_otp') }}</label>
                 <Input id="code"
                        type="text"
                        @keydown.enter.capture="null"
@@ -82,7 +82,7 @@ function submitDisableForm() {
                     :disabled="enableForm.processing"
                     type="submit"
                     class="block"
-                >{{ $trans('submit') }}</Button>
+                >{{ $t('submit') }}</Button>
             </div>
         </form>
     </div>

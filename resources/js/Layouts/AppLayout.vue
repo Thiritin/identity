@@ -71,14 +71,14 @@
                                         <Link
                                             class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
                                             :href="item.route"
-                                        >{{ $trans(item.name) }}
+                                        >{{ $t(item.name) }}
                                         </Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem as-child>
                                         <a
                                             class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
                                             :href="route('login.apps.logout',{app: 'staff'})"
-                                        >{{ $trans('logout') }}
+                                        >{{ $t('logout') }}
                                         </a>
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
@@ -113,14 +113,14 @@
                         <Link
                             class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
                             :href="item.route"
-                        >{{ $trans(item.name) }}
+                        >{{ $t(item.name) }}
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem as-child>
                         <a
                             class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-200 dark:hover:bg-primary-700 dark:text-primary-300"
                             :href="route('auth.logout')"
-                        >{{ $trans('logout') }}
+                        >{{ $t('logout') }}
                         </a>
                     </DropdownMenuItem>
                 </DropdownMenuContent>

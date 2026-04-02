@@ -13,7 +13,7 @@
                     'group px-3 py-2 flex items-center text-sm font-medium',
                 ]"
             >
-                <span class="truncate">{{ $trans(item.name) }}</span>
+                <span class="truncate">{{ $t(item.name) }}</span>
             </Link>
         </nav>
     </aside>

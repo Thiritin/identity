@@ -101,6 +101,9 @@
     "verify_code_resent": "A new code has been sent to your email.",
     "verify_code_expired": "The code has expired. Please request a new one.",
     "verify_code_invalid": "The code is incorrect. Please try again.",
+    "footer_support": "Support",
+    "footer_legal_notice": "Legal Notice",
+    "footer_privacy_policy": "Privacy Policy",
     "pow_required": "Verification is required.",
     "pow_expired": "Verification has expired. Please try again.",
     "pow_invalid": "Verification failed. Please try again."

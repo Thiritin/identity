@@ -2,14 +2,14 @@
     <Head title="Forgot Password"></Head>
     <Logo></Logo>
     <LoginScreenWelcome
-        :sub-title="$trans('password_reset_sub_title')"
-        :title="$trans('password_reset_title')"
+        :sub-title="$t('password_reset_sub_title')"
+        :title="$t('password_reset_title')"
         class="mb-10"
     />
     <form class="space-y-12" @submit.prevent="submit">
         <div class="space-y-6">
             <div class="flex flex-col gap-2">
-                <label for="email">{{ $trans('email') }}</label>
+                <label for="email">{{ $t('email') }}</label>
                 <Input id="email"
                            type="email"
                            autocomplete="email"
@@ -21,7 +21,7 @@
             </div>
             <PasswordInfoBox :password="form.password"/>
             <div class="flex flex-col gap-2">
-                <label for="password">{{ $trans('password') }}</label>
+                <label for="password">{{ $t('password') }}</label>
                 <Input id="password"
                            type="password"
                            autocomplete="password"
@@ -32,7 +32,7 @@
                 <p v-if="form.invalid('password')" class="text-sm text-destructive">{{ form.errors.password }}</p>
             </div>
             <div class="flex flex-col gap-2">
-                <label for="password_confirmation">{{ $trans('password_confirmation') }}</label>
+                <label for="password_confirmation">{{ $t('password_confirmation') }}</label>
                 <Input id="password_confirmation"
                            type="password"
                            autocomplete="password_confirmation"
@@ -49,13 +49,13 @@
                 class="ml-auto mb-4"
                 type="submit"
             >
-                {{ $trans('reset_password') }}
+                {{ $t('reset_password') }}
             </Button>
             <Link
                 :href="route('auth.login.view')"
                 class="ml-auto text-gray-700"
             >
-                {{ $trans('back_to_login') }}
+                {{ $t('back_to_login') }}
             </Link>
         </div>
     </form>

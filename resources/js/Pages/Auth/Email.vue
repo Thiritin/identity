@@ -3,8 +3,8 @@
     <div class="text-center">
         <Logo class="mx-auto" />
         <LoginScreenWelcome
-            :title="$trans('loginscreen_welcome')"
-            :sub-title="$trans('enter_email_to_continue')"
+            :title="$t('loginscreen_welcome')"
+            :sub-title="$t('enter_email_to_continue')"
             class="mb-10"
         />
     </div>
@@ -14,7 +14,7 @@
         </Transition>
         <FormField
             id="email"
-            :label="$trans('email')"
+            :label="$t('email')"
             type="email"
             autocomplete="email"
             placeholder="me@example.org"
@@ -24,7 +24,7 @@
         />
         <HoneypotFields :honeypot="form" />
         <Button :disabled="form.processing" type="submit" class="w-full">
-            {{ $trans('continue') }}
+            {{ $t('continue') }}
             <ArrowRight class="size-4" />
         </Button>
     </form>

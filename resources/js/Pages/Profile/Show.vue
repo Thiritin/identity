@@ -3,7 +3,7 @@
         <template #header>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h1 class="text-3xl font-bold text-white">
-                    {{ $trans('your_profile') }}
+                    {{ $t('your_profile') }}
                 </h1>
             </div>
         </template>
@@ -62,7 +62,7 @@
                                 class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
                             >
                                 <dt class="text-sm font-medium text-gray-500">
-                                    {{ $trans('username') }}
+                                    {{ $t('username') }}
                                 </dt>
                                 <dd
                                     class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"
@@ -74,7 +74,7 @@
                                 class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
                             >
                                 <dt class="text-sm font-medium text-gray-500">
-                                    {{ $trans('email') }}
+                                    {{ $t('email') }}
                                 </dt>
                                 <dd
                                     class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"
@@ -86,7 +86,7 @@
                                 class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
                             >
                                 <dt class="text-sm font-medium text-gray-500">
-                                    {{ $trans('account_id') }}
+                                    {{ $t('account_id') }}
                                 </dt>
                                 <dd
                                     class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"

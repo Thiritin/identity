@@ -6,12 +6,12 @@ use App\Http\Middleware\AccessTokenValidationMiddleware;
 use App\Http\Middleware\Admin\AuthenticateMiddleware;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -29,6 +29,17 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->authGuard('admin')
+            ->brandName('EF Identity')
+            ->brandLogo(asset('images/ef-logo.svg'))
+            ->darkModeBrandLogo(asset('images/ef-logo-dark.svg'))
+            ->brandLogoHeight('2.5rem')
+            ->favicon(asset('images/ef-logo.svg'))
+            ->topNavigation()
+            ->navigationGroups([
+                NavigationGroup::make('Identity'),
+                NavigationGroup::make('OAuth'),
+                NavigationGroup::make('Logs'),
+            ])
             ->colors([
                 'primary' => Color::generateV3Palette('#00504b'),
             ])
@@ -40,7 +51,6 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 AccountWidget::class,
-                FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

@@ -37,6 +37,20 @@
     --color-surface-800: #374151;
     --color-surface-900: #1F2937;
     --color-surface-950: #111827;
+
+    --color-background: hsl(var(--background));
+    --color-foreground: hsl(var(--foreground));
+    --color-card: hsl(var(--card));
+    --color-card-foreground: hsl(var(--card-foreground));
+    --color-popover: hsl(var(--popover));
+    --color-popover-foreground: hsl(var(--popover-foreground));
+    --color-secondary: hsl(var(--muted));
+    --color-secondary-foreground: hsl(var(--foreground));
+    --color-accent: hsl(var(--accent));
+    --color-accent-foreground: hsl(var(--accent-foreground));
+    --color-border: hsl(var(--border));
+    --color-input: hsl(var(--input));
+    --color-ring: hsl(var(--ring));
 }
 
 /* shadcn/vue design tokens */

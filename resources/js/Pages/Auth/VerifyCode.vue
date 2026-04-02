@@ -3,20 +3,20 @@
     <div class="text-center">
         <Logo class="mx-auto" />
         <LoginScreenWelcome
-            :title="$trans('verify_code_title')"
-            :sub-title="$trans('verify_code_subtitle')"
+            :title="$t('verify_code_title')"
+            :sub-title="$t('verify_code_subtitle')"
             class="mb-10"
         />
     </div>
     <form class="space-y-4" @submit.prevent="submit">
         <Transition name="field-error">
-            <p v-if="$page.props.flash?.status === 'code-resent'" class="text-xs text-green-600 text-center">{{ $trans('verify_code_resent') }}</p>
+            <p v-if="$page.props.flash?.status === 'code-resent'" class="text-xs text-green-600 text-center">{{ $t('verify_code_resent') }}</p>
         </Transition>
         <Transition name="field-error">
             <p v-if="$page.props.errors.throttle" class="text-xs text-destructive text-center">{{ $page.props.errors.throttle }}</p>
         </Transition>
         <div class="flex flex-col items-center gap-2">
-            <label for="code" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('verify_code_label') }}</label>
+            <label for="code" class="text-sm text-gray-600 dark:text-primary-300">{{ $t('verify_code_label') }}</label>
             <Input
                 id="code"
                 v-model="form.code"
@@ -34,14 +34,14 @@
             :disabled="form.processing || !form.code || form.code.length < 6"
             type="submit"
             class="w-full"
-        >{{ $trans('verify_code_submit') }} <ArrowRight class="size-4" /></Button>
+        >{{ $t('verify_code_submit') }} <ArrowRight class="size-4" /></Button>
         <button
             type="button"
             :disabled="resendForm.processing"
             class="block w-full text-center text-xs text-gray-500 hover:text-gray-700 dark:text-primary-400 dark:hover:text-primary-300 disabled:opacity-50"
             @click="resend"
         >
-            {{ $trans('verify_code_resend') }}
+            {{ $t('verify_code_resend') }}
         </button>
     </form>
 </template>

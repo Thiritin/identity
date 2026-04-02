@@ -21,8 +21,12 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class AppResource extends Resource
 {
@@ -33,6 +37,8 @@ class AppResource extends Resource
     protected static ?string $recordTitleAttribute = 'client_id';
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'OAuth';
 
     public static function form(Schema $schema): Schema
     {
@@ -191,6 +197,20 @@ class AppResource extends Resource
                 TextColumn::make('client_id'),
                 TextColumn::make('data.client_name')->label('Name'),
                 TextColumn::make('owner.name'),
+                IconColumn::make('public')->boolean(),
+                TextColumn::make('starts_at')->dateTime()->sortable(),
+                TextColumn::make('ends_at')->dateTime()->sortable(),
+            ])
+            ->filters([
+                TernaryFilter::make('public'),
+                Filter::make('active')
+                    ->query(fn (Builder $query): Builder => $query
+                        ->where('starts_at', '<=', now())
+                        ->where(fn (Builder $q) => $q
+                            ->whereNull('ends_at')
+                            ->orWhere('ends_at', '>=', now())
+                        )
+                    ),
             ]);
     }
 

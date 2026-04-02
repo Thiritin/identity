@@ -3,6 +3,7 @@ import path from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import i18n from 'laravel-vue-i18n/vite';
 
 export default defineConfig({
     plugins: [
@@ -22,6 +23,7 @@ export default defineConfig({
             },
         }),
         tailwindcss(),
+        i18n({ langPath: 'resources/lang' }),
     ],
     resolve: {
         alias: {

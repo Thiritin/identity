@@ -9,14 +9,18 @@ use App\Filament\Resources\UserResource\RelationManagers\ActionsRelationManager;
 use App\Filament\Resources\UserResource\RelationManagers\GroupsRelationManager;
 use App\Filament\Resources\UserResource\RelationManagers\TokensRelationManager;
 use App\Models\User;
+use Filament\Actions\BulkAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserResource extends Resource
 {
@@ -27,6 +31,8 @@ class UserResource extends Resource
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Identity';
 
     public static function form(Schema $schema): Schema
     {
@@ -73,6 +79,36 @@ class UserResource extends Resource
                     ->searchable()
                     ->sortable(),
 
+                IconColumn::make('email_verified_at')
+                    ->label('Verified')
+                    ->boolean(),
+
+                IconColumn::make('is_admin')
+                    ->label('Admin')
+                    ->boolean(),
+
+                TextColumn::make('groups_count')
+                    ->label('Groups')
+                    ->counts('groups')
+                    ->sortable(),
+            ])
+            ->filters([
+                TernaryFilter::make('email_verified_at')
+                    ->label('Verified')
+                    ->nullable(),
+
+                TernaryFilter::make('is_admin')
+                    ->label('Admin'),
+            ])
+            ->groupedBulkActions([
+                BulkAction::make('verify')
+                    ->label('Verify Email')
+                    ->icon('heroicon-o-check-circle')
+                    ->requiresConfirmation()
+                    ->action(fn (Collection $records) => $records->each(
+                        fn ($record) => $record->update(['email_verified_at' => now()])
+                    ))
+                    ->deselectRecordsAfterCompletion(),
             ]);
     }
 

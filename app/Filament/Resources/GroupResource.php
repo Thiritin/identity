@@ -18,6 +18,7 @@ use Filament\Schemas\Components\Group as SchemaGroup;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class GroupResource extends Resource
@@ -29,6 +30,8 @@ class GroupResource extends Resource
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Identity';
 
     public static function form(Schema $schema): Schema
     {
@@ -69,6 +72,7 @@ class GroupResource extends Resource
                             GroupTypeEnum::Default->value => 'Default',
                             GroupTypeEnum::Automated->value => 'Automated',
                             GroupTypeEnum::Department->value => 'Department',
+                            GroupTypeEnum::Team->value => 'Team',
                         ])->required(),
                     ]),
 
@@ -90,9 +94,25 @@ class GroupResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
+
                 TextColumn::make('type')
-                    ->sortable()
-                    ->formatStateUsing(fn ($state) => ucfirst($state->value)),
+                    ->badge()
+                    ->color(fn (GroupTypeEnum $state): string => match ($state) {
+                        GroupTypeEnum::Default => 'gray',
+                        GroupTypeEnum::Automated => 'info',
+                        GroupTypeEnum::Department => 'success',
+                        GroupTypeEnum::Team => 'warning',
+                    })
+                    ->sortable(),
+
+                TextColumn::make('users_count')
+                    ->label('Members')
+                    ->counts('users')
+                    ->sortable(),
+            ])
+            ->filters([
+                SelectFilter::make('type')
+                    ->options(GroupTypeEnum::class),
             ])
             ->recordActions([
                 EditAction::make(),

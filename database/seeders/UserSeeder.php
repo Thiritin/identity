@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -21,15 +20,14 @@ class UserSeeder extends Seeder
             return false;
         }
 
-        $user = User::firstOrCreate([
+        User::firstOrCreate([
             'id' => 1,
         ], [
             'name' => 'Admin',
             'email' => 'identity@eurofurence.localhost',
             'email_verified_at' => now(),
             'password' => \Hash::make(env('ADMIN_PASSWORD', random_bytes(32))),
+            'is_admin' => true,
         ]);
-        // Warning this user will be made admin!
-        $user->roles()->attach(Role::where('name', 'superadmin')->firstOrFail());
     }
 }

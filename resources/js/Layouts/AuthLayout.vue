@@ -27,8 +27,6 @@
                         <AuthFooter
                             class="pt-8"
                             :navigation="navigation"
-                            :dark-mode="darkMode"
-                            :toggle-dark-mode="toggleDarkMode"
                         />
                     </div>
                     <!-- Artist Notice -->
@@ -47,6 +45,11 @@ import { usePage } from "@inertiajs/vue3"
 
 const user = usePage().props.user
 const card = ref(null)
+const darkMode = ref(window.matchMedia('(prefers-color-scheme: dark)').matches)
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    darkMode.value = e.matches
+})
 let previousHeight = 0
 
 function onBeforeLeave() {
@@ -64,10 +67,11 @@ function onLeave(el, done) {
 function onEnter(el, done) {
     if (card.value) {
         // New content is mounted but invisible (opacity 0)
-        // Measure what height the card needs
+        // Temporarily remove fixed height to measure natural size
         requestAnimationFrame(() => {
-            const newHeight = card.value.scrollHeight
-            // Ensure we start from the old height
+            card.value.style.height = 'auto'
+            const newHeight = card.value.offsetHeight
+            // Snap back to previous height
             card.value.style.height = previousHeight + 'px'
             // Force reflow
             card.value.offsetHeight
@@ -98,25 +102,24 @@ export default {
     data() {
         return {
             animated: true,
-            darkMode: this.$cookies.isKey('darkMode'),
             navigation: {
                 main: [
                     {
-                        name: 'Support',
+                        name: 'footer_support',
                         href: 'https://help.eurofurence.org/contact/',
                         newTab: true,
                         visible: () => true,
                     },
 
                     {
-                        name: 'Imprint',
+                        name: 'footer_legal_notice',
                         href: 'https://help.eurofurence.org/legal/imprint',
                         newTab: true,
                         visible: () => true,
                     },
 
                     {
-                        name: 'Privacy',
+                        name: 'footer_privacy_policy',
                         href: 'https://help.eurofurence.org/legal/privacy',
                         newTab: true,
                         visible: () => true,
@@ -127,21 +130,7 @@ export default {
     },
     mounted() {
         this.animated = true;
-        this.dark = 'dark:text-primary-300 dark:bg-primary-900';
     },
-    methods: {
-        toggleDarkMode() {
-            if (this.darkMode === false) {
-                this.$cookies.set('darkMode', 'true', 2147483647);
-            }
-
-            if (this.darkMode === true) {
-                this.$cookies.remove('darkMode');
-            }
-
-            this.darkMode = !this.darkMode;
-        },
-    }
 }
 </script>
 <style>

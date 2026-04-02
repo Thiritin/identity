@@ -3,8 +3,8 @@
     <div class="text-center">
         <Logo class="mx-auto"></Logo>
         <LoginScreenWelcome
-            :sub-title="$trans('register_subtitle')"
-            :title="$trans('register_title')"
+            :sub-title="$t('register_subtitle')"
+            :title="$t('register_title')"
             class="mb-10"
         />
     </div>
@@ -14,14 +14,14 @@
         </Transition>
         <FormField
             id="username"
-            :label="$trans('username')"
+            :label="$t('username')"
             v-model.trim.lazy="form.username"
             :error="form.errors.username"
             @change="form.validate('username')"
         />
         <FormField
             id="email"
-            :label="$trans('email')"
+            :label="$t('email')"
             type="email"
             autocomplete="email"
             v-model="form.email"
@@ -29,7 +29,7 @@
         />
         <FormField
             id="password"
-            :label="$trans('password')"
+            :label="$t('password')"
             type="password"
             autocomplete="new-password"
             v-model.trim.lazy="form.password"
@@ -45,12 +45,12 @@
                 :disabled="form.processing"
                 type="submit"
                 class="w-full"
-            >{{ $trans('register_button') }} <ArrowRight class="size-4" /></Button>
+            >{{ $t('register_button') }} <ArrowRight class="size-4" /></Button>
             <Link
                 :href="route('auth.login.view')"
                 class="block text-center text-xs text-gray-500 hover:text-gray-700 dark:text-primary-400 dark:hover:text-primary-300"
             >
-                {{ $trans('register_back_to_login') }}
+                {{ $t('register_back_to_login') }}
             </Link>
         </div>
     </form>

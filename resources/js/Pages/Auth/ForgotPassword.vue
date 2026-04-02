@@ -3,8 +3,8 @@
     <div class="text-center">
         <Logo class="mx-auto"></Logo>
         <LoginScreenWelcome
-            :sub-title="$trans('forgot_password_reset_sub_title')"
-            :title="$trans('forgot_password_reset_title')"
+            :sub-title="$t('forgot_password_reset_sub_title')"
+            :title="$t('forgot_password_reset_title')"
             class="mb-10"
         />
     </div>
@@ -13,12 +13,12 @@
             <div
                 class="text-sm shadow-md p-2 border-l-[4px] border-primary-600 dark:border-primary-300 dark:text-primary-300"
             >
-                {{ $trans('forgot_password_helptext') }}
+                {{ $t('forgot_password_helptext') }}
             </div>
 
             <FormField
                 id="email"
-                :label="$trans('email')"
+                :label="$t('email')"
                 type="email"
                 placeholder="me@example.org"
                 v-model.trim.lazy="form.email"
@@ -31,12 +31,12 @@
                 :disabled="form.processing"
                 type="submit"
                 class="w-full"
-            >{{ $trans('send_reset_mail') }}</Button>
+            >{{ $t('send_reset_mail') }}</Button>
             <Link
                 :href="route('auth.login.view')"
                 class="block text-center text-xs text-gray-500 hover:text-gray-700 dark:text-primary-400 dark:hover:text-primary-300"
             >
-                {{ $trans('back_to_login') }}
+                {{ $t('back_to_login') }}
             </Link>
         </div>
     </form>

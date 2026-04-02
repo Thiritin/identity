@@ -6,6 +6,7 @@ use App\Filament\Resources\ActivityResource\Pages\ListActivities;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Models\Activity;
@@ -15,6 +16,8 @@ class ActivityResource extends Resource
     protected static ?string $model = Activity::class;
 
     protected static bool $isGloballySearchable = false;
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Logs';
 
     protected static ?string $slug = 'activities';
 
@@ -39,6 +42,25 @@ class ActivityResource extends Resource
                 TextColumn::make('created_at')->label('Date')->dateTime()->description(function (Activity $record) {
                     return $record->created_at->since();
                 })->sortable(),
+            ])
+            ->filters([
+                SelectFilter::make('causer_type')
+                    ->label('Causer Type')
+                    ->options(fn () => Activity::query()
+                        ->whereNotNull('causer_type')
+                        ->distinct()
+                        ->pluck('causer_type', 'causer_type')
+                        ->mapWithKeys(fn ($value) => [$value => class_basename($value)])
+                        ->toArray()
+                    ),
+                SelectFilter::make('description')
+                    ->label('Action')
+                    ->options(fn () => Activity::query()
+                        ->distinct()
+                        ->pluck('description', 'description')
+                        ->filter()
+                        ->toArray()
+                    ),
             ]);
     }
 

@@ -10,6 +10,7 @@ use App\Http\Middleware\GuardSwitcher;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\SetLocaleFromBrowser;
 use App\Http\Middleware\TokenIntrospectionCheckMiddleware;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
@@ -62,6 +63,7 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             SubstituteBindings::class,
+            SetLocaleFromBrowser::class,
             HandleInertiaRequests::class,
         ],
 

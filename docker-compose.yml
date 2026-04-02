@@ -77,7 +77,7 @@ services:
       timeout: 5s
 
   hydra:
-    image: 'oryd/hydra:v2.3'
+    image: 'oryd/hydra:v26.2.0'
     networks:
       - sail
     environment:
@@ -125,7 +125,7 @@ services:
     command: serve all
 
   hydra-migrate:
-    image: 'oryd/hydra:v2.3'
+    image: 'oryd/hydra:v26.2.0'
     networks:
       - sail
     environment:

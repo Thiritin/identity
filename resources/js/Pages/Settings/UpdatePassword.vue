@@ -2,7 +2,7 @@
     <Head title="Change Password"></Head>
     <div>
         <SettingsHeader>{{
-                $trans('update_your_password')
+                $t('update_your_password')
             }}
         </SettingsHeader>
         <form @submit.prevent="submitForm">
@@ -15,7 +15,7 @@
             </div>
             <div v-else class="space-y-6">
                 <div class="flex flex-col gap-2 mt-4">
-                    <label for="current_password">{{ $trans('current_password') }}</label>
+                    <label for="current_password">{{ $t('current_password') }}</label>
                     <Input id="current_password"
                            type="password"
                            autocomplete="password"
@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="flex flex-col gap-2">
-                    <label for="password">{{ $trans('password') }}</label>
+                    <label for="password">{{ $t('password') }}</label>
                     <Input id="password"
                            type="password"
                            autocomplete="password"
@@ -45,7 +45,7 @@
                 ></PasswordInfoBox>
 
                 <div class="flex flex-col gap-2">
-                    <label for="password_confirmation">{{ $trans('password_confirmation') }}</label>
+                    <label for="password_confirmation">{{ $t('password_confirmation') }}</label>
                     <Input id="password_confirmation"
                            type="password"
                            autocomplete="password_confirmation"
@@ -62,7 +62,7 @@
                         :disabled="form.processing"
                         type="submit"
                         class="block"
-                    >{{ $trans('submit') }}</Button>
+                    >{{ $t('submit') }}</Button>
                 </div>
             </div>
         </form>

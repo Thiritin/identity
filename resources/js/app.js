@@ -6,7 +6,7 @@ import 'github-markdown-css/github-markdown-light.css'
 import {createApp, h} from 'vue'
 import {createInertiaApp} from '@inertiajs/vue3'
 import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m'
-import {__, getLocale, locales, setLocale, trans, transChoice} from 'matice'
+import {i18nVue} from 'laravel-vue-i18n'
 import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers";
 import VueCookies from 'vue-cookies'
 
@@ -28,26 +28,14 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .use(VueCookies, {})
-            .mixin({methods: {route}})
-            .mixin({
-                methods: {
-                    $trans: trans,
-                    $__: __,
-                    $transChoice: transChoice,
-                    $setLocale(locale) {
-                        setLocale(locale)
-                        this.$forceUpdate() // Refresh the vue instance(The whole app in case of SPA) after the locale changes.
-                    },
-                    // The current locale
-                    $locale() {
-                        return getLocale()
-                    },
-                    // A listing of the available locales
-                    $locales() {
-                        return locales()
-                    },
+            .use(i18nVue, {
+                lang: props.initialPage.props?.locale ?? 'en',
+                resolve: async (lang) => {
+                    const langs = import.meta.glob('../lang/*.json')
+                    return await langs[`../lang/${lang}.json`]()
                 },
             })
+            .mixin({methods: {route}})
             .mount(el)
     },
 })

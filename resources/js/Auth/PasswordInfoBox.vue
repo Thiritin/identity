@@ -8,7 +8,7 @@
         >
             <CircleCheck v-if="rule.passed" class="size-3.5 shrink-0" />
             <Circle v-else class="size-3.5 shrink-0" />
-            <span>{{ $trans(rule.label) }}</span>
+            <span>{{ $t(rule.label) }}</span>
         </div>
     </div>
 </template>

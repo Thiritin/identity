@@ -3,7 +3,6 @@
 use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
 use App\Models\Group;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
@@ -21,13 +20,11 @@ uses(RefreshDatabase::class);
 
 test('Create Group success as Admin', function () {
     $group = Group::factory()->create();
-    $role = Role::findOrCreate('superadmin');
 
     $user = Sanctum::actingAs(
-        User::factory()->create(),
+        User::factory()->admin()->create(),
         ['groups.read', 'groups.update', 'groups.delete']
     );
-    $user->assignRole('superadmin');
 
     $group->users()->sync([$user->id => ['level' => GroupUserLevel::Owner]]);
     $data = [
@@ -42,13 +39,10 @@ test('Create Group success as Admin', function () {
 });
 
 test('Create Group and validate user is set as owner', function () {
-    $role = Role::findOrCreate('superadmin');
-
     $user = Sanctum::actingAs(
-        User::factory()->create(),
+        User::factory()->admin()->create(),
         ['groups.read', 'groups.update', 'groups.delete']
     );
-    $user->assignRole('superadmin');
 
     $data = [
         'type' => 'none',

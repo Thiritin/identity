@@ -64,7 +64,7 @@ watch(enableForm, (value) => {
                 <small class="text-center w-full block">{{ secret }}</small>
             </div>
             <div class="flex flex-col gap-2">
-                <label for="code">{{ $trans('code') }}</label>
+                <label for="code">{{ $t('code') }}</label>
                 <Input id="code"
                        type="number"
                        @change="enableForm.validate('code')"
@@ -78,7 +78,7 @@ watch(enableForm, (value) => {
                     :disabled="enableForm.processing"
                     type="submit"
                     class="block"
-                >{{ $trans('submit') }}</Button>
+                >{{ $t('submit') }}</Button>
             </div>
         </form>
     </div>
@@ -89,7 +89,7 @@ watch(enableForm, (value) => {
         </SettingsSubHeader>
         <form @submit.prevent="deactivateTotp" class="space-y-6">
             <div class="flex flex-col gap-2">
-                <label for="password">{{ $trans('password') }}</label>
+                <label for="password">{{ $t('password') }}</label>
                 <Input id="password"
                        type="password"
                        autocomplete="password"

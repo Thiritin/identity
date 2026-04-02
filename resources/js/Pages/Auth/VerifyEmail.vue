@@ -2,8 +2,8 @@
     <Head title="Verfiy Email"></Head>
     <Logo></Logo>
     <LoginScreenWelcome
-        :sub-title="$trans('verify_subtitle')"
-        :title="$trans('verify_title')"
+        :sub-title="$t('verify_subtitle')"
+        :title="$t('verify_title')"
         class="mb-10"
     />
     <div class="space-y-8">
@@ -11,21 +11,21 @@
         <div
             class="text-sm shadow-md p-2 border-l-[4px] border-primary-600 dark:border-primary-300 dark:text-primary-300"
         >
-            {{ $trans('verify_helptext') }}
+            {{ $t('verify_helptext') }}
         </div>
 
         <div
             v-if="props.status === 'verification-link-sent'"
             class="mb-4 font-medium text-sm text-green-600"
         >
-            {{ $trans('verify_text_sent_to_your_mail') }}
+            {{ $t('verify_text_sent_to_your_mail') }}
         </div>
 
         <div
             v-if="props.status === 'throttled'"
             class="mb-4 font-medium text-sm text-red-600"
         >
-            {{ $trans('too_many_attempts_email_verification') }}
+            {{ $t('too_many_attempts_email_verification') }}
         </div>
 
         <form @submit.prevent="submit">
@@ -34,13 +34,13 @@
                     :disabled="form.processing"
                     type="submit"
                     class="block"
-                >{{ $trans('resend_verification_mail') }}</Button>
+                >{{ $t('resend_verification_mail') }}</Button>
 
                 <a
                     :href="route('auth.logout')"
                     as="button"
                     class="underline text-sm text-gray-600 hover:text-gray-900"
-                >{{ $trans('logout') }}
+                >{{ $t('logout') }}
                 </a>
             </div>
         </form>

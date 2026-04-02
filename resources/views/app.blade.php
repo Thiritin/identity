@@ -7,8 +7,6 @@
 
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
     <link rel="icon" type="image/svg" href="/favicon.svg">
-    @translations
-
     <!-- Scripts -->
     @routes
     @vite(['resources/js/app.js'])

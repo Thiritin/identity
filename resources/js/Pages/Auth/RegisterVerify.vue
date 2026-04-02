@@ -3,8 +3,8 @@
     <div class="text-center">
         <Logo class="mx-auto" />
         <LoginScreenWelcome
-            :title="$trans('register_verify_title')"
-            :sub-title="$trans('register_verify_subtitle')"
+            :title="$t('register_verify_title')"
+            :sub-title="$t('register_verify_subtitle')"
             class="mb-10"
         />
     </div>
@@ -20,7 +20,7 @@
             :disabled="form.processing || !form.altcha"
             type="submit"
             class="w-full"
-        >{{ $trans('continue') }} <ArrowRight class="size-4" /></Button>
+        >{{ $t('continue') }} <ArrowRight class="size-4" /></Button>
     </form>
 </template>
 <script setup>

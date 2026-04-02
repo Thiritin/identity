@@ -1,6 +1,6 @@
 <template>
     <Head title="Two Factor"></Head>
-    <SettingsHeader>{{ $trans('two_factor') }}</SettingsHeader>
+    <SettingsHeader>{{ $t('two_factor') }}</SettingsHeader>
     <SettingsSubHeader
         class="mb-4">Enabling two factor authentication secures your account by requiring a 2nd form of authentication for accessing your account.
     </SettingsSubHeader>
