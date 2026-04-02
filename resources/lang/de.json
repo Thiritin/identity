@@ -277,5 +277,7 @@
     "security_email_sent": "Wir haben einen Bestätigungslink an deine neue E-Mail-Adresse gesendet. Bitte überprüfe dein Postfach.",
     "security_email_rate_limited": "Zu viele Versuche. Bitte versuche es später erneut.",
     "security_backup_codes_add_primary": "Füge eine primäre Zwei-Faktor-Methode hinzu, um Backup-Codes zu aktivieren",
-    "account_suspended": "Dein Konto wurde gesperrt. Bitte kontaktiere den Support."
+    "account_suspended": "Dein Konto wurde gesperrt. Bitte kontaktiere den Support.",
+    "other": "Sonstige",
+    "no_applications_available": "Keine Anwendungen verfügbar."
 }

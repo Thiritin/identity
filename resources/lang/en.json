@@ -277,5 +277,7 @@
     "security_email_sent": "We've sent a verification link to your new email address. Please check your inbox.",
     "security_email_rate_limited": "Too many attempts. Please try again later.",
     "security_backup_codes_add_primary": "Add a primary two-factor method to enable backup codes",
-    "account_suspended": "Your account has been suspended. Please contact support."
+    "account_suspended": "Your account has been suspended. Please contact support.",
+    "other": "Other",
+    "no_applications_available": "No applications available."
 }
