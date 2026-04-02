@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\App;
+use App\Models\AppCategory;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -16,6 +17,10 @@ class AppFactory extends Factory
             'user_id' => User::factory(),
             'name' => $this->faker->company(),
             'description' => $this->faker->sentence(),
+            'public' => false,
+            'pinned' => false,
+            'priority' => $this->faker->numberBetween(1, 1000),
+            'url' => $this->faker->url(),
             'data' => [
                 'client_name' => $this->faker->company(),
                 'redirect_uris' => ['https://example.com/callback'],
@@ -27,5 +32,22 @@ class AppFactory extends Factory
                 'scope' => ['openid'],
             ],
         ];
+    }
+
+    public function public(): static
+    {
+        return $this->state(fn () => ['public' => true]);
+    }
+
+    public function pinned(): static
+    {
+        return $this->state(fn () => ['pinned' => true]);
+    }
+
+    public function withCategory(?AppCategory $category = null): static
+    {
+        return $this->state(fn () => [
+            'category_id' => $category?->id ?? AppCategory::factory(),
+        ]);
     }
 }

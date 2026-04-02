@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class App extends Model
 {
     use HasFactory;
+
     protected $guarded = ['client_secret'];
 
     protected $casts = [
         'data' => 'array',
+        'pinned' => 'boolean',
     ];
 
     public function owner(): BelongsTo
@@ -23,5 +25,10 @@ class App extends Model
     public function groups()
     {
         return $this->belongsToMany(Group::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(AppCategory::class, 'category_id');
     }
 }
