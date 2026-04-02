@@ -17,9 +17,9 @@ const visibleNavigation = computed(() => {
 <template>
     <nav
         aria-label="Footer"
-        class="-mx-5 -my-2 flex flex-wrap items-center justify-center"
+        class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2"
     >
-        <div v-for="item in visibleNavigation" :key="item.name" class="p-4">
+        <template v-for="item in visibleNavigation" :key="item.name">
             <Link
                 v-if="item.href == null"
                 :href="item.link"
@@ -36,7 +36,7 @@ const visibleNavigation = computed(() => {
             >
                 {{ item.name }}
             </a>
-        </div>
+        </template>
         <toogleDarkMode
             :dark-mode="darkMode"
             :toggle-dark-mode="toggleDarkMode"
