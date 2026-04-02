@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-it('loads the security page', function () {
+it('loads the security menu page', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
@@ -16,11 +16,12 @@ it('loads the security page', function () {
             ->component('Settings/Security')
             ->has('totpEnabled')
             ->has('totpLastUsed')
-            ->has('yubikeys')
+            ->has('yubikeyCount')
+            ->has('passwordChangedAt')
         );
 });
 
-it('shows totp as enabled when user has totp', function () {
+it('shows totp as enabled on menu page', function () {
     $user = User::factory()->create();
     $user->twoFactors()->create([
         'type' => TwoFactorTypeEnum::TOTP,
@@ -35,7 +36,7 @@ it('shows totp as enabled when user has totp', function () {
         );
 });
 
-it('lists yubikeys for the user', function () {
+it('shows yubikey count on menu page', function () {
     $user = User::factory()->create();
     $user->twoFactors()->create([
         'type' => TwoFactorTypeEnum::YUBIKEY,
@@ -47,11 +48,62 @@ it('lists yubikeys for the user', function () {
     $this->actingAs($user)
         ->get(route('settings.security'))
         ->assertInertia(fn ($page) => $page
-            ->has('yubikeys', 1)
+            ->where('yubikeyCount', 1)
         );
 });
 
-it('requires authentication', function () {
-    $this->get(route('settings.security'))
-        ->assertRedirect();
+it('loads the password page', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('settings.security.password'))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->component('Settings/Security/Password')
+            ->has('passwordChangedAt')
+        );
+});
+
+it('loads the totp page', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('settings.security.totp'))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->component('Settings/Security/Totp')
+            ->has('totpEnabled')
+            ->has('totpLastUsed')
+        );
+});
+
+it('loads the yubikey page', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('settings.security.yubikey'))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->component('Settings/Security/Yubikey')
+            ->has('yubikeys')
+        );
+});
+
+it('requires authentication for all security pages', function () {
+    $this->get(route('settings.security'))->assertRedirect();
+    $this->get(route('settings.security.password'))->assertRedirect();
+    $this->get(route('settings.security.totp'))->assertRedirect();
+    $this->get(route('settings.security.yubikey'))->assertRedirect();
+});
+
+it('shows password_changed_at on menu page', function () {
+    $user = User::factory()->create([
+        'password_changed_at' => now()->subDays(3),
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('settings.security'))
+        ->assertInertia(fn ($page) => $page
+            ->where('passwordChangedAt', fn ($value) => str_contains($value, 'ago'))
+        );
 });
