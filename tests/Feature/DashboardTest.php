@@ -206,3 +206,74 @@ test('app image_url is null when no image', function () {
             ->where('uncategorized.0.image_url', null)
         );
 });
+
+test('registration app shown as hero when configured and active', function () {
+    config(['services.registration.client_id' => 'reg-app-id']);
+
+    $user = User::factory()->create();
+    App::factory()->public()->create([
+        'client_id' => 'reg-app-id',
+        'name' => 'Eurofurence Registration',
+        'starts_at' => now()->subDay(),
+        'ends_at' => now()->addDay(),
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('dashboard'))
+        ->assertInertia(fn ($page) => $page
+            ->where('registration.name', 'Eurofurence Registration')
+            ->has('uncategorized', 0)
+        );
+});
+
+test('registration app not shown when outside date range', function () {
+    config(['services.registration.client_id' => 'reg-app-id']);
+
+    $user = User::factory()->create();
+    App::factory()->public()->create([
+        'client_id' => 'reg-app-id',
+        'name' => 'Eurofurence Registration',
+        'starts_at' => now()->addMonth(),
+        'ends_at' => now()->addMonths(2),
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('dashboard'))
+        ->assertInertia(fn ($page) => $page
+            ->where('registration', null)
+        );
+});
+
+test('registration app excluded from other sections', function () {
+    config(['services.registration.client_id' => 'reg-app-id']);
+
+    $user = User::factory()->create();
+    $category = AppCategory::factory()->create();
+
+    App::factory()->public()->pinned()->withCategory($category)->create([
+        'client_id' => 'reg-app-id',
+        'name' => 'Registration',
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('dashboard'))
+        ->assertInertia(fn ($page) => $page
+            ->where('registration.name', 'Registration')
+            ->has('pinned', 0)
+            ->has('categories', 0)
+        );
+});
+
+test('registration is null when not configured', function () {
+    config(['services.registration.client_id' => null]);
+
+    $user = User::factory()->create();
+    App::factory()->public()->create(['name' => 'Some App']);
+
+    $this->actingAs($user)
+        ->get(route('dashboard'))
+        ->assertInertia(fn ($page) => $page
+            ->where('registration', null)
+            ->has('uncategorized', 1)
+        );
+});

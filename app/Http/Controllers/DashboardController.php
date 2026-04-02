@@ -36,6 +36,17 @@ class DashboardController extends Controller
             'url' => $app->url,
         ];
 
+        // Featured registration app — shown as hero when active and public
+        $registration = null;
+        $registrationClientId = config('services.registration.client_id');
+        if ($registrationClientId) {
+            $registrationApp = $apps->first(fn (App $app) => $app->client_id === $registrationClientId);
+            if ($registrationApp) {
+                $registration = $mapApp($registrationApp);
+                $apps = $apps->reject(fn (App $app) => $app->client_id === $registrationClientId)->values();
+            }
+        }
+
         $pinned = $apps->where('pinned', true)->values();
         $nonPinned = $apps->reject(fn (App $app) => $app->pinned)->values();
 
@@ -52,6 +63,7 @@ class DashboardController extends Controller
             ])->values();
 
         return Inertia::render('Dashboard', [
+            'registration' => $registration,
             'pinned' => $pinned->map($mapApp),
             'categories' => $categories,
             'uncategorized' => $nonPinned->whereNull('category_id')->values()->map($mapApp),

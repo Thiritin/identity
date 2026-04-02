@@ -60,6 +60,9 @@ return [
             'home_route' => 'staff.dashboard',
         ],
     ],
+    'registration' => [
+        'client_id' => env('REGISTRATION_APP_CLIENT_ID'),
+    ],
     'hydra' => [
         'public' => env('HYDRA_PUBLIC_URL'),
         'local_public' => env('HYDRA_LOCAL_PUBLIC'), // For Dev purposes
