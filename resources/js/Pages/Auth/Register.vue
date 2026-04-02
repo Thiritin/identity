@@ -36,17 +36,13 @@
         <PasswordInfoBox
             :password="form.password"
         />
-        <AltchaWidget v-model="form.altcha" />
-        <Transition name="field-error">
-            <p v-if="form.errors.altcha" class="text-xs text-destructive text-center">{{ form.errors.altcha }}</p>
-        </Transition>
         <HoneypotFields :honeypot="form" />
         <div class="pt-4 space-y-3">
             <Button
-                :disabled="form.processing || !form.altcha"
+                :disabled="form.processing"
                 type="submit"
                 class="w-full"
-            >{{ $trans('register_button') }}</Button>
+            >{{ $trans('register_button') }} <ArrowRight class="size-4" /></Button>
             <Link
                 :href="route('auth.login.view')"
                 class="block text-center text-xs text-gray-500 hover:text-gray-700 dark:text-primary-400 dark:hover:text-primary-300"
@@ -62,10 +58,10 @@ import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import FormField from '@/Components/Auth/FormField.vue'
 import HoneypotFields from '@/Components/Auth/HoneypotFields.vue'
-import AltchaWidget from '@/Components/Auth/AltchaWidget.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
 import PasswordInfoBox from '@/Auth/PasswordInfoBox.vue'
 import { Button } from '@/Components/ui/button'
+import { ArrowRight } from 'lucide-vue-next'
 import { useHoneypot } from '@/Composables/useHoneypot'
 
 defineOptions({
@@ -81,7 +77,6 @@ const form = useForm('post', route('auth.register.store'), {
     email: props.email,
     username: null,
     password: null,
-    altcha: null,
     ...useHoneypot(),
 })
 

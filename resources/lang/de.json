@@ -3,5 +3,15 @@
     "continue": "Weiter",
     "enter_email_to_continue": "Bitte gib deine E-Mail ein",
     "change": "Ändern",
-    "too_many_attempts": "Zu viele Versuche. Bitte versuche es in :seconds Sekunden erneut."
+    "too_many_attempts": "Zu viele Versuche. Bitte versuche es in :seconds Sekunden erneut.",
+    "register_verify_title": "Fast geschafft!",
+    "register_verify_subtitle": "Bitte schließe die Verifizierung ab",
+    "verify_code_title": "Prüfe deine E-Mails",
+    "verify_code_subtitle": "Wir haben dir einen 6-stelligen Code gesendet",
+    "verify_code_label": "Verifizierungscode",
+    "verify_code_submit": "Verifizieren",
+    "verify_code_resend": "Code nicht erhalten? Erneut senden",
+    "verify_code_resent": "Ein neuer Code wurde an deine E-Mail gesendet.",
+    "verify_code_expired": "Der Code ist abgelaufen. Bitte fordere einen neuen an.",
+    "verify_code_invalid": "Der Code ist falsch. Bitte versuche es erneut."
 }

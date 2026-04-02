@@ -90,5 +90,18 @@
     "continue": "Continue",
     "enter_email_to_continue": "Please enter your email",
     "change": "Change",
-    "too_many_attempts": "Too many attempts. Please try again in :seconds seconds."
+    "too_many_attempts": "Too many attempts. Please try again in :seconds seconds.",
+    "register_verify_title": "Almost there!",
+    "register_verify_subtitle": "Please complete the verification",
+    "verify_code_title": "Check your email",
+    "verify_code_subtitle": "We sent you a 6-digit code",
+    "verify_code_label": "Verification code",
+    "verify_code_submit": "Verify",
+    "verify_code_resend": "Didn't receive the code? Resend",
+    "verify_code_resent": "A new code has been sent to your email.",
+    "verify_code_expired": "The code has expired. Please request a new one.",
+    "verify_code_invalid": "The code is incorrect. Please try again.",
+    "pow_required": "Verification is required.",
+    "pow_expired": "Verification has expired. Please try again.",
+    "pow_invalid": "Verification failed. Please try again."
 }

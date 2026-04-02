@@ -2,16 +2,12 @@
 
 namespace App\Http\Requests\Auth;
 
-use GrantHolle\Altcha\Rules\ValidAltcha;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
 class RegisterRequest extends FormRequest
 {
-    /**
-     * @var mixed
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             'username' => [
@@ -31,10 +27,6 @@ class RegisterRequest extends FormRequest
                 'required',
                 'max:255',
                 Password::min(8)->mixedCase()->numbers(),
-            ],
-            'altcha' => [
-                'required',
-                new ValidAltcha(),
             ],
         ];
     }

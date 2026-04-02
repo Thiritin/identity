@@ -8,7 +8,11 @@
     </div>
 </template>
 <script setup>
-import 'altcha'
+import { onMounted } from 'vue'
+
+onMounted(() => {
+    import('altcha')
+})
 
 const model = defineModel()
 

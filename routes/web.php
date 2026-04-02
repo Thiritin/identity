@@ -9,6 +9,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\RegisterVerifyController;
+use App\Http\Controllers\Auth\VerifyCodeController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\UpdateEmailController;
@@ -45,6 +47,17 @@ Route::prefix('auth')->name('auth.')->group(function () {
         Route::post('register', RegisterController::class)
             ->middleware(['guest', HandlePrecognitiveRequests::class, ProtectAgainstSpam::class, 'throttle:5,1'])
             ->name('register.store');
+        Route::get('register/verify', [RegisterVerifyController::class, 'view'])->name('register.verify');
+        Route::post('register/verify', [RegisterVerifyController::class, 'submit'])
+            ->middleware(['throttle:5,1'])
+            ->name('register.verify.submit');
+        Route::get('register/code', [VerifyCodeController::class, 'view'])->name('register.code');
+        Route::post('register/code', [VerifyCodeController::class, 'submit'])
+            ->middleware(['throttle:10,1'])
+            ->name('register.code.submit');
+        Route::post('register/code/resend', [VerifyCodeController::class, 'resend'])
+            ->middleware(['throttle:3,1'])
+            ->name('register.code.resend');
         // Password Reset
         Route::inertia('forgot-password', 'Auth/ForgotPassword')->name('forgot-password.view');
         Route::post('forgot-password', ForgotPasswordController::class)
