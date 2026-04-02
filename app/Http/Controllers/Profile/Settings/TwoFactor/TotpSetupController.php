@@ -85,7 +85,7 @@ class TotpSetupController extends Controller
         // Clear cache
         Cache::forget('user-' . auth()->user()->id . '-two-factor-user-cache');
 
-        return redirect()->route('settings.two-factor');
+        return redirect()->route('settings.security');
     }
 
     // Delete totp device
@@ -100,7 +100,7 @@ class TotpSetupController extends Controller
         // Delete totp device
         auth()->user()->twoFactors()->whereType(TwoFactorTypeEnum::TOTP)->delete();
 
-        return redirect()->route('settings.two-factor');
+        return redirect()->route('settings.security');
 
     }
 

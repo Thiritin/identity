@@ -178,37 +178,36 @@ test('profile settings page loads', function () {
         ->assertInertia(fn ($page) => $page->component('Settings/Profile'));
 });
 
-test('update password page loads', function () {
+test('update password redirects to security', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->get(route('settings.update-password'))
-        ->assertSuccessful()
-        ->assertInertia(fn ($page) => $page->component('Settings/UpdatePassword'));
+        ->get('/settings/update-password')
+        ->assertRedirect('/settings/security');
 });
 
-test('two factor settings page loads', function () {
+test('two factor redirects to security', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->get(route('settings.two-factor'))
-        ->assertSuccessful();
+        ->get('/settings/two-factor')
+        ->assertRedirect('/settings/security');
 });
 
-test('totp setup page loads', function () {
+test('totp setup redirects to security', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->get(route('settings.two-factor.totp'))
-        ->assertSuccessful();
+        ->get('/settings/two-factor/totp')
+        ->assertRedirect('/settings/security');
 });
 
-test('yubikey setup page loads', function () {
+test('yubikey setup redirects to security', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->get(route('settings.two-factor.yubikey'))
-        ->assertSuccessful();
+        ->get('/settings/two-factor/yubikey')
+        ->assertRedirect('/settings/security');
 });
 
 /*
@@ -217,13 +216,11 @@ test('yubikey setup page loads', function () {
 |--------------------------------------------------------------------------
 */
 
-test('settings pages require authentication', function (string $routeName) {
-    $this->get(route($routeName))
-        ->assertRedirect();
+test('settings pages require authentication', function (string $url) {
+    $this->get($url)->assertRedirect();
 })->with([
-    'profile' => 'settings.profile',
-    'update-password' => 'settings.update-password',
-    'two-factor' => 'settings.two-factor',
+    'profile' => '/settings/profile',
+    'security' => '/settings/security',
 ]);
 
 /*
