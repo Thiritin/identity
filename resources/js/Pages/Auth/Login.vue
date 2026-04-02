@@ -10,14 +10,14 @@
     </div>
     <form class="space-y-6" @submit.prevent="submit">
         <div class="space-y-4">
-            <div class="flex flex-col gap-2">
-                <label for="email" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('email') }}</label>
-                <Input id="email"
-                    v-model="form.email"
-                    type="email"
-                    autocomplete="email"
-                />
-            </div>
+            <FormField
+                id="email"
+                :label="$trans('email')"
+                type="email"
+                autocomplete="email"
+                v-model="form.email"
+                :error="form.errors.email"
+            />
             <div class="flex flex-col gap-2">
                 <label for="password" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('password') }}</label>
                 <Input id="password"
@@ -27,9 +27,15 @@
                     :class="{ 'border-destructive': form.invalid('password') || errors.nouser }"
                     v-model.trim.lazy="form.password"
                 />
-                <p v-if="form.invalid('password')" class="text-xs text-destructive">{{ form.errors.password }}</p>
-                <p v-if="errors.nouser" class="text-xs text-destructive">{{ $trans('wrong_login_details_message') }}</p>
-                <p v-if="errors.general" class="text-xs text-destructive">{{ errors.general }}</p>
+                <Transition name="field-error">
+                    <p v-if="form.invalid('password')" class="text-xs text-destructive">{{ form.errors.password }}</p>
+                </Transition>
+                <Transition name="field-error">
+                    <p v-if="errors.nouser" class="text-xs text-destructive">{{ $trans('wrong_login_details_message') }}</p>
+                </Transition>
+                <Transition name="field-error">
+                    <p v-if="errors.general" class="text-xs text-destructive">{{ errors.general }}</p>
+                </Transition>
                 <Link
                     :href="route('auth.forgot-password.view')"
                     class="text-xs text-gray-500 hover:text-gray-700 dark:text-primary-400 dark:hover:text-primary-300"
@@ -66,6 +72,7 @@
 import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
+import FormField from '@/Components/Auth/FormField.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
@@ -94,3 +101,16 @@ function submit() {
     form.submit()
 }
 </script>
+<style scoped>
+.field-error-enter-active {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.field-error-leave-active {
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.field-error-enter-from,
+.field-error-leave-to {
+    opacity: 0;
+    transform: translateY(-4px);
+}
+</style>

@@ -9,19 +9,16 @@
         />
     </div>
     <form class="space-y-4" @submit.prevent="submit">
-        <div class="flex flex-col gap-2">
-            <label for="email" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('email') }}</label>
-            <Input
-                id="email"
-                type="email"
-                autocomplete="email"
-                placeholder="me@example.org"
-                @change="form.validate('email')"
-                :class="{ 'border-destructive': form.invalid('email') }"
-                v-model.trim.lazy="form.email"
-            />
-            <p v-if="form.invalid('email')" class="text-xs text-destructive text-center">{{ form.errors.email }}</p>
-        </div>
+        <FormField
+            id="email"
+            :label="$trans('email')"
+            type="email"
+            autocomplete="email"
+            placeholder="me@example.org"
+            v-model.trim.lazy="form.email"
+            :error="form.errors.email"
+            @change="form.validate('email')"
+        />
         <Button :disabled="form.processing" type="submit" class="w-full">
             {{ $trans('continue') }}
             <ArrowRight class="size-4" />
@@ -32,8 +29,8 @@
 import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
+import FormField from '@/Components/Auth/FormField.vue'
 import { Head, useForm } from '@inertiajs/vue3'
-import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 import { ArrowRight } from 'lucide-vue-next'
 

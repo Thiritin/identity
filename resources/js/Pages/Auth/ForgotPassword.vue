@@ -16,16 +16,15 @@
                 {{ $trans('forgot_password_helptext') }}
             </div>
 
-            <div class="flex flex-col gap-2">
-                <label for="email" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('email') }}</label>
-                <Input id="email"
-                    placeholder="me@example.org"
-                    :class="{ 'border-destructive': form.invalid('email') }"
-                    @change="form.validate('email')"
-                    v-model.trim.lazy="form.email"
-                />
-                <p v-if="form.invalid('email')" class="text-xs text-destructive">{{ form.errors.email }}</p>
-            </div>
+            <FormField
+                id="email"
+                :label="$trans('email')"
+                type="email"
+                placeholder="me@example.org"
+                v-model.trim.lazy="form.email"
+                :error="form.errors.email"
+                @change="form.validate('email')"
+            />
         </div>
         <div class="space-y-3">
             <Button
@@ -51,8 +50,8 @@
 import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
+import FormField from '@/Components/Auth/FormField.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
-import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 
 defineOptions({ layout: AuthLayout })

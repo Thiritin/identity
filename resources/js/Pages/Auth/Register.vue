@@ -9,49 +9,42 @@
         />
     </div>
     <form class="space-y-4" @submit.prevent="submit">
-        <div class="flex flex-col gap-2">
-            <label for="username" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('username') }}</label>
-            <Input id="username"
-                type="text"
-                @change="form.validate('username')"
-                :class="{ 'border-destructive': form.invalid('username') }"
-                v-model.trim.lazy="form.username"
-            />
-            <p v-if="form.invalid('username')" class="text-xs text-destructive">{{ form.errors.username }}</p>
-        </div>
-        <div class="flex flex-col gap-2">
-            <label for="email" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('email') }}</label>
-            <Input id="email"
-                v-model="form.email"
-                type="email"
-                autocomplete="email"
-            />
-        </div>
-        <div class="flex flex-col gap-2">
-            <label for="password" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('password') }}</label>
-            <Input id="password"
-                type="password"
-                autocomplete="password"
-                @change="form.validate('password')"
-                :class="{ 'border-destructive': form.invalid('password') }"
-                v-model.trim.lazy="form.password"
-            />
-            <p v-if="form.invalid('password')" class="text-xs text-destructive">{{ form.errors.password }}</p>
-        </div>
+        <FormField
+            id="username"
+            :label="$trans('username')"
+            v-model.trim.lazy="form.username"
+            :error="form.errors.username"
+            @change="form.validate('username')"
+        />
+        <FormField
+            id="email"
+            :label="$trans('email')"
+            type="email"
+            autocomplete="email"
+            v-model="form.email"
+            :error="form.errors.email"
+        />
+        <FormField
+            id="password"
+            :label="$trans('password')"
+            type="password"
+            autocomplete="password"
+            v-model.trim.lazy="form.password"
+            :error="form.errors.password"
+            @change="form.validate('password')"
+        />
         <PasswordInfoBox
             :password="form.password"
         />
-        <div class="flex flex-col gap-2">
-            <label for="password_confirmation" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('password_confirmation') }}</label>
-            <Input id="password_confirmation"
-                type="password"
-                autocomplete="password"
-                @change="form.validate('password_confirmation')"
-                :class="{ 'border-destructive': form.invalid('password_confirmation') }"
-                v-model.trim.lazy="form.password_confirmation"
-            />
-            <p v-if="form.invalid('password_confirmation')" class="text-xs text-destructive">{{ form.errors.password_confirmation }}</p>
-        </div>
+        <FormField
+            id="password_confirmation"
+            :label="$trans('password_confirmation')"
+            type="password"
+            autocomplete="password"
+            v-model.trim.lazy="form.password_confirmation"
+            :error="form.errors.password_confirmation"
+            @change="form.validate('password_confirmation')"
+        />
         <div class="pt-4 space-y-3">
             <Button
                 :disabled="form.processing"
@@ -71,9 +64,9 @@
 import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
+import FormField from '@/Components/Auth/FormField.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
 import PasswordInfoBox from '@/Auth/PasswordInfoBox.vue'
-import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 
 defineOptions({
