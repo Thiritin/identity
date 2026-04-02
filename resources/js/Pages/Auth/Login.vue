@@ -3,8 +3,8 @@
     <div class="text-center">
         <Logo class="mx-auto"></Logo>
         <LoginScreenWelcome
-            :sub-title="$trans('loginscreen_sign_in_to_continue')"
-            :title="$trans('loginscreen_welcome')"
+            :sub-title="$t('loginscreen_sign_in_to_continue')"
+            :title="$t('loginscreen_welcome')"
             class="mb-10"
         />
     </div>
@@ -15,14 +15,14 @@
         <div class="space-y-4">
             <FormField
                 id="email"
-                :label="$trans('email')"
+                :label="$t('email')"
                 type="email"
                 autocomplete="email"
                 v-model="form.email"
                 :error="form.errors.email"
             />
             <div class="flex flex-col gap-2">
-                <label for="password" class="text-sm text-gray-600 dark:text-primary-300">{{ $trans('password') }}</label>
+                <label for="password" class="text-sm text-gray-600 dark:text-primary-300">{{ $t('password') }}</label>
                 <Input id="password"
                     type="password"
                     autocomplete="current-password"
@@ -34,7 +34,7 @@
                     <p v-if="form.invalid('password')" class="text-xs text-destructive">{{ form.errors.password }}</p>
                 </Transition>
                 <Transition name="field-error">
-                    <p v-if="errors.nouser" class="text-xs text-destructive">{{ $trans('wrong_login_details_message') }}</p>
+                    <p v-if="errors.nouser" class="text-xs text-destructive">{{ $t('wrong_login_details_message') }}</p>
                 </Transition>
                 <Transition name="field-error">
                     <p v-if="errors.general" class="text-xs text-destructive">{{ errors.general }}</p>
@@ -43,7 +43,7 @@
                     :href="route('auth.forgot-password.view')"
                     class="text-xs text-gray-500 hover:text-gray-700 dark:text-primary-400 dark:hover:text-primary-300"
                 >
-                    {{ $trans('forgot_password_btn') }}
+                    {{ $t('forgot_password_btn') }}
                 </Link>
             </div>
             <div class="relative flex items-start">
@@ -54,21 +54,27 @@
                     <label
                         class="font-medium text-gray-700 dark:text-primary-300"
                         for="remember"
-                    >{{ $trans('remember_me') }}</label>
+                    >{{ $t('remember_me') }}</label>
                 </div>
             </div>
         </div>
         <HoneypotFields :honeypot="form" />
+        <div v-if="requiresPow" class="space-y-2">
+            <AltchaWidget v-model="form.altcha" />
+            <Transition name="field-error">
+                <p v-if="form.errors.altcha" class="text-xs text-destructive text-center">{{ form.errors.altcha }}</p>
+            </Transition>
+        </div>
         <Button
-            :disabled="form.processing"
+            :disabled="form.processing || (requiresPow && !form.altcha)"
             type="submit"
             class="w-full"
-        >{{ $trans('sign_in') }} <ArrowRight class="size-4" /></Button>
+        >{{ $t('sign_in') }} <ArrowRight class="size-4" /></Button>
         <Link
             :href="route('auth.register.view')"
             class="block text-center text-xs text-gray-500 hover:text-gray-700 dark:text-primary-400 dark:hover:text-primary-300"
         >
-            {{ $trans('choose_create_new_account') }}
+            {{ $t('choose_create_new_account') }}
         </Link>
     </form>
 </template>
@@ -78,6 +84,7 @@ import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import FormField from '@/Components/Auth/FormField.vue'
 import HoneypotFields from '@/Components/Auth/HoneypotFields.vue'
+import AltchaWidget from '@/Components/Auth/AltchaWidget.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
@@ -93,12 +100,14 @@ const props = defineProps({
     status: String,
     errors: Object,
     email: String,
+    requiresPow: Boolean,
 })
 
 const form = useForm('post', route('auth.login.password.submit'), {
     email: props.email,
     password: null,
     remember: false,
+    altcha: null,
     ...useHoneypot(),
 })
 
