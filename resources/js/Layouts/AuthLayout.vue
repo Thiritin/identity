@@ -7,7 +7,7 @@
                     <div class="w-full max-w-screen-md rounded-xl bg-white/90 px-6 py-8 shadow-2xl backdrop-blur-sm dark:bg-primary-900/90 sm:px-10 sm:py-10">
                         <!-- Slot Content -->
                         <div class="flex-1 w-full flex flex-col justify-center">
-                            <Transition mode="out-in" appear>
+                            <Transition name="page" mode="out-in" appear>
                                 <div :key="$page.url">
                                     <slot name="header">
                                         <AuthHeader v-if="!$page.props.hideUserInfo && user" class="mb-8"></AuthHeader>
@@ -97,24 +97,40 @@ export default {
 </script>
 <style>
 
-.v-enter-active,
-.v-leave-active {
-    transition: opacity 0.2s ease-in-out;
+.page-enter-active {
+    transition: opacity 0.35s cubic-bezier(0.25, 0.1, 0.25, 1),
+                transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-.v-enter-from,
-.v-leave-to {
+.page-leave-active {
+    transition: opacity 0.2s cubic-bezier(0.25, 0.1, 0.25, 1),
+                transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.page-enter-from {
     opacity: 0;
+    transform: scale(0.97);
+}
+
+.page-enter-to {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.page-leave-from {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.page-leave-to {
+    opacity: 0;
+    transform: scale(0.97);
 }
 
 .auth-background {
     background-repeat: no-repeat;
     background-size: cover;
     background-image: url('../../assets/fantastic_furry_festival.jpg');
-}
-
-.page * {
-    @apply transition-colors;
 }
 
 </style>
