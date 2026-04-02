@@ -2,6 +2,8 @@
 
 @plugin "@tailwindcss/typography";
 
+@variant dark (&:where(.dark, .dark *));
+
 /*
  * Custom theme — teal primary + neutral surface palette.
  * Source of truth: tailwind.config.js hex values.

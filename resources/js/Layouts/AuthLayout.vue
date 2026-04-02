@@ -1,36 +1,34 @@
 <template>
     <div :class="{ dark: darkMode }">
         <div class="bg-primary-600 auth-background relative min-h-screen dark:text-primary-300">
-            <!-- Background overlay -->
-            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
             <!-- Centered Content -->
             <div class="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
-                <div class="w-full max-w-md rounded-xl bg-white p-8 shadow-2xl dark:bg-primary-900 sm:p-12">
-                    <!-- Slot Content -->
-                    <div class="flex-1 w-full flex flex-col justify-center">
-                        <Transition mode="out-in" appear>
-                            <div :key="$page.url">
-                                <slot name="header">
-                                    <AuthHeader v-if="!$page.props.hideUserInfo && user" class="mb-8"></AuthHeader>
-                                </slot>
-                                <slot></slot>
-                            </div>
-                        </Transition>
+                <div class="flex flex-col items-center gap-4">
+                    <div class="w-full max-w-md rounded-xl bg-white/90 p-8 shadow-2xl backdrop-blur-sm dark:bg-primary-900/90 sm:p-12">
+                        <!-- Slot Content -->
+                        <div class="flex-1 w-full flex flex-col justify-center">
+                            <Transition mode="out-in" appear>
+                                <div :key="$page.url">
+                                    <slot name="header">
+                                        <AuthHeader v-if="!$page.props.hideUserInfo && user" class="mb-8"></AuthHeader>
+                                    </slot>
+                                    <slot></slot>
+                                </div>
+                            </Transition>
+                        </div>
+                        <!-- Footer Content -->
+                        <AuthFooter
+                            class="pt-8"
+                            :navigation="navigation"
+                            :dark-mode="darkMode"
+                            :toggle-dark-mode="toggleDarkMode"
+                        />
                     </div>
-                    <!-- Footer Content -->
-                    <AuthFooter
-                        class="pt-8"
-                        :navigation="navigation"
-                        :dark-mode="darkMode"
-                        :toggle-dark-mode="toggleDarkMode"
-                    />
-                </div>
-                <!-- Artist Notice -->
-                <div
-                    class="absolute bottom-2 left-2 text-sm text-primary-200 bg-black/50 px-2 py-1 rounded shadow"
-                >
-                    Artwork by
-                    <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
+                    <!-- Artist Notice -->
+                    <div class="text-sm text-primary-200">
+                        Artwork by
+                        <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
+                    </div>
                 </div>
             </div>
         </div>
