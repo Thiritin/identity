@@ -14,11 +14,13 @@ class EmailController extends Controller
 {
     public function view(Request $request)
     {
-        if ($request->missing('login_challenge')) {
-            return Redirect::route('login.apps.redirect', ['app' => 'portal']);
+        if ($request->has('login_challenge')) {
+            Session::put('auth.email_flow.login_challenge', $request->get('login_challenge'));
         }
 
-        Session::put('auth.email_flow.login_challenge', $request->get('login_challenge'));
+        if (! Session::has('auth.email_flow.login_challenge')) {
+            return Redirect::route('login.apps.redirect', ['app' => 'portal']);
+        }
 
         return Inertia::render('Auth/Email');
     }
