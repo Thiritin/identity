@@ -98,14 +98,7 @@
                     <div>
                         <div class="flex items-center justify-between mb-1">
                             <label for="firstname" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_firstname') }}</label>
-                            <Select :model-value="getVisibility('firstname')" @update:model-value="v => setVisibility('firstname', v)">
-                                <SelectTrigger class="h-6 w-auto text-xs gap-1 px-2">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem v-for="opt in visibilityOptions" :key="opt.value" :value="opt.value">{{ $t(opt.label) }}</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <VisibilityPicker field="firstname" />
                         </div>
                         <Input id="firstname" v-model="staffForm.firstname" class="w-full" />
                         <p v-if="staffForm.errors.firstname" class="text-xs text-destructive mt-1">{{ staffForm.errors.firstname }}</p>
@@ -113,14 +106,7 @@
                     <div>
                         <div class="flex items-center justify-between mb-1">
                             <label for="lastname" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_lastname') }}</label>
-                            <Select :model-value="getVisibility('lastname')" @update:model-value="v => setVisibility('lastname', v)">
-                                <SelectTrigger class="h-6 w-auto text-xs gap-1 px-2">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem v-for="opt in visibilityOptions" :key="opt.value" :value="opt.value">{{ $t(opt.label) }}</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <VisibilityPicker field="lastname" />
                         </div>
                         <Input id="lastname" v-model="staffForm.lastname" class="w-full" />
                         <p v-if="staffForm.errors.lastname" class="text-xs text-destructive mt-1">{{ staffForm.errors.lastname }}</p>
@@ -131,14 +117,7 @@
                 <div>
                     <div class="flex items-center justify-between mb-1">
                         <label for="birthdate" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_birthdate') }}</label>
-                        <Select :model-value="getVisibility('birthdate')" @update:model-value="v => setVisibility('birthdate', v)">
-                            <SelectTrigger class="h-6 w-auto text-xs gap-1 px-2">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem v-for="opt in visibilityOptions" :key="opt.value" :value="opt.value">{{ $t(opt.label) }}</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        <VisibilityPicker field="birthdate" />
                     </div>
                     <Input id="birthdate" type="date" v-model="staffForm.birthdate" class="w-full" />
                     <p v-if="staffForm.errors.birthdate" class="text-xs text-destructive mt-1">{{ staffForm.errors.birthdate }}</p>
@@ -148,14 +127,7 @@
                 <div>
                     <div class="flex items-center justify-between mb-1">
                         <label for="phone" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_phone') }}</label>
-                        <Select :model-value="getVisibility('phone')" @update:model-value="v => setVisibility('phone', v)">
-                            <SelectTrigger class="h-6 w-auto text-xs gap-1 px-2">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem v-for="opt in visibilityOptions" :key="opt.value" :value="opt.value">{{ $t(opt.label) }}</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        <VisibilityPicker field="phone" />
                     </div>
                     <Input id="phone" type="tel" v-model="staffForm.phone" class="w-full" />
                     <p v-if="staffForm.errors.phone" class="text-xs text-destructive mt-1">{{ staffForm.errors.phone }}</p>
@@ -165,14 +137,7 @@
                 <div>
                     <div class="flex items-center justify-between mb-1">
                         <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_telegram') }}</label>
-                        <Select :model-value="getVisibility('telegram')" @update:model-value="v => setVisibility('telegram', v)">
-                            <SelectTrigger class="h-6 w-auto text-xs gap-1 px-2">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem v-for="opt in visibilityOptions" :key="opt.value" :value="opt.value">{{ $t(opt.label) }}</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        <VisibilityPicker field="telegram" />
                     </div>
                     <div class="flex items-center h-9 px-3 rounded-md border border-input bg-muted text-sm text-muted-foreground">
                         {{ staffProfile?.telegram_username ? '@' + staffProfile.telegram_username : $t('staff_profile_telegram_not_linked') }}
@@ -279,7 +244,7 @@
 import { Head, useForm, usePage, router } from '@inertiajs/vue3'
 import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
 import AvatarModal from '@/Profile/AvatarModal.vue'
-import { computed, nextTick, ref } from 'vue'
+import { computed, h, nextTick, ref } from 'vue'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 import { Switch } from '@/Components/ui/switch/index.js'
@@ -288,8 +253,8 @@ import {
     DropdownMenu, DropdownMenuContent, DropdownMenuLabel,
     DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/Components/ui/dropdown-menu'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip'
 import { Camera, Pencil, Check, X, Globe, Users, Shield, Lock } from 'lucide-vue-next'
+import { trans } from 'laravel-vue-i18n'
 
 const props = defineProps({
     errors: Object,
@@ -410,6 +375,46 @@ const staffYears = computed(() => {
     if (!props.eurofurenceEditions) return []
     return [...new Set(props.eurofurenceEditions.map(e => e.year))].sort((a, b) => a - b)
 })
+
+/**
+ * Inline functional component for the visibility icon picker.
+ * Renders a small icon button that opens a dropdown radio menu.
+ */
+const VisibilityPicker = (pickerProps) => {
+    const field = pickerProps.field
+    const opt = getVisibilityOption(field)
+    return h(DropdownMenu, null, {
+        default: () => [
+            h(DropdownMenuTrigger, { asChild: true }, {
+                default: () => h('button', {
+                    type: 'button',
+                    title: `${trans('staff_profile_visibility')}: ${trans(opt.label)}`,
+                    class: 'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors',
+                }, [h(opt.icon, { class: 'h-3.5 w-3.5' })]),
+            }),
+            h(DropdownMenuContent, { align: 'end', class: 'w-52' }, {
+                default: () => [
+                    h(DropdownMenuLabel, null, { default: () => trans('staff_profile_visibility') }),
+                    h(DropdownMenuSeparator),
+                    h(DropdownMenuRadioGroup, {
+                        modelValue: getVisibility(field),
+                        'onUpdate:modelValue': (v) => setVisibility(field, v),
+                    }, {
+                        default: () => visibilityOptions.map(o =>
+                            h(DropdownMenuRadioItem, { key: o.value, value: o.value }, {
+                                default: () => [
+                                    h(o.icon, { class: 'h-4 w-4 mr-2 text-muted-foreground' }),
+                                    trans(o.label),
+                                ],
+                            })
+                        ),
+                    }),
+                ],
+            }),
+        ],
+    })
+}
+VisibilityPicker.props = { field: String }
 </script>
 
 <script>
