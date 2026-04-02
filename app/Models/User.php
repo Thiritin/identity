@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Notifications\PasswordResetQueuedNotification;
 use App\Notifications\UpdateEmailNotification;
-use App\Notifications\VerifyEmailQueuedNotification;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,7 +21,6 @@ use Mtvs\EloquentHashids\HashidRouting;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
@@ -31,7 +29,6 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     use HasFactory;
     use HasHashid;
     use HashidRouting;
-    use HasRoles;
     use LogsActivity;
     use Notifiable;
 
@@ -45,6 +42,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'email',
         'password',
         'profile_photo_path',
+        'is_admin',
     ];
 
     /**
@@ -66,6 +64,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean',
     ];
 
     /**
@@ -95,10 +94,8 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function sendEmailVerificationNotification(): void
     {
-        activity()
-            ->by($this)
-            ->log('mail-verify-email');
-        $this->notify(new VerifyEmailQueuedNotification());
+        // Verification is handled by 6-digit code in RegisterVerifyController.
+        // This method is intentionally empty to prevent the default link-based email.
     }
 
     public function sendPasswordResetNotification($token): void
@@ -173,7 +170,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function canAccessPanel($panel): bool
     {
-        return $this->hasRole('superadmin');
+        return $this->is_admin;
     }
 
     public function getActivitylogOptions(): LogOptions

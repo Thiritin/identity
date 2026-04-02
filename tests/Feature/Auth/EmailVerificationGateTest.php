@@ -41,8 +41,9 @@ test('unverified user can login to portal app', function () {
         return Http::response('', 200);
     });
 
-    $response = $this->post(route('auth.login.password.submit'), [
-        'login_challenge' => 'test-challenge',
+    $response = $this->withSession([
+        'auth.login_challenge' => ['challenge' => 'test-challenge'],
+    ])->post(route('auth.login.password.submit'), [
         'email' => $user->email,
         'password' => $password,
         'remember' => false,
@@ -83,8 +84,9 @@ test('unverified user cannot login to non-portal app', function () {
         return Http::response('', 200);
     });
 
-    $response = $this->post(route('auth.login.password.submit'), [
-        'login_challenge' => 'test-challenge',
+    $response = $this->withSession([
+        'auth.login_challenge' => ['challenge' => 'test-challenge'],
+    ])->post(route('auth.login.password.submit'), [
         'email' => $user->email,
         'password' => $password,
         'remember' => false,
@@ -128,8 +130,9 @@ test('verified user can login to any app', function () {
         return Http::response('', 200);
     });
 
-    $response = $this->post(route('auth.login.password.submit'), [
-        'login_challenge' => 'test-challenge',
+    $response = $this->withSession([
+        'auth.login_challenge' => ['challenge' => 'test-challenge'],
+    ])->post(route('auth.login.password.submit'), [
         'email' => $user->email,
         'password' => $password,
         'remember' => false,

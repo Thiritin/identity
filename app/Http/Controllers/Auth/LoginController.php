@@ -20,7 +20,7 @@ class LoginController extends Controller
     public function view(Request $request)
     {
         $email = Session::get('auth.email_flow.email');
-        $loginChallenge = Session::get('auth.email_flow.login_challenge');
+        $loginChallenge = Session::get('auth.login_challenge.challenge');
 
         if (! $email || ! $loginChallenge) {
             return Redirect::route('auth.login.view');
@@ -50,7 +50,6 @@ class LoginController extends Controller
 
         return Inertia::render('Auth/Login', [
             'email' => $email,
-            'loginChallenge' => $loginChallenge,
         ]);
     }
 
@@ -68,34 +67,41 @@ class LoginController extends Controller
             'password' => $request->get('password'),
         ];
 
+        $loginChallenge = Session::get('auth.login_challenge.challenge');
+
+        if (! $loginChallenge) {
+            return Redirect::route('auth.login.view');
+        }
+
         if (Auth::once($loginData) === true) {
             $user = Auth::user();
 
             $hydra = new Client();
-            $loginRequest = $hydra->getLoginRequest($request->get('login_challenge'));
+            $loginRequest = $hydra->getLoginRequest($loginChallenge);
 
             // redirect_to key is added when login request expired.
             if (isset($loginRequest['redirect_to'])) {
                 return Redirect::to($loginRequest['redirect_to']);
             }
 
-            $emailVerified = $this->checkEmailVerification($loginRequest, $user); // Check if user has verified email
+            $emailVerified = $this->checkEmailVerification($loginRequest, $user);
             if ($emailVerified === false) {
                 return Redirect::route('login.apps.redirect', ['app' => 'portal']);
             }
 
             if ($user->twoFactors()->exists()) {
                 return Redirect::signedRoute('auth.two-factor', [
-                    'login_challenge' => $request->get('login_challenge'),
+                    'login_challenge' => $loginChallenge,
                     'user' => $user->hashid,
                     'remember' => $request->get('remember') ?? false,
                 ], now()->addMinutes(30));
             }
 
-            $url = (new Client())->acceptLogin($user->hashId(), $request->get('login_challenge'),
+            $url = (new Client())->acceptLogin($user->hashId(), $loginChallenge,
                 $request->get('remember') ? '2592000' : '3600');
 
             Session::forget('auth.email_flow');
+            Session::forget('auth.login_challenge');
 
             return Inertia::location($url);
         }

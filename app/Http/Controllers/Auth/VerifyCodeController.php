@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Notifications\VerifyEmailCodeNotification;
+use App\Services\Hydra\Client;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -52,9 +53,8 @@ class VerifyCodeController extends Controller
         }
 
         Session::forget('auth.verify_code');
-        Session::put('justRegisteredSkipLogin.user_id', $user->id);
 
-        return Redirect::route('login.apps.redirect', ['app' => 'portal']);
+        return $this->acceptLoginChallenge($user);
     }
 
     public function resend()
@@ -77,5 +77,46 @@ class VerifyCodeController extends Controller
         $user->notify(new VerifyEmailCodeNotification($code));
 
         return back()->with('status', 'code-resent');
+    }
+
+    private function acceptLoginChallenge(User $user)
+    {
+        $challengeData = Session::get('auth.login_challenge');
+
+        if (! $challengeData) {
+            Session::put('justRegisteredSkipLogin.user_id', $user->id);
+
+            return Redirect::route('login.apps.redirect', ['app' => 'portal']);
+        }
+
+        try {
+            $hydra = new Client();
+            $loginRequest = $hydra->getLoginRequest($challengeData['challenge']);
+
+            if (isset($loginRequest['redirect_to'])) {
+                Session::forget('auth.login_challenge');
+                Session::forget('auth.email_flow');
+
+                return Redirect::route('auth.error', [
+                    'error' => 'login_expired',
+                    'error_description' => 'Your login session has expired. Please try again.',
+                ]);
+            }
+
+            $url = $hydra->acceptLogin($user->hashId(), $challengeData['challenge'], '3600');
+
+            Session::forget('auth.login_challenge');
+            Session::forget('auth.email_flow');
+
+            return Inertia::location($url);
+        } catch (\Exception $e) {
+            Session::forget('auth.login_challenge');
+            Session::forget('auth.email_flow');
+
+            return Redirect::route('auth.error', [
+                'error' => 'login_failed',
+                'error_description' => 'Login could not be completed. Please try again.',
+            ]);
+        }
     }
 }

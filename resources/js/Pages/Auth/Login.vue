@@ -93,13 +93,11 @@ const props = defineProps({
     status: String,
     errors: Object,
     email: String,
-    loginChallenge: String,
 })
 
 const form = useForm('post', route('auth.login.password.submit'), {
     email: props.email,
     password: null,
-    login_challenge: props.loginChallenge,
     remember: false,
     ...useHoneypot(),
 })

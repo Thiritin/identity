@@ -51,7 +51,23 @@ test('health endpoint returns ok', function () {
 */
 
 test('login page loads with valid login challenge', function () {
+    Http::fake([
+        '*/admin/oauth2/auth/requests/login*' => Http::response([
+            'challenge' => 'test-challenge-123',
+            'client' => ['client_id' => 'test-client', 'client_name' => 'Test'],
+            'request_url' => 'http://localhost',
+            'requested_scope' => ['openid'],
+            'skip' => false,
+            'subject' => '',
+        ]),
+    ]);
+
+    // First request validates challenge and redirects
     $this->get(route('auth.login.view', ['login_challenge' => 'test-challenge-123']))
+        ->assertRedirect(route('auth.login.view'));
+
+    // Second request renders the email page
+    $this->get(route('auth.login.view'))
         ->assertSuccessful()
         ->assertInertia(fn ($page) => $page->component('Auth/Email'));
 });
@@ -119,8 +135,10 @@ test('login submit with valid credentials returns redirect', function () {
         ]);
     });
 
-    $response = $this->post(route('auth.login.password.submit'), [
-        'login_challenge' => $challenge,
+    $response = $this->withSession([
+        'auth.login_challenge' => ['challenge' => $challenge, 'client_id' => 'smoke-test-client'],
+        'auth.email_flow.email' => $user->email,
+    ])->post(route('auth.login.password.submit'), [
         'email' => $user->email,
         'password' => $password,
         'remember' => false,
@@ -163,8 +181,9 @@ test('login submit with wrong password returns validation error', function () {
         'password' => Hash::make('CorrectPassword123!'),
     ]);
 
-    $this->postJson(route('auth.login.password.submit'), [
-        'login_challenge' => $challenge,
+    $this->withSession([
+        'auth.login_challenge' => ['challenge' => $challenge, 'client_id' => 'smoke-test-client'],
+    ])->postJson(route('auth.login.password.submit'), [
         'email' => $user->email,
         'password' => 'WrongPassword123!',
         'remember' => false,
