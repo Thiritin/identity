@@ -4,7 +4,7 @@
         <Logo class="mx-auto" />
         <LoginScreenWelcome
             :title="$trans('loginscreen_welcome')"
-            :sub-title="$trans('loginscreen_sign_in_to_continue')"
+            :sub-title="$trans('enter_email_to_continue')"
             class="mb-10"
         />
     </div>

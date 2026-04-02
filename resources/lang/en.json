@@ -87,5 +87,6 @@
     "too_many_attempts_email_verification": "You can resend the verification email every 30 seconds.",
     "two_factor_auth": "Two Factor Setup",
     "change_password": "Change Password",
-    "continue": "Continue"
+    "continue": "Continue",
+    "enter_email_to_continue": "Enter your email to continue"
 }
