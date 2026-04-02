@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Profile;
 
 use App\Enums\TwoFactorTypeEnum;
 use App\Http\Controllers\Controller;
+use App\Services\BackupCodeService;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -12,6 +13,7 @@ class SecurityController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $backupCodeService = new BackupCodeService();
 
         $totp = $user->twoFactors()->whereType(TwoFactorTypeEnum::TOTP)->first();
         $yubikeyCount = $user->twoFactors()
@@ -23,6 +25,8 @@ class SecurityController extends Controller
             'totpLastUsed' => $totp?->last_used_at?->diffForHumans(),
             'yubikeyCount' => $yubikeyCount,
             'passwordChangedAt' => $user->password_changed_at?->diffForHumans(),
+            'backupCodesEnabled' => $backupCodeService->hasBackupCodes($user),
+            'backupCodesCount' => $backupCodeService->remainingCount($user),
         ]);
     }
 
@@ -32,6 +36,13 @@ class SecurityController extends Controller
 
         return Inertia::render('Settings/Security/Password', [
             'passwordChangedAt' => $user->password_changed_at?->diffForHumans(),
+        ]);
+    }
+
+    public function email()
+    {
+        return Inertia::render('Settings/Security/Email', [
+            'currentEmail' => Auth::user()->email,
         ]);
     }
 
@@ -60,6 +71,18 @@ class SecurityController extends Controller
 
         return Inertia::render('Settings/Security/Yubikey', [
             'yubikeys' => $yubikeys,
+        ]);
+    }
+
+    public function backupCodes()
+    {
+        $user = Auth::user();
+        $backupCodeService = new BackupCodeService();
+
+        return Inertia::render('Settings/Security/BackupCodes', [
+            'remainingCount' => $backupCodeService->remainingCount($user),
+            'hasBackupCodes' => $backupCodeService->hasBackupCodes($user),
+            'backupCodes' => session('backup_codes'),
         ]);
     }
 }
