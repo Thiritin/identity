@@ -1,61 +1,37 @@
 <template>
-    <VueCookieAcceptDecline
-        :disable-decline="true"
-        :show-postpone-button="false"
-        element-id="cookies"
-        position="top"
-        transition-name="slideFromTop"
-        type="bar"
-    >
-
-        <!-- Optional -->
-        <template #message>
-            {{ $trans('cookie_notice') }}
-        </template>
-
-        <!-- Optional -->
-        <template #acceptContent>OK</template>
-    </VueCookieAcceptDecline>
     <div :class="{ dark: darkMode }">
-        <div class="bg-white flex page dark:text-primary-300 dark:bg-primary-900">
-            <!-- Background & Artist Notice -->
-            <div class="hidden lg:block relative w-0 flex-auto">
-                <div
-                    class="absolute inset-0 object-right h-full w-full object-cover bg-primary-600 auth-background"
-                >
-                    <div
-                        class="absolute bottom-2 left-2 text-sm text-primary-200 bg-black px-2 py-1 rounded shadow"
-                    >
-                        Artwork by
-                        <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
+        <div class="bg-primary-600 auth-background relative min-h-screen dark:text-primary-300">
+            <!-- Background overlay -->
+            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+            <!-- Centered Content -->
+            <div class="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
+                <div class="w-full max-w-md rounded-xl bg-white p-8 shadow-2xl dark:bg-primary-900 sm:p-12">
+                    <!-- Slot Content -->
+                    <div class="flex-1 w-full flex flex-col justify-center">
+                        <Transition mode="out-in" appear>
+                            <div :key="$page.url">
+                                <slot name="header">
+                                    <AuthHeader v-if="!$page.props.hideUserInfo && user" class="mb-8"></AuthHeader>
+                                </slot>
+                                <slot></slot>
+                            </div>
+                        </Transition>
                     </div>
+                    <!-- Footer Content -->
+                    <AuthFooter
+                        class="pt-8"
+                        :navigation="navigation"
+                        :dark-mode="darkMode"
+                        :toggle-dark-mode="toggleDarkMode"
+                    />
                 </div>
-            </div>
-            <!-- Page Content -->
-            <div
-                class="!min-h-[calc(100dvh)] min-h-screen
-                mx-auto w-full max-w-md
-                flex-1 flex flex-col items-center justify-center lg:flex-none
-                px-6 sm:px-12
-                pt-8 pb-8">
-                <!-- Slot Content -->
-                <div class="flex-1 w-full flex flex-col justify-center">
-                    <Transition mode="out-in" appear>
-                        <div :key="$page.url">
-                            <slot name="header">
-                                <AuthHeader v-if="!$page.props.hideUserInfo && user" class="mb-8"></AuthHeader>
-                            </slot>
-                            <slot></slot>
-                        </div>
-                    </Transition>
+                <!-- Artist Notice -->
+                <div
+                    class="absolute bottom-2 left-2 text-sm text-primary-200 bg-black/50 px-2 py-1 rounded shadow"
+                >
+                    Artwork by
+                    <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
                 </div>
-                <!-- Footer Content -->
-                <AuthFooter
-                    class="pt-8"
-                    :navigation="navigation"
-                    :dark-mode="darkMode"
-                    :toggle-dark-mode="toggleDarkMode"
-                />
             </div>
         </div>
     </div>
@@ -66,14 +42,12 @@ import {usePage} from "@inertiajs/vue3";
 const user = usePage().props.user;
 </script>
 <script>
-import VueCookieAcceptDecline from 'vue-cookie-accept-decline'
-import 'vue-cookie-accept-decline/dist/vue-cookie-accept-decline.css'
 import AuthFooter from "../Components/Auth/AuthFooter.vue";
 import AuthHeader from "../Components/Auth/AuthHeader.vue";
 import {usePage} from "@inertiajs/vue3";
 
 export default {
-    components: {AuthHeader, AuthFooter, VueCookieAcceptDecline},
+    components: {AuthHeader, AuthFooter},
     data() {
         return {
             animated: true,
@@ -82,7 +56,7 @@ export default {
                 main: [
                     {
                         name: 'Create Account',
-                        link: route('auth.register.view'),
+                        link: route('auth.login.view'),
                         newTab: false,
                         visible: () => usePage().props.user === null,
                     },
