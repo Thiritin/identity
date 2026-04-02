@@ -81,3 +81,20 @@ test('password page without session redirects to login', function () {
     $this->get(route('auth.login.password.view'))
         ->assertRedirect(route('auth.login.view'));
 });
+
+test('register page loads with session data', function () {
+    $this->withSession([
+        'auth.email_flow.email' => 'newuser@example.com',
+    ])
+        ->get(route('auth.register.view'))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->component('Auth/Register')
+            ->has('email')
+        );
+});
+
+test('register page without session redirects to login', function () {
+    $this->get(route('auth.register.view'))
+        ->assertRedirect(route('auth.login.view'));
+});

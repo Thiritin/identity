@@ -10,33 +10,29 @@
         <div class="flex flex-col gap-2">
             <label for="username">{{ $trans('username') }}</label>
             <Input id="username"
-                       type="text"
-                       @change="form.validate('username')"
-                       :class="{ 'border-destructive': form.invalid('username') }"
-                       v-model.trim.lazy="form.username"
+                type="text"
+                @change="form.validate('username')"
+                :class="{ 'border-destructive': form.invalid('username') }"
+                v-model.trim.lazy="form.username"
             />
             <p v-if="form.invalid('username')" class="text-sm text-destructive">{{ form.errors.username }}</p>
         </div>
         <div class="flex flex-col gap-2">
             <label for="email">{{ $trans('email') }}</label>
             <Input id="email"
-                       placeholder="me@example.org"
-                       type="email"
-                       autocomplete="email"
-                       @change="form.validate('email')"
-                       :class="{ 'border-destructive': form.invalid('email') }"
-                       v-model.trim.lazy="form.email"
+                :model-value="email"
+                disabled
+                class="bg-muted"
             />
-            <p v-if="form.invalid('email')" class="text-sm text-destructive">{{ form.errors.email }}</p>
         </div>
         <div class="flex flex-col gap-2">
             <label for="password">{{ $trans('password') }}</label>
             <Input id="password"
-                       type="password"
-                       autocomplete="password"
-                       @change="form.validate('password')"
-                       :class="{ 'border-destructive': form.invalid('password') }"
-                       v-model.trim.lazy="form.password"
+                type="password"
+                autocomplete="password"
+                @change="form.validate('password')"
+                :class="{ 'border-destructive': form.invalid('password') }"
+                v-model.trim.lazy="form.password"
             />
             <p v-if="form.invalid('password')" class="text-sm text-destructive">{{ form.errors.password }}</p>
         </div>
@@ -46,11 +42,11 @@
         <div class="flex flex-col gap-2">
             <label for="password_confirmation">{{ $trans('password_confirmation') }}</label>
             <Input id="password_confirmation"
-                       type="password"
-                       autocomplete="password"
-                       @change="form.validate('password_confirmation')"
-                       :class="{ 'border-destructive': form.invalid('password_confirmation') }"
-                       v-model.trim.lazy="form.password_confirmation"
+                type="password"
+                autocomplete="password"
+                @change="form.validate('password_confirmation')"
+                :class="{ 'border-destructive': form.invalid('password_confirmation') }"
+                v-model.trim.lazy="form.password_confirmation"
             />
             <p v-if="form.invalid('password_confirmation')" class="text-sm text-destructive">{{ form.errors.password_confirmation }}</p>
         </div>
@@ -71,24 +67,23 @@
 <script setup>
 import Logo from '@/Auth/Logo.vue'
 import LoginScreenWelcome from '@/Auth/LoginScreenWelcome.vue'
-import FormInput from '@/Auth/Form/AuthFormInput.vue'
 import AuthLayout from '@/Layouts/AuthLayout.vue'
-import {Head, Link, useForm} from '@inertiajs/vue3'
+import { Head, Link, useForm } from '@inertiajs/vue3'
 import PasswordInfoBox from '@/Auth/PasswordInfoBox.vue'
-import { Input } from '@/Components/ui/input';
-import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input'
+import { Button } from '@/Components/ui/button'
 
-// Convert vue2 to vue3
 defineOptions({
-    layout: AuthLayout
+    layout: AuthLayout,
 })
 
 const props = defineProps({
-    errors: Object
+    email: String,
+    errors: Object,
 })
 
 const form = useForm('post', route('auth.register.store'), {
-    email: null,
+    email: props.email,
     username: null,
     password: null,
     password_confirmation: null,
