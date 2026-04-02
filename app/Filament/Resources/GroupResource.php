@@ -3,18 +3,20 @@
 namespace App\Filament\Resources;
 
 use App\Enums\GroupTypeEnum;
-use App\Filament\Resources\GroupResource\Pages;
+use App\Filament\Resources\GroupResource\Pages\CreateGroup;
+use App\Filament\Resources\GroupResource\Pages\EditGroup;
+use App\Filament\Resources\GroupResource\Pages\ListGroups;
 use App\Filament\Resources\GroupResource\RelationManagers\UsersRelationManager;
 use App\Models\Group;
-use Filament\Forms\Components\Group as FilamentGroup;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\EditAction;
+use Filament\Schemas\Components\Group as SchemaGroup;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -26,15 +28,15 @@ class GroupResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                FilamentGroup::make()->columnSpan(2)->schema([
+        return $schema
+            ->components([
+                SchemaGroup::make()->columnSpan(2)->schema([
                     Section::make()->schema([
-                        FilamentGroup::make()->columns()->schema([
+                        SchemaGroup::make()->columns()->schema([
                             Placeholder::make('id')
                                 ->label('Internal ID')
                                 ->content(fn (?Group $record): string => $record?->id ?? '-'),
@@ -60,7 +62,7 @@ class GroupResource extends Resource
                     ]),
                 ]),
 
-                FilamentGroup::make()->columnSpan(1)->schema([
+                SchemaGroup::make()->columnSpan(1)->schema([
                     Section::make()->schema([
 
                         Select::make('type')->options([
@@ -92,7 +94,7 @@ class GroupResource extends Resource
                     ->sortable()
                     ->formatStateUsing(fn ($state) => ucfirst($state->value)),
             ])
-            ->actions([
+            ->recordActions([
                 EditAction::make(),
             ]);
     }
@@ -100,9 +102,9 @@ class GroupResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListGroups::route('/'),
-            'create' => Pages\CreateGroup::route('/create'),
-            'edit' => Pages\EditGroup::route('/{record}/edit'),
+            'index' => ListGroups::route('/'),
+            'create' => CreateGroup::route('/create'),
+            'edit' => EditGroup::route('/{record}/edit'),
         ];
     }
 

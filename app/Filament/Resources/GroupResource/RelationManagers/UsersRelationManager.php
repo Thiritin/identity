@@ -3,11 +3,16 @@
 namespace App\Filament\Resources\GroupResource\RelationManagers;
 
 use App\Enums\GroupUserLevel;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\DetachBulkAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
-use Filament\Tables\Actions\AttachAction;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\SelectColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Table;
 
 class UsersRelationManager extends RelationManager
@@ -20,11 +25,11 @@ class UsersRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\SelectColumn::make('level')
+                TextColumn::make('name'),
+                SelectColumn::make('level')
                     ->options(GroupUserLevel::class)
                     ->rules(['required']),
-                Tables\Columns\TextInputColumn::make('title'),
+                TextInputColumn::make('title'),
             ])
             ->filters([
                 //
@@ -32,26 +37,26 @@ class UsersRelationManager extends RelationManager
             ->headerActions([
                 AttachAction::make()->form(fn (AttachAction $action): array => [
                     $action->getRecordSelect(),
-                    Forms\Components\Select::make('level')->required()
+                    Select::make('level')->required()
                         ->options(GroupUserLevel::class),
                 ]),
             ])
-            ->actions([
-                Tables\Actions\DetachAction::make(),
+            ->recordActions([
+                DetachAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\DetachBulkAction::make(),
+            ->toolbarActions([
+                DetachBulkAction::make(),
             ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('level')->required()
+                Select::make('level')->required()
                     ->options(GroupUserLevel::class),
             ]);
     }

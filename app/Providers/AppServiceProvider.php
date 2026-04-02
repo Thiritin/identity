@@ -6,7 +6,7 @@ use App\Providers\Socialite\SocialiteIdentityProvider;
 use App\Services\Hydra\Admin;
 use App\Services\Hydra\Client;
 use Filament\Facades\Filament;
-use Filament\Navigation\UserMenuItem;
+use Filament\Navigation\MenuItem;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -58,11 +58,11 @@ class AppServiceProvider extends ServiceProvider
 
         Filament::serving(function () {
             Filament::registerUserMenuItems([
-                'logout-everywhere' => UserMenuItem::make()
+                'logout-everywhere' => MenuItem::make()
                     ->icon('heroicon-o-arrow-right-circle')
                     ->url(route('dashboard'))
                     ->label('To User Interface'),
-                'logout' => UserMenuItem::make()->url('/oauth2/sessions/logout')->label('Log out'),
+                'logout' => MenuItem::make()->url('/oauth2/sessions/logout')->label('Log out'),
             ]);
         });
 

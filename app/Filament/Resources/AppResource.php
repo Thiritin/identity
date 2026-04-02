@@ -2,23 +2,25 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\AppResource\Pages;
+use App\Filament\Resources\AppResource\Pages\CreateApp;
+use App\Filament\Resources\AppResource\Pages\EditApp;
+use App\Filament\Resources\AppResource\Pages\ListApps;
 use App\Filament\Resources\AppResource\RelationManagers\GroupsRelationManager;
 use App\Models\App;
 use App\Services\Hydra\Client;
-use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -30,12 +32,12 @@ class AppResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'client_id';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Group::make()->columnSpan(2)->schema([
                     Group::make()->columns()->schema([
                         TextInput::make('client_id')->label('Client ID')->disabled(),
@@ -43,7 +45,7 @@ class AppResource extends Resource
                         TextInput::make('data.client_name')->columnSpan(2)->required(),
                     ]),
                     Tabs::make('Tabs')->tabs([
-                        Tabs\Tab::make('Information')->icon('heroicon-o-paper-clip')->schema([
+                        Tab::make('Information')->icon('heroicon-o-paper-clip')->schema([
                             TextInput::make('data.client_uri')
                                 ->url()
                                 ->helperText('A URL string of a web page providing information about the client'),
@@ -57,7 +59,7 @@ class AppResource extends Resource
                                 ->url()
                                 ->helperText('A URL string that references the terms of service for the client'),
                         ]),
-                        Tabs\Tab::make('Login')->icon('heroicon-o-arrow-left-on-rectangle')->schema([
+                        Tab::make('Login')->icon('heroicon-o-arrow-left-on-rectangle')->schema([
                             TagsInput::make('data.redirect_uris')->columnSpan(2),
                             Select::make('data.subject_type')->options([
                                 'public' => 'public',
@@ -75,7 +77,7 @@ class AppResource extends Resource
                                 'token' => 'token',
                             ])->columnSpan(2),
                         ]),
-                        Tabs\Tab::make('Token')->icon('heroicon-o-lock-closed')->schema([
+                        Tab::make('Token')->icon('heroicon-o-lock-closed')->schema([
                             Select::make('data.token_endpoint_auth_method')->options([
                                 'client_secret_post' => 'client_secret_post',
                                 'client_secret_basic' => 'client_secret_basic',
@@ -96,7 +98,7 @@ class AppResource extends Resource
                             }),
 
                         ]),
-                        Tabs\Tab::make('Logout')->icon('heroicon-o-arrow-right-on-rectangle')->schema([
+                        Tab::make('Logout')->icon('heroicon-o-arrow-right-on-rectangle')->schema([
                             TagsInput::make('data.post_logout_redirect_uris')->columnSpan(2),
                             Section::make('Frontchannel Logout')
                                 ->description('Configure frontchannel logout.')
@@ -119,7 +121,7 @@ class AppResource extends Resource
                                 ]),
                         ]),
 
-                        Tabs\Tab::make('Request')->icon('heroicon-o-signal')->schema([
+                        Tab::make('Request')->icon('heroicon-o-signal')->schema([
                             TagsInput::make('data.request_uris')->columnSpan(2),
                             Select::make('data.request_object_signing_alg')->options([
                                 'none' => 'none',
@@ -128,11 +130,11 @@ class AppResource extends Resource
                             ])->columnSpan(2),
                         ]),
 
-                        Tabs\Tab::make('CORS')->icon('heroicon-o-globe-alt')->schema([
+                        Tab::make('CORS')->icon('heroicon-o-globe-alt')->schema([
                             TagsInput::make('data.allowed_cors_origins')->columnSpan(2),
                         ]),
 
-                        Tabs\Tab::make('Audience')->schema([
+                        Tab::make('Audience')->schema([
                             TagsInput::make('data.audience')->columnSpan(1),
                         ]),
                     ]),
@@ -168,7 +170,7 @@ class AppResource extends Resource
                             })->hint('Request new Icons @ Thiritin')->required(),
                             TextInput::make('url')->url(),
                         ]),
-                    Card::make()->schema([
+                    Section::make()->schema([
                         Placeholder::make('created_at')
                             ->label('Created At')
                             ->content(fn (?App $record): string => $record?->created_at?->diffForHumans() ?? '-'),
@@ -195,9 +197,9 @@ class AppResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListApps::route('/'),
-            'create' => Pages\CreateApp::route('/create'),
-            'edit' => Pages\EditApp::route('/{record}/edit'),
+            'index' => ListApps::route('/'),
+            'create' => CreateApp::route('/create'),
+            'edit' => EditApp::route('/{record}/edit'),
         ];
     }
 

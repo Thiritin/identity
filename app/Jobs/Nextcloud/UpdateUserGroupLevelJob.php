@@ -6,11 +6,13 @@ use App\Enums\GroupUserLevel;
 use App\Models\Group;
 use App\Models\User;
 use App\Services\NextcloudService;
+use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class UpdateUserGroupLevelJob implements ShouldQueue
 {
@@ -42,7 +44,7 @@ class UpdateUserGroupLevelJob implements ShouldQueue
                 'new_level' => $this->newLevel->value,
                 'acl_management' => $allowAclManagement,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Failed to update user group level in Nextcloud', [
                 'group_id' => $this->group->id,
                 'group_hashid' => $this->group->hashid,
@@ -57,7 +59,7 @@ class UpdateUserGroupLevelJob implements ShouldQueue
         }
     }
 
-    public function failed(\Throwable $exception): void
+    public function failed(Throwable $exception): void
     {
         Log::error('Update user group level in Nextcloud job failed permanently', [
             'group_id' => $this->group->id,
