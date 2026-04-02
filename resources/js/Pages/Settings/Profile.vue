@@ -70,27 +70,11 @@
         </div>
     </div>
 
-    <!-- Preferences -->
-    <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10">
-        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ $t('preferences') }}</h3>
-        <div class="flex items-center justify-between">
-            <div>
-                <label for="nsfw_content" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('preferences_nsfw_label') }}</label>
-                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $t('preferences_nsfw_description') }}</p>
-            </div>
-            <Switch
-                id="nsfw_content"
-                v-model="nsfwContent"
-                @update:model-value="(val) => togglePreference('nsfw_content', val)"
-            />
-        </div>
-    </div>
-
-    <!-- Staff Profile (staff only) -->
+    <!-- Staff Profile (staff only) — shown first -->
     <template v-if="$page.props.user.isStaff && staffForm">
         <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10">
             <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">{{ $t('staff_profile') }}</h3>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-5">{{ $t('staff_profile_personal') }}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-5">{{ $t('staff_profile_description') }}</p>
 
             <form @submit.prevent="submitStaffProfile" class="space-y-4">
                 <!-- Firstname / Lastname -->
@@ -100,7 +84,7 @@
                             <label for="firstname" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_firstname') }}</label>
                             <VisibilityPicker field="firstname" />
                         </div>
-                        <Input id="firstname" v-model="staffForm.firstname" class="w-full" />
+                        <Input id="firstname" v-model="staffForm.firstname" class="w-full bg-white dark:bg-primary-950" />
                         <p v-if="staffForm.errors.firstname" class="text-xs text-destructive mt-1">{{ staffForm.errors.firstname }}</p>
                     </div>
                     <div>
@@ -108,7 +92,7 @@
                             <label for="lastname" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_lastname') }}</label>
                             <VisibilityPicker field="lastname" />
                         </div>
-                        <Input id="lastname" v-model="staffForm.lastname" class="w-full" />
+                        <Input id="lastname" v-model="staffForm.lastname" class="w-full bg-white dark:bg-primary-950" />
                         <p v-if="staffForm.errors.lastname" class="text-xs text-destructive mt-1">{{ staffForm.errors.lastname }}</p>
                     </div>
                 </div>
@@ -120,7 +104,7 @@
                             <label for="birthdate" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_birthdate') }}</label>
                             <VisibilityPicker field="birthdate" />
                         </div>
-                        <Input id="birthdate" type="date" v-model="staffForm.birthdate" class="w-full" />
+                        <Input id="birthdate" type="date" v-model="staffForm.birthdate" class="w-full bg-white dark:bg-primary-950" />
                         <p v-if="staffForm.errors.birthdate" class="text-xs text-destructive mt-1">{{ staffForm.errors.birthdate }}</p>
                     </div>
                     <div>
@@ -128,7 +112,7 @@
                             <label for="phone" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_phone') }}</label>
                             <VisibilityPicker field="phone" />
                         </div>
-                        <Input id="phone" type="tel" v-model="staffForm.phone" class="w-full" />
+                        <Input id="phone" type="tel" v-model="staffForm.phone" class="w-full bg-white dark:bg-primary-950" />
                         <p v-if="staffForm.errors.phone" class="text-xs text-destructive mt-1">{{ staffForm.errors.phone }}</p>
                     </div>
                 </div>
@@ -186,12 +170,12 @@
                     <div class="space-y-4">
                         <div>
                             <label for="credit_as" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_credit_as_default') }}</label>
-                            <Input id="credit_as" v-model="staffForm.credit_as" class="w-full" />
+                            <Input id="credit_as" v-model="staffForm.credit_as" class="w-full bg-white dark:bg-primary-950" />
                             <p v-if="staffForm.errors.credit_as" class="text-xs text-destructive mt-1">{{ staffForm.errors.credit_as }}</p>
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_spoken_languages') }}</label>
-                            <div class="flex flex-wrap items-center gap-1.5 min-h-9 px-3 py-1.5 rounded-md border border-input bg-transparent text-sm">
+                            <div class="flex flex-wrap items-center gap-1.5 min-h-9 px-3 py-1.5 rounded-md border border-input bg-white dark:bg-primary-950 text-sm">
                                 <span
                                     v-for="(lang, i) in staffForm.spoken_languages"
                                     :key="i"
@@ -257,6 +241,22 @@
             </form>
         </div>
     </template>
+
+    <!-- Preferences -->
+    <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10">
+        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ $t('preferences') }}</h3>
+        <div class="flex items-center justify-between">
+            <div>
+                <label for="nsfw_content" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('preferences_nsfw_label') }}</label>
+                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $t('preferences_nsfw_description') }}</p>
+            </div>
+            <Switch
+                id="nsfw_content"
+                v-model="nsfwContent"
+                @update:model-value="(val) => togglePreference('nsfw_content', val)"
+            />
+        </div>
+    </div>
 </template>
 
 <script setup>
