@@ -45,6 +45,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'email',
         'password',
         'profile_photo_path',
+        'is_admin',
         'preferences',
     ];
 
@@ -67,6 +68,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean',
         'preferences' => 'array',
     ];
 
