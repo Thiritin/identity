@@ -42,6 +42,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
 
     Route::middleware('guest:web')->group(function () {
         Route::redirect('choose/login', '/auth/portal/login', 301)->name('oidc.login');
+        Route::redirect('choose', '/', 301);
         // Register
         Route::get('register', [RegisterController::class, 'view'])->name('register.view');
         Route::post('register', RegisterController::class)
