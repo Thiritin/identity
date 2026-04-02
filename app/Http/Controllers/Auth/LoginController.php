@@ -7,9 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Models\App;
 use App\Models\User;
 use App\Services\Hydra\Client;
-use App\Services\Hydra\HydraRequestException;
 use GrantHolle\Altcha\Rules\ValidAltcha;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -17,29 +15,23 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
-use Inertia\Response;
 use Log;
 
 class LoginController extends Controller
 {
     public function view(Request $request)
     {
+        $email = Session::get('auth.email_flow.email');
         $loginChallenge = Session::get('auth.login_challenge.challenge');
 
-        if (! $loginChallenge) {
+        if (! $email || ! $loginChallenge) {
             return Redirect::route('auth.login.view');
         }
-
-        $email = Session::get('auth.email_flow.email');
 
         try {
             $hydra = new Client();
             $loginRequest = $hydra->getLoginRequest($loginChallenge);
-        } catch (HydraRequestException $e) {
-            Log::warning('Login challenge expired or invalid, restarting login flow', [
-                'challenge' => $loginChallenge,
-                'message' => $e->getMessage(),
-            ]);
+        } catch (\Exception $e) {
             Session::forget('auth.email_flow');
             Session::forget('auth.login_challenge');
 
@@ -55,16 +47,6 @@ class LoginController extends Controller
         $subject = $this->shouldSkipLogin($loginRequest);
 
         if ($subject !== null) {
-            $skipUser = User::findByHashid($subject);
-            if ($skipUser && $skipUser->isSuspended()) {
-                return Redirect::route('auth.error', [
-                    'error' => 'account_suspended',
-                    'error_description' => trans('account_suspended'),
-                ]);
-            }
-        }
-
-        if ($subject !== null) {
             $emailVerified = $this->checkEmailVerification($loginRequest, $subject);
             if ($emailVerified === false) {
                 return Redirect::route('login.apps.redirect', ['app' => 'portal']);
@@ -73,19 +55,6 @@ class LoginController extends Controller
 
         if ($subject !== null) {
             return Redirect::to($hydra->acceptLogin($subject, $loginRequest['challenge'], null, $loginRequest));
-        }
-
-        if (! $email) {
-            return Redirect::route('auth.login.view');
-        }
-
-        // If password was pre-filled by a password manager, attempt login directly
-        $prefilledPassword = Session::pull('auth.email_flow.password');
-        if ($prefilledPassword) {
-            $result = $this->attemptLogin($request, $email, $prefilledPassword, $loginChallenge);
-            if ($result) {
-                return $result;
-            }
         }
 
         $requiresPow = RateLimiter::tooManyAttempts('login-pow:' . $request->ip(), 3);
@@ -113,100 +82,55 @@ class LoginController extends Controller
             ]);
         }
 
+        $loginData = [
+            'email' => $request->get('email'),
+            'password' => $request->get('password'),
+        ];
+
         $loginChallenge = Session::get('auth.login_challenge.challenge');
 
         if (! $loginChallenge) {
             return Redirect::route('auth.login.view');
         }
 
-        $result = $this->attemptLogin(
-            request: $request,
-            email: $request->get('email'),
-            password: $request->get('password'),
-            loginChallenge: $loginChallenge,
-            remember: $request->boolean('remember'),
-        );
+        if (Auth::once($loginData) === true) {
+            $user = Auth::user();
 
-        if ($result) {
-            return $result;
-        }
-
-        throw ValidationException::withMessages(['nouser' => 'Wrong details']);
-    }
-
-    /**
-     * Attempt to authenticate a user and handle the post-login flow.
-     *
-     * @return RedirectResponse|Response|null Redirect on success, null on failure
-     */
-    private function attemptLogin(Request $request, string $email, string $password, string $loginChallenge, bool $remember = false)
-    {
-        if (Auth::once(['email' => $email, 'password' => $password]) !== true) {
-            RateLimiter::hit('login-pow:' . $request->ip(), 60 * 60 * 24);
-
-            return null;
-        }
-
-        $user = Auth::user();
-
-        if ($user->isSuspended()) {
-            return Redirect::route('auth.error', [
-                'error' => 'account_suspended',
-                'error_description' => trans('account_suspended'),
-            ]);
-        }
-
-        try {
             $hydra = new Client();
             $loginRequest = $hydra->getLoginRequest($loginChallenge);
-        } catch (HydraRequestException $e) {
-            Log::warning('Login challenge expired during authentication', [
-                'challenge' => $loginChallenge,
-                'message' => $e->getMessage(),
-            ]);
+
+            // redirect_to key is added when login request expired.
+            if (isset($loginRequest['redirect_to'])) {
+                return Redirect::to($loginRequest['redirect_to']);
+            }
+
+            $emailVerified = $this->checkEmailVerification($loginRequest, $user);
+            if ($emailVerified === false) {
+                return Redirect::route('login.apps.redirect', ['app' => 'portal']);
+            }
+
+            if ($user->twoFactors()->exists()) {
+                return Redirect::signedRoute('auth.two-factor', [
+                    'login_challenge' => $loginChallenge,
+                    'user' => $user->hashid,
+                    'remember' => $request->get('remember') ?? false,
+                ], now()->addMinutes(30));
+            }
+
+            $url = (new Client())->acceptLogin($user->hashId(), $loginChallenge,
+                $request->get('remember') ? '2592000' : '3600');
+
+            RateLimiter::clear('login-pow:' . $request->ip());
+
             Session::forget('auth.email_flow');
             Session::forget('auth.login_challenge');
 
-            return Redirect::route('auth.login.view');
+            return Inertia::location($url);
         }
 
-        if (isset($loginRequest['redirect_to'])) {
-            return Redirect::to($loginRequest['redirect_to']);
-        }
+        RateLimiter::hit('login-pow:' . $request->ip(), 60 * 60 * 24);
 
-        $emailVerified = $this->checkEmailVerification($loginRequest, $user);
-        if ($emailVerified === false) {
-            return Redirect::route('login.apps.redirect', ['app' => 'portal']);
-        }
-
-        if ($user->twoFactors()->exists()) {
-            return Redirect::signedRoute('auth.two-factor', [
-                'login_challenge' => $loginChallenge,
-                'user' => $user->hashid,
-                'remember' => $remember,
-            ], now()->addMinutes(30));
-        }
-
-        try {
-            $url = (new Client())->acceptLogin($user->hashid, $loginChallenge,
-                $remember ? '2592000' : '3600');
-        } catch (HydraRequestException $e) {
-            Log::warning('Failed to accept login with Hydra', [
-                'challenge' => $loginChallenge,
-                'message' => $e->getMessage(),
-            ]);
-            Session::forget('auth.email_flow');
-            Session::forget('auth.login_challenge');
-
-            return Redirect::route('auth.login.view');
-        }
-
-        RateLimiter::clear('login-pow:' . $request->ip());
-
-        Session::forget('auth.email_flow');
-        Session::forget('auth.login_challenge');
-
-        return Inertia::location($url);
+        throw ValidationException::withMessages(['nouser' => 'Wrong details']);
     }
 
     /**
@@ -233,7 +157,14 @@ class LoginController extends Controller
     private function checkEmailVerification($loginRequest, User|string $user)
     {
         // Get App
-        $clientModel = App::where('client_id', $loginRequest['client']['client_id'])->firstOrFail();
+        $clientModel = App::where('client_id', $loginRequest['client']['client_id'])->first();
+
+        if (! $clientModel) {
+            Session::forget('auth.email_flow');
+            Session::forget('auth.login_challenge');
+
+            return false;
+        }
         // Get User
         if (($user instanceof User) === false) {
             $user = User::findByHashidOrFail($user);
