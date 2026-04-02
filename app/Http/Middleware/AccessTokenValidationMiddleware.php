@@ -46,7 +46,7 @@ class AccessTokenValidationMiddleware
         if ($token === null || $refreshToken === null || $tokenExpiresAt === null) {
             Auth::logout();
 
-            return Redirect::route('auth.choose');
+            return Redirect::route('login.apps.redirect', ['app' => $systemName]);
         }
 
         /**

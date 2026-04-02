@@ -17,12 +17,6 @@ uses(RefreshDatabase::class, InteractsWithHydra::class);
 |--------------------------------------------------------------------------
 */
 
-test('choose page loads', function () {
-    $this->get(route('auth.choose'))
-        ->assertSuccessful()
-        ->assertInertia(fn ($page) => $page->component('Auth/Choose'));
-});
-
 test('register page loads', function () {
     $this->get(route('auth.register.view'))
         ->assertSuccessful()
@@ -90,9 +84,9 @@ test('login page loads with valid login challenge', function () {
     $this->deleteHydraClient();
 });
 
-test('login page without challenge redirects to choose', function () {
+test('login page without challenge redirects to portal login', function () {
     $this->get(route('auth.login.view'))
-        ->assertRedirect(route('auth.choose'));
+        ->assertRedirect(route('login.apps.redirect', ['app' => 'portal']));
 });
 
 test('login submit with valid credentials returns redirect', function () {

@@ -13,6 +13,6 @@ class FrontChannelLogoutController extends Controller
     {
         Auth::guard('web')->logout();
 
-        return Redirect::route('auth.choose');
+        return Redirect::route('login.apps.redirect', ['app' => 'portal']);
     }
 }

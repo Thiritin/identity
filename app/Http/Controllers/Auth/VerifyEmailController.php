@@ -15,7 +15,7 @@ class VerifyEmailController extends Controller
     public function view(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return Redirect::route('auth.choose');
+            return Redirect::route('login.apps.redirect', ['app' => 'portal']);
         }
 
         return Inertia::render('Auth/VerifyEmail');
