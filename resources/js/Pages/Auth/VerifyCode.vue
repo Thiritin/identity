@@ -25,7 +25,7 @@
                 autocomplete="one-time-code"
                 maxlength="6"
                 placeholder="000000"
-                class="text-center text-2xl tracking-[0.5em] font-mono w-48"
+                class="text-center text-2xl tracking-[0.5em] indent-[0.5em] font-mono w-52"
             />
             <Transition name="field-error">
                 <p v-if="form.errors.code" class="text-xs text-destructive">{{ form.errors.code }}</p>
