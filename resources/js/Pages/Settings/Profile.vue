@@ -158,25 +158,37 @@
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_spoken_languages') }}</label>
-                            <div class="flex flex-wrap items-center gap-1.5 min-h-9 px-3 py-1.5 rounded-md border border-input bg-white dark:bg-primary-950 text-sm shadow-xs">
+                            <!-- Selected language tags -->
+                            <div v-if="staffForm.spoken_languages.length > 0" class="flex flex-wrap gap-1.5 mb-2">
                                 <span
-                                    v-for="(lang, i) in staffForm.spoken_languages"
-                                    :key="i"
-                                    class="inline-flex items-center gap-1 rounded-md bg-primary/10 text-primary px-2 py-0.5 text-xs font-medium"
+                                    v-for="(code, i) in staffForm.spoken_languages"
+                                    :key="code"
+                                    class="inline-flex items-center gap-1 rounded-md bg-primary/10 text-primary px-2 py-1 text-xs font-medium"
                                 >
-                                    {{ lang }}
+                                    {{ languageMap[code] || code }}
                                     <button type="button" class="hover:text-destructive" @click="staffForm.spoken_languages.splice(i, 1)">
                                         <X class="h-3 w-3" />
                                     </button>
                                 </span>
-                                <input
-                                    class="flex-1 min-w-16 bg-transparent outline-none text-sm placeholder:text-muted-foreground"
-                                    :placeholder="staffForm.spoken_languages.length === 0 ? 'en, de, fr...' : ''"
-                                    @keydown.enter.prevent="addLanguage($event)"
-                                    @keydown.,.prevent="addLanguage($event)"
-                                    @keydown.backspace="removeLastLanguage($event)"
-                                />
                             </div>
+                            <!-- Searchable language picker -->
+                            <Command class="rounded-md border border-input bg-white dark:bg-primary-950 shadow-xs" :multiple="true" v-model="staffForm.spoken_languages">
+                                <CommandInput :placeholder="$t('staff_profile_search_language')" />
+                                <CommandList class="max-h-32">
+                                    <CommandEmpty>{{ $t('staff_profile_no_language_found') }}</CommandEmpty>
+                                    <CommandGroup>
+                                        <CommandItem
+                                            v-for="lang in availableLanguages"
+                                            :key="lang.code"
+                                            :value="lang.code"
+                                        >
+                                            <Check class="h-4 w-4 mr-2" :class="staffForm.spoken_languages.includes(lang.code) ? 'opacity-100' : 'opacity-0'" />
+                                            {{ lang.name }}
+                                            <span class="ml-auto text-xs text-muted-foreground">{{ lang.code }}</span>
+                                        </CommandItem>
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
                             <p v-if="staffForm.errors.spoken_languages" class="text-xs text-destructive mt-1">{{ staffForm.errors.spoken_languages }}</p>
                         </div>
                         <div class="flex justify-end">
@@ -260,6 +272,7 @@ import {
     DropdownMenu, DropdownMenuContent, DropdownMenuLabel,
     DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/Components/ui/dropdown-menu'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/Components/ui/command'
 import { Camera, Pencil, Check, X, Globe, Users, Shield, Lock, MessageCircle } from 'lucide-vue-next'
 import { trans } from 'laravel-vue-i18n'
 
@@ -354,19 +367,28 @@ function submitCreditAs() {
     creditAsForm.post(route('settings.staff-profile.credit-as'), { preserveScroll: true })
 }
 
-function addLanguage(e) {
-    const value = e.target.value.trim().toLowerCase()
-    if (value && !staffForm.spoken_languages.includes(value)) {
-        staffForm.spoken_languages.push(value)
-    }
-    e.target.value = ''
-}
+const availableLanguages = [
+    { code: 'en', name: 'English' },
+    { code: 'de', name: 'Deutsch' },
+    { code: 'fr', name: 'Français' },
+    { code: 'es', name: 'Español' },
+    { code: 'it', name: 'Italiano' },
+    { code: 'nl', name: 'Nederlands' },
+    { code: 'pt', name: 'Português' },
+    { code: 'pl', name: 'Polski' },
+    { code: 'cs', name: 'Čeština' },
+    { code: 'sv', name: 'Svenska' },
+    { code: 'da', name: 'Dansk' },
+    { code: 'fi', name: 'Suomi' },
+    { code: 'no', name: 'Norsk' },
+    { code: 'hu', name: 'Magyar' },
+    { code: 'ru', name: 'Русский' },
+    { code: 'ja', name: '日本語' },
+    { code: 'zh', name: '中文' },
+    { code: 'ko', name: '한국어' },
+]
 
-function removeLastLanguage(e) {
-    if (e.target.value === '' && staffForm.spoken_languages.length > 0) {
-        staffForm.spoken_languages.pop()
-    }
-}
+const languageMap = Object.fromEntries(availableLanguages.map(l => [l.code, l.name]))
 
 function getVisibility(field) { return staffForm.visibility[field] ?? 'all_staff' }
 function setVisibility(field, value) { staffForm.visibility[field] = value }

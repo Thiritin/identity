@@ -308,6 +308,8 @@
     "staff_profile_credit_as": "Credit As",
     "staff_profile_credit_as_default": "Credit As (ConBook Name)",
     "staff_profile_spoken_languages": "Spoken Languages",
+    "staff_profile_search_language": "Search languages...",
+    "staff_profile_no_language_found": "No language found.",
     "staff_profile_group_credit": "Per-Group Credit",
     "staff_profile_group_credit_description": "Override your credit name for specific groups. If left empty, the default credit name above is used.",
     "preferences_description": "Customize your experience.",
