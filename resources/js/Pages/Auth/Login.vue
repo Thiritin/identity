@@ -78,6 +78,29 @@
             type="submit"
             class="w-full"
         >{{ $t('sign_in') }} <ArrowRight class="size-4" /></Button>
+        <template v-if="hasPasskeys">
+            <div class="relative">
+                <div class="absolute inset-0 flex items-center">
+                    <span class="w-full border-t border-gray-200 dark:border-gray-700" />
+                </div>
+                <div class="relative flex justify-center text-xs uppercase">
+                    <span class="bg-white dark:bg-gray-900 px-2 text-gray-500">{{ $t('or') }}</span>
+                </div>
+            </div>
+            <Button
+                type="button"
+                variant="outline"
+                class="w-full"
+                :disabled="passkeyLoading"
+                @click="loginWithPasskey"
+            >
+                <Fingerprint class="size-4" />
+                {{ $t('passkey_login_button') }}
+            </Button>
+            <Transition name="field-error">
+                <p v-if="passkeyError" class="text-xs text-destructive text-center">{{ passkeyError }}</p>
+            </Transition>
+        </template>
         <Link
             :href="route('auth.register.view')"
             class="block text-center text-xs text-gray-500 hover:text-gray-700 dark:text-primary-400 dark:hover:text-primary-300"
@@ -97,7 +120,8 @@ import { Head, Link, useForm, router } from '@inertiajs/vue3'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 import { Checkbox } from '@/Components/ui/checkbox'
-import { ArrowRight, RefreshCw } from 'lucide-vue-next'
+import { ArrowRight, RefreshCw, Fingerprint } from 'lucide-vue-next'
+import { startAuthentication } from '@simplewebauthn/browser'
 import { useHoneypot } from '@/Composables/useHoneypot'
 import { ref, onMounted, onUnmounted } from 'vue'
 
@@ -110,6 +134,7 @@ const props = defineProps({
     errors: Object,
     email: String,
     requiresPow: Boolean,
+    hasPasskeys: Boolean,
 })
 
 const form = useForm('post', route('auth.login.password.submit'), {
@@ -121,6 +146,8 @@ const form = useForm('post', route('auth.login.password.submit'), {
 })
 
 const sessionExpired = ref(false)
+const passkeyLoading = ref(false)
+const passkeyError = ref(null)
 
 let removeInvalidListener = null
 
@@ -139,6 +166,34 @@ onUnmounted(() => {
 
 function submit() {
     form.submit()
+}
+
+async function loginWithPasskey() {
+    passkeyLoading.value = true
+    passkeyError.value = null
+
+    try {
+        const optionsRes = await fetch(route('auth.login.passkey.options'))
+        const optionsJSON = await optionsRes.json()
+
+        if (!optionsJSON.allowCredentials?.length) {
+            passkeyError.value = 'No passkeys available.'
+            return
+        }
+
+        const result = await startAuthentication({ optionsJSON })
+
+        router.post(route('auth.login.passkey.verify'), {
+            credential: JSON.stringify(result),
+            remember: form.remember,
+        })
+    } catch (e) {
+        if (e.name !== 'NotAllowedError') {
+            passkeyError.value = e.message
+        }
+    } finally {
+        passkeyLoading.value = false
+    }
 }
 </script>
 <style scoped>

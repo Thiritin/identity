@@ -1,56 +1,61 @@
 <script setup>
 
-import {computed, ref} from "vue";
+import { computed, ref, onMounted } from "vue";
 import LoginScreenWelcome from "@/Auth/LoginScreenWelcome.vue";
-import {Head, useForm} from "@inertiajs/vue3";
+import { Head, useForm } from "@inertiajs/vue3";
 import { Input } from '@/Components/ui/input';
 import { Button } from '@/Components/ui/button';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/Components/ui/input-otp';
+import { startAuthentication } from '@simplewebauthn/browser';
 
 const props = defineProps({
     lastUsedMethod: String,
     twoFactors: Array,
     hasBackupCodes: Boolean,
     submitFormUrl: String,
+    securityKeyOptionsUrl: String,
 })
 
 const form = useForm('post', props.submitFormUrl, {
     code: '',
-    method: props.lastUsedMethod
+    credential: '',
+    method: props.lastUsedMethod,
 })
 
 const availableMethodTypes = computed(() => {
     return props.twoFactors.map(twoFactor => twoFactor.type)
 })
 
-const selectedMethodName = computed(() => {
-    if (selectedMethod.value === 'backup_code') return 'Backup Code';
-    return selectedMethod.value === 'totp' ? 'TOTP' : 'Yubikey OTP';
-})
+const methodNames = {
+    totp: 'TOTP',
+    yubikey: 'Yubikey OTP',
+    security_key: 'Security Key',
+    backup_code: 'Backup Code',
+}
 
-const otherMethodName = computed(() => {
-    return selectedMethod.value === 'totp' ? 'Yubikey OTP' : 'TOTP';
-})
-
-const otherMethodType = computed(() => {
-    return selectedMethod.value === 'totp' ? 'yubikey' : 'totp';
-})
-
-const otherMethodAvailable = computed(() => {
-    if (selectedMethod.value === 'backup_code') return false;
-    return availableMethodTypes.value.includes(otherMethodType.value.toLowerCase());
-})
-
+const selectedMethod = ref(props.lastUsedMethod);
 const previousMethod = ref(null);
+const securityKeyError = ref(null);
+
+const selectedMethodName = computed(() => methodNames[selectedMethod.value] || selectedMethod.value)
+
+const otherMethods = computed(() => {
+    return availableMethodTypes.value.filter(m => m !== selectedMethod.value && m !== 'backup_codes')
+})
 
 const submitForm = () => {
     form.post(props.submitFormUrl)
 }
 
-const toggleMethod = () => {
-    selectedMethod.value = selectedMethod.value === 'totp' ? 'yubikey' : 'totp';
-    form.method = selectedMethod.value;
-    form.code = '';
+const switchMethod = (method) => {
+    selectedMethod.value = method
+    form.method = method
+    form.code = ''
+    securityKeyError.value = null
+
+    if (method === 'security_key') {
+        triggerSecurityKey()
+    }
 }
 
 const switchToBackupCode = () => {
@@ -66,7 +71,29 @@ const switchBackFromBackupCode = () => {
     form.code = '';
 }
 
-const selectedMethod = ref(props.lastUsedMethod);
+async function triggerSecurityKey() {
+    securityKeyError.value = null
+
+    try {
+        const optionsRes = await fetch(props.securityKeyOptionsUrl)
+        const optionsJSON = await optionsRes.json()
+        const result = await startAuthentication({ optionsJSON })
+
+        form.credential = JSON.stringify(result)
+        form.method = 'security_key'
+        form.post(props.submitFormUrl)
+    } catch (e) {
+        if (e.name !== 'NotAllowedError') {
+            securityKeyError.value = e.message
+        }
+    }
+}
+
+onMounted(() => {
+    if (props.lastUsedMethod === 'security_key') {
+        triggerSecurityKey()
+    }
+})
 
 </script>
 
@@ -88,6 +115,15 @@ const selectedMethod = ref(props.lastUsedMethod);
                                :class="{ 'border-destructive': form.invalid('code') }"
                                v-model.trim.lazy="form.code"
                     />
+                    <!-- Security Key: auto-triggered -->
+                    <div v-else-if="selectedMethod === 'security_key'" class="text-center py-4">
+                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ $t('security_key_tap_to_register') }}</p>
+                        <Button type="button" variant="outline" class="mt-2" @click="triggerSecurityKey">
+                            {{ $t('two_factor_switch_to_security_key') }}
+                        </Button>
+                        <p v-if="securityKeyError" class="text-sm text-destructive mt-2">{{ securityKeyError }}</p>
+                        <p v-if="form.errors.credential" class="text-sm text-destructive mt-2">{{ form.errors.credential }}</p>
+                    </div>
                     <!-- Yubikey input -->
                     <Input v-else-if="selectedMethod !== 'totp'" id="code"
                                type="text"
@@ -118,9 +154,10 @@ const selectedMethod = ref(props.lastUsedMethod);
                         class="block"
                     >{{ $t('login') }}</Button>
                 </div>
-                <div v-if="otherMethodAvailable" @click="toggleMethod"
+                <div v-for="method in otherMethods" :key="method"
+                     @click="switchMethod(method)"
                      class="flex justify-end hover:underline text-sm cursor-pointer">
-                    Switch to {{ otherMethodName }}
+                    Switch to {{ methodNames[method] }}
                 </div>
                 <div v-if="hasBackupCodes && selectedMethod !== 'backup_code'" @click="switchToBackupCode"
                      class="flex justify-end hover:underline text-sm cursor-pointer text-gray-500">
@@ -128,7 +165,7 @@ const selectedMethod = ref(props.lastUsedMethod);
                 </div>
                 <div v-if="selectedMethod === 'backup_code'" @click="switchBackFromBackupCode"
                      class="flex justify-end hover:underline text-sm cursor-pointer text-gray-500">
-                    {{ $t('two_factor_back_to_method', { method: previousMethod === 'totp' ? 'TOTP' : 'Yubikey OTP' }) }}
+                    {{ $t('two_factor_back_to_method', { method: methodNames[previousMethod] || 'TOTP' }) }}
                 </div>
             </form>
         </div>
