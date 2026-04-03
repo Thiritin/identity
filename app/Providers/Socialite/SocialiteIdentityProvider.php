@@ -2,9 +2,13 @@
 
 namespace App\Providers\Socialite;
 
+use Firebase\JWT\JWK;
+use Firebase\JWT\JWT;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Two\AbstractProvider;
@@ -25,6 +29,8 @@ class SocialiteIdentityProvider extends AbstractProvider
     private mixed $endSessionEndpoint;
 
     private mixed $revocationEndpoint;
+
+    private ?string $idToken = null;
 
     /**
      * The scopes being requested.
@@ -95,6 +101,13 @@ class SocialiteIdentityProvider extends AbstractProvider
         ]);
     }
 
+    protected function userInstance(array $response, array $user)
+    {
+        $this->idToken = Arr::get($response, 'id_token');
+
+        return parent::userInstance($response, $user);
+    }
+
     public function logoutAll()
     {
         return Redirect::to($this->getIdentityConfig()->endSessionEndpoint);
@@ -132,5 +145,34 @@ class SocialiteIdentityProvider extends AbstractProvider
     public function getExpiresIn(): ?Carbon
     {
         return Session::get($this->clientId . '.token.expiry');
+    }
+
+    public function getJwks(): array
+    {
+        $this->getIdentityConfig();
+
+        return Cache::remember('hydra_jwks', now()->addHour(), function () {
+            return Http::get($this->jwksUri)->throw()->json();
+        });
+    }
+
+    public function getSid(): ?string
+    {
+        if ($this->idToken === null) {
+            return null;
+        }
+
+        try {
+            $jwks = $this->getJwks();
+            $decoded = JWT::decode($this->idToken, JWK::parseKeySet($jwks));
+
+            return $decoded->sid ?? null;
+        } catch (\Exception $e) {
+            Log::warning('Failed to decode sid from ID token', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return null;
+        }
     }
 }
