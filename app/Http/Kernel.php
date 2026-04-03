@@ -9,7 +9,6 @@ use App\Http\Middleware\EnsureIsDeveloper;
 use App\Http\Middleware\EnsurePasswordIsConfirmed;
 use App\Http\Middleware\EnsureStaffTwoFactor;
 use App\Http\Middleware\GroupMember;
-use App\Http\Middleware\GuardSwitcher;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\PreventRequestForgery;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
@@ -96,7 +95,6 @@ class Kernel extends HttpKernel
         'signed' => ValidateSignature::class,
         'throttle' => ThrottleRequests::class,
         'verified' => EnsureEmailIsVerified::class,
-        'guardswitcher' => GuardSwitcher::class,
         'groupmember' => GroupMember::class,
         'developer' => EnsureIsDeveloper::class,
         'staff.2fa' => EnsureStaffTwoFactor::class,

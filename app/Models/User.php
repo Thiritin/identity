@@ -243,7 +243,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function scopeCheck(string $ability)
     {
-        if (Auth::guard('web')->check() || Auth::guard('staff')->check()) {
+        if (Auth::guard('web')->check()) {
             return true;
         }
         $sanctumCheck = $this->tokenCan($ability);

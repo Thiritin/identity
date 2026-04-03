@@ -94,7 +94,7 @@ class AuthController extends Controller
 
     private function checkApp($app): void
     {
-        if (in_array($app, ['staff', 'portal', 'admin']) === false) {
+        if (in_array($app, ['portal', 'admin']) === false) {
             Log::warning('Unknown app requested in auth flow', ['app' => $app]);
             abort(404, "Unknown application: {$app}");
         }
@@ -103,7 +103,6 @@ class AuthController extends Controller
     private function getGuard($app)
     {
         return match ($app) {
-            'staff' => 'staff',
             'portal' => 'web',
             'admin' => 'admin',
         };

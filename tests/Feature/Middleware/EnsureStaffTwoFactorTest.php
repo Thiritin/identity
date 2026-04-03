@@ -55,29 +55,12 @@ test('staff without totp is redirected from security overview', function () {
         ->assertRedirect(route('settings.security.totp'));
 });
 
-test('staff without totp is redirected from staff routes', function () {
-    $user = createStaffMember();
-
-    $this->actingAs($user, 'staff')
-        ->get(route('staff.dashboard'))
-        ->assertRedirect(route('settings.security.totp'));
-});
-
 test('staff with totp can access dashboard', function () {
     $user = createStaffMember();
     $user->twoFactors()->save(TwoFactor::factory()->totp()->make());
 
     $this->actingAs($user)
         ->get(route('dashboard'))
-        ->assertSuccessful();
-});
-
-test('staff with totp can access staff routes', function () {
-    $user = createStaffMember();
-    $user->twoFactors()->save(TwoFactor::factory()->totp()->make());
-
-    $this->actingAs($user, 'staff')
-        ->get(route('staff.dashboard'))
         ->assertSuccessful();
 });
 

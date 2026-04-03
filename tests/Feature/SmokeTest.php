@@ -4,6 +4,7 @@ use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
 use App\Models\App;
 use App\Models\Group;
+use App\Models\TwoFactor;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
@@ -215,6 +216,7 @@ test('dashboard loads for staff users', function () {
     ]);
     $user = User::factory()->create();
     $staffGroup->users()->attach($user, ['level' => GroupUserLevel::Member]);
+    $user->twoFactors()->save(TwoFactor::factory()->totp()->make());
 
     $this->actingAs($user)
         ->get(route('dashboard'))
@@ -316,53 +318,6 @@ test('settings pages require authentication', function (string $url) {
     'passkeys' => '/settings/security/passkeys',
     'security-keys' => '/settings/security/security-keys',
 ]);
-
-/*
-|--------------------------------------------------------------------------
-| Staff Pages (staff guard)
-|--------------------------------------------------------------------------
-*/
-
-test('staff dashboard loads for staff user', function () {
-    $staffGroup = Group::factory()->create([
-        'system_name' => 'staff',
-        'type' => GroupTypeEnum::Automated,
-    ]);
-    $user = User::factory()->create();
-    $staffGroup->users()->attach($user, ['level' => GroupUserLevel::Member]);
-
-    $this->actingAs($user, 'staff')
-        ->get(route('staff.dashboard'))
-        ->assertSuccessful()
-        ->assertInertia(fn ($page) => $page->component('Staff/Dashboard'));
-});
-
-test('staff groups index loads', function () {
-    $staffGroup = Group::factory()->create([
-        'system_name' => 'staff',
-        'type' => GroupTypeEnum::Automated,
-    ]);
-    $user = User::factory()->create();
-    $staffGroup->users()->attach($user, ['level' => GroupUserLevel::Member]);
-
-    $this->actingAs($user, 'staff')
-        ->get(route('staff.groups.index'))
-        ->assertSuccessful();
-});
-
-test('staff group show page loads', function () {
-    $staffGroup = Group::factory()->create([
-        'system_name' => 'staff',
-        'type' => GroupTypeEnum::Automated,
-    ]);
-    $group = Group::factory()->create();
-    $user = User::factory()->create();
-    $staffGroup->users()->attach($user, ['level' => GroupUserLevel::Member]);
-
-    $this->actingAs($user, 'staff')
-        ->get(route('staff.groups.show', $group))
-        ->assertSuccessful();
-});
 
 /*
 |--------------------------------------------------------------------------

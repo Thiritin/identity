@@ -47,17 +47,9 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
 
-            Route::middleware(['web', 'auth', 'verified', 'auth.oidc'])
+            Route::middleware(['web', 'auth', 'verified', 'auth.oidc', 'staff.2fa'])
                 ->namespace($this->namespace)
                 ->group(base_path('routes/apps/portal.php'));
-
-            Route::middleware([
-                'web', 'auth:staff', 'verified', 'auth.oidc', 'guardswitcher:staff', 'groupmember:staff',
-            ])
-                ->namespace($this->namespace)
-                ->name('staff.')
-                ->prefix('staff')
-                ->group(base_path('routes/apps/staff.php'));
 
             Route::middleware('web')
                 ->namespace($this->namespace)
