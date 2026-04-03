@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Directory\DirectoryController;
+use App\Http\Controllers\Directory\DirectoryMemberController;
+use App\Http\Controllers\Directory\DirectoryTeamController;
+use App\Http\Controllers\Directory\StaffProfileController;
 use App\Http\Controllers\Profile\SecurityController;
 use App\Http\Controllers\Profile\Settings\AppsController;
 use App\Http\Controllers\Profile\Settings\ChangeEmailController;
@@ -102,15 +106,16 @@ Route::middleware('sudo')->group(function () {
         ->middleware([HandlePrecognitiveRequests::class])
         ->name('settings.two-factor.backup-codes.regenerate');
 
-    /** Sessions */
-    Route::get('/settings/security/sessions', [SecurityController::class, 'sessions'])->name('settings.security.sessions');
-    Route::delete('/settings/security/sessions/{session}', [SessionController::class, 'destroy'])
-        ->middleware([HandlePrecognitiveRequests::class])
-        ->name('settings.security.sessions.destroy');
-    Route::delete('/settings/security/sessions', [SessionController::class, 'destroyOthers'])
-        ->middleware([HandlePrecognitiveRequests::class])
-        ->name('settings.security.sessions.destroy-others');
 });
+
+/** Sessions */
+Route::get('/settings/security/sessions', [SecurityController::class, 'sessions'])->name('settings.security.sessions');
+Route::delete('/settings/security/sessions/{session}', [SessionController::class, 'destroy'])
+    ->middleware([HandlePrecognitiveRequests::class])
+    ->name('settings.security.sessions.destroy');
+Route::delete('/settings/security/sessions', [SessionController::class, 'destroyOthers'])
+    ->middleware([HandlePrecognitiveRequests::class])
+    ->name('settings.security.sessions.destroy-others');
 
 Route::post('/settings/security/confirm-password', ConfirmPasswordController::class)
     ->name('settings.security.confirm-password');
@@ -136,3 +141,21 @@ Route::middleware('developer')->prefix('settings/apps')->name('settings.apps.')-
     Route::delete('/{app}', [AppsController::class, 'destroy'])->name('destroy');
     Route::post('/{app}/regenerate-secret', [AppsController::class, 'regenerateSecret'])->name('regenerate-secret');
 });
+
+/** Directory (staff only) */
+Route::middleware('groupmember:staff')
+    ->prefix('directory')
+    ->name('directory.')
+    ->group(function () {
+        Route::get('/', [DirectoryController::class, 'index'])->name('index');
+        Route::get('/members/{user:hashid}', [StaffProfileController::class, 'show'])->name('members.show');
+        Route::get('/{group:hashid}', [DirectoryController::class, 'show'])->name('show');
+        Route::post('/{group:hashid}', [DirectoryController::class, 'update'])->name('update');
+        Route::delete('/{group:hashid}', [DirectoryController::class, 'destroy'])->name('destroy');
+
+        Route::post('/{group:hashid}/members', [DirectoryMemberController::class, 'store'])->name('members.store');
+        Route::patch('/{group:hashid}/members/{user:hashid}', [DirectoryMemberController::class, 'update'])->name('members.update');
+        Route::delete('/{group:hashid}/members/{user:hashid}', [DirectoryMemberController::class, 'destroy'])->name('members.destroy');
+
+        Route::post('/{group:hashid}/teams', [DirectoryTeamController::class, 'store'])->name('teams.store');
+    });

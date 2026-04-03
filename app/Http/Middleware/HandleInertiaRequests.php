@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\GroupUserLevel;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -49,13 +50,23 @@ class HandleInertiaRequests extends Middleware
                 'avatar' => ($request->user()->profile_photo_path) ? Storage::disk('s3-avatars')->url($request->user()->profile_photo_path) : null,
                 'isAdmin' => $request->user()->is_admin,
                 'isStaff' => $request->user()->isStaff(),
+                'isDeveloper' => $request->user()->is_developer,
                 'language' => app()->getLocale(),
                 'preferences' => $request->user()->preferences ?? [],
                 'departments' => $request->user()->groups()
                     ->where('type', 'department')
                     ->limit(10)
                     ->orderBy('name')
-                    ->get(['id', 'name'])->values(),
+                    ->get(['groups.id', 'groups.hashid', 'groups.name'])
+                    ->map(fn ($g) => [
+                        'id' => $g->id,
+                        'hashid' => $g->hashid,
+                        'name' => $g->name,
+                        'title' => $g->pivot->title,
+                        'level' => $g->pivot->level instanceof GroupUserLevel
+                            ? $g->pivot->level->value
+                            : $g->pivot->level,
+                    ]),
                 'memberSince' => $request->user()->created_at?->translatedFormat('F Y'),
             ], $request->user()->only('name', 'email'));
         }
