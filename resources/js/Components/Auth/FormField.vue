@@ -23,11 +23,13 @@ const model = defineModel()
             :placeholder="placeholder"
             :autocomplete="autocomplete"
             :disabled="disabled"
+            :aria-invalid="error ? true : undefined"
+            :aria-describedby="error ? `${id}-error` : undefined"
             :class="{ 'border-destructive': error }"
             v-model="model"
         />
         <Transition name="field-error">
-            <p v-if="error" class="text-xs text-destructive">{{ error }}</p>
+            <p v-if="error" :id="`${id}-error`" role="alert" class="text-xs text-destructive">{{ error }}</p>
         </Transition>
     </div>
 </template>

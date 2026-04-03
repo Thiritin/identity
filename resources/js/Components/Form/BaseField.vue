@@ -11,13 +11,15 @@
                 :id="fieldId"
                 v-model="value"
                 :class="[error ? 'border-red-600' : 'border-gray-300']"
+                :aria-invalid="error ? true : undefined"
+                :aria-describedby="error ? `${fieldId}-error` : undefined"
                 :hint="hint"
                 :label="label"
                 :placeholder="placeholder"
                 :type="type"
                 v-bind="$attrs"
             />
-            <FieldError :value="error" />
+            <FieldError :value="error" :id="error ? `${fieldId}-error` : null" />
         </div>
     </TwoColumnInputLayout>
 </template>
@@ -83,16 +85,6 @@
             },
         },
         emits: ['update:modelValue'],
-        setup(props) {
-            const fieldId =
-                'input-' +
-                props.label.trim().replace(/\W/g, '').toLowerCase() +
-                '-' +
-                Math.random().toString(36).slice(2)
-            return {
-                fieldId,
-            }
-        },
         computed: {
             component() {
                 if (['text', 'password', 'email'].includes(this.type)) {

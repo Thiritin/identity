@@ -1,12 +1,13 @@
 <template>
     <div :class="{ dark: darkMode }">
+        <SkipToContent />
         <div class="bg-primary-600 auth-background relative min-h-screen dark:text-primary-300">
             <!-- Centered Content -->
             <div class="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
                 <div class="flex flex-col items-center w-full max-w-md">
                     <div ref="card" class="auth-card w-full max-w-md rounded-xl rounded-b-none bg-white/90 px-6 py-8 shadow-2xl backdrop-blur-sm dark:bg-primary-900/90 sm:px-10 sm:py-10">
                         <!-- Slot Content -->
-                        <div class="flex-1 w-full flex flex-col justify-center">
+                        <main id="main-content" class="flex-1 w-full flex flex-col justify-center">
                             <Transition
                                 name="page"
                                 mode="out-in"
@@ -22,7 +23,7 @@
                                     <slot></slot>
                                 </div>
                             </Transition>
-                        </div>
+                        </main>
                     </div>
                     <!-- Footer: artwork left, legal right -->
                     <div class="w-full max-w-md flex items-center justify-between bg-black/40 backdrop-blur-sm rounded-b-xl px-4 py-2 text-xs text-white/70">
@@ -30,7 +31,7 @@
                             {{ $t('footer_artwork_by') }}
                             <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
                         </div>
-                        <nav class="flex flex-wrap gap-x-4 gap-y-1">
+                        <nav aria-label="Legal" class="flex flex-wrap gap-x-4 gap-y-1">
                             <a v-for="item in visibleNavigation" :key="item.name" :href="item.href" target="_blank" class="hover:text-white transition-colors">
                                 {{ $t(item.name) }}
                             </a>
@@ -44,7 +45,10 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { usePage } from "@inertiajs/vue3"
+import { useTheme } from '@/Composables/useTheme'
+import SkipToContent from '@/Components/SkipToContent.vue'
 
+const { darkMode } = useTheme()
 const user = usePage().props.user
 const card = ref(null)
 
@@ -55,11 +59,6 @@ const navigation = [
 ]
 
 const visibleNavigation = computed(() => navigation)
-const darkMode = ref(window.matchMedia('(prefers-color-scheme: dark)').matches)
-
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    darkMode.value = e.matches
-})
 let previousHeight = 0
 
 function onBeforeLeave() {

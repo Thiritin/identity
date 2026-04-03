@@ -1,6 +1,6 @@
 <template>
     <transition name="error">
-        <span v-if="value" class="text-sm text-red-600">{{ value }}</span>
+        <span v-if="value" :id="id" role="alert" aria-live="polite" class="text-sm text-red-600">{{ value }}</span>
     </transition>
 </template>
 
@@ -11,6 +11,10 @@
             value: {
                 type: [String, null],
                 required: false,
+            },
+            id: {
+                type: String,
+                default: null,
             },
         },
     }

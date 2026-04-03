@@ -1,6 +1,6 @@
 <template>
     <aside class="py-6 lg:col-span-3">
-        <nav class="space-y-1">
+        <nav aria-label="Settings" class="space-y-1">
             <Link
                 v-for="item in menuItems"
                 :key="item.name"

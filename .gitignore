@@ -25,3 +25,4 @@ config.json
 .playwright-mcp/
 boost.json
 docs/
+tests/Browser/Screenshots
