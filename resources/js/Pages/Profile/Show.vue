@@ -1,13 +1,6 @@
 <template>
-    <app-layout>
-        <template #header>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h1 class="text-3xl font-bold text-white">
-                    {{ $t('your_profile') }}
-                </h1>
-            </div>
-        </template>
-        <div class="bg-white rounded-lg shadow">
+    <div>
+        <div class="bg-white rounded-lg shadow dark:bg-primary-800">
             <div>
                 <img
                     :src="profile.backgroundImage"
@@ -45,7 +38,7 @@
                                     aria-hidden="true"
                                     class="-ml-1 mr-2 h-5 w-5 text-gray-400"
                                 />
-                                <span>Edit</span>
+                                <span>{{ $t('edit') }}</span>
                             </InertiaLink>
                         </div>
                     </div>
@@ -99,10 +92,10 @@
                 </div>
             </div>
         </div>
-    </app-layout>
+    </div>
 </template>
 <script>
-    import AppLayout from '@/Layouts/AppLayout.vue'
+    import AccountLayout from '@/Layouts/AccountLayout.vue'
     import { Pencil, Phone } from 'lucide-vue-next'
     import AvatarModal from '@/Profile/AvatarModal.vue'
     import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
@@ -114,12 +107,12 @@
 
     export default {
         name: 'Show',
+        layout: AccountLayout,
         components: {
             AvatarImage,
             AvatarModal,
             Pencil,
             Phone,
-            AppLayout,
         },
         setup() {
             return {

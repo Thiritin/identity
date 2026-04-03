@@ -102,7 +102,7 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout.vue'
+    import AccountLayout from '@/Layouts/AccountLayout.vue'
     import Card from '@/Components/Card.vue'
     import CogsDuotone from '@/Components/Icons/CogsDuotone.vue'
     import KeySkeletonSolid from '@/Components/Icons/KeySkeletonSolid.vue'
@@ -113,6 +113,7 @@
 
     export default {
         name: 'Developers',
+        layout: AccountLayout,
         components: {
             Logo,
             Github,
@@ -121,7 +122,6 @@
             KeySkeletonSolid,
             CogsDuotone,
             Card,
-            AppLayout,
         },
         setup() {
             return {
