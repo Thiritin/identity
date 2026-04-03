@@ -43,6 +43,32 @@
         </div>
     </div>
 
+    <!-- Your Departments (staff only, above staff profile form) -->
+    <div v-if="$page.props.user.isStaff && $page.props.user.departments?.length > 0"
+         class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
+        <div class="grid md:grid-cols-3 gap-6 md:gap-10">
+            <div>
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('directory_your_departments') }}</h3>
+            </div>
+            <div class="md:col-span-2 space-y-2">
+                <Link
+                    v-for="dept in $page.props.user.departments"
+                    :key="dept.hashid"
+                    :href="route('directory.show', dept.hashid)"
+                    class="flex items-center justify-between px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                >
+                    <div>
+                        <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ dept.name }}</span>
+                        <span v-if="dept.title" class="text-xs text-gray-500 dark:text-gray-400 ml-2">{{ dept.title }}</span>
+                    </div>
+                    <Badge v-if="dept.level && dept.level !== 'member'" variant="secondary" class="text-xs capitalize">
+                        {{ dept.level.replace(/_/g, ' ') }}
+                    </Badge>
+                </Link>
+            </div>
+        </div>
+    </div>
+
     <!-- Staff Profile sections (staff only) -->
     <template v-if="$page.props.user.isStaff && staffForm">
         <form @submit.prevent="submitStaffProfile">
@@ -257,7 +283,44 @@
                 <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('preferences') }}</h3>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('preferences_description') }}</p>
             </div>
-            <div class="md:col-span-2 space-y-4">
+            <div class="md:col-span-2 space-y-5">
+                <!-- Language -->
+                <div>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('preferences_language_label') }}</label>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ $t('preferences_language_description') }}</p>
+                    <Select :model-value="currentLocale" @update:model-value="(val) => savePreference('locale', val)">
+                        <SelectTrigger class="w-full max-w-xs bg-white dark:bg-primary-950">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="lang in uiLanguages" :key="lang.code" :value="lang.code">
+                                {{ lang.name }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <!-- Theme -->
+                <div>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('preferences_theme_label') }}</label>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ $t('preferences_theme_description') }}</p>
+                    <div class="flex gap-2">
+                        <Button
+                            v-for="opt in themeOptions"
+                            :key="opt.value"
+                            type="button"
+                            :variant="currentTheme === opt.value ? 'default' : 'outline'"
+                            size="sm"
+                            class="gap-1.5"
+                            @click="savePreference('theme', opt.value)"
+                        >
+                            <component :is="opt.icon" class="h-4 w-4" />
+                            {{ $t(opt.label) }}
+                        </Button>
+                    </div>
+                </div>
+
+                <!-- NSFW -->
                 <div class="flex items-center justify-between">
                     <div>
                         <label for="nsfw_content" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('preferences_nsfw_label') }}</label>
@@ -266,7 +329,7 @@
                     <Switch
                         id="nsfw_content"
                         v-model="nsfwContent"
-                        @update:model-value="(val) => togglePreference('nsfw_content', val)"
+                        @update:model-value="(val) => savePreference('nsfw_content', val)"
                     />
                 </div>
             </div>
@@ -275,7 +338,7 @@
 </template>
 
 <script setup>
-import { Head, useForm, usePage, router } from '@inertiajs/vue3'
+import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3'
 import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
 import AvatarModal from '@/Profile/AvatarModal.vue'
 import { computed, h, nextTick, ref } from 'vue'
@@ -289,7 +352,8 @@ import {
 } from '@/Components/ui/dropdown-menu'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/Components/ui/command'
 import { Checkbox } from '@/Components/ui/checkbox'
-import { Camera, Pencil, Check, X, Globe, Users, Shield, Lock, MessageCircle } from 'lucide-vue-next'
+import { Badge } from '@/Components/ui/badge'
+import { Camera, Pencil, Check, X, Globe, Users, Shield, Lock, MessageCircle, Sun, Moon, Monitor } from 'lucide-vue-next'
 import { trans } from 'laravel-vue-i18n'
 
 const props = defineProps({
@@ -342,9 +406,36 @@ function submitName() {
 }
 
 const nsfwContent = ref(page.props.user.preferences?.nsfw_content ?? false)
+const currentLocale = ref(page.props.locale ?? 'en')
+const currentTheme = ref(page.props.user.preferences?.theme ?? 'system')
 
-function togglePreference(key, value) {
-    router.post(route('settings.preferences.update'), { key, value }, { preserveScroll: true })
+const uiLanguages = [
+    { code: 'en', name: 'English' },
+    { code: 'de', name: 'Deutsch' },
+    { code: 'fr', name: 'Français' },
+]
+
+const themeOptions = [
+    { value: 'system', label: 'preferences_theme_system', icon: Monitor },
+    { value: 'light', label: 'preferences_theme_light', icon: Sun },
+    { value: 'dark', label: 'preferences_theme_dark', icon: Moon },
+]
+
+function savePreference(key, value) {
+    if (key === 'locale') {
+        currentLocale.value = value
+    } else if (key === 'theme') {
+        currentTheme.value = value
+    }
+
+    router.post(route('settings.preferences.update'), { key, value }, {
+        preserveScroll: true,
+        onSuccess: () => {
+            if (key === 'locale') {
+                window.location.reload()
+            }
+        },
+    })
 }
 
 const visibilityOptions = [
