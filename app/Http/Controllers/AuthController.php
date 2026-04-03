@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OauthSession;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
@@ -30,11 +33,15 @@ class AuthController extends Controller
     public function loginCallback($app)
     {
         $this->checkApp($app);
+
+        $provider = Socialite::driver('idp-' . $app);
+
         try {
-            $userInfo = Socialite::driver('idp-' . $app)->user();
+            $userInfo = $provider->user();
         } catch (InvalidStateException $e) {
             return redirect()->route('login.apps.redirect', ['app' => $app]);
         }
+
         $user = User::where('hashid', $userInfo->id)->first();
         if ($user === null) {
             Log::error('User not found during login callback', [
@@ -47,8 +54,22 @@ class AuthController extends Controller
                 'error_description' => 'Your user account could not be found.',
             ]);
         }
+
         Auth::guard($this->getGuard($app))->loginUsingId($user->id);
-        Socialite::driver('idp-' . $app)->putToken(
+
+        $sid = $provider->getSid();
+        if ($sid) {
+            DB::table('sessions')
+                ->where('id', Session::getId())
+                ->update(['hydra_sid' => $sid]);
+
+            $oauthSession = OauthSession::where('session_id', $sid)->first();
+            if ($oauthSession) {
+                $oauthSession->addClientId(config('services.apps.' . $app . '.client_id'));
+            }
+        }
+
+        $provider->putToken(
             token: $userInfo->token,
             refreshToken: $userInfo->refreshToken,
             expiresIn: now()->addSeconds($userInfo->expiresIn),
