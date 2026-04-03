@@ -24,7 +24,7 @@ class TotpSetupController extends Controller
         // Determine if Two Factor is enabled for the person
         $twoFactorEnabled = auth()->user()->twoFactors()->whereType(TwoFactorTypeEnum::TOTP)->exists();
         if ($twoFactorEnabled === false) {
-            $secret = Cache::remember('user-' . auth()->user()->id . '-two-factor-user-cache', now()->addHour(),
+            $secret = Cache::remember('totp-setup-' . auth()->user()->id . '-' . md5(auth()->user()->email), now()->addMinutes(10),
                 function () use ($tfa) {
                     $secret = $tfa->createSecret();
 
@@ -46,7 +46,7 @@ class TotpSetupController extends Controller
     {
         $tfa = $this->createTwoFactorAuth();
 
-        $secret = Cache::remember('user-' . auth()->user()->id . '-two-factor-user-cache', now()->addHour(),
+        $secret = Cache::remember('totp-setup-' . auth()->user()->id . '-' . md5(auth()->user()->email), now()->addMinutes(10),
             function () use ($tfa) {
                 $secret = $tfa->createSecret();
 
@@ -68,7 +68,7 @@ class TotpSetupController extends Controller
         $tfa = $this->createTwoFactorAuth();
         $data = $request->validated();
         // Verify that data->code is equal to cached value
-        $cachedValue = Cache::get('user-' . auth()->user()->id . '-two-factor-user-cache');
+        $cachedValue = Cache::get('totp-setup-' . auth()->user()->id . '-' . md5(auth()->user()->email));
         if (! isset($cachedValue['secret'])) {
             throw ValidationException::withMessages(['code' => 'Your secret expired, please try again.']);
         }
@@ -85,7 +85,7 @@ class TotpSetupController extends Controller
             'secret' => $data['secret'],
         ]);
         // Clear cache
-        Cache::forget('user-' . auth()->user()->id . '-two-factor-user-cache');
+        Cache::forget('totp-setup-' . auth()->user()->id . '-' . md5(auth()->user()->email));
 
         // Auto-generate backup codes if none exist
         $backupCodeService = new BackupCodeService();

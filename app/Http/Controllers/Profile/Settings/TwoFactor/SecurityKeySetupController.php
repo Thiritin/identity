@@ -11,6 +11,7 @@ use App\Services\WebAuthnService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -62,7 +63,8 @@ class SecurityKeySetupController extends Controller
                 $request->input('name'),
             );
         } catch (\RuntimeException $e) {
-            throw ValidationException::withMessages(['credential' => $e->getMessage()]);
+            Log::warning('Security key registration failed', ['user' => $request->user()->id, 'error' => $e->getMessage()]);
+            throw ValidationException::withMessages(['credential' => 'Security key verification failed. Please try again.']);
         }
 
         // Auto-generate backup codes if none exist

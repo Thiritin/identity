@@ -11,6 +11,7 @@ use App\Services\YubicoService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
@@ -109,6 +110,12 @@ class TwoFactorController extends Controller
 
         $user = User::findByHashidOrFail($request->get('user'));
 
+        $limitKey = 'security-key-options-' . $user->id;
+        if (RateLimiter::tooManyAttempts($limitKey, 10)) {
+            return response()->json(['message' => 'Too many attempts. Please try again later.'], 429);
+        }
+        RateLimiter::hit($limitKey, 120);
+
         $webAuthnService = new WebAuthnService();
         $options = $webAuthnService->generateAuthenticationOptions($user, TwoFactorTypeEnum::SECURITY_KEY);
 
@@ -170,6 +177,13 @@ class TwoFactorController extends Controller
         $factorModel = $twoFactors->first();
         $success = (new TwoFactorAuth())->verifyCode($factorModel->secret, $data['code']);
         if ($success) {
+            // Replay protection: reject codes already used within the validity window
+            $replayKey = 'totp-used-' . $user->id . '-' . $data['code'];
+            if (Cache::has($replayKey)) {
+                return false;
+            }
+            Cache::put($replayKey, true, 90);
+
             RateLimiter::clear($limitKey);
             $factorModel->update(['last_used_at' => now()]);
         }

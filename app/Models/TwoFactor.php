@@ -13,7 +13,19 @@ class TwoFactor extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'type',
+        'name',
+        'identifier',
+        'secret',
+        'credential_id',
+        'public_key',
+        'sign_count',
+        'transports',
+        'aaguid',
+        'last_used_at',
+        'codes',
+    ];
 
     protected $casts = [
         'last_used_at' => 'datetime',

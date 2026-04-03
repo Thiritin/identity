@@ -17,7 +17,7 @@ it('auto-generates backup codes when enabling TOTP for the first time', function
     $code = (new TwoFactorAuth())->getCode($secret);
 
     Cache::put(
-        'user-' . $this->user->id . '-two-factor-user-cache',
+        'totp-setup-' . $this->user->id . '-' . md5($this->user->email),
         ['secret' => $secret, 'qrCode' => 'data:image/png;base64,...']
     );
 
@@ -51,7 +51,7 @@ it('does not regenerate backup codes when adding a second 2FA method', function 
     $this->user->twoFactors()->where('type', TwoFactorTypeEnum::TOTP)->forceDelete();
 
     Cache::put(
-        'user-' . $this->user->id . '-two-factor-user-cache',
+        'totp-setup-' . $this->user->id . '-' . md5($this->user->email),
         ['secret' => $secret, 'qrCode' => 'data:image/png;base64,...']
     );
 

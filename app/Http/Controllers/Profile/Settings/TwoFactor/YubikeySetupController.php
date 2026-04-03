@@ -78,7 +78,7 @@ class YubikeySetupController extends Controller
             throw ValidationException::withMessages(['password' => 'Invalid password']);
         }
         // Delete yubikey device
-        auth()->user()->twoFactors()->where('id', $request->input('keyId'))->delete();
+        auth()->user()->twoFactors()->where('id', $request->input('keyId'))->where('type', TwoFactorTypeEnum::YUBIKEY)->delete();
 
         // Delete backup codes if no other 2FA methods remain
         $remainingMethods = auth()->user()->twoFactors()
