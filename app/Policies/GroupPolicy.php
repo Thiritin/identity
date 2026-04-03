@@ -16,6 +16,7 @@ class GroupPolicy
     use HandlesAuthorization;
 
     private const STAFF_VIEWABLE_TYPES = [
+        GroupTypeEnum::Root,
         GroupTypeEnum::Division,
         GroupTypeEnum::Department,
         GroupTypeEnum::Team,
@@ -29,7 +30,7 @@ class GroupPolicy
         if (Auth::guard('admin')->check()) {
             return $user->can('admin.groups.view');
         }
-        if (Auth::guard('web')->check() || Auth::guard('staff')->check()) {
+        if (Auth::guard('web')->check()) {
             return true;
         }
         if (Auth::guard('api')->check()) {

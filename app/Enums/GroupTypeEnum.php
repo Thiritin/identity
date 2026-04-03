@@ -9,5 +9,6 @@ enum GroupTypeEnum: string
     case Department = 'department';
     case Team = 'team';
     case Automated = 'automated';
+    case Root = 'root';
 
 }

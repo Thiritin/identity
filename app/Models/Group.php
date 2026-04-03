@@ -62,6 +62,20 @@ class Group extends Model
         'type' => GroupTypeEnum::class,
     ];
 
+    protected static function booted(): void
+    {
+        static::saving(function (Group $group) {
+            if ($group->type === GroupTypeEnum::Root) {
+                $existing = Group::where('type', GroupTypeEnum::Root)
+                    ->where('id', '!=', $group->id ?? 0)
+                    ->exists();
+                if ($existing) {
+                    throw new \RuntimeException('Only one root group may exist.');
+                }
+            }
+        });
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class)
