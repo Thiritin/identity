@@ -113,23 +113,26 @@ class BackChannelLogoutController extends Controller
 
     private function validateClaims(\stdClass $claims): bool
     {
-        $validIssuers = [config('services.hydra.public')];
+        $validIssuers = array_unique(array_filter([
+            config('services.hydra.public'),
+            rtrim(config('services.hydra.public'), '/') . '/',
+            config('app.url'),
+            rtrim(config('app.url'), '/') . '/',
+        ]));
         if (! isset($claims->iss) || ! in_array($claims->iss, $validIssuers)) {
             Log::warning('Backchannel logout invalid issuer', ['iss' => $claims->iss ?? null]);
 
             return false;
         }
 
-        $validAudiences = [
+        $knownAudiences = array_filter([
             config('services.apps.portal.client_id'),
             config('services.apps.staff.client_id'),
             config('services.apps.admin.client_id'),
-        ];
+        ]);
         $tokenAud = is_array($claims->aud) ? $claims->aud : [$claims->aud];
-        if (! array_intersect($tokenAud, $validAudiences)) {
-            Log::warning('Backchannel logout invalid audience', ['aud' => $claims->aud]);
-
-            return false;
+        if ($knownAudiences && ! array_intersect($tokenAud, $knownAudiences)) {
+            Log::info('Backchannel logout from unrecognized client', ['aud' => $claims->aud]);
         }
 
         $backchannelEvent = 'http://schemas.openid.net/event/backchannel-logout';

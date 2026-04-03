@@ -21,7 +21,15 @@ class SessionController extends Controller
         }
 
         $hydra = new Client();
-        $hydra->invalidateSession($session->session_id);
+
+        try {
+            $hydra->invalidateSession($session->session_id);
+        } catch (HydraRequestException $e) {
+            Log::warning('Failed to invalidate session in Hydra, removing locally', [
+                'session_id' => $session->session_id,
+                'message' => $e->getMessage(),
+            ]);
+        }
 
         $session->delete();
 

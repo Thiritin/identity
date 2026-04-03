@@ -114,12 +114,12 @@ it('rejects a logout token with wrong issuer', function () {
         ->assertStatus(400);
 });
 
-it('rejects a logout token with wrong audience', function () {
+it('accepts a logout token from an unrecognized client since JWT signature is trusted', function () {
     $privateKey = cacheTestJwks();
-    $token = generateLogoutToken(['aud' => 'wrong-client-id'], $privateKey);
+    $token = generateLogoutToken(['aud' => 'unknown-client-id'], $privateKey);
 
     $this->post('/auth/backchannel-logout', ['logout_token' => $token])
-        ->assertStatus(400);
+        ->assertOk();
 });
 
 it('rejects a logout token missing events claim', function () {

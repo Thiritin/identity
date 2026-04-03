@@ -23,6 +23,7 @@ config.json
 .DS_Store
 .mcp.json
 .playwright-mcp/
+.claude/
 boost.json
 docs/
 tests/Browser/Screenshots
