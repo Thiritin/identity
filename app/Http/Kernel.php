@@ -5,17 +5,19 @@ namespace App\Http;
 use App\Http\Middleware\AccessTokenValidationMiddleware;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\EnsureIsDeveloper;
 use App\Http\Middleware\EnsurePasswordIsConfirmed;
+use App\Http\Middleware\EnsureStaffTwoFactor;
 use App\Http\Middleware\GroupMember;
 use App\Http\Middleware\GuardSwitcher;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\PreventRequestForgery;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\SetLocaleFromBrowser;
 use App\Http\Middleware\TokenIntrospectionCheckMiddleware;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
-use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
@@ -62,7 +64,7 @@ class Kernel extends HttpKernel
             AddQueuedCookiesToResponse::class,
             StartSession::class,
             ShareErrorsFromSession::class,
-            VerifyCsrfToken::class,
+            PreventRequestForgery::class,
             SubstituteBindings::class,
             SetLocaleFromBrowser::class,
             HandleInertiaRequests::class,
@@ -96,5 +98,7 @@ class Kernel extends HttpKernel
         'verified' => EnsureEmailIsVerified::class,
         'guardswitcher' => GuardSwitcher::class,
         'groupmember' => GroupMember::class,
+        'developer' => EnsureIsDeveloper::class,
+        'staff.2fa' => EnsureStaffTwoFactor::class,
     ];
 }
