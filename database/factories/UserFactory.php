@@ -32,9 +32,14 @@ class UserFactory extends Factory
 
     public function admin(): static
     {
-        return $this->state(fn () => [
-            'is_admin' => true,
-        ]);
+        return $this->afterMaking(fn (User $user) => $user->is_admin = true)
+            ->afterCreating(fn (User $user) => $user->forceFill(['is_admin' => true])->save());
+    }
+
+    public function developer(): static
+    {
+        return $this->afterMaking(fn (User $user) => $user->is_developer = true)
+            ->afterCreating(fn (User $user) => $user->forceFill(['is_developer' => true])->save());
     }
 
     public function suspended(): static

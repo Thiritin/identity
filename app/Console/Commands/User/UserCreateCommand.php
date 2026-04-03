@@ -29,8 +29,12 @@ class UserCreateCommand extends Command
             'email' => $email,
             'password' => Hash::make($password),
             'email_verified_at' => now(),
-            'is_admin' => $this->option('admin'),
         ]);
+
+        if ($this->option('admin')) {
+            $user->is_admin = true;
+            $user->save();
+        }
 
         $this->info("User [{$user->email}] created successfully." . ($user->is_admin ? ' (admin)' : ''));
     }

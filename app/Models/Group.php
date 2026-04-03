@@ -45,7 +45,18 @@ class Group extends Model
 
     protected $appends = ['hashid', 'logo_url'];
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'description',
+        'logo',
+        'type',
+        'system_name',
+        'slug',
+        'parent_id',
+        'nextcloud_folder_name',
+        'nextcloud_folder_id',
+        'nextcloud_group_id',
+    ];
 
     protected $casts = [
         'type' => GroupTypeEnum::class,

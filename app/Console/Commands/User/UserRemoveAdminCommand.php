@@ -21,7 +21,8 @@ class UserRemoveAdminCommand extends Command
             return;
         }
 
-        $user->update(['is_admin' => false]);
+        $user->is_admin = false;
+        $user->save();
         $this->info("User [{$user->email}] is no longer an admin.");
     }
 }

@@ -58,15 +58,16 @@ class GroupsController extends Controller
                 'name' => ['required', 'string', 'max:255'],
             ]);
         }
-        $group->update($request->validated());
 
-        return redirect()->back();
+        $data = $request->validated();
 
-        $group->update([
-            'description' => Purify::clean($request->validated()['description'], [
+        if (isset($data['description'])) {
+            $data['description'] = Purify::clean($data['description'], [
                 'HTML.Allowed' => 'div,p,span,ul,ol,li,strong,em,br,a[href],img[src],h1,h2,h3,h4,h5,h6',
-            ]),
-        ]);
+            ]);
+        }
+
+        $group->update($data);
 
         return redirect()->back();
     }

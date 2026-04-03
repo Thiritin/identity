@@ -8,6 +8,7 @@ use App\Models\Group;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\ValidationException;
@@ -50,6 +51,8 @@ class GroupMemberController extends Controller
 
     public function store(Group $group, Request $request)
     {
+        Gate::authorize('update', $group);
+
         $request->validate([
             'email' => 'required_without:user_id|nullable|email|exists:users,email',
             'user_id' => 'required_without:email|nullable|exists:users,id',
@@ -86,8 +89,12 @@ class GroupMemberController extends Controller
 
     public function edit(Group $group, User $member)
     {
+        $requestMember = $group->users()->find($member->id)?->pivot;
+        abort_unless($requestMember, 404);
+        $this->authorize('update', $requestMember);
+
         return Inertia::render('Staff/GroupMember/GroupMemberEdit', [
-            'group' => $group,
+            'group' => $group->only(['hashid', 'name']),
             // Load pivot data
             'member' => $group->users()->where('user_id', $member->id)->select(['id', 'name'])->first(),
         ]);

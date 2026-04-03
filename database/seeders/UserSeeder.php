@@ -20,14 +20,15 @@ class UserSeeder extends Seeder
             return false;
         }
 
-        User::firstOrCreate([
+        $user = User::firstOrCreate([
             'id' => 1,
         ], [
             'name' => 'Admin',
             'email' => 'identity@eurofurence.localhost',
             'email_verified_at' => now(),
             'password' => \Hash::make(env('ADMIN_PASSWORD', random_bytes(32))),
-            'is_admin' => true,
         ]);
+
+        $user->forceFill(['is_admin' => true])->save();
     }
 }

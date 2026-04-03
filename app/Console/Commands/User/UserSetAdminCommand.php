@@ -21,7 +21,8 @@ class UserSetAdminCommand extends Command
             return;
         }
 
-        $user->update(['is_admin' => true]);
+        $user->is_admin = true;
+        $user->save();
         $this->info("User [{$user->email}] is now an admin.");
     }
 }

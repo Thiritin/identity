@@ -13,6 +13,7 @@ use App\Services\Hydra\HydraRequestException;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -47,7 +48,6 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'password',
         'password_changed_at',
         'profile_photo_path',
-        'is_admin',
         'preferences',
         'firstname',
         'lastname',
@@ -88,6 +88,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password_changed_at' => 'datetime',
         'is_admin' => 'boolean',
+        'is_developer' => 'boolean',
         'preferences' => 'array',
         'suspended_at' => 'datetime',
         'birthdate' => 'date',
@@ -173,6 +174,13 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function oauthSessions(): HasMany
     {
         return $this->hasMany(OauthSession::class);
+    }
+
+    public function conventions(): BelongsToMany
+    {
+        return $this->belongsToMany(Convention::class, 'convention_attendee')
+            ->withPivot('is_staff')
+            ->withTimestamps();
     }
 
     public function resetTwoFactorAuth()
