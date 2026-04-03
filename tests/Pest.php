@@ -13,7 +13,7 @@ use Tests\TestCase;
 |
 */
 
-uses(TestCase::class)->in('Feature', 'Browser');
+uses(TestCase::class)->in('Feature', 'Browser', 'Unit');
 
 /*
 |--------------------------------------------------------------------------

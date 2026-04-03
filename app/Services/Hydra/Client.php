@@ -168,6 +168,70 @@ class Client
         }
     }
 
+    public function getConsentSessions(string $subject): array
+    {
+        $response = Http::hydraAdmin()->get('/admin/oauth2/auth/sessions/consent', [
+            'subject' => $subject,
+        ]);
+
+        if ($response->failed()) {
+            Log::error('Hydra getConsentSessions failed', [
+                'subject' => $subject,
+                'status' => $response->status(),
+                'body' => $response->json(),
+            ]);
+
+            throw new HydraRequestException(
+                'Failed to retrieve consent sessions.',
+                $response->status(),
+            );
+        }
+
+        return $response->json() ?? [];
+    }
+
+    public function revokeConsentSession(string $subject, string $clientId): void
+    {
+        $response = Http::hydraAdmin()->withQueryParameters([
+            'subject' => $subject,
+            'client' => $clientId,
+        ])->delete('/admin/oauth2/auth/sessions/consent');
+
+        if ($response->failed()) {
+            Log::error('Hydra revokeConsentSession failed', [
+                'subject' => $subject,
+                'client_id' => $clientId,
+                'status' => $response->status(),
+                'body' => $response->json(),
+            ]);
+
+            throw new HydraRequestException(
+                'Failed to revoke consent session.',
+                $response->status(),
+            );
+        }
+    }
+
+    public function revokeAllConsentSessions(string $subject): void
+    {
+        $response = Http::hydraAdmin()->withQueryParameters([
+            'subject' => $subject,
+        ])->delete('/admin/oauth2/auth/sessions/consent');
+
+        if ($response->failed()) {
+            Log::error('Hydra revokeAllConsentSessions failed', [
+                'subject' => $subject,
+                'status' => $response->status(),
+                'body' => $response->json(),
+            ]);
+
+            throw new HydraRequestException(
+                'Failed to revoke all consent sessions.',
+                $response->status(),
+            );
+        }
+    }
+
     public function getLogoutRequest(string $loginChallenge)
     {
         try {
