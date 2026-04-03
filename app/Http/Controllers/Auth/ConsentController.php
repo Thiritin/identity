@@ -76,9 +76,13 @@ class ConsentController extends Controller
         $session->update([
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
-            'last_client_id' => $consentRequest['client']['client_id'] ?? null,
             'last_seen_at' => now(),
         ]);
+
+        $clientId = $consentRequest['client']['client_id'] ?? null;
+        if ($clientId) {
+            $session->addClientId($clientId);
+        }
 
         Session::put('hydra_session_id', $sessionId);
     }

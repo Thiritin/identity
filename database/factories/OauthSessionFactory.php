@@ -15,7 +15,7 @@ class OauthSessionFactory extends Factory
             'session_id' => Str::uuid()->toString(),
             'ip_address' => $this->faker->ipv4(),
             'user_agent' => $this->faker->userAgent(),
-            'last_client_id' => 'portal',
+            'client_ids' => ['portal'],
             'authenticated_at' => now(),
             'last_seen_at' => now(),
         ];

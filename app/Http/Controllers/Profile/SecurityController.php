@@ -66,6 +66,7 @@ class SecurityController extends Controller
         return Inertia::render('Settings/Security/Totp', [
             'totpEnabled' => $totp !== null,
             'totpLastUsed' => $totp?->last_used_at?->diffForHumans(),
+            'enforced' => $totp === null && $user->isStaff(),
         ]);
     }
 
@@ -113,7 +114,10 @@ class SecurityController extends Controller
                 'session_id' => $session->session_id,
                 'ip_address' => $session->ip_address,
                 'user_agent' => $session->user_agent,
-                'app_name' => $appNames[$session->last_client_id] ?? $session->last_client_id,
+                'app_names' => collect($session->client_ids ?? [])
+                    ->map(fn ($id) => $appNames[$id] ?? $id)
+                    ->values()
+                    ->all(),
                 'authenticated_at' => $session->authenticated_at?->diffForHumans(),
                 'last_seen_at' => $session->last_seen_at?->diffForHumans(),
             ]);

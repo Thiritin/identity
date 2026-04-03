@@ -18,7 +18,7 @@ class OauthSession extends Model
         'session_id',
         'ip_address',
         'user_agent',
-        'last_client_id',
+        'client_ids',
         'authenticated_at',
         'last_seen_at',
     ];
@@ -26,11 +26,23 @@ class OauthSession extends Model
     protected $casts = [
         'authenticated_at' => 'datetime',
         'last_seen_at' => 'datetime',
+        'client_ids' => 'array',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function addClientId(string $clientId): void
+    {
+        $ids = $this->client_ids ?? [];
+
+        if (! in_array($clientId, $ids)) {
+            $ids[] = $clientId;
+            $this->client_ids = $ids;
+            $this->save();
+        }
     }
 
     public function prunable(): Builder

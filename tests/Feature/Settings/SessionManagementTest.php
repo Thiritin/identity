@@ -43,11 +43,10 @@ it('records an oauth session on consent flow', function () {
 
     $this->get(route('auth.consent', ['consent_challenge' => 'consent-challenge-123']));
 
-    $this->assertDatabaseHas('oauth_sessions', [
-        'user_id' => $user->id,
-        'session_id' => 'hydra-session-uuid-abc',
-        'last_client_id' => 'test-client-id',
-    ]);
+    $session = OauthSession::where('session_id', 'hydra-session-uuid-abc')->first();
+    expect($session)->not->toBeNull();
+    expect($session->user_id)->toBe($user->id);
+    expect($session->client_ids)->toBe(['test-client-id']);
 });
 
 it('updates existing oauth session on repeat consent', function () {
@@ -58,7 +57,7 @@ it('updates existing oauth session on repeat consent', function () {
         'session_id' => 'hydra-session-uuid-abc',
         'ip_address' => '10.0.0.1',
         'user_agent' => 'OldBrowser/1.0',
-        'last_client_id' => 'old-client',
+        'client_ids' => ['old-client'],
         'authenticated_at' => now()->subDay(),
         'last_seen_at' => now()->subDay(),
     ]);
@@ -84,7 +83,7 @@ it('updates existing oauth session on repeat consent', function () {
     expect(OauthSession::where('session_id', 'hydra-session-uuid-abc')->count())->toBe(1);
 
     $session->refresh();
-    expect($session->last_client_id)->toBe('new-client');
+    expect($session->client_ids)->toContain('new-client');
     expect($session->authenticated_at->toISOString())->toBe($originalAuthenticatedAt);
 });
 
@@ -159,7 +158,6 @@ it('revokes a single session', function () {
     ]);
 
     $this->actingAs($user)
-        ->withSession(['auth.password_confirmed_at' => now()->unix()])
         ->delete(route('settings.security.sessions.destroy', $session))
         ->assertRedirect();
 
@@ -183,7 +181,6 @@ it('cannot revoke another users session', function () {
     ]);
 
     $this->actingAs($user)
-        ->withSession(['auth.password_confirmed_at' => now()->unix()])
         ->delete(route('settings.security.sessions.destroy', $session))
         ->assertForbidden();
 
@@ -217,7 +214,7 @@ it('revokes all other sessions except current', function () {
     ]);
 
     $this->actingAs($user)
-        ->withSession(['hydra_session_id' => 'current-session', 'auth.password_confirmed_at' => now()->unix()])
+        ->withSession(['hydra_session_id' => 'current-session'])
         ->delete(route('settings.security.sessions.destroy-others'))
         ->assertRedirect();
 
