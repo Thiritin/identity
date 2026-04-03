@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\BackChannelLogoutController;
 use App\Http\Controllers\Auth\ConsentController;
 use App\Http\Controllers\Auth\EmailController;
 use App\Http\Controllers\Auth\ErrorController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Auth\VerifyCodeController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\UpdateEmailController;
+use App\Http\Middleware\PreventRequestForgery;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
 use Spatie\Honeypot\ProtectAgainstSpam;
@@ -84,6 +86,12 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('frontchannel-logout', FrontChannelLogoutController::class)->middleware(['auth'])->name(
         'frontchannel_logout'
     );
+
+    // OIDC Backchannel Logout
+    Route::post('backchannel-logout', BackChannelLogoutController::class)
+        ->withoutMiddleware([PreventRequestForgery::class])
+        ->middleware('throttle:60,1')
+        ->name('backchannel_logout');
 });
 
 // Error
@@ -93,10 +101,10 @@ Route::get('auth/error', ErrorController::class)->name('auth.error');
 Route::prefix('auth')->middleware('auth')->group(function () {
     Route::get('verify', [VerifyEmailController::class, 'view'])->name('verification.notice');
     Route::post('verify', [VerifyEmailController::class, 'submit'])
-        ->middleware('throttle:5,5')
+        ->middleware('throttle:10,5')
         ->name('verification.submit');
     Route::post('verify/resend', [VerifyEmailController::class, 'resend'])
-        ->middleware('throttle:2,1')
+        ->middleware('throttle:5,1')
         ->name('verification.resend');
 });
 
