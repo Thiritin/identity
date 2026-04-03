@@ -22,7 +22,9 @@
                             {{ parseUserAgent(session.user_agent) }}
                         </p>
                         <p class="text-sm text-gray-500 dark:text-gray-400">
-                            {{ session.app_name ?? $t('security_sessions_header') }}
+                            <span v-for="(name, index) in session.app_names" :key="name">
+                                <span v-if="index > 0"> &middot; </span>{{ name }}
+                            </span>
                             <span v-if="session.ip_address"> &middot; {{ session.ip_address }}</span>
                             <span v-if="session.last_seen_at"> &middot; {{ session.last_seen_at }}</span>
                         </p>
