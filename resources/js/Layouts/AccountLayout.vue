@@ -1,5 +1,7 @@
 <template>
     <div :class="{ dark: darkMode }">
+        <SkipToContent />
+        <main id="main-content">
         <!-- Desktop: background + folder tabs + card -->
         <div class="hidden md:block auth-background bg-primary-600 relative min-h-screen">
             <div class="relative z-10 flex min-h-screen justify-center px-4 py-10 lg:py-14">
@@ -12,6 +14,7 @@
                                 :key="tab.name"
                                 :is="tab.external ? 'a' : Link"
                                 :href="tab.href"
+                                :aria-current="tab.active ? 'page' : undefined"
                                 class="relative px-6 py-3 text-center text-sm font-semibold transition-all rounded-t-xl -mb-px"
                                 :class="tab.active
                                     ? 'bg-white/95 text-primary-800 z-10 dark:bg-primary-900/95 dark:text-primary-100'
@@ -58,7 +61,7 @@
                             {{ $t('footer_artwork_by') }}
                             <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
                         </div>
-                        <nav class="flex flex-wrap gap-x-4 gap-y-1">
+                        <nav aria-label="Legal" class="flex flex-wrap gap-x-4 gap-y-1">
                             <a v-for="link in footerLinks" :key="link.name" :href="link.href" target="_blank" class="hover:text-white transition-colors">{{ link.name }}</a>
                         </nav>
                     </div>
@@ -79,13 +82,14 @@
             </div>
 
             <!-- Bottom Navigation -->
-            <nav class="fixed bottom-0 inset-x-0 z-40 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 safe-bottom">
+            <nav aria-label="Account navigation" class="fixed bottom-0 inset-x-0 z-40 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 safe-bottom">
                 <div class="flex justify-around">
                     <component
                         v-for="tab in tabs"
                         :key="tab.name"
                         :is="tab.external ? 'a' : Link"
                         :href="tab.href"
+                        :aria-current="tab.active ? 'page' : undefined"
                         class="flex-1 flex flex-col items-center gap-1 py-2 text-xs font-medium transition-colors"
                         :class="tab.active
                             ? 'text-primary-600 dark:text-primary-400'
@@ -104,6 +108,7 @@
                 </div>
             </nav>
         </div>
+        </main>
         <!-- Sudo mode: confirm password modal -->
         <Dialog :open="passwordConfirmRequired">
             <DialogContent :show-close-button="false" @interact-outside.prevent @escape-key-down.prevent>
@@ -113,11 +118,14 @@
                 </DialogHeader>
                 <form @submit.prevent="submitConfirmPassword">
                     <div class="flex flex-col gap-2">
+                        <label for="confirm-password" class="sr-only">{{ $t('password') }}</label>
                         <Input
+                            id="confirm-password"
                             type="password"
                             v-model="confirmForm.password"
                             :placeholder="$t('password')"
                             autocomplete="current-password"
+                            :aria-invalid="confirmForm.errors.password ? true : undefined"
                             :class="{ 'border-destructive': confirmForm.errors.password }"
                         />
                         <p v-if="confirmForm.errors.password" class="text-sm text-destructive">
@@ -139,13 +147,16 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { Link, usePage, useForm } from '@inertiajs/vue3'
-import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness, BookUser, Settings } from 'lucide-vue-next'
+import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness, BookUser, Settings, AppWindow } from 'lucide-vue-next'
 import { Toaster } from '@/Components/ui/sonner'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/Components/ui/dialog'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 import { trans } from 'laravel-vue-i18n'
+import { useTheme } from '@/Composables/useTheme'
+import SkipToContent from '@/Components/SkipToContent.vue'
 
+const { darkMode } = useTheme()
 const page = usePage()
 const user = computed(() => page.props.user)
 const currentUrl = computed(() => page.url)
@@ -165,8 +176,11 @@ const tabs = computed(() => {
         { name: trans('tab_profile'), route: 'settings.profile', href: route('settings.profile'), icon: UserRound, active: isActive('settings.profile') },
         { name: trans('tab_security'), route: 'settings.security', href: route('settings.security'), icon: ShieldCheck, active: isActive('settings.security') || isActive('settings.security.*') },
     ]
+    if (user.value.isDeveloper) {
+        items.push({ name: trans('tab_my_apps'), route: 'settings.apps.index', href: route('settings.apps.index'), icon: AppWindow, active: isActive('settings.apps.*') })
+    }
     if (user.value.isStaff) {
-        items.push({ name: trans('tab_directory'), route: 'staff.dashboard', href: route('staff.dashboard'), icon: BookUser, active: false })
+        items.push({ name: trans('tab_directory'), route: 'directory.index', href: route('directory.index'), icon: BookUser, active: isActive('directory.*') })
     }
     if (user.value.isAdmin) {
         items.push({ name: trans('tab_admin'), route: null, href: '/admin', icon: Settings, active: false, external: true })
@@ -183,12 +197,6 @@ const footerLinks = computed(() => [
     { name: trans('footer_imprint'), href: 'https://help.eurofurence.org/legal/imprint' },
     { name: trans('footer_privacy'), href: 'https://help.eurofurence.org/legal/privacy' },
 ])
-
-const darkMode = ref(window.matchMedia('(prefers-color-scheme: dark)').matches)
-
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    darkMode.value = e.matches
-})
 
 const passwordConfirmRequired = computed(() => page.props.passwordConfirmRequired === true)
 
