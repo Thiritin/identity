@@ -59,6 +59,29 @@ test('non-staff users get 403 on group detail', function () {
         ->assertForbidden();
 });
 
+test('directory routes receive directoryTree shared prop', function () {
+    [$user] = setupStaffUser();
+
+    $response = $this->actingAs($user)
+        ->get(route('directory.index'));
+
+    $response->assertOk();
+    $page = $response->original->getData()['page'];
+    expect($page['props'])->toHaveKey('directoryTree');
+    expect($page['props'])->toHaveKey('myGroupCount');
+});
+
+test('show page sets directorySelectedSlug', function () {
+    [$user, $root] = setupStaffUser();
+
+    $response = $this->actingAs($user)
+        ->get(route('directory.show', $root->slug));
+
+    $response->assertOk();
+    $page = $response->original->getData()['page'];
+    expect($page['props']['directorySelectedSlug'])->toBe($root->slug);
+});
+
 test('staff users can view staff profile', function () {
     [$user, , $staffGroup] = setupStaffUser();
     $otherUser = User::factory()->create();
