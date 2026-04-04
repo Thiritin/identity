@@ -1,0 +1,35 @@
+{
+  "id": "identity/api/v1/get-groups",
+  "title": "Get all groups",
+  "description": "This call returns a paginated result of all groups.",
+  "source": "@site/docs/identity/api/v1/get-groups.api.mdx",
+  "sourceDirName": "identity/api/v1",
+  "slug": "/identity/api/v1/get-groups",
+  "permalink": "/identity/api/v1/get-groups",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "get-groups",
+    "title": "Get all groups",
+    "description": "This call returns a paginated result of all groups.",
+    "sidebar_label": "Get all groups",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "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",
+    "sidebar_class_name": "get api-method",
+    "info_path": "identity/api/v1/eurofurence-identity",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Groups",
+    "permalink": "/identity/api/v1/groups"
+  },
+  "next": {
+    "title": "Create a new group",
+    "permalink": "/identity/api/v1/create-group"
+  }
+}

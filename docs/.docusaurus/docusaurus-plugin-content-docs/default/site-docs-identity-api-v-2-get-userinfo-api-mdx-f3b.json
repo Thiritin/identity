@@ -1,0 +1,35 @@
+{
+  "id": "identity/api/v2/get-userinfo",
+  "title": "Get userinfo",
+  "description": "Returns identity claims for the authenticated user based on granted scopes.",
+  "source": "@site/docs/identity/api/v2/get-userinfo.api.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/get-userinfo",
+  "permalink": "/identity/api/v2/get-userinfo",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "get-userinfo",
+    "title": "Get userinfo",
+    "description": "Returns identity claims for the authenticated user based on granted scopes.",
+    "sidebar_label": "Get userinfo",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "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",
+    "sidebar_class_name": "get api-method",
+    "info_path": "identity/api/v2/eurofurence-identity",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Open ID Connect",
+    "permalink": "/identity/api/v2/open-id-connect"
+  },
+  "next": {
+    "title": "Introspect token",
+    "permalink": "/identity/api/v2/introspect-token"
+  }
+}

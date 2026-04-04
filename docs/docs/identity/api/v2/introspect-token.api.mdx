@@ -1,0 +1,71 @@
+---
+id: introspect-token
+title: "Introspect token"
+description: "Check if an access or refresh token is active. Returns token metadata if active."
+sidebar_label: "Introspect token"
+hide_title: true
+hide_table_of_contents: true
+api: eJzNV91v2zYQ/1cI5qENIEtBUOzBT0vTYjCWLUHsrg+pkZylk8WFIlXyZMcw9L8PR8q2nI+1e9uTKd737453560s0OdONaSskWN5WWH+KFQpwAjIc/ReWCcclg59Jcg+ohHKC8hJrTAVt0itM74n1EhQAEGQjxzfzDdzi99b5dCLXCs0JKClCg2pHNioWCkQHxEcul7N+8h37zF3SKepTKTHvHWKNnJ8t5WXgTwNVDm+m3fzRDr83qKnj7bYyPE2fCqHhRyTazGRuTWEhpgETaN709nTaL1ej0rr6lHrNJrcFiyzlT6vsAY+0aZBOZZ28TfmJBPZONugI4U+UNnhAZsnp8xSJs9QnVXYx0ZWKEPO+obVdYn0uWXJH2mYNpDjyGMDDggLoZUnYUsRxBl/kXPmZNclg+DvegfniSRFmvXP+GKyd0HZkB70JLsuCvvGGh/DOz87459jV65/l28C+re35r/gF6tkwLewViOYF/F/rZAqrpA9kvsqDCi2i5cYdonsK0kVr1LfwL5LJD41g3tlCJfoZCK5VIDi1S8fmFMB/Syn96/aCuHcx+s3ya1/jdr9e15jJkNimROWnkviukEjJp/EpTWGczJPJKckJHBSRI97LUGpTGSNVFkmNdaHJAJVciyzQSnzG3UrdD480ePk3ThbtMEnmcjWaTmWFVHjx1mmCu4EtEmxdbZsHZocU+uWGTQqW53LLnmu7MrmoH9Oj2bWynraa5sfWsmUSzRWISMy+TSsVr4odgAlx99ffi6AdI1ajx6NXZuM5VUxyq0p1bKNUL8o8ejFPi1dIi9CA5496zFsmeEO/vOTCb2T+Y8b4w8FuCZNaZmTExe9OE/P0jN5qKvPh7DEpI+1f/+QBytYg2JEavyVKuUUKZPmtpaJNBDszfpbdlGrHE2s5Z56FW8K0ZoCnfhjMnuR3KWiql2w0myna497ttB2kdWgTHY1ufz85/RzeDToan9dTtGtVI4DVRXq5kWqNC5BZ0HmRVYubiZidS7QFI1VhrwobexCrwEjfDQYxt7Jibi+aKk6F9PQpOPdyZ75mxmJh1gZD2PxEbzKxXENiLI14dmA3vE3zpZK48NYfPHo3nlRKN9o2AhGU4ApBKyAwAXmkJkDa/gUUBSOxzrzrtCpcjeHPQG1PnpVlloZfBDZ/nwft4GHsbgdLgP7qKYEZRmEPZ/SepM6BI4sVjGPKIZtMPw559Ezuw7my1L08Yn3pXKeOKhEaNidmsoaTARSnp4ObIHWL42B1r3OGusFOv9up9yL9zzlMCcvGnQjdkKslFcLpWMSiZRZ+tNdbL852zYRmWU4HjAN3zsLlWqCbt6JsBDKhPj4jZ0OhHeu3iIUvXyBBEr7sAoxSBc3k6HA2inilF86BMKsbQogjKIxjzUYWOLOjaFogRqD7Kdw6IV2gV3zTA3sK4Xr+7LV+j5gdt97dED0qHjQc3BBVxbQ43WEIQu6dmvgUaAMNDRNQGS/KB6z78L8yr+vC8hEPo20XYamddwkHKzT2ChYot9P3ugZoV049LZ1OfoMvEfyGZapX/HqtYD8kYMzxaXV1smxPDk7+4AfcplI0DTDJ3rWGTH9KxVX7Bd3VZ6SNZhBkzsM5vhsnreZ7WGh+r+u4P0wIXyirNEQ23lIwbbfB+4GmwNvFTx5+Xa7XYDHL053HV9/b9HxIj9P5AqcggXPmbt5l8gKoUAXFohH3DAUEZTRjG0zu27Zhx+v8Lw2RBVcvg29IRzWVV4K9gvOzfWU58+i/x9R24JlBpqT4Ud0m8EcrrBxvCa7A4fTk8BsBp5st5EjDPiuk0nvcqyQbt513T+W29EA
+sidebar_class_name: "post api-method"
+info_path: identity/api/v2/eurofurence-identity
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+import Translate from "@docusaurus/Translate";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Introspect token"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/introspect"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Check if an access or refresh token is active. Returns token metadata if active.
+
+Requires client authentication via Bearer token (client_secret).
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+>
+  <Translate id="theme.openapi.request.title">Request</Translate>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  {...require("./introspect-token.RequestSchema.json")}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  {...require("./introspect-token.StatusCodes.json")}
+>
+  
+</StatusCodes>
+
+
+      

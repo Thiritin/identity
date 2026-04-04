@@ -1,0 +1,35 @@
+{
+  "id": "identity/api/v1/create-group-user",
+  "title": "Add member",
+  "description": "Add a new user to the group.",
+  "source": "@site/docs/identity/api/v1/create-group-user.api.mdx",
+  "sourceDirName": "identity/api/v1",
+  "slug": "/identity/api/v1/create-group-user",
+  "permalink": "/identity/api/v1/create-group-user",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "create-group-user",
+    "title": "Add member",
+    "description": "Add a new user to the group.",
+    "sidebar_label": "Add member",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "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",
+    "sidebar_class_name": "post api-method",
+    "info_path": "identity/api/v1/eurofurence-identity",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "List members",
+    "permalink": "/identity/api/v1/get-group-users"
+  },
+  "next": {
+    "title": "Remove member",
+    "permalink": "/identity/api/v1/delete-group-user"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "identity/guides/scopes",
+  "title": "Scopes",
+  "description": "Scopes control what data and APIs your application can access on behalf of a user. When a user authorizes your app, they see which scopes you're requesting and can decide whether to grant access.",
+  "source": "@site/docs/identity/guides/scopes.md",
+  "sourceDirName": "identity/guides",
+  "slug": "/identity/guides/scopes",
+  "permalink": "/identity/guides/scopes",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2,
+    "title": "Scopes"
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Build an Application",
+    "permalink": "/identity/guides/build-an-application"
+  },
+  "next": {
+    "title": "Introduction",
+    "permalink": "/identity/api/v1/eurofurence-identity"
+  }
+}

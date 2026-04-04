@@ -1,0 +1,1155 @@
+openapi: 3.0.0
+servers:
+  - description: Production
+    url: 'https://identity.eurofurence.org/api/v2'
+  - description: Local
+    url: 'https://identity.eurofurence.localhost/api/v2'
+info:
+  version: 2.0.0
+  title: Eurofurence Identity
+  contact:
+    email: me@thiritin.com
+    name: Thiritin
+  license:
+    name: Licensed under MIT
+    url: 'https://github.com/Thiritin/identity/blob/main/LICENSE'
+  termsOfService: 'https://help.eurofurence.org/legal/terms'
+  description: |-
+    API v2 endpoints for the Eurofurence Identity service.
+
+    ## OAuth2 Scopes
+
+    ### Identity
+    - `openid`: Basic OpenID Connect functionality
+    - `profile`: User's display name and avatar
+    - `email`: User's email address and verification status
+    - `offline` / `offline_access`: Refresh tokens
+
+    ### Staff
+    - `staff.my.read`: Access to the authenticated user's own staff profile (firstname, lastname, phone, etc.)
+    - `staff.all.read`: Access to all staff members' profiles (respects per-user visibility settings)
+
+    ### Groups
+    - `groups`: User's group memberships (returned in userinfo)
+    - `groups.read`: Read group details via the API
+    - `groups.write`: Create/update groups and manage members
+    - `groups.delete`: Delete groups
+
+    ### Other
+    - `view_full_staff_details`: Access email addresses in group/user listings
+    - `metadata.read`: Read per-app user metadata
+    - `metadata.write`: Write per-app user metadata
+  x-logo:
+    url: 'https://raw.githubusercontent.com/Thiritin/identity/main/resources/assets/ef.svg'
+    backgroundColor: '#004e4c'
+    altText: Eurofurence e.V. Logo
+tags:
+  - name: Open ID Connect
+    description: Endpoints related to OpenID Connect
+  - name: Staff
+    description: Staff member profiles with visibility-controlled access
+  - name: Groups
+    description: Group management with type filtering, hierarchy, and inline members
+  - name: Group Members
+    description: Manage group memberships with real role levels
+  - name: User Metadata
+    description: Per-app key-value metadata storage for users. Scoped by OAuth client_id.
+security:
+  - OpenID:
+      - openid
+      - profile
+      - email
+      - groups
+      - staff.my.read
+      - staff.all.read
+      - groups.read
+      - groups.write
+      - groups.delete
+      - metadata.read
+      - metadata.write
+  - AccessToken:
+      - groups.read
+      - groups.write
+      - groups.delete
+      - staff.my.read
+      - staff.all.read
+      - metadata.read
+      - metadata.write
+paths:
+  /userinfo:
+    get:
+      summary: Get userinfo
+      description: |-
+        Returns identity claims for the authenticated user based on granted scopes.
+
+        **Differences from v1:**
+        - `groups` scope returns objects with name, type, slug, level, and title instead of just hashid arrays
+        - `staff.my.read` scope adds staff profile fields (firstname, lastname, etc.)
+      security:
+        - OpenID:
+            - openid
+            - profile
+            - email
+            - groups
+            - staff.my.read
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Userinfo'
+      tags:
+        - Open ID Connect
+      operationId: getUserinfo
+  /introspect:
+    post:
+      summary: Introspect token
+      description: |-
+        Check if an access or refresh token is active. Returns token metadata if active.
+
+        Requires client authentication via Bearer token (client_secret).
+      security:
+        - ClientSecret: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenIntrospectionRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenIntrospectionResponse'
+      tags:
+        - Open ID Connect
+      operationId: introspectToken
+  /staff/me:
+    get:
+      summary: Get own staff profile
+      description: Returns the authenticated user's full staff profile including all PII fields.
+      security:
+        - OpenID:
+            - staff.my.read
+        - AccessToken:
+            - staff.my.read
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/StaffProfile'
+      tags:
+        - Staff
+      operationId: getStaffMe
+  /staff:
+    get:
+      summary: List all staff members
+      description: |-
+        Returns a paginated list of all staff members.
+
+        PII fields are filtered based on the viewer's relationship to each staff member,
+        respecting per-user visibility settings (AllStaff, MyDepartments, LeadsAndDirectors, DirectorsOnly).
+        Fields that are not visible to the viewer are omitted from the response.
+      security:
+        - OpenID:
+            - staff.all.read
+        - AccessToken:
+            - staff.all.read
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search staff members by name
+          example: John
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number for pagination
+          example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/StaffProfile'
+      tags:
+        - Staff
+      operationId: getStaffList
+  '/staff/{user}':
+    get:
+      summary: Get staff member
+      description: |-
+        Returns a single staff member's profile.
+
+        PII fields are filtered based on the viewer's relationship to the staff member.
+        Returns 404 if the user is not a staff member.
+      security:
+        - OpenID:
+            - staff.all.read
+        - AccessToken:
+            - staff.all.read
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+          description: User's hashid
+          example: 1VJEQAYWW54TZ5VD
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/StaffProfile'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Staff
+      operationId: getStaffMember
+  /groups/tree:
+    get:
+      summary: Get group hierarchy tree
+      description: |-
+        Returns the full organizational hierarchy as a nested tree structure.
+
+        The tree starts from divisions and includes departments and teams.
+        Each node includes a `is_mine` flag indicating whether the authenticated user is a member.
+      security:
+        - OpenID:
+            - groups.read
+        - AccessToken:
+            - groups.read
+      parameters:
+        - in: query
+          name: depth
+          schema:
+            type: integer
+            default: 3
+            minimum: 1
+            maximum: 3
+          description: 'Maximum depth of the tree (1=divisions only, 2=+departments, 3=+teams)'
+          example: 2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GroupTreeNode'
+      tags:
+        - Groups
+      operationId: getGroupTree
+  /groups:
+    get:
+      summary: List groups
+      description: |-
+        Returns a paginated list of groups.
+
+        Staff members can see all hierarchy groups. Non-staff users only see groups they belong to.
+      security:
+        - OpenID:
+            - groups.read
+        - AccessToken:
+            - groups.read
+      parameters:
+        - in: query
+          name: type
+          schema:
+            type: string
+          description: 'Filter by group type(s), comma-separated'
+          example: division,department
+        - in: query
+          name: include
+          schema:
+            type: string
+          description: 'Include related data, comma-separated (members, children)'
+          example: members,children
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search groups by name
+          example: IT
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number for pagination
+          example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Group'
+      tags:
+        - Groups
+      operationId: getGroups
+    post:
+      summary: Create group
+      security:
+        - OpenID:
+            - groups.write
+        - AccessToken:
+            - groups.write
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupForm'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Group'
+      tags:
+        - Groups
+      operationId: createGroup
+  '/groups/{group}':
+    get:
+      summary: Get group
+      security:
+        - OpenID:
+            - groups.read
+        - AccessToken:
+            - groups.read
+      parameters:
+        - in: path
+          name: group
+          required: true
+          schema:
+            type: string
+          description: Group hashid
+          example: Y6K08PEKXG9Q7ZWJ
+        - in: query
+          name: include
+          schema:
+            type: string
+          description: 'Include related data, comma-separated (members, children)'
+          example: children,members
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Group'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Groups
+      operationId: getGroup
+    put:
+      summary: Update group
+      security:
+        - OpenID:
+            - groups.write
+        - AccessToken:
+            - groups.write
+      parameters:
+        - in: path
+          name: group
+          required: true
+          schema:
+            type: string
+          description: Group hashid
+          example: Y6K08PEKXG9Q7ZWJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupForm'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Group'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Groups
+      operationId: updateGroup
+    delete:
+      summary: Delete group
+      security:
+        - OpenID:
+            - groups.delete
+        - AccessToken:
+            - groups.delete
+      parameters:
+        - in: path
+          name: group
+          required: true
+          schema:
+            type: string
+          description: Group hashid
+          example: Y6K08PEKXG9Q7ZWJ
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Groups
+      operationId: deleteGroup
+  '/groups/{group}/members':
+    get:
+      summary: List group members
+      description: Returns a paginated list of group members with their roles and titles.
+      security:
+        - OpenID:
+            - groups.read
+        - AccessToken:
+            - groups.read
+      parameters:
+        - in: path
+          name: group
+          required: true
+          schema:
+            type: string
+          description: Group hashid
+          example: Y6K08PEKXG9Q7ZWJ
+        - in: query
+          name: level
+          schema:
+            type: string
+          description: 'Filter by member level(s), comma-separated'
+          example: director,team_lead
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search members by name
+          example: John
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 25
+          description: Results per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GroupMember'
+      tags:
+        - Group Members
+      operationId: getGroupMembers
+    post:
+      summary: Add member
+      description: Add a user to a group by email or user ID.
+      security:
+        - OpenID:
+            - groups.write
+        - AccessToken:
+            - groups.write
+      parameters:
+        - in: path
+          name: group
+          required: true
+          schema:
+            type: string
+          description: Group hashid
+          example: Y6K08PEKXG9Q7ZWJ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddMemberForm'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/GroupMember'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Group Members
+      operationId: addGroupMember
+  '/groups/{group}/members/{user}':
+    patch:
+      summary: Update member
+      description: Update a member's level or title within a group.
+      security:
+        - OpenID:
+            - groups.write
+        - AccessToken:
+            - groups.write
+      parameters:
+        - in: path
+          name: group
+          required: true
+          schema:
+            type: string
+          description: Group hashid
+          example: Y6K08PEKXG9Q7ZWJ
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+          description: User hashid
+          example: 1VJEQAYWW54TZ5VD
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMemberForm'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/GroupMember'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Group Members
+      operationId: updateGroupMember
+    delete:
+      summary: Remove member
+      description: Remove a user from a group.
+      security:
+        - OpenID:
+            - groups.write
+        - AccessToken:
+            - groups.write
+      parameters:
+        - in: path
+          name: group
+          required: true
+          schema:
+            type: string
+          description: Group hashid
+          example: Y6K08PEKXG9Q7ZWJ
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+          description: User hashid
+          example: 1VJEQAYWW54TZ5VD
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - Group Members
+      operationId: removeGroupMember
+  /metadata:
+    get:
+      summary: List all metadata
+      description: Returns all key-value pairs stored by the authenticated app for the current user.
+      security:
+        - OpenID:
+            - metadata.read
+        - AccessToken:
+            - metadata.read
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Metadata'
+      tags:
+        - User Metadata
+      operationId: getMetadata
+  '/metadata/{key}':
+    get:
+      summary: Get metadata value
+      description: Returns a single metadata value by key.
+      security:
+        - OpenID:
+            - metadata.read
+        - AccessToken:
+            - metadata.read
+      parameters:
+        - in: path
+          name: key
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9._-]+$'
+          description: The metadata key
+          example: billing.address.city
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Metadata'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - User Metadata
+      operationId: getMetadataKey
+    put:
+      summary: Create or update metadata
+      description: Creates or updates a metadata key-value pair. Returns 201 on create, 200 on update.
+      security:
+        - OpenID:
+            - metadata.write
+        - AccessToken:
+            - metadata.write
+      parameters:
+        - in: path
+          name: key
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9._-]+$'
+          description: The metadata key
+          example: billing.address.city
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetadataValue'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Metadata'
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Metadata'
+      tags:
+        - User Metadata
+      operationId: putMetadataKey
+    delete:
+      summary: Delete metadata
+      description: Deletes a metadata key-value pair.
+      security:
+        - OpenID:
+            - metadata.write
+        - AccessToken:
+            - metadata.write
+      parameters:
+        - in: path
+          name: key
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9._-]+$'
+          description: The metadata key
+          example: billing.address.city
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - User Metadata
+      operationId: deleteMetadataKey
+components:
+  schemas:
+    Userinfo:
+      type: object
+      properties:
+        sub:
+          type: string
+          description: User's unique identifier (hashid)
+          example: 1VJEQAYWW54TZ5VD
+        email:
+          type: string
+          description: User's email (requires `email` scope)
+          example: user@example.com
+        email_verified:
+          type: boolean
+          description: Whether email is verified (requires `email` scope)
+        name:
+          type: string
+          description: Display name (requires `profile` scope)
+          example: FurryUser42
+        avatar:
+          type: string
+          nullable: true
+          description: Avatar URL (requires `profile` scope)
+        groups:
+          type: array
+          description: 'Group memberships with details (requires `groups` scope). In v2, returns objects instead of just hashid strings.'
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: Y6K08PEKXG9Q7ZWJ
+              name:
+                type: string
+                example: Information Technology
+              type:
+                type: string
+                enum: [none, division, department, team, automated, root]
+                example: department
+              slug:
+                type: string
+                example: operations/information-technology
+              level:
+                type: string
+                enum: [member, team_lead, director, division_director]
+                example: member
+              title:
+                type: string
+                nullable: true
+                example: App Developer
+        firstname:
+          type: string
+          description: First name (requires `staff.my.read` scope)
+          example: John
+        lastname:
+          type: string
+          description: Last name (requires `staff.my.read` scope)
+          example: Doe
+        birthdate:
+          type: string
+          format: date
+          nullable: true
+          description: Date of birth (requires `staff.my.read` scope)
+          example: '1990-01-15'
+        phone:
+          type: string
+          nullable: true
+          description: Phone number (requires `staff.my.read` scope)
+        telegram_username:
+          type: string
+          nullable: true
+          description: Telegram username (requires `staff.my.read` scope)
+        spoken_languages:
+          type: array
+          nullable: true
+          description: Spoken languages (requires `staff.my.read` scope)
+          items:
+            type: string
+        credit_as:
+          type: string
+          nullable: true
+          description: Preferred credit name (requires `staff.my.read` scope)
+        nda_verified:
+          type: boolean
+          description: NDA verification status (requires `staff.my.read` scope)
+    TokenIntrospectionRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          description: The token to introspect
+        scope:
+          type: string
+          description: Space-separated list of scopes to check
+      required:
+        - token
+    TokenIntrospectionResponse:
+      type: object
+      properties:
+        active:
+          type: boolean
+          description: Whether the token is active
+        sub:
+          type: string
+        client_id:
+          type: string
+        scope:
+          type: string
+        exp:
+          type: integer
+          format: int64
+        iat:
+          type: integer
+          format: int64
+        iss:
+          type: string
+        token_type:
+          type: string
+        token_use:
+          type: string
+    StaffProfile:
+      type: object
+      description: 'Staff member profile. PII fields may be absent based on the viewer''s relationship to the staff member.'
+      properties:
+        id:
+          type: string
+          description: User hashid
+          example: 1VJEQAYWW54TZ5VD
+        name:
+          type: string
+          description: Display name
+          example: FurryUser42
+        avatar:
+          type: string
+          nullable: true
+          description: Avatar URL
+        nda_verified:
+          type: boolean
+          description: NDA verification status
+        firstname:
+          type: string
+          description: First name (visibility-controlled)
+          example: John
+        lastname:
+          type: string
+          description: Last name (visibility-controlled)
+          example: Doe
+        birthdate:
+          type: string
+          format: date
+          nullable: true
+          description: Date of birth (visibility-controlled)
+        phone:
+          type: string
+          nullable: true
+          description: Phone number (visibility-controlled)
+        telegram_username:
+          type: string
+          nullable: true
+          description: Telegram username (visibility-controlled)
+        spoken_languages:
+          type: array
+          nullable: true
+          description: Spoken languages (visibility-controlled)
+          items:
+            type: string
+        credit_as:
+          type: string
+          nullable: true
+          description: Preferred credit name (visibility-controlled)
+        groups:
+          type: array
+          description: Group memberships
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              type:
+                type: string
+                enum: [none, division, department, team, automated, root]
+              slug:
+                type: string
+              level:
+                type: string
+                enum: [member, team_lead, director, division_director]
+              title:
+                type: string
+                nullable: true
+    GroupTreeNode:
+      type: object
+      description: Recursive tree node representing a group in the hierarchy
+      properties:
+        hashid:
+          type: string
+          example: Y6K08PEKXG9Q7ZWJ
+        name:
+          type: string
+          example: Operations
+        type:
+          type: string
+          enum: [division, department, team]
+          example: division
+        slug:
+          type: string
+          example: operations
+        icon:
+          type: string
+          nullable: true
+          example: briefcase
+        member_count:
+          type: integer
+          description: 'Number of members (for divisions: number of child departments)'
+          example: 5
+        is_mine:
+          type: boolean
+          description: Whether the authenticated user is a member
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupTreeNode'
+    Group:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Group hashid
+          example: Y6K08PEKXG9Q7ZWJ
+        type:
+          type: string
+          enum: [none, division, department, team, automated, root]
+          example: department
+        name:
+          type: string
+          example: Information Technology
+        description:
+          type: string
+          nullable: true
+        slug:
+          type: string
+          example: operations/information-technology
+        icon:
+          type: string
+          nullable: true
+          example: code
+        logo:
+          type: string
+          nullable: true
+          description: Logo URL
+        parent_id:
+          type: string
+          nullable: true
+          description: Parent group hashid
+        member_count:
+          type: integer
+          example: 12
+        translations:
+          type: object
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        children:
+          type: array
+          description: 'Child groups (only present when include=children)'
+          items:
+            $ref: '#/components/schemas/Group'
+        members:
+          type: array
+          description: 'Group members (only present when include=members)'
+          items:
+            $ref: '#/components/schemas/GroupMember'
+    GroupForm:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [none, division, department, team]
+          example: department
+        name:
+          type: string
+          example: New Department
+        description:
+          type: string
+          nullable: true
+        parent_id:
+          type: string
+          nullable: true
+          description: Parent group hashid
+      required:
+        - type
+        - name
+    GroupMember:
+      type: object
+      properties:
+        user_id:
+          type: string
+          example: 1VJEQAYWW54TZ5VD
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          nullable: true
+          description: 'Email (only visible with `view_full_staff_details` scope)'
+        avatar:
+          type: string
+          nullable: true
+          description: Avatar URL
+        level:
+          type: string
+          enum: [member, team_lead, director, division_director]
+          example: member
+        title:
+          type: string
+          nullable: true
+          example: App Developer
+        credit_as:
+          type: string
+          nullable: true
+          example: J. Doe
+    AddMemberForm:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 'User email (required if user_id not provided)'
+          example: john@example.com
+        user_id:
+          type: string
+          description: 'User hashid (required if email not provided)'
+          example: 1VJEQAYWW54TZ5VD
+        level:
+          type: string
+          enum: [member, team_lead, director, division_director]
+          default: member
+        title:
+          type: string
+          nullable: true
+          example: App Developer
+    UpdateMemberForm:
+      type: object
+      properties:
+        level:
+          type: string
+          enum: [member, team_lead, director, division_director]
+        title:
+          type: string
+          nullable: true
+    Metadata:
+      type: object
+      properties:
+        key:
+          type: string
+          example: billing.address.city
+        value:
+          type: string
+          example: Berlin
+    MetadataValue:
+      type: object
+      properties:
+        value:
+          type: string
+          description: The metadata value to store (max 64KB)
+          example: Berlin
+      required:
+        - value
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+  securitySchemes:
+    OpenID:
+      type: openIdConnect
+      openIdConnectUrl: 'https://identity.eurofurence.org/.well-known/openid-configuration'
+      description: OpenID Connect
+    AccessToken:
+      type: http
+      scheme: bearer
+    ClientSecret:
+      type: http
+      scheme: bearer

@@ -1,0 +1,35 @@
+{
+  "id": "identity/api/v2/remove-group-member",
+  "title": "Remove member",
+  "description": "Remove a user from a group.",
+  "source": "@site/docs/identity/api/v2/remove-group-member.api.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/remove-group-member",
+  "permalink": "/identity/api/v2/remove-group-member",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "remove-group-member",
+    "title": "Remove member",
+    "description": "Remove a user from a group.",
+    "sidebar_label": "Remove member",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "eJylVm1P20gQ/iur4UOLZGwOcW/+dBxEVVpaKNByfYnIxB7HK9a77u46gCL/99Os7ZBA7q7qffJ6PW/PM+OZWUJOLrOy9tJoSOGCKrMggaJxZEVhTSVQzK1p6hgicJQ1VvoHSL8s4awmPT6B9AuE7y6+s9ITTNpoCUdZRs5dmVvSWwQmEdRosSJP1gVbkn3X6EuIQGNFkHY6EIGlb420lEPqbUMRuKykCiFdgn+oWdB5K/Uc2ugJlFdsQJToSplDBHSPVa1Y4dMvb/Z/Ox+9+evV7+9//Xz9GjjiLREwBf8ngA9M4Rb/P318PXp/9On6+ufDq88/fzwBJsSSq4125Njwwf4hPzbNvTPi2GhP2kPbRuBxztz1MN9SNWMyJxGYmiyyzjiHFGxIaBDqZCCCinxp+GNOijxB1AFPIekSlSzDs02qzmqyZCraUAB2MeRsM7pza/ImCy8RNFZBCqX3tUuTROakvfQPMTXWFI0lnVFs7DzBWiaLg0D/prFTk6H6PjuKRUvj/Mra5LFOLzlVHaVDta6yZvgiPzZaU+Yh2nz/8H0A4jtSau9WmzudsL7M9zKjCzlvugzA05LoohCD1zba/FNWwbFn6EuN32eElizLHytJ2l9SZsl/h0IbgdSFYUlOXBfFQbwf70MEXvpQkKNHWGLcY4UIMqM9ZsELVSiZkYr+8KW00ksdZ6Z6/Feu+lsOUcmMtCPW67+edje5aHROVrwdXz1L7lz6spmx0WSwteI9mSkzSyqUOjkdH4/eXY7YjSdbubPikuxCZrRmqiRVP0uVojmqJOg8y8rR+VgsDgTpvDZSeycKY4UvSWwjRrjOYfxVf9U7O+LsqPHlgbjMTE2uu9tZCX/Ve2LaVcY0FX+ik5nYrAFRNDr8NqgG+dqaQiqapoI7yAsnculqhQ+C2RSoc4EL9GiDcMjMo2h4FZjnlpwLsguyspBZqEfhPPrGdVEVhZKapiJZnW8wFOM0FRdUWHKl8FyXK1SXHosiKDs+xdVDbAkZWVfFwptAGza+ZPwZes55F5m5C+6LQvT4xMtCWucZVCQUDqe6NJoiQT6Ld9d8oVLPnaFSvc2+U70YjDvxkjsqZd6JmuxeGGcL6eRMqi6J3ks9d7sDttAhO2a6JvjIaXgfPJSyDrZ9YzXlQuqAj/+x3TXlIdQLwrzXz8mjVE4sJAaSjs7H6wphNk5TcWwJPSVNnaOnTrXLY4Ua5zSEsa7adfFpKk7CoVcagJ35krpSWUi6uykapW4CZzd9RI+MbhQPOQYXbCWBPSVdoCzYqshjjh43gDLRWNfd7jBIbIoPMK/5uV0BIrjfU2YemtZmk7B4F3eNgjWybhr+Q88I7cKSM43NyCXoHHmXUBG7xRwimGF2y+B0fmyUsZDCzv7+IR1mEAEqf0X3/klnpPhjLE45Lu6qtXG+Qr3W5PrVqRqm7EaPWUIf7X/uWH1D93Tvk1ph11IDDct+TA/7FESQDltSXxZ8FdaWSQQ8FFl4uZyhow9WtS1ff2vI8gI3iWCBVuKMRwCPc+n4nENaoHL0L/G/vOg3ol3xZMfaGnt/iZpnygJVw28QwS09rNa8sAL8SACbO9YP+A9stZN2bSs6GZ2OrkZcBw3TvZqx/UyNhgOzttX4ctlJhKnetitfoZuys7b9G4EWASk=",
+    "sidebar_class_name": "delete api-method",
+    "info_path": "identity/api/v2/eurofurence-identity",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Update member",
+    "permalink": "/identity/api/v2/update-group-member"
+  },
+  "next": {
+    "title": "User Metadata",
+    "permalink": "/identity/api/v2/user-metadata"
+  }
+}

@@ -1,0 +1,1 @@
+{"parameters":[{"in":"query","name":"depth","schema":{"type":"integer","default":3,"minimum":1,"maximum":3},"description":"Maximum depth of the tree (1=divisions only, 2=+departments, 3=+teams)","example":2}]}

@@ -1,0 +1,1 @@
+{"parameters":[{"in":"path","name":"group","schema":{"type":"string"},"description":"Group Identifier","required":true,"example":"8513K1FW0H4W2SJG"},{"in":"query","name":"with_users","schema":{"type":"boolean","default":false},"description":"Include user membership data for the group with username, email, avatar, and user level within the group.","example":true}]}

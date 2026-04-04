@@ -1,0 +1,35 @@
+{
+  "id": "identity/api/v2/add-group-member",
+  "title": "Add member",
+  "description": "Add a user to a group by email or user ID.",
+  "source": "@site/docs/identity/api/v2/add-group-member.api.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/add-group-member",
+  "permalink": "/identity/api/v2/add-group-member",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "add-group-member",
+    "title": "Add member",
+    "description": "Add a user to a group by email or user ID.",
+    "sidebar_label": "Add member",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "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",
+    "sidebar_class_name": "post api-method",
+    "info_path": "identity/api/v2/eurofurence-identity",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "List group members",
+    "permalink": "/identity/api/v2/get-group-members"
+  },
+  "next": {
+    "title": "Update member",
+    "permalink": "/identity/api/v2/update-group-member"
+  }
+}

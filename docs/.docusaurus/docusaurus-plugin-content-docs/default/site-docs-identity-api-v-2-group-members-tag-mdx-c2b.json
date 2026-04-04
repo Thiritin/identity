@@ -1,0 +1,29 @@
+{
+  "id": "identity/api/v2/group-members",
+  "title": "Group Members",
+  "description": "Group Members",
+  "source": "@site/docs/identity/api/v2/group-members.tag.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/group-members",
+  "permalink": "/identity/api/v2/group-members",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "group-members",
+    "title": "Group Members",
+    "description": "Group Members",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Delete group",
+    "permalink": "/identity/api/v2/delete-group"
+  },
+  "next": {
+    "title": "List group members",
+    "permalink": "/identity/api/v2/get-group-members"
+  }
+}

@@ -25,5 +25,5 @@ config.json
 .playwright-mcp/
 .claude/
 boost.json
-docs/
 tests/Browser/Screenshots
+docs/superpowers

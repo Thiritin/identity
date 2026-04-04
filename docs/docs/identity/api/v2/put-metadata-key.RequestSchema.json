@@ -1,0 +1,1 @@
+{"title":"Body","body":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"value":{"type":"string","description":"The metadata value to store (max 64KB)","example":"Berlin"}},"required":["value"],"title":"MetadataValue"}}}}}

@@ -1,0 +1,1 @@
+{"title":"Body","body":{"required":true,"content":{"application/x-www-form-urlencoded":{"schema":{"type":"object","properties":{"token":{"type":"string","description":"The token to introspect"},"scope":{"type":"string","description":"Space-separated list of scopes to check"}},"required":["token"],"title":"TokenIntrospectionRequest"}}}}}

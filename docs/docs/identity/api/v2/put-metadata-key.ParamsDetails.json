@@ -1,0 +1,1 @@
+{"parameters":[{"in":"path","name":"key","required":true,"schema":{"type":"string","pattern":"^[a-zA-Z0-9._-]+$"},"description":"The metadata key","example":"billing.address.city"}]}

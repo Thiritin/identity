@@ -1,0 +1,1 @@
+{"responses":{"204":{"description":"No Content","content":{"text/html":{"example":""}}},"404":{"content":{"application/json":{"schema":{"type":"object","properties":{"message":{"type":"string"}},"title":"Error"},"example":{"message":"Not Found!"}}},"description":"Not Found"}}}

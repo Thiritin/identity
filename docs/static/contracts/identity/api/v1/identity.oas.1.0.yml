@@ -1,0 +1,947 @@
+openapi: 3.0.0
+servers:
+  - description: Production
+    url: 'https://identity.eurofurence.org/api/v1'
+  - description: Local
+    url: 'https://identity.eurofurence.localhost/api/v1'
+info:
+  version: 1.0.0
+  title: Eurofurence Identity
+  contact:
+    email: me@thiritin.com
+    name: Thiritin
+  license:
+    name: Licensed under MIT
+    url: 'https://github.com/Thiritin/identity/blob/main/LICENSE'
+  termsOfService: 'https://help.eurofurence.org/legal/terms'
+  description: |-
+    This is the official API Documentation for the Eurofurence Identity service. This can be used to query or automated different things within the Identity service.
+
+    To request a new oauth2 client contact [Thiritin](https://t.me/thiritin) via telegram.
+
+    ## OAuth2 Scopes
+
+    The following scopes are available for OAuth2 authentication:
+
+    - `openid`: Basic OpenID Connect functionality
+    - `offline`: Offline access (refresh tokens)
+    - `offline_access`: Offline access (refresh tokens)
+    - `profile`: Access to user profile information
+    - `email`: Access to user email address
+    - `groups`: Access to user's group memberships
+    - `groups.read`: Read access to group information
+    - `groups.write`: Write access to group information (create/update)
+    - `groups.delete`: Delete access to group information
+    - `view_full_staff_details`: Access to full staff details including email addresses in group and user listings. Without this scope, email addresses are filtered out of API responses for privacy protection.
+    - `read`: General read access
+    - `write`: General write access
+  x-logo:
+    url: 'https://raw.githubusercontent.com/Thiritin/identity/main/resources/assets/ef.svg'
+    backgroundColor: '#004e4c'
+    altText: Eurofurence e.V. Logo
+tags:
+  - name: Open ID Connect
+    description: Endpoints related to OpenID Connect
+  - name: Groups
+    description: Endpoints related the Group resource
+  - name: Group Memberships
+security:
+  - OpenID:
+      - openid
+      - offline
+      - offline_access
+      - profile
+      - email
+      - groups
+      - groups.read
+      - groups.write
+      - groups.delete
+      - view_full_staff_details
+  - AccessToken:
+      - read
+      - write
+      - groups.read
+      - groups.write
+      - groups.delete
+      - view_full_staff_details
+paths:
+  /userinfo:
+    get:
+      summary: Get userinfo of the user
+      security:
+        - OpenID:
+            - openid
+            - profile
+            - email
+            - groups
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Userinfo'
+          description: OK
+      tags:
+        - Open ID Connect
+      operationId: getUserinfo
+  /introspect:
+    post:
+      summary: Introspect Token
+      description: >-
+        The introspection endpoint allows to check if a token (both refresh and
+        access) is active or not. An active token is neither expired nor revoked.
+
+        If a token is active, additional information on the token will be included.
+
+        Please note that this endpoint does require authorization by a client_id and client_secret combination.
+        The client_secret must be submitted as a Bearer token.
+      security:
+        - ClientSecret: [ ]
+      requestBody:
+        description: "Introspect a token"
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenIntrospection'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenIntrospection'
+          description: OK
+      tags:
+        - Open ID Connect
+      operationId: introspectToken
+  /groups:
+    get:
+      summary: Get all groups
+      security:
+        - OpenID:
+            - groups.read
+        - AccessToken:
+            - groups.read
+      description: This call returns a paginated result of all groups.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Used for pagination.
+          example: 1
+        - in: query
+          name: with_users
+          schema:
+            type: boolean
+            default: false
+          description: Include user membership data for each group with username, email, avatar, and user level within the group.
+          example: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      oneOf:
+                        - $ref: '#/components/schemas/Group'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: 'https://identity.eurofurence.org/api/v1/groups?page=1'
+                      last:
+                        type: string
+                        nullable: true
+                        example: 'https://identity.eurofurence.org/api/v1/groups?page=5'
+                      prev:
+                        type: string
+                        nullable: true
+                        example: null
+                      next:
+                        type: string
+                        nullable: true
+                        example: 'https://identity.eurofurence.org/api/v1/groups?page=2'
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: integer
+                        example: 1
+                      path:
+                        type: integer
+                        example: 5
+                      to:
+                        type: integer
+                        example: 25
+              examples:
+                without_users:
+                  summary: Groups without user data
+                  value:
+                    data:
+                      - id: "Y6K08PEKXG9Q7ZWJ"
+                        type: "department"
+                        name: "Information Technology"
+                        description: "IT Department handling all technical aspects"
+                        logo: null
+                        slug: "information-technology"
+                        created_at: "2023-02-19T19:22:51.000000Z"
+                        updated_at: "2024-08-14T18:52:24.000000Z"
+                    links:
+                      first: "https://identity.eurofurence.org/api/v1/groups?page=1"
+                      last: null
+                      prev: null
+                      next: "https://identity.eurofurence.org/api/v1/groups?page=2"
+                    meta:
+                      current_page: 1
+                      from: 1
+                      path: 1
+                      to: 25
+                with_users:
+                  summary: Groups with user data (when with_users=true)
+                  value:
+                    data:
+                      - id: "Y6K08PEKXG9Q7ZWJ"
+                        type: "department"
+                        name: "Information Technology"
+                        description: "IT Department handling all technical aspects"
+                        logo: null
+                        slug: "information-technology"
+                        created_at: "2023-02-19T19:22:51.000000Z"
+                        updated_at: "2024-08-14T18:52:24.000000Z"
+                        users:
+                          - user_id: "1VJEQAYWW54TZ5VD"
+                            name: "John Doe"
+                            email: "john.doe@example.com"
+                            level: "admin"
+                            title: "Department Lead"
+                            avatar: "https://s3.eurofurence.org/avatars/john-doe-avatar.jpg"
+                          - user_id: "2XKFRBZXX65UA6WE"
+                            name: "Jane Smith"
+                            email: "jane.smith@example.com"
+                            level: "member"
+                            avatar: null
+                    links:
+                      first: "https://identity.eurofurence.org/api/v1/groups?page=1"
+                      last: null
+                      prev: null
+                      next: "https://identity.eurofurence.org/api/v1/groups?page=2"
+                    meta:
+                      current_page: 1
+                      from: 1
+                      path: 1
+                      to: 25
+          description: OK
+      tags:
+        - Groups
+      operationId: getGroups
+    post:
+      operationId: createGroup
+      summary: Create a new group
+      security:
+        - OpenID:
+            - groups.create
+        - AccessToken:
+            - groups.create
+      description: This call returns a paginated result of all groups.
+      requestBody:
+        description: Create a new group
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Group'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Group'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Group'
+          description: OK
+      tags:
+        - Groups
+  '/groups/{group}':
+    get:
+      summary: Get single group
+      security:
+        - OpenID:
+            - groups.read
+        - AccessToken:
+            - groups.read
+      description: This call returns a single group with optional user membership data.
+      parameters:
+        - in: path
+          name: group
+          schema:
+            type: string
+          description: Group Identifier
+          required: true
+          example: 8513K1FW0H4W2SJG
+        - in: query
+          name: with_users
+          schema:
+            type: boolean
+            default: false
+          description: Include user membership data for the group with username, email, avatar, and user level within the group.
+          example: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Group'
+              examples:
+                without_users:
+                  summary: Single group without user data
+                  value:
+                    data:
+                      id: "Y6K08PEKXG9Q7ZWJ"
+                      type: "department"
+                      name: "Information Technology"
+                      description: "IT Department handling all technical aspects"
+                      logo: null
+                      slug: "information-technology"
+                      created_at: "2023-02-19T19:22:51.000000Z"
+                      updated_at: "2024-08-14T18:52:24.000000Z"
+                with_users:
+                  summary: Single group with user data (when with_users=true)
+                  value:
+                    data:
+                      id: "Y6K08PEKXG9Q7ZWJ"
+                      type: "department"
+                      name: "Information Technology"
+                      description: "IT Department handling all technical aspects"
+                      logo: null
+                      slug: "information-technology"
+                      created_at: "2023-02-19T19:22:51.000000Z"
+                      updated_at: "2024-08-14T18:52:24.000000Z"
+                      users:
+                        - user_id: "1VJEQAYWW54TZ5VD"
+                          name: "John Doe"
+                          email: "john.doe@example.com"
+                          level: "admin"
+                          title: "Department Lead"
+                          avatar: "https://s3.eurofurence.org/avatars/john-doe-single.jpg"
+                        - user_id: "2XKFRBZXX65UA6WE"
+                          name: "Jane Smith"
+                          email: "jane.smith@example.com"
+                          level: "member"
+                          avatar: null
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: Not Found!
+          description: Not Found
+      tags:
+        - Groups
+      operationId: getGroup
+    put:
+      summary: Update single group
+      security:
+        - OpenID:
+            - groups.update
+        - AccessToken:
+            - groups.update
+      description: This call updates a single group.
+      parameters:
+        - in: path
+          name: group
+          schema:
+            type: string
+          description: Group Identifier
+          required: true
+          example: 8513K1FW0H4W2SJG
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Group'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: Not Found!
+          description: Not Found
+      tags:
+        - Groups
+      operationId: putGroup
+    patch:
+      summary: Update single group
+      security:
+        - OpenID:
+            - groups.update
+        - AccessToken:
+            - groups.update
+      description: This call updates a single group.
+      parameters:
+        - in: path
+          name: group
+          schema:
+            type: string
+          description: Group Identifier
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Group'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: Not Found!
+          description: Not Found
+      tags:
+        - Groups
+      operationId: patchGroup
+    delete:
+      summary: Deletes a group
+      description: Delete a group with the given identifier
+      security:
+        - OpenID:
+            - groups.delete
+        - AccessToken:
+            - groups.delete
+      parameters:
+        - in: path
+          name: group
+          schema:
+            type: string
+          description: Group Identifier
+          required: true
+          example: 8513K1FW0H4W2SJG
+      responses:
+        '204':
+          description: No Content
+          content:
+            text/html:
+              example: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: Not Found!
+          description: Not Found
+      tags:
+        - Groups
+      operationId: deleteGroup
+  '/groups/{group}/users':
+    get:
+      summary: List members
+      description: Show members of the groups. Email addresses are only visible with the `view_full_staff_details` scope/permission.
+      security:
+        - OpenID:
+            - groups.update
+        - AccessToken:
+            - groups.update
+      parameters:
+        - in: path
+          name: group
+          schema:
+            type: string
+          description: Group Identifier
+          required: true
+          example: 8513K1FW0H4W2SJG
+        - in: query
+          name: 'filter[level]'
+          schema:
+            type: string
+          examples:
+            member:
+              value: member
+              description: Shows any member that has the member level.
+            moderator:
+              value: moderator
+              description: Shows any member that has the moderator level.
+            admin:
+              value: admin
+              description: Shows any member that has the admin level.
+            owner:
+              value: owner
+              description: Shows any member that has the owner level.
+          description: Filter results by user level (By default, all members are shown)
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      oneOf:
+                        - $ref: '#/components/schemas/GroupUser'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type: string
+                        example: 'https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/users?page=1'
+                      last:
+                        type: string
+                        nullable: true
+                        example: 'https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/users?page=10'
+                      prev:
+                        type: string
+                        nullable: true
+                        example: null
+                      next:
+                        type: string
+                        nullable: true
+                        example: 'https://identity.eurofurence.org/api/v1/groups/Y6K08PEKXG9Q7ZWJ/users?page=2'
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      from:
+                        type: integer
+                        example: 1
+                      path:
+                        type: integer
+                        example: 5
+                      to:
+                        type: integer
+                        example: 100
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: Not Found!
+          description: Not Found
+      tags:
+        - Group Memberships
+      operationId: getGroupUsers
+    post:
+      summary: Add member
+      description: Add a new user to the group.
+      security:
+        - OpenID:
+            - groups.update
+        - AccessToken:
+            - groups.update
+      parameters:
+        - in: path
+          name: group
+          schema:
+            type: string
+          description: Group Identifier
+          required: true
+          example: 8513K1FW0H4W2SJG
+      requestBody:
+        description: Add a user to a group
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupUserForm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GroupUserForm'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupUser'
+          description: OK
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: Not Found!
+          description: Not Found
+      tags:
+        - Group Memberships
+      operationId: createGroupUser
+  '/groups/{group}/users/{user}':
+    delete:
+      summary: Remove member
+      description: Remove a user account from the group
+      security:
+        - OpenID:
+            - groups.delete
+        - AccessToken:
+            - groups.delete
+      parameters:
+        - in: path
+          name: group
+          schema:
+            type: string
+          description: Group Identifier
+          required: true
+        - in: path
+          name: user
+          schema:
+            type: string
+          description: User's UUID
+          required: true
+          example: 1VJEQAYWW54TZ5VD
+      responses:
+        '204':
+          description: No Content
+          content:
+            text/html:
+              example: ''
+      tags:
+        - Group Memberships
+      operationId: deleteGroupUser
+components:
+  schemas:
+    Userinfo:
+      type: object
+      properties:
+        sub:
+          readOnly: true
+          type: string
+          description: Uuid of the user
+        name:
+          readOnly: true
+          type: string
+          description: Choosen username by the user
+        email:
+          readOnly: true
+          type: string
+          description: Primary email of the user
+        email_verified:
+          readOnly: true
+          type: boolean
+          description: 'Boolean value, true if email is verified. false if email is not verified.'
+        avatar:
+          readOnly: true
+          type: string
+          description: Returns full url of users avatar.
+        groups:
+          type: array
+          uniqueItems: true
+          readOnly: true
+          items:
+            type: string
+    TokenIntrospection:
+      type: object
+      properties:
+        token:
+          required: true
+          writeOnly: true
+          type: string
+          description: The string value of the token. For access tokens, this is the "access_token" value returned from the token endpoint defined in OAuth 2.0. For refresh tokens, this is the "refresh_token" value returned.
+        active:
+          description: |-
+            Active is a boolean indicator of whether or not the presented token
+            is currently active.  The specifics of a token's "active" state
+            will vary depending on the implementation of the authorization
+            server and the information it keeps about its tokens, but a "true"
+            value return for the "active" property will generally indicate
+            that a given token has been issued by this authorization server,
+            has not been revoked by the resource owner, and is within its
+            given time window of validity (e.g., after its issuance time and
+            before its expiration time).
+          type: boolean
+          readOnly: true
+        aud:
+          description: Audience contains a list of the token's intended audiences.
+          type: array
+          readOnly: true
+          items:
+            type: string
+        client_id:
+          required: true
+          description: |-
+            ID is a client identifier for an OAuth 2.0 client.
+          type: string
+        exp:
+          description: |-
+            Expires at is an integer timestamp, measured in the number of seconds
+            since January 1 1970 UTC, indicating when this token will expire.
+          readOnly: true
+          type: integer
+          format: int64
+        ext:
+          description: Extra is arbitrary data set by the session.
+          readOnly: true
+          type: object
+          additionalProperties: { }
+        iat:
+          description: |-
+            Issued at is an integer timestamp, measured in the number of seconds
+            since January 1 1970 UTC, indicating when this token was
+            originally issued.
+          readOnly: true
+          type: integer
+          format: int64
+        iss:
+          description: IssuerURL is a string representing the issuer of this token
+          readOnly: true
+          type: string
+        nbf:
+          description: |-
+            NotBefore is an integer timestamp, measured in the number of seconds
+            since January 1 1970 UTC, indicating when this token is not to be
+            used before.
+          readOnly: true
+          type: integer
+          format: int64
+        obfuscated_subject:
+          description: >-
+            ObfuscatedSubject is set when the subject identifier algorithm was set
+            to "pairwise" during authorization.
+
+            It is the `sub` value of the ID Token that was issued.
+          readOnly: true
+          type: string
+        scope:
+          description: |-
+            Scope is a JSON string containing a space-separated list of
+            scopes associated with this token.
+          type: string
+        sub:
+          description: |-
+            Subject of the token, as defined in JWT [RFC7519].
+            Usually a machine-readable identifier of the resource owner who
+            authorized this token.
+          readOnly: true
+          type: string
+        token_type:
+          description: TokenType is the introspected token's type, typically `Bearer`.
+          readOnly: true
+          type: string
+        token_use:
+          description: >-
+            TokenUse is the introspected token's use, for example `access_token`
+            or `refresh_token`.
+          readOnly: true
+          type: string
+        username:
+          description: |-
+            Username is a human-readable identifier for the resource owner who
+            authorized this token.
+          readOnly: true
+          type: string
+    GroupUser:
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: The user's unique identifier
+          example: "1VJEQAYWW54TZ5VD"
+        group_id:
+          type: string
+          description: The group's unique identifier
+          example: "Y6K08PEKXG9Q7ZWJ"
+        name:
+          type: string
+          description: The user's display name
+          example: "John Doe"
+        email:
+          type: string
+          nullable: true
+          description: The user's email address (only visible with view_full_staff_details permission)
+          example: "john.doe@example.com"
+        avatar:
+          type: string
+          nullable: true
+          description: URL to the user's profile picture
+          example: "https://s3.eurofurence.org/avatars/user-profile-photo.jpg"
+        level:
+          type: string
+          description: The user's permission level within this group
+          enum:
+            - member
+            - moderator
+            - admin
+            - owner
+          example: "member"
+        title:
+          type: string
+          nullable: true
+          description: The user's custom title within this group
+          example: "App Developer"
+    GroupUserForm:
+      type: object
+      properties:
+        level:
+          type: string
+          enum:
+            - member
+            - moderator
+            - admin
+            - owner
+          default: member
+      required:
+        - level
+      oneOf:
+        - properties:
+            id:
+              type: string
+              description: The user id, cannot be used with email when adding a user
+              example: 1VJEQAYWW54TZ5VD
+          required:
+            - id
+        - properties:
+            email:
+              type: string
+              description: The email of the user, cannot be used with id when adding a user
+              example: thiritin@eurofurence.org
+          required:
+            - email
+    Group:
+      type: object
+      properties:
+        id:
+          readOnly: true
+          type: string
+          description: The groups uuid
+          example: Y6K08PEKXG9Q7ZWJ
+        type:
+          default: none
+          enum:
+            - none
+            - department
+        name:
+          type: string
+          example: Attendees 2021
+        description:
+          type: string
+          example: <b>Thanks for Attending Eurofurence 2021</b>
+        logo:
+          type: string
+          description: URL to the groups logo
+          example: 'http://identity.eurofurence.org/storage/avatars/mqKYRqC8aEXifh1muaTJgzIysGRykr-metaMTIucG5n-.png'
+        slug:
+          type: string
+          readOnly: true
+          description: 'Unique identifier for the group, but not immuteable.'
+          example: attendees-2021
+        translations:
+          type: object
+          readOnly: true
+          properties:
+            name:
+              type: object
+              nullable: true
+              properties:
+                en:
+                  type: string
+                  example: Attendees 2021
+                de:
+                  type: string
+                  example: Teilnehmer 2021
+            description:
+              type: object
+              nullable: true
+              properties:
+                en:
+                  type: string
+                  example: <b>Thanks for Attending Eurofurence 2021</b>
+                de:
+                  type: string
+                  example: <b>Vielen Dank für die teilnahme Eurofurence 2021</b>
+        created_at:
+          type: string
+          example: '2022-12-10T20:41:34.000000Z'
+        updated_at:
+          type: string
+          example: '2022-12-10T20:41:34.000000Z'
+        users:
+          type: array
+          description: User membership data for the group (only present when with_users=true)
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/GroupUserWithData'
+    GroupUserWithData:
+      type: object
+      description: User membership data including user details and level within the group
+      properties:
+        user_id:
+          type: string
+          description: The user's unique identifier
+          example: "1VJEQAYWW54TZ5VD"
+        name:
+          type: string
+          description: The user's display name
+          example: "John Doe"
+        email:
+          type: string
+          nullable: true
+          description: The user's email address (only visible with view_full_staff_details permission)
+          example: "john.doe@example.com"
+        avatar:
+          type: string
+          nullable: true
+          description: URL to the user's profile picture
+          example: "https://s3.eurofurence.org/avatars/user-profile-photo.jpg"
+        level:
+          type: string
+          description: The user's permission level within this group
+          enum:
+            - member
+            - moderator
+            - admin
+            - owner
+          example: "member"
+        title:
+          type: string
+          nullable: true
+          description: The user's custom title within this group
+          example: "Senior Developer"
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+  securitySchemes:
+    OpenID:
+      type: openIdConnect
+      openIdConnectUrl: 'https://identity.eurofurence.org/.well-known/openid-configuration'
+      description: OpenID Connect
+    AccessToken:
+      type: http
+      scheme: bearer
+    ClientSecret:
+      type: http
+      scheme: bearer

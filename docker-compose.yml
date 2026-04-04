@@ -34,6 +34,21 @@ services:
       - traefik.http.services.app.loadbalancer.server.port=80
       - traefik.http.routers.app.entrypoints=web
 
+  docs:
+    image: node:22-bookworm-slim
+    working_dir: /app
+    volumes:
+      - './docs:/app'
+      - 'docs-node-modules:/app/node_modules'
+    command: sh -c "npm install 2>&1 && npx docusaurus gen-api-docs all && npx docusaurus start --host 0.0.0.0 --port 3000"
+    networks:
+      - sail
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.docs.rule=Host(`docs.identity.eurofurence.localhost`)
+      - traefik.http.services.docs.loadbalancer.server.port=3000
+      - traefik.http.routers.docs.entrypoints=web
+
   traefik:
     image: 'traefik:v2.11'
     command:
@@ -49,8 +64,17 @@ services:
       sail:
         aliases:
           - identity.eurofurence.localhost
+          - docs.identity.eurofurence.localhost
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.localhost-redirect.rule=Host(`localhost`)
+      - traefik.http.routers.localhost-redirect.entrypoints=web
+      - traefik.http.routers.localhost-redirect.middlewares=redirect-to-identity
+      - traefik.http.middlewares.redirect-to-identity.redirectregex.regex=^http://localhost/(.*)
+      - traefik.http.middlewares.redirect-to-identity.redirectregex.replacement=http://identity.eurofurence.localhost/$${1}
+      - traefik.http.middlewares.redirect-to-identity.redirectregex.permanent=false
 
   mysql:
     image: 'mysql/mysql-server:8.0'
@@ -105,6 +129,8 @@ services:
       WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_8: registration.room.test
       WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_9: registration.room.live
       WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_10: view_full_staff_details
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_11: staff.my.read
+      WEBFINGER_OIDC_DISCOVERY_SUPPORTED_SCOPE_12: staff.all.read
       LOG_LEAK_SENSITIVE_VALUES: "true"
       OAUTH2_EXPOSE_INTERNAL_ERRORS: "true"
       DEV: "true"
@@ -168,5 +194,7 @@ volumes:
   sail-minio:
     driver: local
   sail-meilisearch:
+    driver: local
+  docs-node-modules:
     driver: local
 

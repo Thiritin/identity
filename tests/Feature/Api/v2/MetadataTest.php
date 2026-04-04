@@ -55,7 +55,7 @@ it('returns a single metadata key', function () {
 
     $this->getJson('/api/v2/metadata/theme')
         ->assertOk()
-        ->assertJson(['data' => ['key' => 'theme', 'value' => 'dark']]);
+        ->assertJson(['key' => 'theme', 'value' => 'dark']);
 });
 
 it('returns 404 for a non-existent key', function () {
@@ -72,7 +72,7 @@ it('creates a new metadata key via PUT and returns 201', function () {
 
     $this->putJson('/api/v2/metadata/theme', ['value' => 'dark'])
         ->assertCreated()
-        ->assertJson(['data' => ['key' => 'theme', 'value' => 'dark']]);
+        ->assertJson(['key' => 'theme', 'value' => 'dark']);
 
     $this->assertDatabaseHas('user_app_metadata', [
         'user_id' => $user->id,
@@ -90,7 +90,7 @@ it('updates an existing metadata key via PUT and returns 200', function () {
 
     $this->putJson('/api/v2/metadata/theme', ['value' => 'light'])
         ->assertOk()
-        ->assertJson(['data' => ['key' => 'theme', 'value' => 'light']]);
+        ->assertJson(['key' => 'theme', 'value' => 'light']);
 
     $this->assertDatabaseHas('user_app_metadata', [
         'user_id' => $user->id,

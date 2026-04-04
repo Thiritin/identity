@@ -1,0 +1,1 @@
+{"parameters":[{"in":"query","name":"search","schema":{"type":"string"},"description":"Search staff members by name","example":"John"},{"in":"query","name":"page","schema":{"type":"integer"},"description":"Page number for pagination","example":1}]}

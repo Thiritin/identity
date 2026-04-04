@@ -115,6 +115,11 @@ class Client
             if (in_array('groups', $consentChallenge['requested_scope'])) {
                 $requestData['session']['id_token']['groups'] = $user->groups->pluck('hashid');
             }
+            if (in_array('staff.my.read', $consentChallenge['requested_scope'])) {
+                $requestData['session']['id_token']['firstname'] = $user->firstname;
+                $requestData['session']['id_token']['lastname'] = $user->lastname;
+                $requestData['session']['id_token']['credit_as'] = $user->credit_as;
+            }
 
             return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/consent/accept?challenge=' . $consentChallenge['challenge'],
                 $requestData)->json();

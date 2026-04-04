@@ -1,0 +1,1 @@
+{"parameters":[{"in":"path","name":"group","schema":{"type":"string"},"description":"Group Identifier","required":true},{"in":"path","name":"user","schema":{"type":"string"},"description":"User's UUID","required":true,"example":"1VJEQAYWW54TZ5VD"}]}

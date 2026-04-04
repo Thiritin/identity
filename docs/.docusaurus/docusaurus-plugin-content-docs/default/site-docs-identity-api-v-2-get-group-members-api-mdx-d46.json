@@ -1,0 +1,35 @@
+{
+  "id": "identity/api/v2/get-group-members",
+  "title": "List group members",
+  "description": "Returns a paginated list of group members with their roles and titles.",
+  "source": "@site/docs/identity/api/v2/get-group-members.api.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/get-group-members",
+  "permalink": "/identity/api/v2/get-group-members",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "get-group-members",
+    "title": "List group members",
+    "description": "Returns a paginated list of group members with their roles and titles.",
+    "sidebar_label": "List group members",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "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",
+    "sidebar_class_name": "get api-method",
+    "info_path": "identity/api/v2/eurofurence-identity",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Group Members",
+    "permalink": "/identity/api/v2/group-members"
+  },
+  "next": {
+    "title": "Add member",
+    "permalink": "/identity/api/v2/add-group-member"
+  }
+}

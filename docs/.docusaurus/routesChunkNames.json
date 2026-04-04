@@ -1,0 +1,234 @@
+{
+  "/__docusaurus/debug-5ff": {
+    "__comp": "__comp---theme-debug-config-23-a-2ff",
+    "__context": {
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
+    }
+  },
+  "/__docusaurus/debug/config-5ba": {
+    "__comp": "__comp---theme-debug-config-23-a-2ff",
+    "__context": {
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
+    }
+  },
+  "/__docusaurus/debug/content-a2b": {
+    "__comp": "__comp---theme-debug-contentba-8-ce7",
+    "__context": {
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
+    },
+    "__props": "__props---docusaurus-debug-content-3-c-0-be2"
+  },
+  "/__docusaurus/debug/globalData-c3c": {
+    "__comp": "__comp---theme-debug-global-dataede-0fa",
+    "__context": {
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
+    }
+  },
+  "/__docusaurus/debug/metadata-156": {
+    "__comp": "__comp---theme-debug-site-metadata-68-e-3d4",
+    "__context": {
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
+    }
+  },
+  "/__docusaurus/debug/registry-88c": {
+    "__comp": "__comp---theme-debug-registry-679-501",
+    "__context": {
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
+    }
+  },
+  "/__docusaurus/debug/routes-000": {
+    "__comp": "__comp---theme-debug-routes-946-699",
+    "__context": {
+      "plugin": "plugin---docusaurus-debugb-38-ad3"
+    }
+  },
+  "/-e8b": {
+    "__comp": "__comp---theme-docs-root-5-e-9-0b6",
+    "__context": {
+      "plugin": "plugin---docsaba-d7c"
+    }
+  },
+  "/-f4d": {
+    "__comp": "__comp---theme-doc-version-roota-7-b-5de",
+    "__props": "__props---22-d-307"
+  },
+  "/-7b8": {
+    "__comp": "__comp---theme-doc-roota-94-67a"
+  },
+  "/identity/api/v1/create-group-2ac": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-api-v-1-create-group-8-d-9-3b6"
+  },
+  "/identity/api/v1/create-group-user-aa9": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-api-v-1-create-group-user-951-43d"
+  },
+  "/identity/api/v1/delete-group-302": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-api-v-1-delete-groupb-1-c-f7e"
+  },
+  "/identity/api/v1/delete-group-user-9d4": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-api-v-1-delete-group-userecf-dfb"
+  },
+  "/identity/api/v1/eurofurence-identity-969": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-api-v-1-eurofurence-identity-572-e17"
+  },
+  "/identity/api/v1/get-group-c3e": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-api-v-1-get-group-68-a-348"
+  },
+  "/identity/api/v1/get-group-users-a3f": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-api-v-1-get-group-users-2-df-f6e"
+  },
+  "/identity/api/v1/get-groups-ccc": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-api-v-1-get-groups-733-0d0"
+  },
+  "/identity/api/v1/get-userinfo-ce4": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-api-v-1-get-userinfoc-88-96b"
+  },
+  "/identity/api/v1/group-memberships-74e": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-api-v-1-group-memberships-481-c5d"
+  },
+  "/identity/api/v1/groups-1fe": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-api-v-1-groupsa-35-e31"
+  },
+  "/identity/api/v1/introspect-token-295": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-api-v-1-introspect-tokenc-73-372"
+  },
+  "/identity/api/v1/open-id-connect-48c": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-api-v-1-open-id-connect-6-ed-519"
+  },
+  "/identity/api/v1/patch-group-359": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-api-v-1-patch-groupad-7-0a1"
+  },
+  "/identity/api/v1/put-group-6d4": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-api-v-1-put-group-345-7c7"
+  },
+  "/identity/api/v2/add-group-member-847": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-add-group-member-085-c51"
+  },
+  "/identity/api/v2/create-group-f31": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-create-groupd-75-ec5"
+  },
+  "/identity/api/v2/delete-group-27f": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-delete-groupbd-5-757"
+  },
+  "/identity/api/v2/delete-metadata-key-2fd": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-delete-metadata-key-8-d-3-50b"
+  },
+  "/identity/api/v2/eurofurence-identity-f0f": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-eurofurence-identity-904-4c2"
+  },
+  "/identity/api/v2/get-group-6e4": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-group-6-bc-89b"
+  },
+  "/identity/api/v2/get-group-members-a84": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-group-membersd-46-9b4"
+  },
+  "/identity/api/v2/get-group-tree-5ac": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-group-tree-775-55c"
+  },
+  "/identity/api/v2/get-groups-0aa": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-groupsc-96-0bf"
+  },
+  "/identity/api/v2/get-metadata-4e2": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-metadata-695-35b"
+  },
+  "/identity/api/v2/get-metadata-key-ab9": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-metadata-key-22-b-32d"
+  },
+  "/identity/api/v2/get-staff-list-c88": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-staff-liste-16-d81"
+  },
+  "/identity/api/v2/get-staff-me-83c": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-staff-me-1-fe-6ab"
+  },
+  "/identity/api/v2/get-staff-member-430": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-staff-member-7-f-9-dbd"
+  },
+  "/identity/api/v2/get-userinfo-68f": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-userinfof-3-b-197"
+  },
+  "/identity/api/v2/group-members-a2c": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-group-membersc-2-b-e89"
+  },
+  "/identity/api/v2/groups-976": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-groups-52-f-a76"
+  },
+  "/identity/api/v2/introspect-token-f37": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-introspect-tokene-76-d6a"
+  },
+  "/identity/api/v2/open-id-connect-68a": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-open-id-connect-84-b-996"
+  },
+  "/identity/api/v2/put-metadata-key-483": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-put-metadata-keye-67-6bd"
+  },
+  "/identity/api/v2/remove-group-member-983": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-remove-group-memberd-48-28e"
+  },
+  "/identity/api/v2/staff-e2f": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-stafffb-5-46b"
+  },
+  "/identity/api/v2/update-group-623": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-update-group-3-b-2-25b"
+  },
+  "/identity/api/v2/update-group-member-2e5": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-update-group-member-17-a-605"
+  },
+  "/identity/api/v2/user-metadata-8f4": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-user-metadatacba-4fd"
+  },
+  "/identity/guides/build-an-application-e47": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-guides-build-an-application-6-d-1-24b"
+  },
+  "/identity/guides/getting-started-bf0": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-identity-guides-getting-startedb-89-2eb"
+  },
+  "/identity/guides/scopes-f1f": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-guides-scopes-4-f-8-709"
+  },
+  "/-ce3": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---docs-869-bb0"
+  }
+}

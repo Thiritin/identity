@@ -1,0 +1,248 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/",
+      "versions": [
+        {
+          "name": "current",
+          "label": "Next",
+          "isLast": true,
+          "path": "/",
+          "mainDocId": "identity/index",
+          "docs": [
+            {
+              "id": "identity/api/v1/create-group",
+              "path": "/identity/api/v1/create-group",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v1/create-group-user",
+              "path": "/identity/api/v1/create-group-user",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v1/delete-group",
+              "path": "/identity/api/v1/delete-group",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v1/delete-group-user",
+              "path": "/identity/api/v1/delete-group-user",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v1/eurofurence-identity",
+              "path": "/identity/api/v1/eurofurence-identity",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v1/get-group",
+              "path": "/identity/api/v1/get-group",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v1/get-group-users",
+              "path": "/identity/api/v1/get-group-users",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v1/get-groups",
+              "path": "/identity/api/v1/get-groups",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v1/get-userinfo",
+              "path": "/identity/api/v1/get-userinfo",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v1/group-memberships",
+              "path": "/identity/api/v1/group-memberships",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v1/groups",
+              "path": "/identity/api/v1/groups",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v1/introspect-token",
+              "path": "/identity/api/v1/introspect-token",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v1/open-id-connect",
+              "path": "/identity/api/v1/open-id-connect",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v1/patch-group",
+              "path": "/identity/api/v1/patch-group",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v1/put-group",
+              "path": "/identity/api/v1/put-group",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/add-group-member",
+              "path": "/identity/api/v2/add-group-member",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/create-group",
+              "path": "/identity/api/v2/create-group",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/delete-group",
+              "path": "/identity/api/v2/delete-group",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/delete-metadata-key",
+              "path": "/identity/api/v2/delete-metadata-key",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/eurofurence-identity",
+              "path": "/identity/api/v2/eurofurence-identity",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/get-group",
+              "path": "/identity/api/v2/get-group",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/get-group-members",
+              "path": "/identity/api/v2/get-group-members",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/get-group-tree",
+              "path": "/identity/api/v2/get-group-tree",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/get-groups",
+              "path": "/identity/api/v2/get-groups",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/get-metadata",
+              "path": "/identity/api/v2/get-metadata",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/get-metadata-key",
+              "path": "/identity/api/v2/get-metadata-key",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/get-staff-list",
+              "path": "/identity/api/v2/get-staff-list",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/get-staff-me",
+              "path": "/identity/api/v2/get-staff-me",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/get-staff-member",
+              "path": "/identity/api/v2/get-staff-member",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/get-userinfo",
+              "path": "/identity/api/v2/get-userinfo",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/group-members",
+              "path": "/identity/api/v2/group-members",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/groups",
+              "path": "/identity/api/v2/groups",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/introspect-token",
+              "path": "/identity/api/v2/introspect-token",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/open-id-connect",
+              "path": "/identity/api/v2/open-id-connect",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/put-metadata-key",
+              "path": "/identity/api/v2/put-metadata-key",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/remove-group-member",
+              "path": "/identity/api/v2/remove-group-member",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/staff",
+              "path": "/identity/api/v2/staff",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/update-group",
+              "path": "/identity/api/v2/update-group",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/update-group-member",
+              "path": "/identity/api/v2/update-group-member",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/user-metadata",
+              "path": "/identity/api/v2/user-metadata",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/guides/build-an-application",
+              "path": "/identity/guides/build-an-application",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/guides/getting-started",
+              "path": "/identity/guides/getting-started",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/guides/scopes",
+              "path": "/identity/guides/scopes",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/index",
+              "path": "/",
+              "sidebar": "identitySidebar"
+            }
+          ],
+          "draftIds": [],
+          "sidebars": {
+            "identitySidebar": {
+              "link": {
+                "path": "/",
+                "label": "Introduction"
+              }
+            }
+          }
+        }
+      ],
+      "breadcrumbs": true
+    }
+  }
+}

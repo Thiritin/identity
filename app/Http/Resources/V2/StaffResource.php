@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Storage;
 /** @mixin User */
 class StaffResource extends JsonResource
 {
+    public static $wrap = null;
+
     private ?User $viewer = null;
 
     public function forViewer(User $viewer): static

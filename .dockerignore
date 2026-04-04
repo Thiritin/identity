@@ -7,3 +7,4 @@ storage/clockwork/*
 storage/framework/*/*
 storage/logs/*
 openapi.yml
+docs

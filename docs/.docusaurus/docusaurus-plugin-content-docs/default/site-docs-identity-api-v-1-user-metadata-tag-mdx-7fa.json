@@ -1,0 +1,29 @@
+{
+  "id": "identity/api/v1/user-metadata",
+  "title": "User Metadata",
+  "description": "User Metadata",
+  "source": "@site/docs/identity/api/v1/user-metadata.tag.mdx",
+  "sourceDirName": "identity/api/v1",
+  "slug": "/identity/api/v1/user-metadata",
+  "permalink": "/identity/api/v1/user-metadata",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "user-metadata",
+    "title": "User Metadata",
+    "description": "User Metadata",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Remove member",
+    "permalink": "/identity/api/v1/delete-group-user"
+  },
+  "next": {
+    "title": "List all metadata",
+    "permalink": "/identity/api/v1/get-metadata"
+  }
+}

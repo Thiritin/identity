@@ -1,0 +1,33 @@
+{
+  "id": "identity/api/v2/eurofurence-identity",
+  "title": "Eurofurence Identity",
+  "description": "API v2 endpoints for the Eurofurence Identity service.",
+  "source": "@site/docs/identity/api/v2/eurofurence-identity.info.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/eurofurence-identity",
+  "permalink": "/identity/api/v2/eurofurence-identity",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 0,
+  "frontMatter": {
+    "id": "eurofurence-identity",
+    "title": "Eurofurence Identity",
+    "description": "API v2 endpoints for the Eurofurence Identity service.",
+    "sidebar_label": "Introduction",
+    "sidebar_position": 0,
+    "hide_title": true,
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Remove member",
+    "permalink": "/identity/api/v1/delete-group-user"
+  },
+  "next": {
+    "title": "Open ID Connect",
+    "permalink": "/identity/api/v2/open-id-connect"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "id": "identity/api/v2/staff",
+  "title": "Staff",
+  "description": "Staff",
+  "source": "@site/docs/identity/api/v2/staff.tag.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/staff",
+  "permalink": "/identity/api/v2/staff",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "staff",
+    "title": "Staff",
+    "description": "Staff",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Introspect token",
+    "permalink": "/identity/api/v2/introspect-token"
+  },
+  "next": {
+    "title": "Get own staff profile",
+    "permalink": "/identity/api/v2/get-staff-me"
+  }
+}

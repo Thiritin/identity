@@ -1,0 +1,29 @@
+{
+  "id": "identity/api/v2/open-id-connect",
+  "title": "Open ID Connect",
+  "description": "Open ID Connect",
+  "source": "@site/docs/identity/api/v2/open-id-connect.tag.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/open-id-connect",
+  "permalink": "/identity/api/v2/open-id-connect",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "open-id-connect",
+    "title": "Open ID Connect",
+    "description": "Open ID Connect",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Introduction",
+    "permalink": "/identity/api/v2/eurofurence-identity"
+  },
+  "next": {
+    "title": "Get userinfo",
+    "permalink": "/identity/api/v2/get-userinfo"
+  }
+}

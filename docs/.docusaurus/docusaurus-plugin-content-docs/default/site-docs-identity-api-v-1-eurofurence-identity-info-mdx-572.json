@@ -1,0 +1,33 @@
+{
+  "id": "identity/api/v1/eurofurence-identity",
+  "title": "Eurofurence Identity",
+  "description": "This is the official API Documentation for the Eurofurence Identity service. This can be used to query or automated different things within the Identity service.",
+  "source": "@site/docs/identity/api/v1/eurofurence-identity.info.mdx",
+  "sourceDirName": "identity/api/v1",
+  "slug": "/identity/api/v1/eurofurence-identity",
+  "permalink": "/identity/api/v1/eurofurence-identity",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 0,
+  "frontMatter": {
+    "id": "eurofurence-identity",
+    "title": "Eurofurence Identity",
+    "description": "This is the official API Documentation for the Eurofurence Identity service. This can be used to query or automated different things within the Identity service.",
+    "sidebar_label": "Introduction",
+    "sidebar_position": 0,
+    "hide_title": true,
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Scopes",
+    "permalink": "/identity/guides/scopes"
+  },
+  "next": {
+    "title": "Open ID Connect",
+    "permalink": "/identity/api/v1/open-id-connect"
+  }
+}

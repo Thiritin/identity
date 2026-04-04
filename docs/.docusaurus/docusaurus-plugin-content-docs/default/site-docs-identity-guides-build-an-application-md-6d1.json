@@ -1,0 +1,27 @@
+{
+  "id": "identity/guides/build-an-application",
+  "title": "Build an Application",
+  "description": "This guide explains how to integrate your application with Eurofurence Identity for authentication and authorization.",
+  "source": "@site/docs/identity/guides/build-an-application.md",
+  "sourceDirName": "identity/guides",
+  "slug": "/identity/guides/build-an-application",
+  "permalink": "/identity/guides/build-an-application",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1,
+    "title": "Build an Application"
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Getting Started",
+    "permalink": "/identity/guides/getting-started"
+  },
+  "next": {
+    "title": "Scopes",
+    "permalink": "/identity/guides/scopes"
+  }
+}

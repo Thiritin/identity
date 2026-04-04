@@ -1,0 +1,69 @@
+---
+id: delete-group-user
+title: "Remove member"
+description: "Remove a user account from the group"
+sidebar_label: "Remove member"
+hide_title: true
+hide_table_of_contents: true
+api: eJydVt1P3DgQ/1dG04eCFBJa0Zc8HQeo4kRLryxFd3QFXmeysXDs1HZ2Wa3yv5/Gye6yLNfj+hTH8/2bD88SC/LSqSYoazDHr1TbGYGA1pMDIaVtTYDS2RpCRTB1tm0wQU+ydSosML9d4mVD5vwU81uMZJ8WpCkQjrtkicdSkvcj+0DmJY5xgo1woqZAzkdtit1oRKgwQSNqwhzXVmVFtcB8iWHRMMEHp8wUu+RZFB9ZAM4LMkGVihwm6OhHqxwVmAfXEnv2giEO+v/Yufbk3nq4vj4/3TGRID2KutEs/+7bH2d/Hv91c/PhaPT3h2+nyHE78o01njwben94xJ9t9Z8tnFgTyARMUA4n9ooeQ1aFWvPPxgp2XdclGMSUkRxA+ET1hJyvVONxnKBtyAlWf15gjn0aIuN1H3pNobIbEiY9QjlmfeayZfx2GUPlsyV/ulgQbrbK4HYQX5wtWhl/EmydxhyrEBqfZ5mKCQqLlFpny9aRkZRaN81Eo7LZO+QsbSu7sFLo1+nRzFpZH9baxpu6veIM98ivqnedbMsXxYk1hiQDv/V//boA0jlpffBg7NxkLK+KA2lNqaZtjz4+r6TeC1hZ7ZLtxlk7x5ZXFcr/ExKOHPOfaEUmXJF0FF4h0CWoTGmZkxPXe/EuPUwPMcGgQqyos01YQzeFxVCKQkYrVAvFiNT0W6iUU0GZVNp601Kj4ZZd1EqS8cRyA/WivymgNQU5+HQ+2knuVIWqnbDSbKVrjXs20XaS1UKZ7OL85Ozz1RmbCeRqf1lekZspSU9UVaSbnVRpmgqdRZmdrIwq5UH5OPpsWSqphIbjL+dwamVbkwkxmVBaF1leggt870YKUZkUBibE07WAYOFHS24B1oFog61FoAIKVZbkyAQIlTJTD3PFh2hgR+l3892MLPDkIR9AgKE5WNGG6j3IWBAwJAtuV+iN91Z4hLSmbJW2fZgpAYE0TZ2oo+Y3b+DyOOq6krYhH61VBKXV2s6VmYKP9yAcgZgJpcVEU4RjkGNP2GUZgcpZwQHc9x1xn8PvwisJ27UPZWviuBBahUXPX5ZaGbrP4bI/8cNE3sOeo9KRryBwm/j9p9x3Pc8rhRpnS6XZRN93nJz4BA4E4GZxdQwjCsTC32WP1yCKwpH3kbGfmzucb33/mEK9GdBP+FNHghH6SqJYOR7sIPLcl0Fk7lTgCG74+zMh2JOORKCsbQoRaP+pkn7u3+dwGg//aXumaH5Xtlrf+SDK8q6gIJTejpfJEMkwkEEZqduCS2gLMWLKYEmYosdUKx+4E1K4UaGybewM39desiPPtVgqHchRAcxsy9iy6+c21mfj1EzIBac3UCy3NIYzwP6RDDmhwW3gj+QVxCv6/AnUmODjgbbTOFO3Z5gT87SfYxzQ8JL/y0iL08yRt62T5DPhPQWfUZn62RQTnAj5wPiY4sRq6zDHN4eHR3QkMUGhw4gew7PBTem3FC7YLx76jfWhFubJDB5Wvr4On4/A5WbveO1uODw8cUlptOhHf8RjOSwTqzUQE8xXUnGf4Iu4g40T5KebWZfLifB07XTX8XWcmJjfjhOcCad44PRLh/J8LjAvhfb0kzD2vg572j68sCe+6P1wKQy/fjOh27huJfhAi/V6GpeVX3Fie4n8BfsRsW7cJViRKMhFPHoS92ATnghtVkdeh9bb3unZxdnojEuo5QStt4dhW0hWB9b8ojPLZc8R95WuW/sWZyw713X/AIQ/Xlo=
+sidebar_class_name: "delete api-method"
+info_path: identity/api/v1/eurofurence-identity
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+import Translate from "@docusaurus/Translate";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Remove member"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"delete"}
+  path={"/groups/{group}/users/{user}"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Remove a user account from the group
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+>
+  <Translate id="theme.openapi.request.title">Request</Translate>
+</Heading>
+
+<ParamsDetails
+  {...require("./delete-group-user.ParamsDetails.json")}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  {...require("./delete-group-user.RequestSchema.json")}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  {...require("./delete-group-user.StatusCodes.json")}
+>
+  
+</StatusCodes>
+
+
+      

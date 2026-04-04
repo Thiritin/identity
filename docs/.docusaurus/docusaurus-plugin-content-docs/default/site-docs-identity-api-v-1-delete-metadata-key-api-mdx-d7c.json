@@ -1,0 +1,31 @@
+{
+  "id": "identity/api/v1/delete-metadata-key",
+  "title": "Delete metadata",
+  "description": "Deletes a metadata key-value pair.",
+  "source": "@site/docs/identity/api/v1/delete-metadata-key.api.mdx",
+  "sourceDirName": "identity/api/v1",
+  "slug": "/identity/api/v1/delete-metadata-key",
+  "permalink": "/identity/api/v1/delete-metadata-key",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "delete-metadata-key",
+    "title": "Delete metadata",
+    "description": "Deletes a metadata key-value pair.",
+    "sidebar_label": "Delete metadata",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "eJyVVm1T20YQ/ivbS2cKU1kiDF+qT6VAO0xpyASnmSlxYS2trAunO+XuZON69N87e5L8giGlnyzv67OvtyuRk8usrL00WqTinBR5coBQkcccPcIDLUdzVA1BjdLGIhKOssZKvxTp7Upc16Qvz0V6KwaNeGGlJzFpo5U4zTJybmweSD8rMolEjRYr8mRdsCcZRo2+FJHQWJFIxQMt2WtWUoUiXQm/rJnsvJV6JtiC92RZ7+9bHP1zOvrraPRTfDea/Pi9aKMnEY5L2olNRMLS10ZaykXqbUORoEesasUuplIpqWcx5rkl5+KMo2bQllxttCPHeI6PTvhn1887A2dGe9KeMZx0IllPSVcC61rJDFk6+eJYZbUfopl+ocxziNbUZL3sHFbkHM5oPxdtGwkvfcB+Ya2x7HsdzpaieGc8/GoanX8n2nYvSWtuZxFnXBvx0ZGFP/rciUkkGFOI4DIXqchD7wz830NqK/Kl2TC7YpUiFclQg2T1QMs2dJWdD02wi+a9NXmThT+RaKwSqSi9r12aJDIn7aVfxtRYUzSWdEaxsbMEa5nM3wruwV1jVyZD9To7ikVL4/zL1jbQYH78P9Edv4Tu1aaeADwOrTlM5w03U9cvw4xu+ooJ+ZnRumuvnf8fXxdDvCClRg/aLHTC+jIfZUYXctZ0PSGeNlWHAgavbbS7Hdbg2PMw72EICS2FTj5TkrS/ocySf4VCGwmpC8OS3FkdirfxUXwktsZkExZc9rGKKEwqZsELVSg5IxX97EtppZc6zky12U/jnsoQlcxIuzBsPfeqo+TQ6Jzn53K8V9yZ9GUzZaPJYGud92SqzDSpUOrk6vLs4t3NBbvxZCt3XdyQncuMtkyVpOq9UimaoUqCzl5VxqV0IB34ksAUhcwkKjh9fwnnJmsq0j4UEwpjg8hz6QLXwYghGMtQw5Sg4Zi9ga8N2SUYC9h4U6GnHHJZFGRJe/Cl1DMHC8kfwcGe0c/6sx4b4CVNzgOCpgUYbHx5DFloCOiLBbdD9iYHQz58XFEylO0Q5hLBk6KZxSpYfvMGrk+DrZvM1OSCt5KgMEqZhdQzcIEOaAlwjlLhVFFIR6/HSBhyt8tTNjCC+24i7lP4BZ3MYLf3oWh0WBqopF928kWhpKb7FK67L8AwHHBgqbDkSvA8Ju5wW/quk3mlUm1NIRW76OaOi9PwSu8ZwMNiqxBGUAiNvy8eyNA/iUFwZk1Tuz3JHxwEDlRUTcm6Utbb8rEl5Ax9IMwH4N70Kk+x9CrhbrhP4RP/fksJDjJL6Clp6hw9HW4b6d6i+xS6a+c/fc8lLe6KRqk757Eo7nLyKNVuvMyGwIaeDVJnqsm5hXYyRszpPaHOu5wq6TxPQgyfpC9NEybDdb0X7elzLxZSebKUAwubIozs+ioJ/VlbOcdsyeX1FNotDuGsj7Dn81+THWFdd7gG2V3Fl6rwsmrv6jfSZFGB3bgM7MHgwF9sGRaReBwpMwt7fHdvWlzE3e5kj/1x9cIaDRvUkjONzcgl6Bx5l1ARuznfkFPMHrgmOj8zyliRijdHRyd0kolIoPJjevRPHguK/4zhinHxQ1Mb5yvUW3u/b64hDU8X79Yx+Lqru3/sPD36pFbYPTchH6v+qNrc1yISKd+2k0jwecCs1WqKjj5a1bZMDltZpLeTSMzRSl5q3eUlHX/nIi1QOfoG6IMP/dl8CM/c1M+i7YmoWSJEJ1IhonDgd2d+O2kjURLmZAOcjsNjVvstnb3jmQ+f9a15fnF1Mb7gwjWclvWd0N8F0fDBDp6FtFp1EuEyads1wrBNGWPb/gu6qKla",
+    "sidebar_class_name": "delete api-method",
+    "info_path": "docs/identity/api/v1/eurofurence-identity",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Create or update metadata",
+    "permalink": "/identity/api/v1/put-metadata-key"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "identity/api/v2/get-staff-me",
+  "title": "Get own staff profile",
+  "description": "Returns the authenticated user's full staff profile including all PII fields.",
+  "source": "@site/docs/identity/api/v2/get-staff-me.api.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/get-staff-me",
+  "permalink": "/identity/api/v2/get-staff-me",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "get-staff-me",
+    "title": "Get own staff profile",
+    "description": "Returns the authenticated user's full staff profile including all PII fields.",
+    "sidebar_label": "Get own staff profile",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "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",
+    "sidebar_class_name": "get api-method",
+    "info_path": "identity/api/v2/eurofurence-identity",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Staff",
+    "permalink": "/identity/api/v2/staff"
+  },
+  "next": {
+    "title": "List all staff members",
+    "permalink": "/identity/api/v2/get-staff-list"
+  }
+}

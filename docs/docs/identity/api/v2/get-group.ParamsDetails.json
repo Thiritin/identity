@@ -1,0 +1,1 @@
+{"parameters":[{"in":"path","name":"group","required":true,"schema":{"type":"string"},"description":"Group hashid","example":"Y6K08PEKXG9Q7ZWJ"},{"in":"query","name":"include","schema":{"type":"string"},"description":"Include related data, comma-separated (members, children)","example":"children,members"}]}

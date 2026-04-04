@@ -1,0 +1,35 @@
+{
+  "id": "identity/api/v1/patch-group",
+  "title": "Update single group",
+  "description": "This call updates a single group.",
+  "source": "@site/docs/identity/api/v1/patch-group.api.mdx",
+  "sourceDirName": "identity/api/v1",
+  "slug": "/identity/api/v1/patch-group",
+  "permalink": "/identity/api/v1/patch-group",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "patch-group",
+    "title": "Update single group",
+    "description": "This call updates a single group.",
+    "sidebar_label": "Update single group",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "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",
+    "sidebar_class_name": "patch api-method",
+    "info_path": "identity/api/v1/eurofurence-identity",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Update single group",
+    "permalink": "/identity/api/v1/put-group"
+  },
+  "next": {
+    "title": "Deletes a group",
+    "permalink": "/identity/api/v1/delete-group"
+  }
+}

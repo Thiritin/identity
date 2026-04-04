@@ -1,0 +1,22 @@
+{
+  "id": "identity/index",
+  "title": "Introduction",
+  "description": "Eurofurence Identity is the central authentication and authorization service for the Eurofurence ecosystem. It allows users to sign in once and access all connected Eurofurence applications — from event registration to community tools — with a single account.",
+  "source": "@site/docs/identity/index.md",
+  "sourceDirName": "identity",
+  "slug": "/",
+  "permalink": "/",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "slug": "/",
+    "title": "Introduction"
+  },
+  "sidebar": "identitySidebar",
+  "next": {
+    "title": "Getting Started",
+    "permalink": "/identity/guides/getting-started"
+  }
+}

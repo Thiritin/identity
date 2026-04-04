@@ -1,0 +1,1 @@
+{"parameters":[{"in":"query","name":"page","schema":{"type":"integer"},"description":"Used for pagination.","example":1},{"in":"query","name":"with_users","schema":{"type":"boolean","default":false},"description":"Include user membership data for each group with username, email, avatar, and user level within the group.","example":true}]}
