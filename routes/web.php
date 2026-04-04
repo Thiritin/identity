@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\RegisterVerifyController;
+use App\Http\Controllers\Auth\RememberSessionController;
 use App\Http\Controllers\Auth\VerifyCodeController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\TwoFactorController;
@@ -46,6 +47,12 @@ Route::prefix('auth')->name('auth.')->group(function () {
         [TwoFactorController::class, 'submit'])
         ->middleware(['signed', HandlePrecognitiveRequests::class])
         ->name('two-factor.submit');
+
+    Route::get('remember-session', [RememberSessionController::class, 'show'])
+        ->name('remember-session');
+    Route::post('remember-session', [RememberSessionController::class, 'submit'])
+        ->middleware([HandlePrecognitiveRequests::class])
+        ->name('remember-session.submit');
 
     Route::get('consent', [ConsentController::class, 'show'])->name('consent');
     Route::post('consent', [ConsentController::class, 'accept'])->name('consent.accept');
