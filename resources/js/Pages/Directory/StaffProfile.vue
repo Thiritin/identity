@@ -53,6 +53,7 @@
             :open="showEditMember"
             :member="memberForModal"
             :group-hashid="group.hashid"
+            :assignable-levels="assignableLevels"
             @close="showEditMember = false"
         />
 
@@ -158,6 +159,7 @@ const props = defineProps({
     group: Object,
     groupMembership: Object,
     canEdit: Boolean,
+    assignableLevels: Array,
     profileUser: Object,
     groups: Array,
     visibleFields: Object,

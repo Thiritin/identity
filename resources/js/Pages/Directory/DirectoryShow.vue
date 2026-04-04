@@ -40,6 +40,7 @@
         :open="showEditMember"
         :member="editingMember"
         :group-hashid="group.hashid"
+        :assignable-levels="assignableLevels"
         @close="showEditMember = false"
     />
 </template>
@@ -59,6 +60,7 @@ defineProps({
     members: Array,
     subGroups: Array,
     canEdit: Boolean,
+    assignableLevels: Array,
 })
 
 const showEdit = ref(false)

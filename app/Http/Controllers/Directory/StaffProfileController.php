@@ -85,6 +85,7 @@ class StaffProfileController extends Controller
             ],
             'groupMembership' => $groupMembership,
             'canEdit' => $canEdit,
+            'assignableLevels' => $this->getAssignableLevels($viewer, $group),
             'profileUser' => [
                 'hashid' => $user->hashid,
                 'name' => $user->name,
@@ -99,6 +100,40 @@ class StaffProfileController extends Controller
             'conventionAttendance' => $conventionAttendance,
             'allConventions' => $allConventions,
         ]);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getAssignableLevels(User $viewer, Group $group): array
+    {
+        if ($viewer->is_admin) {
+            return array_map(fn ($l) => $l->value, GroupUserLevel::cases());
+        }
+
+        $levels = collect();
+
+        $membership = $viewer->groups()->where('groups.id', $group->id)->first();
+        if ($membership) {
+            $level = $membership->pivot->level instanceof GroupUserLevel
+                ? $membership->pivot->level
+                : GroupUserLevel::from($membership->pivot->level);
+            $levels = $levels->merge($level->assignableLevels());
+        }
+
+        if ($group->parent_id) {
+            $parentMembership = $viewer->groups()->where('groups.id', $group->parent_id)->first();
+            if ($parentMembership) {
+                $level = $parentMembership->pivot->level instanceof GroupUserLevel
+                    ? $parentMembership->pivot->level
+                    : GroupUserLevel::from($parentMembership->pivot->level);
+                $levels = $levels->merge($level->assignableLevels());
+            }
+        }
+
+        $levels->push(GroupUserLevel::Member);
+
+        return $levels->unique()->map(fn ($l) => $l->value)->values()->all();
     }
 
     /**

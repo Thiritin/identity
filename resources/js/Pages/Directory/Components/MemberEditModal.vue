@@ -16,10 +16,7 @@
                             <span>{{ levelLabel }}</span>
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="member" :text-value="$t('level_member')">{{ $t('level_member') }}</SelectItem>
-                            <SelectItem value="team_lead" :text-value="$t('level_team_lead')">{{ $t('level_team_lead') }}</SelectItem>
-                            <SelectItem value="director" :text-value="$t('level_director')">{{ $t('level_director') }}</SelectItem>
-                            <SelectItem value="division_director" :text-value="$t('level_division_director')">{{ $t('level_division_director') }}</SelectItem>
+                            <SelectItem v-for="lvl in assignableLevels" :key="lvl" :value="lvl" :text-value="$t('level_' + lvl)">{{ $t('level_' + lvl) }}</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -54,6 +51,7 @@ const props = defineProps({
     open: Boolean,
     member: Object,
     groupHashid: String,
+    assignableLevels: { type: Array, default: () => ['member'] },
 })
 
 const emit = defineEmits(['close'])

@@ -35,4 +35,20 @@ enum GroupUserLevel: string
             self::TeamLead,
         ];
     }
+
+    /**
+     * Returns the levels that this role is allowed to assign to other users.
+     *
+     * Hierarchy: Admin → DivisionDirector, DivisionDirector → Director, Director → TeamLead.
+     * Everyone who can manage members can assign Member.
+     */
+    public function assignableLevels(): array
+    {
+        return match ($this) {
+            self::DivisionDirector => [self::Director, self::TeamLead, self::Member],
+            self::Director => [self::TeamLead, self::Member],
+            self::TeamLead => [self::Member],
+            self::Member => [],
+        };
+    }
 }
