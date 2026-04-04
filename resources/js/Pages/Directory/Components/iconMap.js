@@ -1,0 +1,43 @@
+import {
+    Users, Shield, Code, Palette, Music, Camera,
+    Heart, Star, Zap, Globe, Megaphone, Wrench,
+    Book, Briefcase, Building, Truck, Gamepad2,
+    Monitor, Printer, Scissors, Headphones, Mic,
+    Video, PenTool, Layout, Server, Gift, Coffee,
+    Sparkles, Clapperboard,
+} from 'lucide-vue-next'
+
+export const iconMap = {
+    users: Users,
+    shield: Shield,
+    code: Code,
+    palette: Palette,
+    music: Music,
+    camera: Camera,
+    heart: Heart,
+    star: Star,
+    zap: Zap,
+    globe: Globe,
+    megaphone: Megaphone,
+    wrench: Wrench,
+    book: Book,
+    briefcase: Briefcase,
+    building: Building,
+    truck: Truck,
+    'gamepad-2': Gamepad2,
+    monitor: Monitor,
+    printer: Printer,
+    scissors: Scissors,
+    headphones: Headphones,
+    mic: Mic,
+    video: Video,
+    'pen-tool': PenTool,
+    layout: Layout,
+    server: Server,
+    gift: Gift,
+    coffee: Coffee,
+    sparkles: Sparkles,
+    clapperboard: Clapperboard,
+}
+
+export const iconNames = Object.keys(iconMap)
