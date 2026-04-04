@@ -259,7 +259,22 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->logOnly(['name', 'email', 'profile_photo_path']);
+        return LogOptions::defaults()->logOnly([
+            'name',
+            'email',
+            'profile_photo_path',
+            'firstname',
+            'lastname',
+            'birthdate',
+            'phone',
+            'telegram_username',
+            'spoken_languages',
+            'credit_as',
+            'first_eurofurence',
+            'first_year_staff',
+            'staff_profile_visibility',
+            'preferences',
+        ]);
     }
 
     public function getHashidsConnection(): string
