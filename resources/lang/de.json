@@ -564,5 +564,14 @@
     "my_data_delete_confirm": "Bist du sicher, dass du dein Konto unwiderruflich löschen möchtest? Alle deine Daten werden entfernt und du wirst aus allen verbundenen Apps abgemeldet. Dies kann nicht rückgängig gemacht werden.",
     "my_data_delete_blocked_registration": "Dein Konto kann nicht gelöscht werden, da du eine aktive Eventregistrierung hast. Bitte storniere zuerst deine Registrierung.",
     "my_data_delete_error": "Dein Konto kann derzeit aufgrund eines technischen Problems nicht gelöscht werden. Bitte versuche es später erneut oder kontaktiere datenschutz@eurofurence.de.",
-    "my_data_delete_success": "Dein Konto wurde gelöscht."
+    "my_data_delete_success": "Dein Konto wurde gelöscht.",
+    "convention_attendance": "Kongressteilnahme",
+    "convention_attendance_add": "Kongress hinzufügen",
+    "convention_attendance_attended": "Teilgenommen",
+    "convention_attendance_cannot_remove_staff": "Kann nicht entfernt werden: Du bist als Staff für diesen Kongress eingetragen.",
+    "convention_attendance_description": "Kongresse, an denen du teilgenommen oder als Staff mitgearbeitet hast.",
+    "convention_attendance_no_entries": "Keine Kongressteilnahmen erfasst.",
+    "convention_attendance_remove": "Entfernen",
+    "convention_attendance_staff": "Staff",
+    "convention_attendance_staff_note": "Der Staff-Status wird von deinem Abteilungsleiter verwaltet."
 }

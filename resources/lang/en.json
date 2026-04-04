@@ -564,5 +564,14 @@
     "my_data_delete_confirm": "Are you sure you want to permanently delete your account? All your data will be removed and you will be signed out of all connected apps. This cannot be undone.",
     "my_data_delete_blocked_registration": "Your account cannot be deleted because you have an active event registration. Please cancel your registration first.",
     "my_data_delete_error": "Your account cannot be deleted at this time due to a technical issue. Please try again later or contact datenschutz@eurofurence.de.",
-    "my_data_delete_success": "Your account has been deleted."
+    "my_data_delete_success": "Your account has been deleted.",
+    "convention_attendance": "Convention Attendance",
+    "convention_attendance_add": "Add convention",
+    "convention_attendance_attended": "Attended",
+    "convention_attendance_cannot_remove_staff": "Cannot remove: you are marked as staff for this convention.",
+    "convention_attendance_description": "Conventions you have attended or worked as staff.",
+    "convention_attendance_no_entries": "No convention attendance recorded.",
+    "convention_attendance_remove": "Remove",
+    "convention_attendance_staff": "Staff",
+    "convention_attendance_staff_note": "Staff status is managed by your department director."
 }
