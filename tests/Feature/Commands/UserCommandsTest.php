@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\TwoFactor;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -83,8 +82,7 @@ test('user:remove-admin fails for nonexistent user', function () {
 
 test('user:disable-2fa removes two-factor auth', function () {
     $user = User::factory()->create();
-    TwoFactor::create([
-        'user_id' => $user->id,
+    $user->twoFactors()->create([
         'type' => 'totp',
         'secret' => 'testsecret',
     ]);

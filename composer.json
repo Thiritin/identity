@@ -34,6 +34,8 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "league/flysystem-path-prefixing": "^3.0",
         "league/oauth2-client": "^2.6",
+        "nutgram/laravel": "^1.7",
+        "nutgram/nutgram": "^4.44",
         "robthree/twofactorauth": "^2.1",
         "sentry/sentry-laravel": "^4.7",
         "spatie/laravel-activitylog": "^4.7",

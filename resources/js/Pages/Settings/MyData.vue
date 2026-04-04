@@ -103,7 +103,7 @@
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $t('my_data_activity_description') }}</p>
             </div>
             <div class="md:col-span-2">
-                <div v-if="activityLog.data.length === 0" class="py-4 text-sm text-gray-500 dark:text-gray-400">
+                <div v-if="!activityLog?.data?.length" class="py-4 text-sm text-gray-500 dark:text-gray-400">
                     {{ $t('my_data_activity_no_entries') }}
                 </div>
                 <div v-else class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -113,7 +113,7 @@
                                 {{ new Date(entry.createdAt).toLocaleString() }}
                             </span>
                             <span class="text-xs" :class="entry.causedBySelf ? 'text-gray-500 dark:text-gray-400' : 'text-amber-600 dark:text-amber-400 font-medium'">
-                                {{ entry.causedBySelf ? $t('my_data_activity_you') : $t('my_data_activity_changed_by', { name: entry.causerName }) }}
+                                {{ entry.causedBySelf ? $t('my_data_activity_you') : $t('my_data_activity_changed_by', { name: entry.causerName || '?' }) }}
                             </span>
                         </div>
                         <p class="text-sm text-gray-700 dark:text-gray-300 mt-1">{{ entry.description }}</p>
@@ -129,7 +129,7 @@
                     <Link
                         v-for="link in activityLog.links"
                         :key="link.label"
-                        :href="link.url"
+                        :href="link.url || ''"
                         class="px-3 py-1 text-xs rounded border"
                         :class="link.active ? 'bg-indigo-600 text-white border-indigo-600' : 'text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800'"
                         v-html="link.label"
@@ -217,8 +217,8 @@
                 >
                     {{ $t('my_data_delete_button') }}
                 </button>
-                <p v-if="deleteForm.errors.delete" class="mt-2 text-sm text-red-600 dark:text-red-400">
-                    {{ deleteForm.errors.delete }}
+                <p v-if="usePage().props.errors?.delete" class="mt-2 text-sm text-red-600 dark:text-red-400">
+                    {{ usePage().props.errors.delete }}
                 </p>
             </div>
         </div>
@@ -249,7 +249,7 @@
                 <button @click="showDeleteDialog = false" class="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
                     {{ $t('cancel') }}
                 </button>
-                <button @click="submitDelete" :disabled="deleteForm.processing" class="px-3 py-1.5 text-sm rounded-md bg-red-600 text-white hover:bg-red-500 disabled:opacity-50">
+                <button @click="submitDelete" class="px-3 py-1.5 text-sm rounded-md bg-red-600 text-white hover:bg-red-500">
                     {{ $t('my_data_delete_button') }}
                 </button>
             </div>
@@ -259,9 +259,9 @@
 
 <script setup>
 import { ref } from 'vue'
-import { Head, Link, router, useForm } from '@inertiajs/vue3'
+import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
-import DataField from './MyData/DataField.vue'
+import DataField from '@/Components/DataField.vue'
 
 const props = defineProps({
     profile: Object,
@@ -308,15 +308,14 @@ function confirmRevoke() {
 
 // Delete account
 const showDeleteDialog = ref(false)
-const deleteForm = useForm('delete', route('my-data.delete-account'), {})
 
 function confirmDeleteAccount() {
     showDeleteDialog.value = true
 }
 
 function submitDelete() {
-    deleteForm.submit({
-        onFinish: () => {
+    router.delete(route('my-data.delete-account'), {
+        onSuccess: () => {
             showDeleteDialog.value = false
         },
     })

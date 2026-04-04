@@ -2,7 +2,7 @@
     <Dialog v-model:open="open">
         <DialogContent class="sm:max-w-lg">
             <DialogHeader>
-                <DialogTitle>Crop Avatar</DialogTitle>
+                <DialogTitle>{{ $t('crop_avatar') }}</DialogTitle>
             </DialogHeader>
             <form @submit.prevent="submit">
                 <div class="mt-2">
@@ -27,12 +27,12 @@
                         autofocus
                         class="bg-primary-600 mr-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-100 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         type="submit">
-                        Submit
+                        {{ $t('submit') }}
                     </button>
                     <button
                         class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         type="button" @click="open = false">
-                        Cancel
+                        {{ $t('cancel') }}
                     </button>
                 </div>
             </form>

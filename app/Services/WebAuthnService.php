@@ -51,6 +51,10 @@ class WebAuthnService
     {
         if ($this->ceremonyStepManagerFactory === null) {
             $this->ceremonyStepManagerFactory = new CeremonyStepManagerFactory();
+
+            if (app()->environment('local', 'testing')) {
+                $this->ceremonyStepManagerFactory->setSecuredRelyingPartyId([$this->host()]);
+            }
         }
 
         return $this->ceremonyStepManagerFactory;

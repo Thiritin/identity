@@ -15,24 +15,28 @@ class ForgotPasswordController extends Controller
     public function __invoke(ForgotPasswordRequest $request)
     {
         $key = 'reset-passwords:' . $request->ip();
-        // Throttle requests
+
         if (RateLimiter::tooManyAttempts($key, 5)) {
-            throw ValidationException::withMessages(['email' => 'Too many attempts.']);
+            throw ValidationException::withMessages(['email' => __('passwords.throttled')]);
         }
 
         RateLimiter::hit($key);
 
-        $status = Password::sendResetLink(
+        Password::sendResetLink(
             $request->only('email')
         );
 
-        activity()
-            ->byAnonymous()
-            ->on(User::whereEmail($request->get('email'))->firstOrFail())
-            ->log('mail-reset-password');
+        $user = User::whereEmail($request->get('email'))->first();
 
-        return $status === Password::RESET_LINK_SENT
-            ? Inertia::render('Auth/ForgotPassword', ['status' => __($status)])
-            : back()->withErrors(['email' => __($status)]);
+        if ($user) {
+            activity()
+                ->byAnonymous()
+                ->on($user)
+                ->log('mail-reset-password');
+        }
+
+        return Inertia::render('Auth/ForgotPassword', [
+            'status' => __('passwords.sent'),
+        ]);
     }
 }

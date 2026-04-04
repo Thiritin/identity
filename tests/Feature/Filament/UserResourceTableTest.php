@@ -32,6 +32,7 @@ it('can filter by 2FA status', function () {
     Livewire::test(ListUsers::class)
         ->loadTable()
         ->filterTable('has_two_factor', true)
+        ->searchTable($userWith2fa->name)
         ->assertCanSeeTableRecords([$userWith2fa])
         ->assertCanNotSeeTableRecords([$userWithout2fa]);
 });

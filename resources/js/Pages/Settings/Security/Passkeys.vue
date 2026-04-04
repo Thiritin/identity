@@ -89,6 +89,7 @@ import { Button } from '@/Components/ui/button'
 import SettingsHeader from '@/Components/Settings/SettingsHeader.vue'
 import SettingsSubHeader from '@/Components/Settings/SettingsSubHeader.vue'
 import { startRegistration } from '@simplewebauthn/browser'
+import { trans } from 'laravel-vue-i18n'
 
 defineProps({
     passkeys: Array,
@@ -122,7 +123,7 @@ async function startRegistrationFlow() {
         addForm.credential = JSON.stringify(result)
     } catch (e) {
         if (e.name === 'NotAllowedError') {
-            registrationError.value = 'Registration was cancelled or timed out.'
+            registrationError.value = trans('registration_cancelled')
         } else {
             registrationError.value = e.message
         }

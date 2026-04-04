@@ -52,11 +52,11 @@ watch(enableForm, (value) => {
 </script>
 
 <template>
-    <Head title="Authenticator App Setup"></Head>
+    <Head :title="$t('authenticator_setup_title')"></Head>
     <div v-if="secret">
-        <SettingsHeader>Setup Two Factor</SettingsHeader>
+        <SettingsHeader>{{ $t('authenticator_setup_header') }}</SettingsHeader>
         <SettingsSubHeader
-            class="mb-4">Please scan the QRCode below and enter the code provided by your authenticator app.
+            class="mb-4">{{ $t('authenticator_setup_description') }}
         </SettingsSubHeader>
         <form @submit.prevent="submitForm" class="space-y-6">
             <div>
@@ -83,9 +83,9 @@ watch(enableForm, (value) => {
         </form>
     </div>
     <div v-else>
-        <SettingsHeader>Disable Two Factor</SettingsHeader>
+        <SettingsHeader>{{ $t('authenticator_disable_header') }}</SettingsHeader>
         <SettingsSubHeader
-            class="mb-4">To disable two factor authentication, please enter your password.
+            class="mb-4">{{ $t('authenticator_disable_description') }}
         </SettingsSubHeader>
         <form @submit.prevent="deactivateTotp" class="space-y-6">
             <div class="flex flex-col gap-2">
@@ -99,7 +99,7 @@ watch(enableForm, (value) => {
                 />
                 <p v-if="deleteForm.invalid('password')" class="text-sm text-destructive">{{ deleteForm.errors.password }}</p>
             </div>
-            <PrimaryButton @click="deactivateTotp" class="ml-auto block">Disable</PrimaryButton>
+            <PrimaryButton @click="deactivateTotp" class="ml-auto block">{{ $t('disable') }}</PrimaryButton>
         </form>
     </div>
 </template>

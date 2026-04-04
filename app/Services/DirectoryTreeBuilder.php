@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 
 class DirectoryTreeBuilder
 {
-    public function build(): array
+    public function build(array $myGroupIds = []): array
     {
         $groups = Group::query()
             ->whereIn('type', [
@@ -21,18 +21,24 @@ class DirectoryTreeBuilder
             ->orderBy('name')
             ->get();
 
-        return $this->buildTree($groups, null);
+        $root = $groups->firstWhere('type', GroupTypeEnum::Root);
+
+        $rootId = $root?->id;
+
+        return $this->buildTree($groups, $rootId, $myGroupIds);
     }
 
-    private function buildTree(Collection $groups, ?int $parentId): array
+    private function buildTree(Collection $groups, ?int $parentId, array $myGroupIds): array
     {
         return $groups->where('parent_id', $parentId)
             ->map(fn (Group $group) => [
                 'hashid' => $group->hashid,
+                'slug' => $group->slug,
                 'name' => $group->name,
                 'type' => $group->type->value,
                 'member_count' => $group->users_count,
-                'children' => $this->buildTree($groups, $group->id),
+                'is_mine' => in_array($group->id, $myGroupIds),
+                'children' => $this->buildTree($groups, $group->id, $myGroupIds),
             ])
             ->values()
             ->all();

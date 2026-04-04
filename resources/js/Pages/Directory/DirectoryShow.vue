@@ -1,7 +1,7 @@
 <template>
     <Head :title="group.name" />
     <div class="flex flex-col lg:flex-row gap-6">
-        <DirectoryTree :tree="tree" :selected="group.hashid" class="lg:w-72 shrink-0" />
+        <DirectoryTree :tree="tree" :selected="group.slug" :my-group-count="myGroupCount" class="lg:w-72 shrink-0" />
         <div class="flex-1 min-w-0">
             <GroupDetail
                 :group="group"
@@ -41,6 +41,7 @@ import TeamCreateModal from './Components/TeamCreateModal.vue'
 
 defineProps({
     tree: Array,
+    myGroupCount: Number,
     group: Object,
     leaders: Array,
     members: Array,

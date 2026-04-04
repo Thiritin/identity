@@ -10,7 +10,7 @@
             <Link
                 v-for="group in groups"
                 :key="group.hashid"
-                :href="route('directory.show', group.hashid)"
+                :href="route('directory.show', group.slug)"
                 class="flex items-center justify-between gap-3 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
             >
                 <div class="min-w-0">

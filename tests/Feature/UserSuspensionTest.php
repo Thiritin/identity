@@ -110,10 +110,8 @@ it('blocks suspended user on skip-login path', function () {
 
     $response = $this->get(route('auth.login.password.view'));
 
-    $response->assertRedirect(route('auth.error', [
-        'error' => 'account_suspended',
-        'error_description' => trans('account_suspended'),
-    ]));
+    $response->assertOk();
+    $response->assertInertia(fn ($page) => $page->component('Auth/Suspended'));
 });
 
 it('blocks suspended user on attemptLogin path', function () {
@@ -138,10 +136,8 @@ it('blocks suspended user on attemptLogin path', function () {
         'remember' => false,
     ]);
 
-    $response->assertRedirect(route('auth.error', [
-        'error' => 'account_suspended',
-        'error_description' => trans('account_suspended'),
-    ]));
+    $response->assertOk();
+    $response->assertInertia(fn ($page) => $page->component('Auth/Suspended'));
 });
 
 it('blocks suspended user on TwoFactor submit', function () {

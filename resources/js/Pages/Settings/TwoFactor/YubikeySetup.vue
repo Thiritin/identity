@@ -45,11 +45,11 @@ function submitDisableForm() {
 </script>
 
 <template>
-    <Head title="Yubikey Setup"></Head>
+    <Head :title="$t('yubikey_setup_title')"></Head>
     <div v-if="props.keys.length === 0 || showCreateField === true">
-        <SettingsHeader>Setup Yubikey Authenticator</SettingsHeader>
+        <SettingsHeader>{{ $t('yubikey_setup_header') }}</SettingsHeader>
         <SettingsSubHeader
-            class="mb-4">Please tap your Yubikey to add it as a second factor.
+            class="mb-4">{{ $t('yubikey_setup_description') }}
         </SettingsSubHeader>
         <form @submit.prevent="submitForm()" class="space-y-4">
             <div class="flex flex-col gap-2">
@@ -65,10 +65,10 @@ function submitDisableForm() {
                 <p v-if="enableForm.invalid('code')" class="text-sm text-destructive">{{ enableForm.errors.code }}</p>
             </div>
             <div class="flex flex-col gap-2">
-                <label for="name">Name / Identifier</label>
+                <label for="name">{{ $t('yubikey_name_label') }}</label>
                 <Input id="name"
                        type="text"
-                       placeholder="Work, Home, etc."
+                       :placeholder="$t('yubikey_name_placeholder')"
                        autocomplete="name"
                        @change="enableForm.validate('name')"
                        :class="{ 'border-destructive': enableForm.invalid('name') }"
@@ -87,13 +87,13 @@ function submitDisableForm() {
         </form>
     </div>
     <div v-else-if="disableKeyId !== null">
-        <SettingsHeader>Disable Two Factor</SettingsHeader>
+        <SettingsHeader>{{ $t('authenticator_disable_header') }}</SettingsHeader>
         <SettingsSubHeader
-            class="mb-4">To disable two factor authentication, please enter your password.
+            class="mb-4">{{ $t('yubikey_disable_description') }}
         </SettingsSubHeader>
         <form @submit.prevent="submitDisableForm" class="space-y-6">
             <div class="flex flex-col gap-2">
-                <label for="password">Current Password</label>
+                <label for="password">{{ $t('current_password') }}</label>
                 <Input id="password"
                        type="password"
                        autocomplete="password"
@@ -104,15 +104,15 @@ function submitDisableForm() {
                 <p v-if="disableForm.invalid('password')" class="text-sm text-destructive">{{ disableForm.errors.password }}</p>
             </div>
             <div class="flex justify-end gap-3">
-                <Button variant="secondary" size="sm" @click="disableKeyId = null">Cancel</Button>
-                <Button size="sm">Submit</Button>
+                <Button variant="secondary" size="sm" @click="disableKeyId = null">{{ $t('cancel') }}</Button>
+                <Button size="sm">{{ $t('submit') }}</Button>
             </div>
         </form>
     </div>
     <div v-else>
-        <SettingsHeader>Manage your Yubikeys</SettingsHeader>
+        <SettingsHeader>{{ $t('yubikey_manage_header') }}</SettingsHeader>
         <SettingsSubHeader
-            class="mb-4">Here you can manage your Yubikeys. You can add new ones, or remove existing ones.
+            class="mb-4">{{ $t('yubikey_manage_description') }}
         </SettingsSubHeader>
         <div class="divide-y divide-gray-300 mb-4">
             <ListItem v-for="key in keys" class="items-center">
@@ -128,7 +128,7 @@ function submitDisableForm() {
             </ListItem>
         </div>
         <div class="flex justify-end">
-            <BaseButton @click="showCreateField = true" primary>Add New</BaseButton>
+            <BaseButton @click="showCreateField = true" primary>{{ $t('add_new') }}</BaseButton>
         </div>
     </div>
 </template>

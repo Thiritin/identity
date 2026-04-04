@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Directory;
 
+use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Directory\UpdateGroupRequest;
@@ -18,17 +19,76 @@ class DirectoryController extends Controller
 
     public function index(): Response
     {
-        $tree = $this->treeBuilder->build();
-        $rootHashid = $tree[0]['hashid'] ?? null;
+        $user = request()->user();
+
+        $myGroupIds = $user->groups()->pluck('groups.id')->all();
+        $tree = $this->treeBuilder->build($myGroupIds);
+
+        $myMemberships = $user->groups()
+            ->whereIn('type', [
+                GroupTypeEnum::Division,
+                GroupTypeEnum::Department,
+                GroupTypeEnum::Team,
+            ])
+            ->orderBy('name')
+            ->get()
+            ->map(fn (Group $group) => [
+                'hashid' => $group->hashid,
+                'slug' => $group->slug,
+                'name' => $group->name,
+                'type' => $group->type->value,
+                'title' => $group->pivot->title,
+                'level' => $group->pivot->level,
+            ]);
+
+        $divisions = Group::query()
+            ->where('type', GroupTypeEnum::Division)
+            ->with(['children' => fn ($q) => $q
+                ->where('type', GroupTypeEnum::Department)
+                ->withCount('users')
+                ->orderBy('name'),
+            ])
+            ->withCount('users')
+            ->orderBy('name')
+            ->get()
+            ->map(fn (Group $group) => [
+                'hashid' => $group->hashid,
+                'slug' => $group->slug,
+                'name' => $group->name,
+                'member_count' => $group->users_count,
+                'departments' => $group->children->map(fn (Group $dept) => [
+                    'hashid' => $dept->hashid,
+                    'slug' => $dept->slug,
+                    'name' => $dept->name,
+                    'member_count' => $dept->users_count,
+                    'is_mine' => in_array($dept->id, $myGroupIds),
+                ])->values(),
+            ]);
+
+        $orphanDepartments = Group::query()
+            ->where('type', GroupTypeEnum::Department)
+            ->whereDoesntHave('parent', fn ($q) => $q->where('type', GroupTypeEnum::Division))
+            ->withCount('users')
+            ->orderBy('name')
+            ->get()
+            ->map(fn (Group $group) => [
+                'hashid' => $group->hashid,
+                'slug' => $group->slug,
+                'name' => $group->name,
+                'member_count' => $group->users_count,
+            ]);
 
         return Inertia::render('Directory/DirectoryIndex', [
             'tree' => $tree,
-            'rootHashid' => $rootHashid,
+            'myMemberships' => $myMemberships,
+            'divisions' => $divisions,
+            'orphanDepartments' => $orphanDepartments,
         ]);
     }
 
-    public function show(Group $group): Response
+    public function show(string $slug): Response
     {
+        $group = Group::where('slug', $slug)->firstOrFail();
         $this->authorize('view', $group);
 
         $members = $group->users()
@@ -52,6 +112,7 @@ class DirectoryController extends Controller
             ->get()
             ->map(fn ($child) => [
                 'hashid' => $child->hashid,
+                'slug' => $child->slug,
                 'name' => $child->name,
                 'type' => $child->type->value,
                 'member_count' => $child->users_count,
@@ -62,10 +123,14 @@ class DirectoryController extends Controller
             ['division_director', 'director', 'team_lead']
         ));
 
+        $myGroupIds = request()->user()->groups()->pluck('groups.id')->all();
+
         return Inertia::render('Directory/DirectoryShow', [
-            'tree' => $this->treeBuilder->build(),
+            'tree' => $this->treeBuilder->build($myGroupIds),
+            'myGroupCount' => count($myGroupIds),
             'group' => [
                 'hashid' => $group->hashid,
+                'slug' => $group->slug,
                 'name' => $group->name,
                 'type' => $group->type->value,
                 'description' => $group->description,
@@ -96,10 +161,10 @@ class DirectoryController extends Controller
     {
         $this->authorize('delete', $group);
 
-        $parentHashid = $group->parent?->hashid;
+        $parentSlug = $group->parent?->slug;
         $group->users()->detach();
         $group->delete();
 
-        return redirect()->route('directory.show', $parentHashid);
+        return redirect()->route('directory.show', $parentSlug);
     }
 }

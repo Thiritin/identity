@@ -10,11 +10,9 @@
     </div>
     <form v-if="!status" class="space-y-6" @submit.prevent="submit">
         <div class="space-y-4">
-            <div
-                class="text-sm shadow-md p-2 border-l-[4px] border-primary-600 dark:border-primary-300 dark:text-primary-300"
-            >
+            <p class="text-sm text-muted-foreground">
                 {{ $t('forgot_password_helptext') }}
-            </div>
+            </p>
 
             <FormField
                 id="email"
@@ -41,9 +39,9 @@
         </div>
     </form>
     <div v-else>
-        <div class="text-sm shadow-md p-2 border-l-[4px] border-primary-600">
+        <p class="text-sm text-muted-foreground">
             {{ status }}
-        </div>
+        </p>
     </div>
 </template>
 <script setup>

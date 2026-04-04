@@ -1,9 +1,9 @@
 <template>
     <div>
         <Link
-            :href="route('directory.show', node.hashid)"
+            :href="route('directory.show', node.slug)"
             class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-gray-100 dark:hover:bg-white/10"
-            :class="selected === node.hashid ? 'bg-primary/10 text-primary font-medium dark:bg-primary/20' : 'text-gray-700 dark:text-gray-300'"
+            :class="selected === node.slug ? 'bg-primary/10 text-primary font-medium dark:bg-primary/20' : 'text-gray-700 dark:text-gray-300'"
             preserve-state
         >
             <button
@@ -15,7 +15,8 @@
                 <ChevronRight class="h-3.5 w-3.5 transition-transform" :class="expanded ? 'rotate-90' : ''" />
             </button>
             <span v-else class="w-4.5" />
-            <span class="truncate flex-1">{{ node.name }}</span>
+            <span class="truncate flex-1" :class="node.is_mine ? 'font-semibold' : ''">{{ node.name }}</span>
+            <span v-if="node.is_mine" class="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
             <span class="text-xs text-gray-400 dark:text-gray-500 tabular-nums">{{ node.member_count }}</span>
         </Link>
         <div v-if="expanded && node.children?.length" class="ml-4">
@@ -41,10 +42,10 @@ const props = defineProps({
     defaultExpanded: { type: Boolean, default: false },
 })
 
-const expanded = ref(props.defaultExpanded || props.node.type === 'root')
+const expanded = ref(props.defaultExpanded || props.node.type === 'division')
 
 function isAncestor(child) {
-    if (child.hashid === props.selected) return true
+    if (child.slug === props.selected) return true
     return (child.children || []).some(c => isAncestor(c))
 }
 </script>

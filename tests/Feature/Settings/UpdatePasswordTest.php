@@ -12,6 +12,7 @@ it('sets password_changed_at when password is updated', function () {
     ]);
 
     $this->actingAs($user)
+        ->withSession(['auth.password_confirmed_at' => now()->unix()])
         ->post(route('settings.update-password.store'), [
             'current_password' => 'OldPassword1',
             'password' => 'NewPassword1',

@@ -54,7 +54,7 @@ test('login password page auto logs in when hydra marks login as skippable', fun
     $app->saveQuietly();
 
     $this->withSession([
-        'auth.login_challenge' => ['challenge' => 'test-challenge', 'client_id' => 'test-client'],
+        'auth.login_challenge' => ['challenge' => 'test-challenge', 'client_id' => 'test-client', 'subject' => $user->hashid],
     ])->get(route('auth.login.password.view'))
         ->assertRedirect('https://app.example/callback');
 });

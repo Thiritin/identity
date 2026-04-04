@@ -24,6 +24,7 @@ use App\Listeners\Nextcloud\DeleteNextcloudGroup;
 use App\Listeners\Nextcloud\RemoveUserFromNextcloudGroup;
 use App\Listeners\Nextcloud\UpdateNextcloudGroup;
 use App\Listeners\Nextcloud\UpdateUserNextcloudGroupLevel;
+use App\Listeners\SendTelegramLoginNotification;
 use App\Models\App;
 use App\Models\Group;
 use App\Models\GroupUser;
@@ -62,6 +63,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         Login::class => [
             LogUserLoginListener::class,
+            SendTelegramLoginNotification::class,
         ],
         PasswordReset::class => [
             LogUserPasswordResetListener::class,

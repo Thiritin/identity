@@ -88,13 +88,19 @@ class Handler extends ExceptionHandler
             return $response;
         }
 
-        if (! in_array($status, [401, 402, 403, 404, 405, 500, 503])) {
+        if ($status === 419) {
+            return back()->with([
+                'message' => __('session_expired'),
+            ]);
+        }
+
+        if (! in_array($status, [401, 402, 403, 404, 405, 429, 500, 503])) {
             return $response;
         }
 
         return inertia('Auth/Error', [
-            'title' => "Error $status",
-            'description' => $response->exception?->getMessage(),
+            'status' => $status,
+            'homeUrl' => url('/'),
         ])
             ->toResponse($request)
             ->setStatusCode($status);

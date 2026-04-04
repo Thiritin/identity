@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\ConventionController;
 use App\Http\Controllers\Api\v1\GroupController;
 use App\Http\Controllers\Api\v1\GroupUserController;
 use App\Http\Controllers\Api\v1\IntrospectionController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\Api\v1\UserinfoController;
 use App\Http\Controllers\Api\v2\MetadataController;
 use App\Http\Controllers\HealthController;
 use Illuminate\Support\Facades\Route;
+use SergiX44\Nutgram\Nutgram;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +37,12 @@ Route::middleware('api')->prefix('v1/')->name('api.v1.')->group(function () {
      */
     // Introspect requires auth via client id + secret
     Route::post('introspect', IntrospectionController::class)->name('introspect');
+
+    /**
+     * Public routes
+     */
+    Route::get('conventions', [ConventionController::class, 'index'])->name('conventions.index');
+    Route::get('conventions/current', [ConventionController::class, 'current'])->name('conventions.current');
 });
 
 Route::middleware('api')->prefix('v2/')->name('api.v2.')->group(function () {
@@ -48,3 +56,10 @@ Route::middleware('api')->prefix('v2/')->name('api.v2.')->group(function () {
 
 // Health check endpoint - no authentication required
 Route::get('health', HealthController::class)->name('health');
+
+// Telegram Bot Webhook
+Route::post('/telegram/webhook', function () {
+    app(Nutgram::class)->run();
+
+    return response()->json(['ok' => true]);
+});

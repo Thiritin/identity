@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\TelegramNotifier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -36,8 +37,11 @@ class UpdateEmailController extends Controller
             ]);
         }
 
-        Log::info($user->id . ' has changed his E-Mail from ' . $user->email . ' to ' . $newMailFromCache);
+        $oldEmail = $user->email;
+        Log::info($user->id . ' has changed his E-Mail from ' . $oldEmail . ' to ' . $newMailFromCache);
         $user->update(['email' => $newMailFromCache]);
+
+        app(TelegramNotifier::class)->notifyEmailChanged($user, $oldEmail, $newMailFromCache);
 
         return Inertia::render('Auth/VerifyEmailSuccess', [
             'user' => $user->only('name', 'email'),

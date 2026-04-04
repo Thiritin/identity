@@ -1,7 +1,7 @@
 <template>
     <Head :title="$t('security_authenticator_app')" />
     <div>
-        <Link :href="route('settings.security')" class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 mb-4">
+        <Link v-if="!enforced" :href="route('settings.security')" class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 mb-4">
             <ArrowLeft class="h-4 w-4" />
             {{ $t('security') }}
         </Link>
@@ -13,6 +13,10 @@
             </template>
             <template v-else>{{ $t('totp_protect_account') }}</template>
         </SettingsSubHeader>
+
+        <div v-if="enforced" class="rounded-md border border-amber-300 dark:border-amber-600 bg-amber-50 dark:bg-amber-950/50 p-4 mb-6">
+            <p class="text-sm text-amber-800 dark:text-amber-200">{{ $t('totp_staff_enforced') }}</p>
+        </div>
 
         <!-- Setup flow (when disabled) -->
         <div v-if="!totpEnabled">
@@ -127,6 +131,7 @@ import SettingsSubHeader from '@/Components/Settings/SettingsSubHeader.vue'
 defineProps({
     totpEnabled: Boolean,
     totpLastUsed: String,
+    enforced: Boolean,
 })
 
 const currentStep = ref(1)

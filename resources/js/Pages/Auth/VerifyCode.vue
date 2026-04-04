@@ -74,8 +74,11 @@ const form = useForm('post', route(props.submitRoute), {
     code: null,
 })
 
+let autoSubmitted = false
+
 watch(() => form.code, (value) => {
-    if (value && value.length === 6 && /^[A-Za-z0-9]{6}$/.test(value) && !form.processing) {
+    if (value && value.length === 6 && /^[A-Za-z0-9]{6}$/.test(value) && !form.processing && !autoSubmitted) {
+        autoSubmitted = true
         submit()
     }
 })
@@ -83,6 +86,7 @@ watch(() => form.code, (value) => {
 const resendForm = useForm('post', route(props.resendRoute), {})
 
 function submit() {
+    autoSubmitted = false
     form.submit()
 }
 

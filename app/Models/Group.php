@@ -114,11 +114,23 @@ class Group extends Model
     public function setNameAttribute($value)
     {
         $this->attributes['name'] = $value;
-        $prefix = '';
-        if ($this->parent) {
-            $prefix = $this->parent->name . ' / ';
+        $this->attributes['slug'] = $this->buildHierarchicalSlug($value);
+    }
+
+    private function buildHierarchicalSlug(string $name): string
+    {
+        $segments = [];
+        $parent = $this->parent;
+
+        while ($parent && $parent->type !== GroupTypeEnum::Root) {
+            $segments[] = Str::slug($parent->name);
+            $parent = $parent->parent;
         }
-        $this->attributes['slug'] = $prefix . Str::slug($value);
+
+        $segments = array_reverse($segments);
+        $segments[] = Str::slug($name);
+
+        return implode('/', $segments);
     }
 
     public function getLogoUrlAttribute()

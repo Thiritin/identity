@@ -1,5 +1,5 @@
 <template>
-    <Head title="Change Password"></Head>
+    <Head :title="$t('change_password_title')"></Head>
     <div>
         <SettingsHeader>{{
                 $t('update_your_password')
@@ -10,7 +10,7 @@
                 <div
                     class="bg-primary-200 px-4 py-2 rounded mt-4 font-semibold"
                 >
-                    Your password has been updated.
+                    {{ $t('password_updated_success') }}
                 </div>
             </div>
             <div v-else class="space-y-6">

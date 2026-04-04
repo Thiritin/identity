@@ -29,17 +29,17 @@ beforeEach(function () {
     ]);
 });
 
-test('tree builder returns full hierarchy', function () {
+test('tree builder skips root and returns divisions at top level', function () {
     $tree = app(DirectoryTreeBuilder::class)->build();
-    expect($tree)->toHaveCount(1);
-    expect($tree[0]['name'])->toBe('Board of Directors');
-    expect($tree[0]['type'])->toBe('root');
-    expect($tree[0]['children'])->toHaveCount(2);
+    expect($tree)->toHaveCount(2);
+    expect($tree[0]['name'])->toBe('Alpha Division');
+    expect($tree[0]['type'])->toBe('division');
+    expect($tree[1]['name'])->toBe('Beta Division');
 });
 
 test('tree is sorted alphabetically at each level', function () {
     $tree = app(DirectoryTreeBuilder::class)->build();
-    $divisionNames = collect($tree[0]['children'])->pluck('name')->all();
+    $divisionNames = collect($tree)->pluck('name')->all();
     expect($divisionNames)->toBe(['Alpha Division', 'Beta Division']);
 });
 
@@ -47,7 +47,7 @@ test('tree includes member counts', function () {
     $user = User::factory()->create();
     $this->department->users()->attach($user, ['level' => GroupUserLevel::Member]);
     $tree = app(DirectoryTreeBuilder::class)->build();
-    $dept = $tree[0]['children'][0]['children'][0];
+    $dept = $tree[0]['children'][0];
     expect($dept['name'])->toBe('Art Department');
     expect($dept['member_count'])->toBe(1);
 });
@@ -63,9 +63,19 @@ test('tree excludes automated and default groups', function () {
 
 test('tree nests departments under divisions and teams under departments', function () {
     $tree = app(DirectoryTreeBuilder::class)->build();
-    $division = $tree[0]['children'][0];
+    $division = $tree[0];
     expect($division['children'])->toHaveCount(1);
     expect($division['children'][0]['name'])->toBe('Art Department');
     expect($division['children'][0]['children'])->toHaveCount(1);
     expect($division['children'][0]['children'][0]['name'])->toBe('Badge Team');
+});
+
+test('tree marks user groups with is_mine', function () {
+    $user = User::factory()->create();
+    $this->department->users()->attach($user, ['level' => GroupUserLevel::Member]);
+
+    $tree = app(DirectoryTreeBuilder::class)->build([$this->department->id]);
+    $dept = $tree[0]['children'][0];
+    expect($dept['is_mine'])->toBeTrue();
+    expect($tree[0]['is_mine'])->toBeFalse();
 });

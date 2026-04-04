@@ -24,6 +24,7 @@
 <script setup>
 import { computed } from 'vue'
 import { Link } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import { Badge } from '@/Components/ui/badge'
 
 const props = defineProps({ member: Object })
@@ -35,12 +36,5 @@ const levelValue = computed(() => {
 
 const isLead = computed(() => ['division_director', 'director', 'team_lead'].includes(levelValue.value))
 
-const levelLabel = computed(() => {
-    const labels = {
-        division_director: 'Division Director',
-        director: 'Director',
-        team_lead: 'Team Lead',
-    }
-    return labels[levelValue.value] ?? ''
-})
+const levelLabel = computed(() => levelValue.value ? trans(`level_${levelValue.value}`) : '')
 </script>

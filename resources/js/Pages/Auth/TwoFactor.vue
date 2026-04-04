@@ -1,11 +1,10 @@
 <script setup>
 
-import { computed, ref, onMounted } from "vue";
+import { computed, ref, watch, onMounted } from "vue";
 import LoginScreenWelcome from "@/Auth/LoginScreenWelcome.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { Input } from '@/Components/ui/input';
 import { Button } from '@/Components/ui/button';
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/Components/ui/input-otp';
 import { startAuthentication } from '@simplewebauthn/browser';
 
 const props = defineProps({
@@ -34,16 +33,38 @@ const methodNames = {
 }
 
 const selectedMethod = ref(props.lastUsedMethod);
-const previousMethod = ref(null);
+const showMethodPicker = ref(false);
 const securityKeyError = ref(null);
 
 const selectedMethodName = computed(() => methodNames[selectedMethod.value] || selectedMethod.value)
 
-const otherMethods = computed(() => {
-    return availableMethodTypes.value.filter(m => m !== selectedMethod.value && m !== 'backup_codes')
+const methodDescriptions = {
+    totp: 'two_factor_totp_description',
+    yubikey: 'two_factor_yubikey_description',
+    backup_code: 'two_factor_backup_code_description',
+}
+
+const alternativeMethods = computed(() => {
+    const methods = availableMethodTypes.value.filter(m => m !== selectedMethod.value)
+    if (props.hasBackupCodes && selectedMethod.value !== 'backup_code') {
+        methods.push('backup_code')
+    }
+    return methods
+})
+
+const hasAlternatives = computed(() => alternativeMethods.value.length > 0)
+
+let autoSubmitted = false
+
+watch(() => form.code, (value) => {
+    if (value && value.length === 6 && /^\d{6}$/.test(value) && !form.processing && !autoSubmitted && selectedMethod.value === 'totp') {
+        autoSubmitted = true
+        submitForm()
+    }
 })
 
 const submitForm = () => {
+    autoSubmitted = false
     form.post(props.submitFormUrl)
 }
 
@@ -51,24 +72,13 @@ const switchMethod = (method) => {
     selectedMethod.value = method
     form.method = method
     form.code = ''
+    form.credential = ''
     securityKeyError.value = null
+    showMethodPicker.value = false
 
     if (method === 'security_key') {
         triggerSecurityKey()
     }
-}
-
-const switchToBackupCode = () => {
-    previousMethod.value = selectedMethod.value;
-    selectedMethod.value = 'backup_code';
-    form.method = 'backup_code';
-    form.code = '';
-}
-
-const switchBackFromBackupCode = () => {
-    selectedMethod.value = previousMethod.value || props.lastUsedMethod;
-    form.method = selectedMethod.value;
-    form.code = '';
 }
 
 async function triggerSecurityKey() {
@@ -98,20 +108,22 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head title="Enter your Two Factor"></Head>
+    <Head :title="$t('two_factor_title')"></Head>
     <div>
-        <LoginScreenWelcome title="Two Factor"
-                            sub-title="One more step"></LoginScreenWelcome>
+        <LoginScreenWelcome :title="$t('two_factor_title')"
+                            :sub-title="$t('two_factor_subtitle')"></LoginScreenWelcome>
         <div class="mt-8">
             <form @submit.prevent="submitForm" class="space-y-6">
-                <div class="flex flex-col gap-2">
-                    <label for="code">{{ selectedMethodName }}</label>
+                <div class="flex flex-col items-center gap-2">
+                    <label for="code" class="text-sm font-medium text-gray-700 dark:text-primary-200">{{ selectedMethodName }}</label>
+                    <p v-if="methodDescriptions[selectedMethod]" class="text-xs text-gray-500 dark:text-primary-400 text-center">{{ $t(methodDescriptions[selectedMethod]) }}</p>
 
                     <!-- Backup code input -->
                     <Input v-if="selectedMethod === 'backup_code'" id="code"
                                type="text"
                                placeholder="XXXX-XXXX"
                                autocomplete="one-time-code"
+                               class="text-center text-lg tracking-widest font-mono"
                                :class="{ 'border-destructive': form.invalid('code') }"
                                v-model.trim.lazy="form.code"
                     />
@@ -132,40 +144,43 @@ onMounted(() => {
                                v-model.trim.lazy="form.code"
                     />
                     <!-- TOTP input -->
-                    <InputOTP
-                        v-else
-                        v-model="form.code"
-                        :maxlength="6"
-                    >
-                        <InputOTPGroup>
-                            <InputOTPSlot v-for="i in 6" :key="i" :index="i - 1" />
-                        </InputOTPGroup>
-                    </InputOTP>
+                    <Input v-else id="code"
+                               type="text"
+                               inputmode="numeric"
+                               autocomplete="one-time-code"
+                               maxlength="6"
+                               placeholder="XXXXXX"
+                               class="text-center text-2xl tracking-[0.5em] indent-[0.5em] font-mono"
+                               :class="{ 'border-destructive': form.invalid('code') }"
+                               v-model.trim="form.code"
+                    />
 
                     <p v-if="form.invalid('code')" class="text-sm text-destructive">{{ form.errors.code }}</p>
                     <p v-if="$page.props.errors.throttle" class="text-sm text-destructive">{{ $page.props.errors.throttle }}</p>
                 </div>
 
 
-                <div class="flex justify-end">
-                    <Button
-                        :disabled="form.processing"
-                        type="submit"
-                        class="block"
-                    >{{ $t('login') }}</Button>
-                </div>
-                <div v-for="method in otherMethods" :key="method"
-                     @click="switchMethod(method)"
-                     class="flex justify-end hover:underline text-sm cursor-pointer">
-                    Switch to {{ methodNames[method] }}
-                </div>
-                <div v-if="hasBackupCodes && selectedMethod !== 'backup_code'" @click="switchToBackupCode"
-                     class="flex justify-end hover:underline text-sm cursor-pointer text-gray-500">
-                    {{ $t('two_factor_backup_code_link') }}
-                </div>
-                <div v-if="selectedMethod === 'backup_code'" @click="switchBackFromBackupCode"
-                     class="flex justify-end hover:underline text-sm cursor-pointer text-gray-500">
-                    {{ $t('two_factor_back_to_method', { method: methodNames[previousMethod] || 'TOTP' }) }}
+                <Button
+                    :disabled="form.processing"
+                    type="submit"
+                    class="w-full"
+                >{{ $t('login') }}</Button>
+
+                <!-- Method picker -->
+                <div v-if="hasAlternatives" class="text-center">
+                    <button v-if="!showMethodPicker" type="button" @click="showMethodPicker = true"
+                            class="text-sm text-gray-500 hover:underline cursor-pointer dark:text-primary-400">
+                        {{ $t('two_factor_try_another_way') }}
+                    </button>
+                    <div v-else class="space-y-2">
+                        <p class="text-xs text-gray-500 dark:text-primary-400">{{ $t('two_factor_choose_method') }}</p>
+                        <div v-for="method in alternativeMethods" :key="method">
+                            <button type="button" @click="switchMethod(method)"
+                                    class="w-full rounded-md border border-gray-200 dark:border-primary-700 px-4 py-2.5 text-sm text-gray-700 dark:text-primary-200 hover:bg-gray-50 dark:hover:bg-primary-800 transition-colors cursor-pointer">
+                                {{ methodNames[method] }}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>

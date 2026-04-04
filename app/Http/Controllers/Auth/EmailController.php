@@ -41,6 +41,11 @@ class EmailController extends Controller
             }
 
             if (($loginRequest['skip'] ?? false) === true) {
+                $skipUser = User::findByHashid($loginRequest['subject'] ?? '');
+                if ($skipUser) {
+                    Session::put('auth.email_flow.email', $skipUser->email);
+                }
+
                 return Redirect::route('auth.login.password.view');
             }
 
@@ -52,6 +57,13 @@ class EmailController extends Controller
         }
 
         if (Session::get('auth.login_challenge.skip') === true) {
+            if (! Session::has('auth.email_flow.email')) {
+                $skipUser = User::findByHashid(Session::get('auth.login_challenge.subject', ''));
+                if ($skipUser) {
+                    Session::put('auth.email_flow.email', $skipUser->email);
+                }
+            }
+
             return Redirect::route('auth.login.password.view');
         }
 

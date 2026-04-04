@@ -45,7 +45,7 @@ test('staff users can view group detail', function () {
     [$user, $root] = setupStaffUser();
 
     $this->actingAs($user)
-        ->get(route('directory.show', $root))
+        ->get(route('directory.show', $root->slug))
         ->assertOk();
 });
 
@@ -55,7 +55,7 @@ test('non-staff users get 403 on group detail', function () {
     $user->twoFactors()->save(TwoFactor::factory()->totp()->make());
 
     $this->actingAs($user)
-        ->get(route('directory.show', $root))
+        ->get(route('directory.show', $root->slug))
         ->assertForbidden();
 });
 

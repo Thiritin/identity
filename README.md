@@ -1,106 +1,160 @@
-# Identity
+# EF Identity
 
-This is a Laravel, IntertiaJS with Vue based application that works as an OIDC Provider.
+Identity management and OIDC provider for Eurofurence. Built with Laravel, Inertia.js (Vue 3), and Ory Hydra.
 
-## Installation
+## Prerequisites
 
-You need to have at least docker and docker-compose installed.
-Podman is also supported, but you need to set up the podman socket and command to be compatible with docker.
+- [Docker](https://docs.docker.com/get-docker/) and Docker Compose
+- Port 80 available (used by Traefik reverse proxy)
 
-1. Clone the Repo
-2. Copy `.env.example` to `.env` and set up the environment variables if needed.  
-   `cp .env.example .env`  
-   (you should generate new secret keys, but for simplicity some default ones are provided)
-3. Run `docker compose up -d` to start the docker containers.  
-   It may take a while to pull and build images for the first time.
-4. Wait when php dependencies are installed and the dev server starts.  
-   It may also take a while depending on your internet connection and computer performance.    
-   You can check the logs with `docker compose logs -f laravel.test`
-   (`Ctrl+C` here will close logs, but will keep the server running).
-5. Setup alias for sail:
-   ```bash
-   alias sail='./vendor/bin/sail'
-   ```
-   or use docker-compose directly:
-   ```bash
-   docker compose exec -it -u sail laravel.test <command>
-   ```
-   (further commands will have a sail and pure docker-compose version)
-6. Run `sail composer install` or `docker compose exec -it -u sail laravel.test php composer install`.
-7. Run `sail artisan migrate` or `docker compose exec -it -u sail laravel.test php artisan migrate`.
-8. Run `sail artisan db:seed` or `docker compose exec -it -u sail laravel.test php artisan db:seed`.
-9. Run `sail npm install` or `docker compose exec -it -u sail laravel.test npm install`.
-10. Run `sail npm run dev` or `docker compose exec -it -u sail laravel.test npm run dev`.  
-    (you can run this command locally. it may speed up HMR and file watching on some systems)
-11. Add `identity.eurofurence.localhost` to your hosts file and forward them to `127.0.0.1`.
-12. You can now go to http://identity.eurofurence.localhost.    
-    it may take a while to load first time.  
-    Default credentials are: `identity@eurofurence.localhost`, `admin` (unless you changed them in `.env`).
+## Quick Start
 
-### Entering laravel container
+```bash
+make setup
+```
 
-To enter the laravel container, run `sail shell` or `docker compose exec -it -u sail laravel.test bash`.
+This single command copies `.env`, builds containers, installs all dependencies, runs migrations, seeds the database, and builds frontend assets.
 
-### Updating dev environment
+Once finished, open **http://identity.eurofurence.localhost** in your browser.
 
-To keep your dev environment up to date after merging changes from the main branch or creating a new one, run:
+> **Note:** `*.localhost` resolves to `127.0.0.1` on most systems. If it doesn't work, add `127.0.0.1 identity.eurofurence.localhost` to your `/etc/hosts` file.
 
-* `sail up -d` or `docker compose up -d` to update container image versions.
-* `sail npm install` or `docker compose exec -it -u sail laravel.test npm install` to update npm packages.
-* `sail composer install` or `docker compose exec -it -u sail laravel.test composer install` to update composer files.
-* `sail restart` or `docker compose restart` to restart the containers.
+### Default Credentials
 
-### Stopping dev environment
+- **Email:** `identity@eurofurence.localhost`
+- **Password:** `admin` (configurable via `ADMIN_PASSWORD` in `.env`)
 
-To stop the dev environment, run `sail stop` or `docker compose stop`.
+## Manual Setup
 
-This action will stop all containers, free up the ports and keep data in containers and volumes.
+If you prefer to run each step yourself:
 
-To start it again, run `sail up -d` or `docker compose up -d`.
+```bash
+# 1. Copy environment file
+cp .env.example .env
 
-### Removing and cleaning up the dev environment
+# 2. Build and start containers
+docker compose build
+docker compose up -d
 
-**WARNING: This action will remove all containers and volumes, including the database and all data in it.**
+# 3. Install PHP dependencies (also auto-runs on first container start)
+docker compose exec laravel.test composer install
 
-To remove the dev environment, run `sail down -v` or `docker compose down -v`.
+# 4. Install JS dependencies
+docker compose exec laravel.test npm install
 
-Also, you may want to remove `vendor` and `node_modules` if you want to perform
-a clean installation later `rm -rf vendor node_modules`.
+# 5. Generate application key
+docker compose exec laravel.test php artisan key:generate
 
-**WARNING: next step will remove all pulled and built images, build caches, volumes, networks and stopped containers.**
+# 6. Run database migrations
+docker compose exec laravel.test php artisan migrate
 
-For some rare cases, you may want to remove all pulled images and volumes `docker system prune -af`.
+# 7. Seed the database (creates admin user and OAuth apps)
+docker compose exec laravel.test php artisan db:seed
 
-## Exposed Ports
+# 8. Build frontend assets (or use `make dev` for HMR)
+docker compose exec laravel.test npm run build
+```
 
-* `:80` - HTTP terafic internal router. It routes http request to laravel container (mostly)
-  and hydra (`/.well-known`,`/oauth2`,`/health`,`/userinfo`)
-* `:8080` - traefic dashboard (for debugging)
-* `:3306` - MySQL database (can be changed via `FORWARD_DB_PORT` in `.env`)
-* `:4444`, `:4445`, `:5555` - Hydra endpoints (for debugging)
-* `:6379` - Redis (can be changed via `FORWARD_REDIS_PORT` in `.env`)
-* `:6001`, `:9601` - Soketi (local WS pusher implementation)
-  (can be changed via `PUSHER_PORT` and `PUSHER_METRICS_PORT` in `.env`)
-* `:7700` - MeiliSearch (can be changed via `FORWARD_MEILISEARCH_PORT` in `.env`)
-* `:1025`, `:8025` - MailPit local SMTP server
-  (can be changed via `FORWARD_MAILPIT_PORT`, `FORWARD_MAILPIT_DASHBOARD_PORT` in `.env`)
+## Day-to-Day Development
 
-## Connecting to the MySQL database from the host
+```bash
+make up          # Start containers
+make dev         # Start Vite dev server (HMR for frontend changes)
+make down        # Stop containers
+```
 
-After you finish the installation, you can connect to the MySQL database from your host machine.
+Frontend changes are picked up automatically by Vite when `make dev` is running.
 
-* Host: `127.0.0.1`
-* Port: `3306` (or the port you set in `.env` for `FORWARD_DB_PORT`)
-* Username: `sail` (or the user you set in `.env` for `DB_USERNAME`)
-* Password: `password` (or the password you set in `.env` for `DB_PASSWORD`)
-* Database: `laravel` (or the database you set in `.env` for `DB_DATABASE`)
+## Make Commands
 
-## Receiving mail
+| Command | Description |
+|---------|-------------|
+| `make setup` | First-time setup (does everything) |
+| `make up` | Start all containers |
+| `make down` | Stop all containers |
+| `make restart` | Restart all containers |
+| `make dev` | Start Vite dev server (HMR) |
+| `make build` | Build frontend assets |
+| `make install` | Install PHP + JS dependencies |
+| `make migrate` | Run database migrations |
+| `make seed` | Run database seeders |
+| `make fresh` | Drop all tables, re-migrate, and re-seed |
+| `make test` | Run the test suite |
+| `make test-filter F=LoginTest` | Run tests matching a filter |
+| `make lint` | Run Laravel Pint on changed files |
+| `make shell` | Open a bash shell in the app container |
+| `make db-shell` | Open a MySQL shell |
+| `make logs` | Tail application logs |
+| `make artisan CMD="route:list"` | Run any artisan command |
 
-During development, you should use `identity.eurofurence.localhost` hostname
-(eg `some-user@identity.eurofurence.localhost`) to receive emails.
+## Updating After a Pull
 
-Use mailpit to check the emails at [http://localhost:8025](http://localhost:8025).
+```bash
+make install     # Update PHP + JS dependencies
+make migrate     # Run any new migrations
+make up          # Restart containers (picks up image changes)
+```
+
+## Services & Ports
+
+| Service | URL | Notes |
+|---------|-----|-------|
+| Application | http://identity.eurofurence.localhost | Main app |
+| Mailpit | http://localhost:8025 | Email testing UI |
+| Traefik dashboard | http://localhost:8080 | Routing debug |
+| MySQL | `localhost:3306` | Configurable via `FORWARD_DB_PORT` |
+| Redis | `localhost:6379` | Configurable via `FORWARD_REDIS_PORT` |
+| Hydra (public) | `localhost:4444` | OAuth2/OIDC |
+
+### Connecting to MySQL from the Host
+
+| Setting | Value |
+|---------|-------|
+| Host | `127.0.0.1` |
+| Port | `3306` (or `FORWARD_DB_PORT`) |
+| Username | `sail` (or `DB_USERNAME`) |
+| Password | `password` (or `DB_PASSWORD`) |
+| Database | `laravel` (or `DB_DATABASE`) |
+
+## Receiving Mail
+
+Use any `@identity.eurofurence.localhost` email address during development. All outgoing mail is captured by Mailpit at http://localhost:8025.
+
+## Cleaning Up
+
+```bash
+# Stop containers (preserves data)
+make down
+
+# Remove containers AND all data (database, volumes)
+docker compose down -v
+
+# Full cleanup (removes images, build cache, everything)
+docker system prune -af
+```
+
+## Troubleshooting
+
+### Port 80 is already in use
+
+Stop whatever is using port 80 (Apache, Nginx, another Docker project), then `make up`.
+
+### Permission issues with files created by Docker
+
+Uncomment and set `WWWUSER` and `WWWGROUP` in `.env` to match your local user:
+
+```bash
+id -u  # your UID
+id -g  # your GID
+```
+
+### Frontend changes not showing up
+
+Make sure `make dev` is running for HMR. If you previously ran `make build`, the dev server takes precedence.
+
+### Database connection refused
+
+Wait a few seconds after `make up` for MySQL to finish starting. Check with `docker compose ps` that `mysql` is healthy.
 
 ## Security
 

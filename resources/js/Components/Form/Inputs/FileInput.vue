@@ -22,8 +22,8 @@
                     :for="id"
                     class="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
                 >
-                    <span v-if="!fileUploaded">Upload a file</span>
-                    <span v-else>Select a different file</span>
+                    <span v-if="!fileUploaded">{{ $t('file_upload') }}</span>
+                    <span v-else>{{ $t('file_upload_different') }}</span>
                     <input
                         :id="id"
                         :name="id"

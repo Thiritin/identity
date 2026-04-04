@@ -57,6 +57,7 @@
 import { Link } from '@inertiajs/vue3'
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
+import { trans } from 'laravel-vue-i18n'
 import { Pencil, UserPlus, Plus } from 'lucide-vue-next'
 import GroupDescription from './GroupDescription.vue'
 import MemberList from './MemberList.vue'
@@ -74,7 +75,6 @@ defineEmits(['toggle-edit', 'add-member', 'create-sub-group'])
 
 function levelLabel(level) {
     const val = typeof level === 'object' ? level.value ?? level : level
-    const labels = { division_director: 'Division Director', director: 'Director', team_lead: 'Team Lead' }
-    return labels[val] ?? ''
+    return val ? trans(`level_${val}`) : ''
 }
 </script>

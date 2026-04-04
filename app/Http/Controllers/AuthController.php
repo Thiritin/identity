@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\OauthSession;
 use App\Models\User;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -40,6 +41,17 @@ class AuthController extends Controller
             $userInfo = $provider->user();
         } catch (InvalidStateException $e) {
             return redirect()->route('login.apps.redirect', ['app' => $app]);
+        } catch (ClientException $e) {
+            Log::warning('OAuth token exchange failed', [
+                'app' => $app,
+                'status' => $e->getResponse()->getStatusCode(),
+                'body' => $e->getResponse()->getBody()->getContents(),
+            ]);
+
+            return redirect()->route('auth.error', [
+                'error' => 'login_failed',
+                'error_description' => 'The login attempt failed. Please try again.',
+            ]);
         }
 
         $user = User::where('hashid', $userInfo->id)->first();

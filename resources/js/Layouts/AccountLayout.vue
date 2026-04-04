@@ -214,7 +214,7 @@ const rightTabs = computed(() => [
 const footerLinks = computed(() => [
     { name: trans('footer_my_data'), href: route('my-data'), internal: true },
     { name: trans('footer_support_link'), href: 'https://help.eurofurence.org/contact/' },
-    { name: trans('footer_imprint'), href: 'https://help.eurofurence.org/legal/imprint' },
+    { name: trans('footer_legal_notice'), href: 'https://help.eurofurence.org/legal/imprint' },
     { name: trans('footer_privacy'), href: 'https://help.eurofurence.org/legal/privacy' },
 ])
 
