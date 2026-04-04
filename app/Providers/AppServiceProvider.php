@@ -30,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        \App\Models\NotificationType::observe(\App\Observers\NotificationTypeObserver::class);
+
         RateLimiter::for('login', function (Request $request) {
             return Limit::perMinute(5)->by($request->email . $request->ip());
         });

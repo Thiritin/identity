@@ -36,6 +36,11 @@ class App extends Model
         return $this->belongsTo(AppCategory::class, 'category_id');
     }
 
+    public function notificationTypes(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(NotificationType::class);
+    }
+
     public function isApproved(): bool
     {
         return (bool) $this->approved;
