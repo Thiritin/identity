@@ -13,6 +13,7 @@ class ErrorController extends Controller
         return Inertia::render('Auth/Error', [
             'title' => $request->get('error'),
             'description' => $request->get('error_description'),
+            'hideUserInfo' => true,
         ]);
     }
 }
