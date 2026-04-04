@@ -1,8 +1,6 @@
 <template>
     <Head :title="$t('tab_directory')" />
-    <div class="flex flex-col lg:flex-row gap-6">
-        <DirectoryTree :tree="tree" :selected="null" :my-group-count="myMemberships.length" class="lg:w-72 shrink-0" />
-        <div class="flex-1 min-w-0 space-y-8">
+    <div class="space-y-8">
             <!-- My Groups -->
             <section v-if="myMemberships.length > 0">
                 <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
@@ -78,7 +76,6 @@
                     </Link>
                 </div>
             </section>
-        </div>
     </div>
 </template>
 
@@ -86,10 +83,8 @@
 import { Head, Link } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import { Badge } from '@/Components/ui/badge'
-import DirectoryTree from './Components/DirectoryTree.vue'
 
 defineProps({
-    tree: Array,
     myMemberships: Array,
     divisions: Array,
     orphanDepartments: Array,

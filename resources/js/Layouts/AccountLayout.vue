@@ -40,18 +40,29 @@
                                  ? 'bg-transparent'
                                  : 'bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-8 sm:px-10 sm:py-10'"
                         >
-                            <Transition
-                                name="page"
-                                mode="out-in"
-                                @before-leave="onBeforeLeave"
-                                @leave="onLeave"
-                                @enter="onEnter"
-                                @after-enter="onAfterEnter"
-                            >
-                                <div :key="page.url">
-                                    <slot />
+                            <div :class="isDirectory ? 'flex flex-col lg:flex-row gap-6' : ''">
+                                <DirectoryTree
+                                    v-if="isDirectory"
+                                    :tree="page.props.directoryTree ?? []"
+                                    :selected="page.props.directorySelectedSlug"
+                                    :my-group-count="page.props.myGroupCount ?? 0"
+                                    class="lg:w-72 shrink-0"
+                                />
+                                <div :class="isDirectory ? 'flex-1 min-w-0' : ''">
+                                    <Transition
+                                        name="page"
+                                        mode="out-in"
+                                        @before-leave="onBeforeLeave"
+                                        @leave="onLeave"
+                                        @enter="onEnter"
+                                        @after-enter="onAfterEnter"
+                                    >
+                                        <div :key="page.url">
+                                            <slot />
+                                        </div>
+                                    </Transition>
                                 </div>
-                            </Transition>
+                            </div>
                         </div>
                     </div>
 
@@ -173,6 +184,7 @@ import { Button } from '@/Components/ui/button'
 import { trans } from 'laravel-vue-i18n'
 import { useTheme } from '@/Composables/useTheme'
 import SkipToContent from '@/Components/SkipToContent.vue'
+import DirectoryTree from '@/Pages/Directory/Components/DirectoryTree.vue'
 
 const { darkMode } = useTheme()
 const page = usePage()

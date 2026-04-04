@@ -1,9 +1,7 @@
 <template>
     <Head :title="group.name" />
-    <div class="flex flex-col lg:flex-row gap-6">
-        <DirectoryTree :tree="tree" :selected="group.slug" :my-group-count="myGroupCount" class="lg:w-72 shrink-0" />
-        <div class="flex-1 min-w-0">
-            <GroupDetail
+    <div>
+        <GroupDetail
                 :group="group"
                 :leaders="leaders"
                 :members="members"
@@ -13,7 +11,6 @@
                 @add-member="showAddMember = true"
                 @create-sub-group="showCreateTeam = true"
             />
-        </div>
     </div>
 
     <MemberAddModal
@@ -41,15 +38,12 @@
 <script setup>
 import { ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
-import DirectoryTree from './Components/DirectoryTree.vue'
 import GroupDetail from './Components/GroupDetail.vue'
 import MemberAddModal from './Components/MemberAddModal.vue'
 import TeamCreateModal from './Components/TeamCreateModal.vue'
 import GroupEditModal from './Components/GroupEditModal.vue'
 
 defineProps({
-    tree: Array,
-    myGroupCount: Number,
     group: Object,
     leaders: Array,
     members: Array,

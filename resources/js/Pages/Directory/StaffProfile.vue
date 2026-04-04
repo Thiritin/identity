@@ -1,11 +1,6 @@
 <template>
     <Head :title="profileUser.name" />
     <div class="max-w-2xl mx-auto">
-        <Link :href="route('directory.index')" class="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-primary mb-4">
-            <ArrowLeft class="h-4 w-4" />
-            {{ $t('directory_back') }}
-        </Link>
-
         <div class="flex items-center gap-4 mb-6">
             <div class="h-16 w-16 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden shrink-0">
                 <img v-if="profileUser.avatar" :src="profileUser.avatar" :alt="profileUser.name" class="h-full w-full object-cover" />
@@ -91,7 +86,6 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3'
 import { Badge } from '@/Components/ui/badge'
-import { ArrowLeft } from 'lucide-vue-next'
 import ConventionAttendanceEditor from '@/Components/ConventionAttendanceEditor.vue'
 
 defineProps({
