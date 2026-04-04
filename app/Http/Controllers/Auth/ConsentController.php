@@ -9,6 +9,7 @@ use App\Models\OauthSession;
 use App\Models\User;
 use App\Services\Hydra\Client;
 use App\Services\Hydra\HydraRequestException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
@@ -46,6 +47,11 @@ class ConsentController extends Controller
             }
 
             $app = App::where('client_id', $consentRequest['client']['client_id'] ?? null)->first();
+
+            $approvalRedirect = $this->rejectIfUnapproved($app, $user, $consentRequest, $hydra);
+            if ($approvalRedirect) {
+                return $approvalRedirect;
+            }
 
             if ($app?->skip_consent) {
                 $this->recordSession($consentRequest, $user);
@@ -109,6 +115,13 @@ class ConsentController extends Controller
                 );
 
                 return redirect($response['redirect_to']);
+            }
+
+            $app = App::where('client_id', $consentRequest['client']['client_id'] ?? null)->first();
+
+            $approvalRedirect = $this->rejectIfUnapproved($app, $user, $consentRequest, $hydra);
+            if ($approvalRedirect) {
+                return $approvalRedirect;
             }
 
             $this->recordSession($consentRequest, $user);
@@ -180,5 +193,27 @@ class ConsentController extends Controller
         }
 
         Session::put('hydra_session_id', $sessionId);
+    }
+
+    private function rejectIfUnapproved(?App $app, User $user, array $consentRequest, Client $hydra): ?RedirectResponse
+    {
+        if ($app === null || $app->isApproved()) {
+            return null;
+        }
+
+        if ($app->user_id === $user->id) {
+            return null;
+        }
+
+        $response = $hydra->rejectConsentRequest(
+            $consentRequest,
+            'access_denied',
+            'This application has not been approved for public use.',
+            trans('app_not_approved'),
+            'Application not approved for public use.',
+            403
+        );
+
+        return redirect($response['redirect_to']);
     }
 }

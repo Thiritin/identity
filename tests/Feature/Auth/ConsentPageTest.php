@@ -133,6 +133,123 @@ it('rejects consent for suspended users', function () {
     $response->assertRedirect('https://app.example.com/callback?error=access_denied');
 });
 
+it('rejects consent for non-owner on unapproved app', function () {
+    $owner = User::factory()->create();
+    $otherUser = User::factory()->create();
+
+    App::withoutEvents(fn () => App::factory()->unapproved()->create([
+        'client_id' => 'unapproved-app-id',
+        'user_id' => $owner->id,
+        'skip_consent' => false,
+    ]));
+
+    fakeHydraConsentRequest($otherUser, [
+        'client' => ['client_id' => 'unapproved-app-id', 'client_name' => 'Unapproved App'],
+    ]);
+
+    $response = $this->get(route('auth.consent', ['consent_challenge' => 'test-challenge-123']));
+
+    $response->assertRedirect();
+    Http::assertSent(fn ($request) => str_contains($request->url(), 'consent/reject'));
+});
+
+it('allows consent for owner on unapproved app', function () {
+    $owner = User::factory()->create();
+
+    App::withoutEvents(fn () => App::factory()->unapproved()->create([
+        'client_id' => 'unapproved-app-id',
+        'user_id' => $owner->id,
+        'skip_consent' => false,
+    ]));
+
+    fakeHydraConsentRequest($owner, [
+        'client' => ['client_id' => 'unapproved-app-id', 'client_name' => 'Unapproved App'],
+    ]);
+
+    $response = $this->get(route('auth.consent', ['consent_challenge' => 'test-challenge-123']));
+
+    $response->assertInertia(fn ($page) => $page->component('Auth/Consent'));
+});
+
+it('allows consent for any user on approved app', function () {
+    $owner = User::factory()->create();
+    $otherUser = User::factory()->create();
+
+    App::withoutEvents(fn () => App::factory()->create([
+        'client_id' => 'approved-app-id',
+        'user_id' => $owner->id,
+        'skip_consent' => false,
+    ]));
+
+    fakeHydraConsentRequest($otherUser, [
+        'client' => ['client_id' => 'approved-app-id', 'client_name' => 'Approved App'],
+    ]);
+
+    $response = $this->get(route('auth.consent', ['consent_challenge' => 'test-challenge-123']));
+
+    $response->assertInertia(fn ($page) => $page->component('Auth/Consent'));
+});
+
+it('rejects consent for non-owner on unapproved skip_consent app', function () {
+    $owner = User::factory()->create();
+    $otherUser = User::factory()->create();
+
+    App::withoutEvents(fn () => App::factory()->unapproved()->skipConsent()->create([
+        'client_id' => 'unapproved-skip-app-id',
+        'user_id' => $owner->id,
+    ]));
+
+    fakeHydraConsentRequest($otherUser, [
+        'client' => ['client_id' => 'unapproved-skip-app-id', 'client_name' => 'Skip App'],
+    ]);
+
+    $response = $this->get(route('auth.consent', ['consent_challenge' => 'test-challenge-123']));
+
+    $response->assertRedirect();
+    Http::assertSent(fn ($request) => str_contains($request->url(), 'consent/reject'));
+});
+
+it('accepts consent for non-owner on approved app via accept endpoint', function () {
+    $owner = User::factory()->create();
+    $otherUser = User::factory()->create();
+
+    App::withoutEvents(fn () => App::factory()->create([
+        'client_id' => 'approved-app-id',
+        'user_id' => $owner->id,
+    ]));
+
+    fakeHydraConsentRequest($otherUser, [
+        'client' => ['client_id' => 'approved-app-id', 'client_name' => 'Approved App'],
+    ]);
+
+    $response = $this->post(route('auth.consent.accept'), [
+        'consent_challenge' => 'test-challenge-123',
+    ]);
+
+    $response->assertRedirect('https://app.example.com/callback');
+});
+
+it('rejects consent accept for non-owner on unapproved app', function () {
+    $owner = User::factory()->create();
+    $otherUser = User::factory()->create();
+
+    App::withoutEvents(fn () => App::factory()->unapproved()->create([
+        'client_id' => 'unapproved-app-id',
+        'user_id' => $owner->id,
+    ]));
+
+    fakeHydraConsentRequest($otherUser, [
+        'client' => ['client_id' => 'unapproved-app-id', 'client_name' => 'Unapproved App'],
+    ]);
+
+    $response = $this->post(route('auth.consent.accept'), [
+        'consent_challenge' => 'test-challenge-123',
+    ]);
+
+    $response->assertRedirect();
+    Http::assertSent(fn ($request) => str_contains($request->url(), 'consent/reject'));
+});
+
 it('rejects consent when user does not exist', function () {
     Http::fake([
         '*/admin/oauth2/auth/requests/consent/reject*' => Http::response([
