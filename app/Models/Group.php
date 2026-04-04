@@ -48,6 +48,7 @@ class Group extends Model
     protected $fillable = [
         'name',
         'description',
+        'icon',
         'logo',
         'type',
         'system_name',
