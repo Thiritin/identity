@@ -35,7 +35,7 @@
 
         <GroupDescription :description="group.description" />
 
-        <MemberList :members="members" :can-edit="canEdit" :group-slug="group.slug">
+        <MemberList :members="members" :can-edit="canEdit" :group-slug="group.slug" @edit-member="$emit('edit-member', $event)">
             <template v-if="canEdit" #actions>
                 <Button variant="outline" size="sm" @click="$emit('add-member')">
                     <UserPlus class="h-3.5 w-3.5 mr-1" /> {{ $t('directory_add_member') }}
@@ -73,7 +73,7 @@ defineProps({
     canEdit: Boolean,
 })
 
-defineEmits(['toggle-edit', 'add-member', 'create-sub-group'])
+defineEmits(['toggle-edit', 'add-member', 'create-sub-group', 'edit-member'])
 
 function levelLabel(level) {
     const val = typeof level === 'object' ? level.value ?? level : level

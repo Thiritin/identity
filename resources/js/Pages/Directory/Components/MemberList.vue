@@ -20,6 +20,8 @@
                 :key="member.hashid"
                 :member="member"
                 :group-slug="groupSlug"
+                :can-edit="canEdit"
+                @edit="$emit('edit-member', $event)"
             >
                 <template v-if="canEdit" #actions>
                     <slot name="member-actions" :member="member" />
@@ -42,6 +44,8 @@ const props = defineProps({
     canEdit: Boolean,
     groupSlug: String,
 })
+
+defineEmits(['edit-member'])
 
 const search = ref('')
 

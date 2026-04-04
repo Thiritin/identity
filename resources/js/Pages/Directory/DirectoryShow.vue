@@ -10,6 +10,7 @@
                 @toggle-edit="showEdit = true"
                 @add-member="showAddMember = true"
                 @create-sub-group="showCreateTeam = true"
+                @edit-member="(m) => { editingMember = m; showEditMember = true }"
             />
     </div>
 
@@ -33,6 +34,14 @@
         :group="group"
         @close="showEdit = false"
     />
+
+    <MemberEditModal
+        v-if="canEdit"
+        :open="showEditMember"
+        :member="editingMember"
+        :group-hashid="group.hashid"
+        @close="showEditMember = false"
+    />
 </template>
 
 <script setup>
@@ -42,6 +51,7 @@ import GroupDetail from './Components/GroupDetail.vue'
 import MemberAddModal from './Components/MemberAddModal.vue'
 import TeamCreateModal from './Components/TeamCreateModal.vue'
 import GroupEditModal from './Components/GroupEditModal.vue'
+import MemberEditModal from './Components/MemberEditModal.vue'
 
 defineProps({
     group: Object,
@@ -54,6 +64,8 @@ defineProps({
 const showEdit = ref(false)
 const showAddMember = ref(false)
 const showCreateTeam = ref(false)
+const showEditMember = ref(false)
+const editingMember = ref(null)
 </script>
 
 <script>

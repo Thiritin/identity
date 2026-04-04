@@ -17,6 +17,9 @@
         <Badge v-if="isLead" variant="secondary" class="shrink-0 text-xs">
             {{ levelLabel }}
         </Badge>
+        <button v-if="canEdit" @click.prevent="$emit('edit', member)" class="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+            <Pencil class="h-3.5 w-3.5" />
+        </button>
         <slot name="actions" />
     </div>
 </template>
@@ -26,8 +29,11 @@ import { computed } from 'vue'
 import { Link } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import { Badge } from '@/Components/ui/badge'
+import { Pencil } from 'lucide-vue-next'
 
-const props = defineProps({ member: Object, groupSlug: String })
+const props = defineProps({ member: Object, groupSlug: String, canEdit: Boolean })
+
+defineEmits(['edit'])
 
 const levelValue = computed(() => {
     const l = props.member.level
