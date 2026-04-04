@@ -184,3 +184,52 @@ it('returns 401 for unauthenticated requests', function () {
     $this->getJson('/api/v2/metadata')
         ->assertUnauthorized();
 });
+
+it('accepts a valid future expires_at on upsert', function () {
+    $user = User::factory()->create();
+    actingAsApiUser($user, 'app-one', ['metadata.write']);
+
+    $expiresAt = now()->addYears(3)->startOfSecond();
+
+    $this->putJson('/api/v2/metadata/address', [
+        'value' => '123 Main St',
+        'expires_at' => $expiresAt->toIso8601String(),
+    ])
+        ->assertCreated()
+        ->assertJson([
+            'key' => 'address',
+            'value' => '123 Main St',
+            'expires_at' => $expiresAt->toIso8601String(),
+        ]);
+
+    $this->assertDatabaseHas('user_app_metadata', [
+        'user_id' => $user->id,
+        'client_id' => 'app-one',
+        'key' => 'address',
+        'expires_at' => $expiresAt->toDateTimeString(),
+    ]);
+});
+
+it('rejects expires_at in the past', function () {
+    $user = User::factory()->create();
+    actingAsApiUser($user, 'app-one', ['metadata.write']);
+
+    $this->putJson('/api/v2/metadata/address', [
+        'value' => '123 Main St',
+        'expires_at' => now()->subDay()->toIso8601String(),
+    ])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['expires_at']);
+});
+
+it('accepts null expires_at meaning never expires', function () {
+    $user = User::factory()->create();
+    actingAsApiUser($user, 'app-one', ['metadata.write']);
+
+    $this->putJson('/api/v2/metadata/address', [
+        'value' => '123 Main St',
+        'expires_at' => null,
+    ])
+        ->assertCreated()
+        ->assertJson(['expires_at' => null]);
+});

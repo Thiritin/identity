@@ -18,6 +18,7 @@ class UpsertMetadataRequest extends FormRequest
     {
         return [
             'value' => ['required', 'string', 'max:65535'],
+            'expires_at' => ['nullable', 'date', 'after:now'],
         ];
     }
 }
