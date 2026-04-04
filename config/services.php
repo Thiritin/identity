@@ -80,4 +80,7 @@ return [
         'username' => env('NEXTCLOUD_USERNAME'),
         'password' => env('NEXTCLOUD_PASSWORD'),
     ],
+    'edna' => [
+        'url' => env('EDNA_URL', 'https://www.furcom.org/eurofurence/edna.php'),
+    ],
 ];
