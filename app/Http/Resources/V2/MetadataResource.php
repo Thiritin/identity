@@ -14,6 +14,7 @@ class MetadataResource extends JsonResource
         return [
             'key' => $this->key,
             'value' => $this->value,
+            'expires_at' => $this->expires_at?->toIso8601String(),
         ];
     }
 }
