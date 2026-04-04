@@ -5,11 +5,13 @@ use App\Http\Controllers\Directory\DirectoryController;
 use App\Http\Controllers\Directory\DirectoryMemberController;
 use App\Http\Controllers\Directory\DirectoryTeamController;
 use App\Http\Controllers\Directory\StaffProfileController;
+use App\Http\Controllers\Profile\MyDataController;
 use App\Http\Controllers\Profile\SecurityController;
 use App\Http\Controllers\Profile\Settings\AppsController;
 use App\Http\Controllers\Profile\Settings\ChangeEmailController;
 use App\Http\Controllers\Profile\Settings\ConfirmPasswordController;
 use App\Http\Controllers\Profile\Settings\SessionController;
+use App\Http\Controllers\Profile\Settings\TelegramController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\BackupCodesController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\PasskeySetupController;
 use App\Http\Controllers\Profile\Settings\TwoFactor\SecurityKeySetupController;
@@ -120,6 +122,7 @@ Route::delete('/settings/security/sessions', [SessionController::class, 'destroy
 Route::post('/settings/security/confirm-password', ConfirmPasswordController::class)
     ->name('settings.security.confirm-password');
 
+Route::get('/settings/update-password', fn () => redirect('/settings/security', 301));
 Route::redirect('/settings/two-factor', '/settings/security', 301);
 Route::redirect('/settings/two-factor/totp', '/settings/security/totp', 301);
 Route::redirect('/settings/two-factor/yubikey', '/settings/security/yubikey', 301);
@@ -127,8 +130,19 @@ Route::redirect('/settings/two-factor/yubikey', '/settings/security/yubikey', 30
 Route::post('/profile/avatar/store', StoreAvatarController::class)
     ->name('profile.avatar.store');
 
+/** Telegram */
+Route::post('/settings/telegram/link-code', [TelegramController::class, 'generateCode'])
+    ->middleware('throttle:5,1')
+    ->name('settings.telegram.generate-code');
+Route::get('/settings/telegram/status', [TelegramController::class, 'status'])
+    ->name('settings.telegram.status');
+Route::delete('/settings/telegram', [TelegramController::class, 'disconnect'])
+    ->name('settings.telegram.disconnect');
+
 Route::post('/settings/preferences', UpdatePreferencesController::class)
     ->name('settings.preferences.update');
+
+Route::get('/my-data', MyDataController::class)->name('my-data');
 
 /** App Management (developers only) */
 Route::middleware('developer')->prefix('settings/apps')->name('settings.apps.')->group(function () {
@@ -149,13 +163,13 @@ Route::middleware('groupmember:staff')
     ->group(function () {
         Route::get('/', [DirectoryController::class, 'index'])->name('index');
         Route::get('/members/{user:hashid}', [StaffProfileController::class, 'show'])->name('members.show');
-        Route::get('/{group:hashid}', [DirectoryController::class, 'show'])->name('show');
-        Route::post('/{group:hashid}', [DirectoryController::class, 'update'])->name('update');
-        Route::delete('/{group:hashid}', [DirectoryController::class, 'destroy'])->name('destroy');
 
-        Route::post('/{group:hashid}/members', [DirectoryMemberController::class, 'store'])->name('members.store');
-        Route::patch('/{group:hashid}/members/{user:hashid}', [DirectoryMemberController::class, 'update'])->name('members.update');
-        Route::delete('/{group:hashid}/members/{user:hashid}', [DirectoryMemberController::class, 'destroy'])->name('members.destroy');
+        Route::post('/g/{group:hashid}', [DirectoryController::class, 'update'])->name('update');
+        Route::delete('/g/{group:hashid}', [DirectoryController::class, 'destroy'])->name('destroy');
+        Route::post('/g/{group:hashid}/members', [DirectoryMemberController::class, 'store'])->name('members.store');
+        Route::patch('/g/{group:hashid}/members/{user:hashid}', [DirectoryMemberController::class, 'update'])->name('members.update');
+        Route::delete('/g/{group:hashid}/members/{user:hashid}', [DirectoryMemberController::class, 'destroy'])->name('members.destroy');
+        Route::post('/g/{group:hashid}/teams', [DirectoryTeamController::class, 'store'])->name('teams.store');
 
-        Route::post('/{group:hashid}/teams', [DirectoryTeamController::class, 'store'])->name('teams.store');
+        Route::get('/{slug}', [DirectoryController::class, 'show'])->where('slug', '.*')->name('show');
     });
