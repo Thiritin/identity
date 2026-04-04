@@ -31,16 +31,22 @@ class DirectoryTreeBuilder
     private function buildTree(Collection $groups, ?int $parentId, array $myGroupIds): array
     {
         return $groups->where('parent_id', $parentId)
-            ->map(fn (Group $group) => [
-                'hashid' => $group->hashid,
-                'slug' => $group->slug,
-                'name' => $group->name,
-                'icon' => $group->icon,
-                'type' => $group->type->value,
-                'member_count' => $group->users_count,
-                'is_mine' => in_array($group->id, $myGroupIds),
-                'children' => $this->buildTree($groups, $group->id, $myGroupIds),
-            ])
+            ->map(function (Group $group) use ($groups, $myGroupIds) {
+                $children = $this->buildTree($groups, $group->id, $myGroupIds);
+
+                return [
+                    'hashid' => $group->hashid,
+                    'slug' => $group->slug,
+                    'name' => $group->name,
+                    'icon' => $group->icon,
+                    'type' => $group->type->value,
+                    'member_count' => $group->type === GroupTypeEnum::Division
+                        ? count($children)
+                        : $group->users_count,
+                    'is_mine' => in_array($group->id, $myGroupIds),
+                    'children' => $children,
+                ];
+            })
             ->values()
             ->all();
     }
