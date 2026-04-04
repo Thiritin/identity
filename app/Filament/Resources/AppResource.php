@@ -159,6 +159,10 @@ class AppResource extends Resource
                                 ->required(),
                             Toggle::make('approved')
                                 ->hint('Allow all users to log in with this app'),
+                            Toggle::make('allow_notifications')
+                                ->label('Allow Notifications')
+                                ->helperText('Enables the notification service for this app. Required before owners can register notification types.')
+                                ->default(false),
                         ]),
                     Section::make('Dashboard Settings')
                         ->description('These settings control the visibility of the app on the dashboard. This is NOT access control in any way.')
@@ -216,6 +220,7 @@ class AppResource extends Resource
                 TextColumn::make('owner.name'),
                 IconColumn::make('approved')->boolean(),
                 IconColumn::make('public')->boolean(),
+                IconColumn::make('allow_notifications')->boolean()->label('Notifications'),
                 TextColumn::make('starts_at')->dateTime()->sortable(),
                 TextColumn::make('ends_at')->dateTime()->sortable(),
             ])
