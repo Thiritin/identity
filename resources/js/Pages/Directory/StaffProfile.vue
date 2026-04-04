@@ -98,7 +98,10 @@
                 </div>
                 <div v-if="visibleFields.birthdate" class="px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5">
                     <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_birthdate') }}</dt>
-                    <dd class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ visibleFields.birthdate }}</dd>
+                    <dd class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        {{ formattedBirthdate }}
+                        <span class="text-gray-500 dark:text-gray-400 font-normal">({{ age }})</span>
+                    </dd>
                 </div>
                 <div v-if="visibleFields.phone" class="px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5">
                     <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_phone') }}</dt>
@@ -106,7 +109,11 @@
                 </div>
                 <div v-if="visibleFields.telegram" class="px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5">
                     <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_telegram') }}</dt>
-                    <dd class="text-sm font-medium text-gray-900 dark:text-gray-100">@{{ visibleFields.telegram }}</dd>
+                    <dd class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        <a :href="'https://t.me/' + visibleFields.telegram" target="_blank" class="text-primary-600 hover:text-primary-500 dark:text-primary-300 dark:hover:text-primary-200">
+                            @{{ visibleFields.telegram }}
+                        </a>
+                    </dd>
                 </div>
             </dl>
         </section>
@@ -120,7 +127,7 @@
             <div class="px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5">
                 <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_spoken_languages') }}</dt>
                 <dd class="flex flex-wrap gap-1 mt-1">
-                    <Badge v-for="lang in profileUser.spoken_languages" :key="lang" variant="secondary" class="text-xs">{{ lang }}</Badge>
+                    <Badge v-for="lang in profileUser.spoken_languages" :key="lang" variant="secondary" class="text-xs">{{ displayLanguage(lang) }}</Badge>
                 </dd>
             </div>
         </section>
@@ -164,6 +171,34 @@ const props = defineProps({
 })
 
 const showEditMember = ref(false)
+
+const formattedBirthdate = computed(() => {
+    if (!props.visibleFields?.birthdate) return ''
+    return new Date(props.visibleFields.birthdate).toLocaleDateString(undefined, {
+        year: 'numeric', month: 'long', day: 'numeric',
+    })
+})
+
+const age = computed(() => {
+    if (!props.visibleFields?.birthdate) return ''
+    const birth = new Date(props.visibleFields.birthdate)
+    const now = new Date()
+    let years = now.getFullYear() - birth.getFullYear()
+    const monthDiff = now.getMonth() - birth.getMonth()
+    if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birth.getDate())) {
+        years--
+    }
+    return years
+})
+
+const displayLanguage = (code) => {
+    try {
+        const name = new Intl.DisplayNames(undefined, { type: 'language' }).of(code)
+        return name ? name.charAt(0).toUpperCase() + name.slice(1) : code
+    } catch {
+        return code
+    }
+}
 
 const memberForModal = computed(() => ({
     hashid: props.profileUser.hashid,
