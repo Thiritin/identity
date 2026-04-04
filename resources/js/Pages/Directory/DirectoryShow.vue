@@ -9,7 +9,7 @@
                 :members="members"
                 :sub-groups="subGroups"
                 :can-edit="canEdit"
-                @toggle-edit="editMode = !editMode"
+                @toggle-edit="showEdit = true"
                 @add-member="showAddMember = true"
                 @create-sub-group="showCreateTeam = true"
             />
@@ -29,6 +29,13 @@
         :group-hashid="group.hashid"
         @close="showCreateTeam = false"
     />
+
+    <GroupEditModal
+        v-if="canEdit"
+        :open="showEdit"
+        :group="group"
+        @close="showEdit = false"
+    />
 </template>
 
 <script setup>
@@ -38,6 +45,7 @@ import DirectoryTree from './Components/DirectoryTree.vue'
 import GroupDetail from './Components/GroupDetail.vue'
 import MemberAddModal from './Components/MemberAddModal.vue'
 import TeamCreateModal from './Components/TeamCreateModal.vue'
+import GroupEditModal from './Components/GroupEditModal.vue'
 
 defineProps({
     tree: Array,
@@ -49,7 +57,7 @@ defineProps({
     canEdit: Boolean,
 })
 
-const editMode = ref(false)
+const showEdit = ref(false)
 const showAddMember = ref(false)
 const showCreateTeam = ref(false)
 </script>

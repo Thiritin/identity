@@ -3,6 +3,7 @@
         <div>
             <div class="flex items-center gap-2 mb-1">
                 <Badge variant="outline" class="text-xs capitalize">{{ group.type }}</Badge>
+                <component :is="iconMap[group.icon]" v-if="group.icon && iconMap[group.icon]" class="h-5 w-5 text-gray-400" />
                 <Button v-if="canEdit" variant="ghost" size="sm" @click="$emit('toggle-edit')">
                     <Pencil class="h-3.5 w-3.5 mr-1" /> {{ $t('directory_edit_group') }}
                 </Button>
@@ -59,6 +60,7 @@ import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { trans } from 'laravel-vue-i18n'
 import { Pencil, UserPlus, Plus } from 'lucide-vue-next'
+import { iconMap } from './iconMap'
 import GroupDescription from './GroupDescription.vue'
 import MemberList from './MemberList.vue'
 import SubGroupList from './SubGroupList.vue'
