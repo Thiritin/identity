@@ -91,6 +91,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'is_admin' => 'boolean',
         'is_developer' => 'boolean',
         'preferences' => 'array',
+        'notification_preferences' => 'array',
         'suspended_at' => 'datetime',
         'birthdate' => 'date',
         'spoken_languages' => 'array',
