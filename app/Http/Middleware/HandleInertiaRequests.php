@@ -57,10 +57,11 @@ class HandleInertiaRequests extends Middleware
                     ->where('type', 'department')
                     ->limit(10)
                     ->orderBy('name')
-                    ->get(['groups.id', 'groups.hashid', 'groups.name'])
+                    ->get(['groups.id', 'groups.hashid', 'groups.slug', 'groups.name'])
                     ->map(fn ($g) => [
                         'id' => $g->id,
                         'hashid' => $g->hashid,
+                        'slug' => $g->slug,
                         'name' => $g->name,
                         'title' => $g->pivot->title,
                         'level' => $g->pivot->level instanceof GroupUserLevel
@@ -82,7 +83,7 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'locale' => app()->getLocale(),
             'user' => Route::is(['auth.login.view']) ? null : $user,
-            'hideUserInfo' => Route::is(['auth.login.view', 'verification.notice']),
+            'hideUserInfo' => Route::is(['auth.login.view', 'verification.notice', 'auth.consent']),
             'staffMemberList' => $staffMembers,
         ]);
     }
