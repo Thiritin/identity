@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 use Log;
 
 class LoginController extends Controller
@@ -27,13 +28,28 @@ class LoginController extends Controller
         $email = Session::get('auth.email_flow.email');
         $loginChallenge = Session::get('auth.login_challenge.challenge');
 
-        if (! $email || ! $loginChallenge) {
+        if (! $loginChallenge) {
             return Redirect::route('auth.login.view');
+        }
+
+        if (! $email) {
+            $subject = Session::get('auth.login_challenge.subject', '');
+            $skipUser = $subject ? User::findByHashid($subject) : null;
+            if ($skipUser) {
+                $email = $skipUser->email;
+                Session::put('auth.email_flow.email', $email);
+            } else {
+                return Redirect::route('auth.login.view');
+            }
         }
 
         try {
             $hydra = new Client();
             $loginRequest = $hydra->getLoginRequest($loginChallenge);
+
+            if (isset($loginRequest['error'])) {
+                throw new \RuntimeException($loginRequest['error_description'] ?? 'Invalid login challenge');
+            }
         } catch (\Exception $e) {
             Session::forget('auth.email_flow');
             Session::forget('auth.login_challenge');
@@ -46,18 +62,18 @@ class LoginController extends Controller
             return Redirect::to($loginRequest['redirect_to']);
         }
 
-        // Check if user is allowed to skip login
-        $subject = $this->shouldSkipLogin($loginRequest);
+        $user = User::where('email', $email)->first();
 
-        if ($subject !== null) {
-            $skipUser = User::findByHashid($subject);
-            if ($skipUser && $skipUser->isSuspended()) {
-                return Redirect::route('auth.error', [
-                    'error' => 'account_suspended',
-                    'error_description' => trans('account_suspended'),
-                ]);
+        // Centralized enforcement checks (suspension + staff TOTP)
+        if ($user) {
+            $enforcement = $this->checkLoginEnforcement($user, $loginRequest);
+            if ($enforcement) {
+                return $enforcement;
             }
         }
+
+        // Check if user is allowed to skip login
+        $subject = $this->shouldSkipLogin($loginRequest);
 
         if ($subject !== null) {
             $emailVerified = $this->checkEmailVerification($loginRequest, $subject);
@@ -72,7 +88,6 @@ class LoginController extends Controller
 
         $requiresPow = RateLimiter::tooManyAttempts('login-pow:' . $request->ip(), 3);
 
-        $user = User::where('email', $email)->first();
         $hasPasskeys = $user ? $user->twoFactors()->where('type', TwoFactorTypeEnum::PASSKEY)->exists() : false;
 
         return Inertia::render('Auth/Login', [
@@ -106,7 +121,6 @@ class LoginController extends Controller
     {
         $request->validate([
             'credential' => 'required|string',
-            'remember' => 'nullable|boolean',
         ]);
 
         $email = Session::get('auth.email_flow.email');
@@ -119,13 +133,6 @@ class LoginController extends Controller
         $user = User::where('email', $email)->first();
         if (! $user) {
             throw ValidationException::withMessages(['credential' => 'User not found']);
-        }
-
-        if ($user->isSuspended()) {
-            return Redirect::route('auth.error', [
-                'error' => 'account_suspended',
-                'error_description' => trans('account_suspended'),
-            ]);
         }
 
         $limitKey = 'passkey-login-' . $user->id;
@@ -150,6 +157,11 @@ class LoginController extends Controller
             return Redirect::to($loginRequest['redirect_to']);
         }
 
+        $enforcement = $this->checkLoginEnforcement($user, $loginRequest);
+        if ($enforcement) {
+            return $enforcement;
+        }
+
         $emailVerified = $this->checkEmailVerification($loginRequest, $user);
         if ($emailVerified === false) {
             return Redirect::route('login.apps.redirect', ['app' => 'portal']);
@@ -164,18 +176,16 @@ class LoginController extends Controller
             return Redirect::signedRoute('auth.two-factor', [
                 'login_challenge' => $loginChallenge,
                 'user' => $user->hashid,
-                'remember' => $request->get('remember') ?? false,
             ], now()->addMinutes(30));
         }
 
-        $url = (new Client())->acceptLogin($user->hashid, $loginChallenge,
-            $request->get('remember') ? '2592000' : '3600');
+        Session::put('auth.pending_login', [
+            'user_hashid' => $user->hashid,
+            'login_challenge' => $loginChallenge,
+            'clear_pow_ip' => $request->ip(),
+        ]);
 
-        RateLimiter::clear('login-pow:' . $request->ip());
-        Session::forget('auth.email_flow');
-        Session::forget('auth.login_challenge');
-
-        return Inertia::location($url);
+        return Redirect::route('auth.remember-session');
     }
 
     public function submit(LoginRequest $request)
@@ -209,19 +219,17 @@ class LoginController extends Controller
         if (Auth::once($loginData) === true) {
             $user = Auth::user();
 
-            if ($user->isSuspended()) {
-                return Redirect::route('auth.error', [
-                    'error' => 'account_suspended',
-                    'error_description' => trans('account_suspended'),
-                ]);
-            }
-
             $hydra = new Client();
             $loginRequest = $hydra->getLoginRequest($loginChallenge);
 
             // redirect_to key is added when login request expired.
             if (isset($loginRequest['redirect_to'])) {
                 return Redirect::to($loginRequest['redirect_to']);
+            }
+
+            $enforcement = $this->checkLoginEnforcement($user, $loginRequest);
+            if ($enforcement) {
+                return $enforcement;
             }
 
             $emailVerified = $this->checkEmailVerification($loginRequest, $user);
@@ -233,19 +241,16 @@ class LoginController extends Controller
                 return Redirect::signedRoute('auth.two-factor', [
                     'login_challenge' => $loginChallenge,
                     'user' => $user->hashid,
-                    'remember' => $request->get('remember') ?? false,
                 ], now()->addMinutes(30));
             }
 
-            $url = (new Client())->acceptLogin($user->hashid, $loginChallenge,
-                $request->get('remember') ? '2592000' : '3600');
+            Session::put('auth.pending_login', [
+                'user_hashid' => $user->hashid,
+                'login_challenge' => $loginChallenge,
+                'clear_pow_ip' => $request->ip(),
+            ]);
 
-            RateLimiter::clear('login-pow:' . $request->ip());
-
-            Session::forget('auth.email_flow');
-            Session::forget('auth.login_challenge');
-
-            return Inertia::location($url);
+            return Redirect::route('auth.remember-session');
         }
 
         RateLimiter::hit('login-pow:' . $request->ip(), 60 * 60 * 24);
@@ -274,16 +279,47 @@ class LoginController extends Controller
         return null;
     }
 
+    private function isPortalClient(array $loginRequest): bool
+    {
+        $clientId = $loginRequest['client']['client_id'] ?? null;
+        if (! $clientId) {
+            return false;
+        }
+
+        return App::where('client_id', $clientId)->where('system_name', 'portal')->exists();
+    }
+
+    private function checkLoginEnforcement(User $user, array $loginRequest): ?InertiaResponse
+    {
+        if ($user->isSuspended()) {
+            return Inertia::render('Auth/Suspended');
+        }
+
+        if ($user->isStaff() && ! $this->isPortalClient($loginRequest)) {
+            $hasTotp = $user->twoFactors()->where('type', TwoFactorTypeEnum::TOTP)->exists();
+            if (! $hasTotp) {
+                return Inertia::render('Auth/StaffTotpRequired', [
+                    'portalLoginUrl' => route('login.apps.redirect', ['app' => 'portal']),
+                ]);
+            }
+        }
+
+        return null;
+    }
+
     private function checkEmailVerification($loginRequest, User|string $user)
     {
         // Get App
         $clientModel = App::where('client_id', $loginRequest['client']['client_id'])->first();
 
         if (! $clientModel) {
-            Session::forget('auth.email_flow');
-            Session::forget('auth.login_challenge');
+            $clientId = $loginRequest['client']['client_id'] ?? 'unknown';
+            Log::error('OAuth client not found in database', [
+                'client_id' => $clientId,
+                'available_apps' => App::pluck('client_id')->toArray(),
+            ]);
 
-            return false;
+            throw new \RuntimeException("OAuth client not configured: {$clientId}");
         }
         // Get User
         if (($user instanceof User) === false) {
