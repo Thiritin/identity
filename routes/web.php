@@ -24,11 +24,11 @@ use Spatie\Honeypot\ProtectAgainstSpam;
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('login', [EmailController::class, 'view'])->name('login.view');
     Route::post('login', [EmailController::class, 'submit'])
-        ->middleware([HandlePrecognitiveRequests::class, ProtectAgainstSpam::class, 'throttle:15,1'])
+        ->middleware([HandlePrecognitiveRequests::class, ProtectAgainstSpam::class, 'throttle:15,1,login-email'])
         ->name('login.submit');
     Route::get('login/password', [LoginController::class, 'view'])->name('login.password.view');
     Route::post('login/password', [LoginController::class, 'submit'])
-        ->middleware([HandlePrecognitiveRequests::class, ProtectAgainstSpam::class, 'throttle:10,1'])
+        ->middleware([HandlePrecognitiveRequests::class, ProtectAgainstSpam::class, 'throttle:10,1,login-password'])
         ->name('login.password.submit');
     Route::get('login/passkey/options', [LoginController::class, 'passkeyOptions'])
         ->name('login.passkey.options');
@@ -66,23 +66,23 @@ Route::prefix('auth')->name('auth.')->group(function () {
         // Register
         Route::get('register', [RegisterController::class, 'view'])->name('register.view');
         Route::post('register', RegisterController::class)
-            ->middleware(['guest', HandlePrecognitiveRequests::class, ProtectAgainstSpam::class, 'throttle:5,1'])
+            ->middleware(['guest', HandlePrecognitiveRequests::class, ProtectAgainstSpam::class, 'throttle:5,1,register'])
             ->name('register.store');
         Route::get('register/verify', [RegisterVerifyController::class, 'view'])->name('register.verify');
         Route::post('register/verify', [RegisterVerifyController::class, 'submit'])
-            ->middleware(['throttle:15,1'])
+            ->middleware(['throttle:15,1,register-verify'])
             ->name('register.verify.submit');
         Route::get('register/code', [VerifyCodeController::class, 'view'])->name('register.code');
         Route::post('register/code', [VerifyCodeController::class, 'submit'])
-            ->middleware(['throttle:5,5'])
+            ->middleware(['throttle:5,5,register-code'])
             ->name('register.code.submit');
         Route::post('register/code/resend', [VerifyCodeController::class, 'resend'])
-            ->middleware(['throttle:2,1'])
+            ->middleware(['throttle:2,1,register-code-resend'])
             ->name('register.code.resend');
         // Password Reset
         Route::inertia('forgot-password', 'Auth/ForgotPassword')->name('forgot-password.view');
         Route::post('forgot-password', ForgotPasswordController::class)
-            ->middleware([HandlePrecognitiveRequests::class, 'throttle:5,1'])
+            ->middleware([HandlePrecognitiveRequests::class, 'throttle:5,1,forgot-password'])
             ->name('forgot-password.store');
         // Set new Password
         Route::get('password-reset', [PasswordResetController::class, 'view'])->name('password-reset.view');
@@ -99,7 +99,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
     // OIDC Backchannel Logout
     Route::post('backchannel-logout', BackChannelLogoutController::class)
         ->withoutMiddleware([PreventRequestForgery::class])
-        ->middleware('throttle:60,1')
+        ->middleware('throttle:60,1,backchannel-logout')
         ->name('backchannel_logout');
 });
 
@@ -110,10 +110,10 @@ Route::get('auth/error', ErrorController::class)->name('auth.error');
 Route::prefix('auth')->middleware('auth')->group(function () {
     Route::get('verify', [VerifyEmailController::class, 'view'])->name('verification.notice');
     Route::post('verify', [VerifyEmailController::class, 'submit'])
-        ->middleware('throttle:10,5')
+        ->middleware('throttle:10,5,verify-email')
         ->name('verification.submit');
     Route::post('verify/resend', [VerifyEmailController::class, 'resend'])
-        ->middleware('throttle:5,1')
+        ->middleware('throttle:5,1,verify-email-resend')
         ->name('verification.resend');
 });
 

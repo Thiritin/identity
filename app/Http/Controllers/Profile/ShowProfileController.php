@@ -7,6 +7,8 @@ use App\Models\Convention;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use Locale;
+use ResourceBundle;
 
 class ShowProfileController extends Controller
 {
@@ -54,11 +56,22 @@ class ShowProfileController extends Controller
 
         $allConventions = Convention::query()->orderBy('year')->get(['id', 'name', 'year']);
 
+        $availableLanguages = collect(ResourceBundle::getLocales(''))
+            ->filter(fn (string $loc) => strlen($loc) === 2)
+            ->map(fn (string $loc) => [
+                'code' => $loc,
+                'name' => ucfirst(Locale::getDisplayLanguage($loc, $loc)),
+            ])
+            ->filter(fn (array $lang) => $lang['name'] !== $lang['code'])
+            ->sortBy('name')
+            ->values();
+
         return Inertia::render('Settings/Profile', [
             'staffProfile' => $staffProfile,
             'groupMemberships' => $groupMemberships,
             'conventionAttendance' => $conventionAttendance,
             'allConventions' => $allConventions,
+            'availableLanguages' => $availableLanguages,
             'telegram' => [
                 'linked' => $user->telegram_id !== null,
                 'username' => $user->telegram_username,

@@ -2,52 +2,6 @@
     <Head :title="$t('my_data_title')" />
 
     <div class="space-y-8">
-        <!-- Profile Data -->
-        <div class="grid md:grid-cols-3 gap-6 md:gap-10">
-            <div>
-                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ $t('my_data_profile_section') }}</h3>
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $t('my_data_profile_description') }}</p>
-                <Link :href="route('settings.profile')" class="mt-2 inline-block text-xs text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
-                    {{ $t('my_data_edit_profile') }} &rarr;
-                </Link>
-            </div>
-            <div class="md:col-span-2">
-                <dl class="divide-y divide-gray-200 dark:divide-gray-700">
-                    <DataField :label="$t('my_data_nickname')" :value="profile.name" />
-                    <DataField :label="$t('my_data_email')" :value="profile.email" />
-                    <DataField :label="$t('my_data_profile_photo')" :value="profile.profilePhotoPath ? '✓' : null" />
-                    <template v-if="isStaff">
-                        <DataField :label="$t('my_data_firstname')" :value="profile.firstname" />
-                        <DataField :label="$t('my_data_lastname')" :value="profile.lastname" />
-                        <DataField :label="$t('my_data_birthdate')" :value="profile.birthdate" />
-                        <DataField :label="$t('my_data_phone')" :value="profile.phone" />
-                        <DataField :label="$t('my_data_telegram')" :value="profile.telegram" />
-                        <DataField :label="$t('my_data_spoken_languages')" :value="profile.spokenLanguages?.join(', ')" />
-                        <DataField :label="$t('my_data_credit_as')" :value="profile.creditAs" />
-                        <DataField :label="$t('my_data_first_ef')" :value="profile.firstEurofurence" />
-                        <DataField :label="$t('my_data_first_year_staff')" :value="profile.firstYearStaff" />
-                    </template>
-                </dl>
-            </div>
-        </div>
-
-        <!-- Access Levels (staff only) -->
-        <div v-if="isStaff" class="grid md:grid-cols-3 gap-6 md:gap-10 border-t border-gray-200/50 dark:border-gray-700/50 pt-8">
-            <div>
-                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ $t('my_data_access_levels_title') }}</h3>
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $t('my_data_access_levels_description') }}</p>
-                <Link :href="route('settings.profile')" class="mt-2 inline-block text-xs text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
-                    {{ $t('my_data_edit_profile') }} &rarr;
-                </Link>
-            </div>
-            <div class="md:col-span-2 space-y-2">
-                <p class="text-sm text-gray-700 dark:text-gray-300">{{ $t('my_data_visibility_all_staff') }}</p>
-                <p class="text-sm text-gray-700 dark:text-gray-300">{{ $t('my_data_visibility_my_departments') }}</p>
-                <p class="text-sm text-gray-700 dark:text-gray-300">{{ $t('my_data_visibility_leads_and_directors') }}</p>
-                <p class="text-sm text-gray-700 dark:text-gray-300">{{ $t('my_data_visibility_directors_only') }}</p>
-            </div>
-        </div>
-
         <!-- Group Memberships (staff only) -->
         <div v-if="isStaff && groups?.length" class="grid md:grid-cols-3 gap-6 md:gap-10 border-t border-gray-200/50 dark:border-gray-700/50 pt-8">
             <div>
@@ -98,41 +52,47 @@
                 <div v-else-if="connectedApps.length === 0" class="py-4 text-sm text-gray-500 dark:text-gray-400">
                     {{ $t('my_data_apps_no_apps') }}
                 </div>
-                <div v-else class="space-y-4">
-                    <div v-for="app in connectedApps" :key="app.clientId" class="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                        <div class="flex items-start justify-between">
-                            <div class="flex items-center gap-3">
-                                <img v-if="app.image" :src="app.image" :alt="app.name" class="h-10 w-10 rounded-lg border border-gray-200 dark:border-gray-700 object-cover" />
-                                <div v-else class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800 text-lg font-semibold text-gray-400 dark:text-gray-500">
-                                    {{ app.name?.charAt(0)?.toUpperCase() }}
-                                </div>
-                                <div>
-                                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ app.name }}</p>
-                                    <p v-if="app.description" class="text-xs text-gray-500 dark:text-gray-400">{{ app.description }}</p>
+                <div v-else class="divide-y divide-gray-200 dark:divide-gray-700">
+                    <div v-for="app in connectedApps" :key="app.clientId">
+                        <button
+                            @click="toggleApp(app.clientId)"
+                            class="w-full flex items-center gap-3 py-3 text-left group"
+                        >
+                            <img v-if="app.image" :src="app.image" :alt="app.name" class="h-10 w-10 rounded-lg border border-gray-200 dark:border-gray-700 object-cover" />
+                            <div v-else class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800 text-lg font-semibold text-gray-400 dark:text-gray-500">
+                                {{ app.name?.charAt(0)?.toUpperCase() }}
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-sm font-medium text-gray-900 dark:text-white">{{ app.name }}</p>
+                                <p v-if="app.description" class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ app.description }}</p>
+                            </div>
+                            <ChevronDown class="h-4 w-4 shrink-0 text-gray-400 transition-transform" :class="{ 'rotate-180': expandedApps.has(app.clientId) }" />
+                        </button>
+                        <div v-if="expandedApps.has(app.clientId)" class="pb-4 pl-13 space-y-3">
+                            <div class="space-y-1">
+                                <p class="text-xs font-medium text-gray-600 dark:text-gray-400">{{ $t('my_data_apps_granted_scopes') }}</p>
+                                <div class="flex flex-wrap gap-1">
+                                    <span v-for="scope in app.scopes" :key="scope" class="inline-block text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                                        {{ scopeLabel(scope) }}
+                                    </span>
                                 </div>
                             </div>
-                            <a v-if="app.policyUri" :href="app.policyUri" target="_blank" class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">
-                                {{ $t('my_data_apps_privacy_policy') }}
-                            </a>
-                        </div>
-                        <div class="mt-3 space-y-1">
-                            <p class="text-xs font-medium text-gray-600 dark:text-gray-400">{{ $t('my_data_apps_granted_scopes') }}</p>
-                            <div class="flex flex-wrap gap-1">
-                                <span v-for="scope in app.scopes" :key="scope" class="inline-block text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
-                                    {{ scopeLabel(scope) }}
-                                </span>
+                            <div class="flex items-center justify-between">
+                                <div class="space-y-1">
+                                    <span v-if="app.consentedAt" class="block text-xs text-gray-500 dark:text-gray-400">
+                                        {{ $t('my_data_apps_consent_date') }}: {{ new Date(app.consentedAt).toLocaleDateString() }}
+                                    </span>
+                                    <a v-if="app.policyUri" :href="app.policyUri" target="_blank" class="block text-xs text-indigo-600 dark:text-indigo-400 hover:underline">
+                                        {{ $t('my_data_apps_privacy_policy') }}
+                                    </a>
+                                </div>
+                                <button
+                                    @click="revokeApp(app.clientId)"
+                                    class="text-xs text-red-600 hover:text-red-500 dark:text-red-400 dark:hover:text-red-300"
+                                >
+                                    {{ $t('my_data_apps_revoke') }}
+                                </button>
                             </div>
-                        </div>
-                        <div class="mt-3 flex items-center justify-between">
-                            <span v-if="app.consentedAt" class="text-xs text-gray-500 dark:text-gray-400">
-                                {{ $t('my_data_apps_consent_date') }}: {{ new Date(app.consentedAt).toLocaleDateString() }}
-                            </span>
-                            <button
-                                @click="revokeApp(app.clientId)"
-                                class="text-xs text-red-600 hover:text-red-500 dark:text-red-400 dark:hover:text-red-300"
-                            >
-                                {{ $t('my_data_apps_revoke') }}
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -209,14 +169,12 @@
 import { ref } from 'vue'
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
-import DataField from '@/Components/DataField.vue'
+import { ChevronDown } from 'lucide-vue-next'
 
 const props = defineProps({
-    profile: Object,
     isStaff: Boolean,
     groups: Array,
     conventions: Array,
-    visibility: Object,
     connectedApps: Array,
 })
 
@@ -232,6 +190,17 @@ const scopeLabels = {
 
 function scopeLabel(scope) {
     return scopeLabels[scope] ? trans(scopeLabels[scope]) : scope
+}
+
+// Expand/collapse app details
+const expandedApps = ref(new Set())
+
+function toggleApp(clientId) {
+    if (expandedApps.value.has(clientId)) {
+        expandedApps.value.delete(clientId)
+    } else {
+        expandedApps.value.add(clientId)
+    }
 }
 
 // Revoke app consent

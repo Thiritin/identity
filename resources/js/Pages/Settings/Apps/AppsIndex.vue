@@ -24,7 +24,7 @@
                 </Link>
             </div>
 
-            <div v-else class="flex items-center justify-center py-16">
+            <div v-else class="flex items-center justify-center py-16 text-center">
                 <p class="text-gray-400 dark:text-gray-500">{{ $t('apps_no_apps') }}</p>
             </div>
         </div>

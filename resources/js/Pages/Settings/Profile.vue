@@ -185,7 +185,7 @@
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('convention_attendance') }}</h3>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('convention_attendance_description') }}</p>
-                    <p class="text-xs text-amber-600 dark:text-amber-400 mt-2">{{ $t('convention_attendance_staff_note') }}</p>
+
                 </div>
                 <div class="md:col-span-2">
                     <ConventionAttendanceEditor
@@ -391,6 +391,7 @@ const props = defineProps({
     groupMemberships: Array,
     conventionAttendance: Array,
     allConventions: Array,
+    availableLanguages: Array,
     telegram: Object,
 })
 
@@ -580,28 +581,7 @@ function submitCreditAs() {
     creditAsForm.post(route('settings.staff-profile.credit-as'), { preserveScroll: true })
 }
 
-const availableLanguages = [
-    { code: 'en', name: 'English' },
-    { code: 'de', name: 'Deutsch' },
-    { code: 'fr', name: 'Français' },
-    { code: 'es', name: 'Español' },
-    { code: 'it', name: 'Italiano' },
-    { code: 'nl', name: 'Nederlands' },
-    { code: 'pt', name: 'Português' },
-    { code: 'pl', name: 'Polski' },
-    { code: 'cs', name: 'Čeština' },
-    { code: 'sv', name: 'Svenska' },
-    { code: 'da', name: 'Dansk' },
-    { code: 'fi', name: 'Suomi' },
-    { code: 'no', name: 'Norsk' },
-    { code: 'hu', name: 'Magyar' },
-    { code: 'ru', name: 'Русский' },
-    { code: 'ja', name: '日本語' },
-    { code: 'zh', name: '中文' },
-    { code: 'ko', name: '한국어' },
-]
-
-const languageMap = Object.fromEntries(availableLanguages.map(l => [l.code, l.name]))
+const languageMap = Object.fromEntries((props.availableLanguages ?? []).map(l => [l.code, l.name]))
 const languagePopoverOpen = ref(false)
 
 function getVisibility(field) { return staffForm.visibility[field] ?? 'all_staff' }

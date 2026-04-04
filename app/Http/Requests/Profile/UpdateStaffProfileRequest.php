@@ -5,6 +5,8 @@ namespace App\Http\Requests\Profile;
 use App\Enums\StaffProfileVisibility;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Locale;
+use ResourceBundle;
 
 class UpdateStaffProfileRequest extends FormRequest
 {
@@ -23,11 +25,21 @@ class UpdateStaffProfileRequest extends FormRequest
             'birthdate' => ['nullable', 'date', 'before:today'],
             'phone' => ['nullable', 'string', 'max:50'],
             'spoken_languages' => ['nullable', 'array'],
-            'spoken_languages.*' => ['string', 'max:5'],
+            'spoken_languages.*' => ['string', Rule::in($this->validLanguageCodes())],
             'credit_as' => ['nullable', 'string', 'max:100'],
             'visibility' => ['nullable', 'array'],
             'visibility.*' => [Rule::enum(StaffProfileVisibility::class)],
         ];
+    }
+
+    /** @return list<string> */
+    private function validLanguageCodes(): array
+    {
+        return collect(ResourceBundle::getLocales(''))
+            ->filter(fn (string $loc) => strlen($loc) === 2)
+            ->filter(fn (string $loc) => Locale::getDisplayLanguage($loc, $loc) !== $loc)
+            ->values()
+            ->all();
     }
 
     public function validated($key = null, $default = null): array
