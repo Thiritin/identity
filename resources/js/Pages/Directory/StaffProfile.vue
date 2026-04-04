@@ -46,7 +46,7 @@
                     <label class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_level') }}</label>
                     <Select v-model="memberForm.level">
                         <SelectTrigger class="mt-1 h-8 text-sm">
-                            <SelectValue />
+                            <SelectValue :placeholder="levelLabel" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="member">{{ $t('level_member') }}</SelectItem>
@@ -164,13 +164,14 @@
 
 <script setup>
 import { Head, Link, router } from '@inertiajs/vue3'
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import { Checkbox } from '@/Components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import ConventionAttendanceEditor from '@/Components/ConventionAttendanceEditor.vue'
+import { trans } from 'laravel-vue-i18n'
 
 const props = defineProps({
     breadcrumbs: Array,
@@ -190,6 +191,8 @@ const memberForm = reactive({
     can_manage_members: props.groupMembership?.can_manage_members ?? false,
     processing: false,
 })
+
+const levelLabel = computed(() => trans('level_' + (memberForm.level ?? 'member')))
 
 function saveMembership() {
     memberForm.processing = true
