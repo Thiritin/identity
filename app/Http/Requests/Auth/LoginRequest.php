@@ -11,7 +11,6 @@ class LoginRequest extends FormRequest
         return [
             'email' => 'required|email',
             'password' => 'required',
-            'remember' => 'required|bool',
             'altcha' => 'nullable|string',
         ];
     }
