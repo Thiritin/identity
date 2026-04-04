@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Enums\TwoFactorTypeEnum;
 use App\Models\User;
 use App\Services\BackupCodeService;
-use App\Services\Hydra\Client;
 use App\Services\WebAuthnService;
 use App\Services\YubicoService;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -28,19 +28,28 @@ class TwoFactorController extends Controller
             ->whereIn('type', [TwoFactorTypeEnum::TOTP, TwoFactorTypeEnum::YUBIKEY, TwoFactorTypeEnum::SECURITY_KEY])
             ->orderBy('last_used_at', 'desc')->get(['id', 'type', 'last_used_at']);
         if ($twoFactors->count() === 0) {
-            return redirect()->route('auth.error', ['error' => 'no_two_factor']);
+            $user = User::findByHashidOrFail($request->get('user'));
+
+            Session::put('auth.pending_login', [
+                'user_hashid' => $user->hashid,
+                'login_challenge' => $request->get('login_challenge'),
+            ]);
+
+            return Redirect::route('auth.remember-session');
         }
         // Get last used two factor method
         $lastUsed = $twoFactors->firstWhere('last_used_at', '!=', null)->type ?? $twoFactors->first()->type ?? null;
 
+        $user = User::findByHashidOrFail($request->get('user'));
+
         return Inertia::render('Auth/TwoFactor', [
             'twoFactors' => $twoFactors,
             'lastUsedMethod' => $lastUsed,
+            'hasBackupCodes' => $user->twoFactors()->where('type', TwoFactorTypeEnum::BackupCodes)->exists(),
             'submitFormUrl' => URL::signedRoute('auth.two-factor.submit',
                 [
                     'login_challenge' => $request->get('login_challenge'),
                     'user' => $request->get('user'),
-                    'remember' => $request->get('remember'),
                 ],
                 now()->addMinutes(30)),
             'securityKeyOptionsUrl' => URL::signedRoute('auth.two-factor.security-key.options', [
@@ -58,7 +67,6 @@ class TwoFactorController extends Controller
             'code' => 'required_unless:method,security_key|string|nullable',
             'method' => 'required|string|in:yubikey,totp,backup_code,security_key',
             'credential' => 'required_if:method,security_key|string|nullable',
-            'remember' => 'nullable|boolean',
         ]);
         $user = User::findByHashidOrFail($request->get('user'));
 
@@ -98,10 +106,12 @@ class TwoFactorController extends Controller
         } else {
             throw ValidationException::withMessages(['code' => 'Invalid two factor method.']);
         }
-        $url = (new Client())->acceptLogin($user->hashId(), $request->get('login_challenge'),
-            $request->get('remember') ? '2592000' : '3600');
+        Session::put('auth.pending_login', [
+            'user_hashid' => $user->hashid,
+            'login_challenge' => $request->get('login_challenge'),
+        ]);
 
-        return Inertia::location($url);
+        return Redirect::route('auth.remember-session');
     }
 
     public function securityKeyOptions(Request $request): JsonResponse
