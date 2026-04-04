@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Profile\UpdateOwnConventionAttendanceRequest;
+use App\Http\Requests\Profile\UpdateUserConventionAttendanceRequest;
+use App\Models\User;
 use Illuminate\Support\Facades\Redirect;
 
 class UpdateConventionAttendanceController extends Controller
@@ -40,6 +42,39 @@ class UpdateConventionAttendanceController extends Controller
                 abort(403, 'Cannot remove: you are marked as staff for this convention.');
             }
 
+            $user->conventions()->detach($conventionId);
+        }
+
+        return Redirect::back();
+    }
+
+    public function updateForUser(UpdateUserConventionAttendanceRequest $request, User $user)
+    {
+        $conventionId = $request->validated('convention_id');
+        $action = $request->validated('action');
+
+        if ($action === 'add') {
+            $user->conventions()->attach($conventionId, [
+                'is_attended' => $request->boolean('is_attended', true),
+                'is_staff' => $request->boolean('is_staff', false),
+            ]);
+        }
+
+        if ($action === 'update') {
+            $data = [];
+
+            if ($request->has('is_attended')) {
+                $data['is_attended'] = $request->boolean('is_attended');
+            }
+
+            if ($request->has('is_staff')) {
+                $data['is_staff'] = $request->boolean('is_staff');
+            }
+
+            $user->conventions()->updateExistingPivot($conventionId, $data);
+        }
+
+        if ($action === 'remove') {
             $user->conventions()->detach($conventionId);
         }
 

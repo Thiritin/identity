@@ -173,6 +173,8 @@ Route::middleware('groupmember:staff')
     ->group(function () {
         Route::get('/', [DirectoryController::class, 'index'])->name('index');
         Route::get('/members/{user:hashid}', [StaffProfileController::class, 'show'])->name('members.show');
+        Route::post('/members/{user:hashid}/conventions', [UpdateConventionAttendanceController::class, 'updateForUser'])
+            ->name('members.conventions');
 
         Route::post('/g/{group:hashid}', [DirectoryController::class, 'update'])->name('update');
         Route::delete('/g/{group:hashid}', [DirectoryController::class, 'destroy'])->name('destroy');
