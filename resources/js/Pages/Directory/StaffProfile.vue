@@ -25,7 +25,7 @@
                 <Link
                     v-for="group in groups"
                     :key="group.hashid"
-                    :href="route('directory.show', group.hashid)"
+                    :href="route('directory.show', group.slug)"
                     class="flex items-center justify-between px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
                 >
                     <div>
@@ -65,24 +65,25 @@
             </dl>
         </section>
 
-        <section v-if="profileUser.spoken_languages?.length || profileUser.first_eurofurence" class="mb-6">
-            <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">{{ $t('staff_profile_languages_history') }}</h2>
-            <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div v-if="profileUser.spoken_languages?.length" class="px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5">
-                    <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_spoken_languages') }}</dt>
-                    <dd class="flex flex-wrap gap-1 mt-1">
-                        <Badge v-for="lang in profileUser.spoken_languages" :key="lang" variant="secondary" class="text-xs">{{ lang }}</Badge>
-                    </dd>
-                </div>
-                <div v-if="profileUser.first_eurofurence" class="px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5">
-                    <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_first_ef') }}</dt>
-                    <dd class="text-sm font-medium text-gray-900 dark:text-gray-100">EF {{ profileUser.first_eurofurence }}</dd>
-                </div>
-                <div v-if="profileUser.first_year_staff" class="px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5">
-                    <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_first_year_staff') }}</dt>
-                    <dd class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ profileUser.first_year_staff }}</dd>
-                </div>
-            </dl>
+        <section v-if="profileUser.spoken_languages?.length" class="mb-6">
+            <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">{{ $t('staff_profile_skills') }}</h2>
+            <div class="px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5">
+                <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_spoken_languages') }}</dt>
+                <dd class="flex flex-wrap gap-1 mt-1">
+                    <Badge v-for="lang in profileUser.spoken_languages" :key="lang" variant="secondary" class="text-xs">{{ lang }}</Badge>
+                </dd>
+            </div>
+        </section>
+
+        <section class="mb-6">
+            <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">{{ $t('convention_attendance') }}</h2>
+            <ConventionAttendanceEditor
+                :attendance="conventionAttendance"
+                :all-conventions="allConventions"
+                :can-manage="canManageAttendance"
+                :readonly="!canManageAttendance"
+                :endpoint="canManageAttendance ? route('directory.members.conventions', profileUser.hashid) : ''"
+            />
         </section>
     </div>
 </template>
@@ -91,11 +92,15 @@
 import { Head, Link } from '@inertiajs/vue3'
 import { Badge } from '@/Components/ui/badge'
 import { ArrowLeft } from 'lucide-vue-next'
+import ConventionAttendanceEditor from '@/Components/ConventionAttendanceEditor.vue'
 
 defineProps({
     profileUser: Object,
     groups: Array,
     visibleFields: Object,
+    conventionAttendance: Array,
+    allConventions: Array,
+    canManageAttendance: Boolean,
 })
 
 function isLead(level) {
