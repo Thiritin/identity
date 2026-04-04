@@ -121,11 +121,15 @@ class Group extends Model
     private function buildHierarchicalSlug(string $name): string
     {
         $segments = [];
-        $parent = $this->parent;
+        $parentId = $this->parent_id;
 
-        while ($parent && $parent->type !== GroupTypeEnum::Root) {
+        while ($parentId) {
+            $parent = self::find($parentId);
+            if (! $parent || $parent->type === GroupTypeEnum::Root) {
+                break;
+            }
             $segments[] = Str::slug($parent->name);
-            $parent = $parent->parent;
+            $parentId = $parent->parent_id;
         }
 
         $segments = array_reverse($segments);
