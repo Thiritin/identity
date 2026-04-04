@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Profile;
 
 use App\Enums\StaffProfileVisibility;
-use App\Support\EurofurenceEdition;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -14,7 +13,7 @@ class UpdateStaffProfileRequest extends FormRequest
         return $this->user()->isStaff();
     }
 
-    private const VISIBILITY_FIELDS = ['firstname', 'lastname', 'birthdate', 'telegram', 'phone'];
+    private const VISIBILITY_FIELDS = ['firstname', 'lastname', 'birthdate', 'phone'];
 
     public function rules(): array
     {
@@ -26,8 +25,6 @@ class UpdateStaffProfileRequest extends FormRequest
             'spoken_languages' => ['nullable', 'array'],
             'spoken_languages.*' => ['string', 'max:5'],
             'credit_as' => ['nullable', 'string', 'max:100'],
-            'first_eurofurence' => ['nullable', 'integer', 'min:1', 'max:' . EurofurenceEdition::currentEf()],
-            'first_year_staff' => ['nullable', 'integer', 'min:1995', 'max:' . date('Y')],
             'visibility' => ['nullable', 'array'],
             'visibility.*' => [Rule::enum(StaffProfileVisibility::class)],
         ];

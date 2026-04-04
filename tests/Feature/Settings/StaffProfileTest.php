@@ -2,6 +2,7 @@
 
 use App\Enums\GroupUserLevel;
 use App\Models\Group;
+use App\Models\TwoFactor;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -12,6 +13,7 @@ function createStaffUser(): User
     $user = User::factory()->create();
     $staffGroup = Group::factory()->create(['system_name' => 'staff']);
     $user->groups()->attach($staffGroup, ['level' => GroupUserLevel::Member]);
+    $user->twoFactors()->save(TwoFactor::factory()->totp()->make());
 
     return $user;
 }
@@ -25,8 +27,6 @@ it('allows staff to update their profile', function () {
             'lastname' => 'Doe',
             'phone' => '+49123456789',
             'credit_as' => 'JohnD',
-            'first_eurofurence' => 25,
-            'first_year_staff' => 2019,
             'spoken_languages' => ['en', 'de'],
             'visibility' => [
                 'firstname' => 'all_staff',
@@ -41,8 +41,6 @@ it('allows staff to update their profile', function () {
     expect($user->lastname)->toBe('Doe');
     expect($user->phone)->toBe('+49123456789');
     expect($user->credit_as)->toBe('JohnD');
-    expect($user->first_eurofurence)->toBe(25);
-    expect($user->first_year_staff)->toBe(2019);
     expect($user->spoken_languages)->toBe(['en', 'de']);
     expect($user->staff_profile_visibility)->toEqual([
         'firstname' => 'all_staff',
@@ -75,26 +73,6 @@ it('validates field types', function () {
             'firstname' => str_repeat('a', 101),
         ])
         ->assertSessionHasErrors('firstname');
-});
-
-it('validates first_eurofurence range', function () {
-    $user = createStaffUser();
-
-    $this->actingAs($user)
-        ->post(route('settings.staff-profile.update'), [
-            'first_eurofurence' => 0,
-        ])
-        ->assertSessionHasErrors('first_eurofurence');
-});
-
-it('validates first_year_staff range', function () {
-    $user = createStaffUser();
-
-    $this->actingAs($user)
-        ->post(route('settings.staff-profile.update'), [
-            'first_year_staff' => 1990,
-        ])
-        ->assertSessionHasErrors('first_year_staff');
 });
 
 it('validates visibility values against enum', function () {
