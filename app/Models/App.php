@@ -18,6 +18,7 @@ class App extends Model
         'skip_consent' => 'boolean',
         'approved' => 'boolean',
         'first_party' => 'boolean',
+        'allow_notifications' => 'boolean',
     ];
 
     public function owner(): BelongsTo
