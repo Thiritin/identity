@@ -2,6 +2,7 @@
 
 use App\Enums\GroupUserLevel;
 use App\Models\Group;
+use App\Models\TwoFactor;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -28,6 +29,7 @@ it('passes staff profile data when user is staff', function () {
     $department = Group::factory()->create(['type' => 'department', 'name' => 'Art']);
 
     $user->groups()->attach($staffGroup, ['level' => GroupUserLevel::Member]);
+    $user->twoFactors()->save(TwoFactor::factory()->totp()->make());
     $user->groups()->attach($department, [
         'level' => GroupUserLevel::Member,
         'title' => 'Artist',
@@ -41,7 +43,8 @@ it('passes staff profile data when user is staff', function () {
             ->component('Settings/Profile')
             ->has('staffProfile')
             ->has('groupMemberships')
-            ->has('eurofurenceEditions')
+            ->has('conventionAttendance')
+            ->has('allConventions')
         );
 });
 

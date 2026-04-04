@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Directory;
 use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
 use App\Http\Controllers\Controller;
+use App\Models\Convention;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -22,6 +23,7 @@ class StaffProfileController extends Controller
             ->get()
             ->map(fn ($g) => [
                 'hashid' => $g->hashid,
+                'slug' => $g->slug,
                 'name' => $g->name,
                 'type' => $g->type->value,
                 'title' => $g->pivot->title,
@@ -38,6 +40,22 @@ class StaffProfileController extends Controller
             ])
             ->all();
 
+        $conventionAttendance = $user->conventions()
+            ->orderByDesc('year')
+            ->get()
+            ->map(fn ($convention) => [
+                'id' => $convention->id,
+                'name' => $convention->name,
+                'year' => $convention->year,
+                'is_attended' => (bool) $convention->pivot->is_attended,
+                'is_staff' => (bool) $convention->pivot->is_staff,
+            ]);
+
+        $canManageAttendance = $this->canManageUser($viewer, $user);
+        $allConventions = $canManageAttendance
+            ? Convention::query()->orderBy('year')->get(['id', 'name', 'year'])
+            : null;
+
         return Inertia::render('Directory/StaffProfile', [
             'profileUser' => [
                 'hashid' => $user->hashid,
@@ -46,12 +64,33 @@ class StaffProfileController extends Controller
                     ? Storage::disk('s3-avatars')->url($user->profile_photo_path)
                     : null,
                 'spoken_languages' => $user->spoken_languages,
-                'first_eurofurence' => $user->first_eurofurence,
-                'first_year_staff' => $user->first_year_staff,
                 'credit_as' => $user->credit_as,
             ],
             'groups' => $groups,
             'visibleFields' => $visibleFields,
+            'conventionAttendance' => $conventionAttendance,
+            'allConventions' => $allConventions,
+            'canManageAttendance' => $canManageAttendance,
         ]);
+    }
+
+    private function canManageUser(User $viewer, User $target): bool
+    {
+        $targetGroupIds = $target->groups()
+            ->whereIn('groups.type', [
+                GroupTypeEnum::Department->value,
+                GroupTypeEnum::Division->value,
+                GroupTypeEnum::Team->value,
+            ])
+            ->pluck('groups.id');
+
+        if ($targetGroupIds->isEmpty()) {
+            return false;
+        }
+
+        return $viewer->groups()
+            ->whereIn('groups.id', $targetGroupIds)
+            ->get()
+            ->contains(fn ($group) => $group->pivot->canManageMembers());
     }
 }

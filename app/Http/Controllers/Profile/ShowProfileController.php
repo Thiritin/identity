@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Controller;
-use App\Support\EurofurenceEdition;
+use App\Models\Convention;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -17,7 +17,6 @@ class ShowProfileController extends Controller
 
         $staffProfile = null;
         $groupMemberships = null;
-        $eurofurenceEditions = null;
 
         if ($isStaff) {
             $staffProfile = [
@@ -25,12 +24,8 @@ class ShowProfileController extends Controller
                 'lastname' => $user->lastname,
                 'birthdate' => $user->birthdate?->format('Y-m-d'),
                 'phone' => $user->phone,
-                'telegram_id' => $user->telegram_id,
-                'telegram_username' => $user->telegram_username,
                 'spoken_languages' => $user->spoken_languages ?? [],
                 'credit_as' => $user->credit_as,
-                'first_eurofurence' => $user->first_eurofurence,
-                'first_year_staff' => $user->first_year_staff,
                 'visibility' => $user->staff_profile_visibility ?? [],
             ];
 
@@ -44,14 +39,30 @@ class ShowProfileController extends Controller
                     'level' => $group->pivot->level->value,
                     'credit_as' => $group->pivot->credit_as,
                 ]);
-
-            $eurofurenceEditions = EurofurenceEdition::allEditions();
         }
+
+        $conventionAttendance = $user->conventions()
+            ->orderByDesc('year')
+            ->get()
+            ->map(fn ($convention) => [
+                'id' => $convention->id,
+                'name' => $convention->name,
+                'year' => $convention->year,
+                'is_attended' => (bool) $convention->pivot->is_attended,
+                'is_staff' => (bool) $convention->pivot->is_staff,
+            ]);
+
+        $allConventions = Convention::query()->orderBy('year')->get(['id', 'name', 'year']);
 
         return Inertia::render('Settings/Profile', [
             'staffProfile' => $staffProfile,
             'groupMemberships' => $groupMemberships,
-            'eurofurenceEditions' => $eurofurenceEditions,
+            'conventionAttendance' => $conventionAttendance,
+            'allConventions' => $allConventions,
+            'telegram' => [
+                'linked' => $user->telegram_id !== null,
+                'username' => $user->telegram_username,
+            ],
         ]);
     }
 }
