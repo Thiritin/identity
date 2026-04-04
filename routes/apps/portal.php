@@ -5,7 +5,10 @@ use App\Http\Controllers\Directory\DirectoryController;
 use App\Http\Controllers\Directory\DirectoryMemberController;
 use App\Http\Controllers\Directory\DirectoryTeamController;
 use App\Http\Controllers\Directory\StaffProfileController;
+use App\Http\Controllers\Profile\DeleteAccountController;
+use App\Http\Controllers\Profile\ExportMyDataController;
 use App\Http\Controllers\Profile\MyDataController;
+use App\Http\Controllers\Profile\RevokeAppConsentController;
 use App\Http\Controllers\Profile\SecurityController;
 use App\Http\Controllers\Profile\Settings\AppsController;
 use App\Http\Controllers\Profile\Settings\ChangeEmailController;
@@ -108,6 +111,9 @@ Route::middleware('sudo')->group(function () {
         ->middleware([HandlePrecognitiveRequests::class])
         ->name('settings.two-factor.backup-codes.regenerate');
 
+    Route::get('/my-data/export', ExportMyDataController::class)->name('my-data.export');
+    Route::delete('/my-data/account', DeleteAccountController::class)->name('my-data.delete-account');
+
 });
 
 /** Sessions */
@@ -143,6 +149,7 @@ Route::post('/settings/preferences', UpdatePreferencesController::class)
     ->name('settings.preferences.update');
 
 Route::get('/my-data', MyDataController::class)->name('my-data');
+Route::delete('/my-data/apps/{clientId}', RevokeAppConsentController::class)->name('my-data.revoke-app');
 
 /** App Management (developers only) */
 Route::middleware('developer')->prefix('settings/apps')->name('settings.apps.')->group(function () {
