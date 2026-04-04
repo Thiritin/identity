@@ -10,6 +10,7 @@ use App\Http\Controllers\Profile\DeleteAccountController;
 use App\Http\Controllers\Profile\ExportMyDataController;
 use App\Http\Controllers\Profile\MyDataController;
 use App\Http\Controllers\Profile\NotificationPreferencesController;
+use App\Http\Controllers\Profile\NotificationsController;
 use App\Http\Controllers\Profile\RevokeAppConsentController;
 use App\Http\Controllers\Profile\SecurityController;
 use App\Http\Controllers\Profile\Settings\Apps\NotificationTypesController;
@@ -158,6 +159,14 @@ Route::get('/settings/notifications', [NotificationPreferencesController::class,
     ->name('settings.notifications.edit');
 Route::post('/settings/notifications', [NotificationPreferencesController::class, 'update'])
     ->name('settings.notifications.update');
+
+/** Notifications feed */
+Route::get('/notifications', [NotificationsController::class, 'index'])->name('notifications.index');
+Route::get('/notifications/recent', [NotificationsController::class, 'recent'])->name('notifications.recent');
+Route::post('/notifications/read-all', [NotificationsController::class, 'markAllRead'])->name('notifications.markAllRead');
+Route::post('/notifications/{id}/read', [NotificationsController::class, 'markRead'])->name('notifications.markRead')->whereNumber('id');
+Route::delete('/notifications', [NotificationsController::class, 'clearAll'])->name('notifications.clearAll');
+Route::delete('/notifications/{id}', [NotificationsController::class, 'destroy'])->name('notifications.destroy')->whereNumber('id');
 
 Route::get('/my-data', MyDataController::class)->name('my-data');
 Route::delete('/my-data/apps/{clientId}', RevokeAppConsentController::class)->name('my-data.revoke-app');

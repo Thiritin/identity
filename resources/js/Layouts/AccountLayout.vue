@@ -24,6 +24,9 @@
                                 {{ tab.name }}
                             </component>
                             <div class="flex-1" />
+                            <div class="flex items-center px-2">
+                                <NotificationBell />
+                            </div>
                             <template v-for="tab in rightTabs" :key="tab.name">
                                 <component
                                     :is="tab.external ? 'a' : Link"
@@ -185,6 +188,7 @@ import { trans } from 'laravel-vue-i18n'
 import { useTheme } from '@/Composables/useTheme'
 import SkipToContent from '@/Components/SkipToContent.vue'
 import DirectoryTree from '@/Pages/Directory/Components/DirectoryTree.vue'
+import NotificationBell from '@/Components/notifications/NotificationBell.vue'
 
 const { darkMode } = useTheme()
 const page = usePage()
