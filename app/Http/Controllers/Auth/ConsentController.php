@@ -54,8 +54,6 @@ class ConsentController extends Controller
                 return redirect($response['redirect_to']);
             }
 
-            $this->recordSession($consentRequest, $user);
-
             $client = $consentRequest['client'] ?? [];
 
             return Inertia::render('Auth/Consent', [

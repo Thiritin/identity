@@ -24,7 +24,7 @@ it('invalidates a single Hydra session by sid', function () {
     });
 });
 
-it('records an oauth session on consent flow', function () {
+it('records an oauth session on consent accept', function () {
     $user = User::factory()->create();
 
     Http::fake([
@@ -41,7 +41,7 @@ it('records an oauth session on consent flow', function () {
         ]),
     ]);
 
-    $this->get(route('auth.consent', ['consent_challenge' => 'consent-challenge-123']));
+    $this->post(route('auth.consent.accept'), ['consent_challenge' => 'consent-challenge-123']);
 
     $session = OauthSession::where('session_id', 'hydra-session-uuid-abc')->first();
     expect($session)->not->toBeNull();
@@ -49,7 +49,7 @@ it('records an oauth session on consent flow', function () {
     expect($session->client_ids)->toBe(['test-client-id']);
 });
 
-it('updates existing oauth session on repeat consent', function () {
+it('updates existing oauth session on repeat consent accept', function () {
     $user = User::factory()->create();
 
     $session = OauthSession::create([
@@ -78,7 +78,7 @@ it('updates existing oauth session on repeat consent', function () {
         ]),
     ]);
 
-    $this->get(route('auth.consent', ['consent_challenge' => 'consent-challenge-456']));
+    $this->post(route('auth.consent.accept'), ['consent_challenge' => 'consent-challenge-456']);
 
     expect(OauthSession::where('session_id', 'hydra-session-uuid-abc')->count())->toBe(1);
 
