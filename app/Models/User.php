@@ -56,6 +56,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'spoken_languages',
         'credit_as',
         'staff_profile_visibility',
+        'nda_verified_at',
     ];
 
     /**
@@ -75,6 +76,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'telegram_id',
         'telegram_username',
         'staff_profile_visibility',
+        'nda_verified_at',
     ];
 
     /**
@@ -92,6 +94,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'birthdate' => 'date',
         'spoken_languages' => 'array',
         'staff_profile_visibility' => 'array',
+        'nda_verified_at' => 'datetime',
     ];
 
     /**
@@ -270,6 +273,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             'credit_as',
             'staff_profile_visibility',
             'preferences',
+            'nda_verified_at',
         ]);
     }
 
