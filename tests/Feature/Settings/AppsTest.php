@@ -50,7 +50,7 @@ test('non-developer user cannot access apps', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->get(route('settings.apps.index'))
+        ->get(route('developers.index'))
         ->assertForbidden();
 });
 
@@ -60,7 +60,7 @@ test('developer user can list their own apps', function () {
     $app = App::factory()->create(['user_id' => $user->id]);
 
     $this->actingAs($user)
-        ->get(route('settings.apps.index'))
+        ->get(route('developers.index'))
         ->assertSuccessful()
         ->assertInertia(fn ($page) => $page
             ->component('Settings/Apps/AppsIndex', false)
@@ -75,7 +75,7 @@ test('developer user cannot see other users apps', function () {
     App::factory()->create(['user_id' => $otherUser->id]);
 
     $this->actingAs($user)
-        ->get(route('settings.apps.index'))
+        ->get(route('developers.index'))
         ->assertSuccessful()
         ->assertInertia(fn ($page) => $page
             ->component('Settings/Apps/AppsIndex', false)
@@ -88,7 +88,7 @@ test('developer user can view create form', function () {
     $user = createDeveloperUser();
 
     $this->actingAs($user)
-        ->get(route('settings.apps.create'))
+        ->get(route('developers.create'))
         ->assertSuccessful()
         ->assertInertia(fn ($page) => $page
             ->component('Settings/Apps/AppCreate', false)
@@ -101,7 +101,7 @@ test('developer user can create an app', function () {
     $user = createDeveloperUser();
 
     $response = $this->actingAs($user)
-        ->post(route('settings.apps.store'), [
+        ->post(route('developers.store'), [
             'client_name' => 'My New App',
             'redirect_uris' => ['https://myapp.com/callback'],
             'post_logout_redirect_uris' => ['https://myapp.com/logout'],
@@ -125,7 +125,7 @@ test('developer user can view their own app', function () {
     $app = App::factory()->create(['user_id' => $user->id]);
 
     $this->actingAs($user)
-        ->get(route('settings.apps.show', $app))
+        ->get(route('developers.show', $app))
         ->assertSuccessful()
         ->assertInertia(fn ($page) => $page
             ->component('Settings/Apps/AppShow', false)
@@ -139,7 +139,7 @@ test('developer user cannot view another users app', function () {
     $otherApp = App::factory()->create();
 
     $this->actingAs($user)
-        ->get(route('settings.apps.show', $otherApp))
+        ->get(route('developers.show', $otherApp))
         ->assertForbidden();
 });
 
@@ -149,7 +149,7 @@ test('developer user can edit their own app', function () {
     $app = App::factory()->create(['user_id' => $user->id]);
 
     $this->actingAs($user)
-        ->get(route('settings.apps.edit', $app))
+        ->get(route('developers.edit', $app))
         ->assertSuccessful()
         ->assertInertia(fn ($page) => $page
             ->component('Settings/Apps/AppEdit', false)
@@ -164,7 +164,7 @@ test('developer user cannot edit another users app', function () {
     $otherApp = App::factory()->create();
 
     $this->actingAs($user)
-        ->get(route('settings.apps.edit', $otherApp))
+        ->get(route('developers.edit', $otherApp))
         ->assertForbidden();
 });
 
@@ -174,7 +174,7 @@ test('developer user can update their own app', function () {
     $app = App::factory()->create(['user_id' => $user->id, 'client_id' => 'test-client-id']);
 
     $this->actingAs($user)
-        ->put(route('settings.apps.update', $app), [
+        ->put(route('developers.update', $app), [
             'client_name' => 'Updated Name',
             'redirect_uris' => ['https://updated.com/callback'],
             'scope' => ['openid', 'email'],
@@ -191,7 +191,7 @@ test('developer user cannot update another users app', function () {
     $otherApp = App::factory()->create();
 
     $this->actingAs($user)
-        ->put(route('settings.apps.update', $otherApp), [
+        ->put(route('developers.update', $otherApp), [
             'client_name' => 'Hacked',
             'redirect_uris' => ['https://evil.com/callback'],
         ])
@@ -204,8 +204,8 @@ test('developer user can delete their own app', function () {
     $app = App::factory()->create(['user_id' => $user->id, 'client_id' => 'test-client-id']);
 
     $this->actingAs($user)
-        ->delete(route('settings.apps.destroy', $app))
-        ->assertRedirect(route('settings.apps.index'));
+        ->delete(route('developers.destroy', $app))
+        ->assertRedirect(route('developers.index'));
 
     expect(App::find($app->id))->toBeNull();
 });
@@ -216,7 +216,7 @@ test('developer user cannot delete another users app', function () {
     $otherApp = App::factory()->create();
 
     $this->actingAs($user)
-        ->delete(route('settings.apps.destroy', $otherApp))
+        ->delete(route('developers.destroy', $otherApp))
         ->assertForbidden();
 });
 
@@ -226,7 +226,7 @@ test('developer user can regenerate secret for their own app', function () {
     $app = App::factory()->create(['user_id' => $user->id, 'client_id' => 'test-client-id']);
 
     $this->actingAs($user)
-        ->post(route('settings.apps.regenerate-secret', $app))
+        ->post(route('developers.regenerate-secret', $app))
         ->assertSuccessful()
         ->assertInertia(fn ($page) => $page
             ->component('Settings/Apps/AppEdit', false)
@@ -243,7 +243,7 @@ test('developer user cannot regenerate secret for another users app', function (
     $otherApp = App::factory()->create();
 
     $this->actingAs($user)
-        ->post(route('settings.apps.regenerate-secret', $otherApp))
+        ->post(route('developers.regenerate-secret', $otherApp))
         ->assertForbidden();
 });
 
@@ -252,7 +252,7 @@ test('create app validation requires client_name and redirect_uris', function ()
     $user = createDeveloperUser();
 
     $this->actingAs($user)
-        ->post(route('settings.apps.store'), [])
+        ->post(route('developers.store'), [])
         ->assertSessionHasErrors(['client_name', 'redirect_uris']);
 });
 
@@ -261,7 +261,7 @@ test('create app validation requires valid urls in redirect_uris', function () {
     $user = createDeveloperUser();
 
     $this->actingAs($user)
-        ->post(route('settings.apps.store'), [
+        ->post(route('developers.store'), [
             'client_name' => 'Test',
             'redirect_uris' => ['not-a-url'],
         ])

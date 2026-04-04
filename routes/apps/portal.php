@@ -155,7 +155,7 @@ Route::get('/my-data', MyDataController::class)->name('my-data');
 Route::delete('/my-data/apps/{clientId}', RevokeAppConsentController::class)->name('my-data.revoke-app');
 
 /** App Management (developers only) */
-Route::middleware('developer')->prefix('settings/apps')->name('settings.apps.')->group(function () {
+Route::middleware('developer')->prefix('developers')->name('developers.')->group(function () {
     Route::get('/', [AppsController::class, 'index'])->name('index');
     Route::get('/create', [AppsController::class, 'create'])->name('create');
     Route::post('/', [AppsController::class, 'store'])->name('store');

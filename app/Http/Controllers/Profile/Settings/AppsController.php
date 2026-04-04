@@ -16,13 +16,14 @@ class AppsController extends Controller
     public function index()
     {
         $apps = auth()->user()->apps()
-            ->select('id', 'client_id', 'data', 'created_at')
+            ->select('id', 'client_id', 'data', 'approved', 'created_at')
             ->latest()
             ->get()
             ->map(fn (App $app) => [
                 'id' => $app->id,
                 'client_id' => $app->client_id,
                 'client_name' => $app->data['client_name'] ?? '',
+                'approved' => $app->isApproved(),
                 'created_at' => $app->created_at->toDateTimeString(),
             ]);
 
@@ -71,7 +72,7 @@ class AppsController extends Controller
                 'message' => 'Failed to create app. Please try again.',
             ]);
 
-            return redirect()->route('settings.apps.index');
+            return redirect()->route('developers.index');
         }
 
         $app->refresh();
@@ -133,7 +134,7 @@ class AppsController extends Controller
             'message' => __('apps_updated'),
         ]);
 
-        return redirect()->route('settings.apps.edit', $app);
+        return redirect()->route('developers.edit', $app);
     }
 
     public function destroy(App $app)
@@ -142,7 +143,7 @@ class AppsController extends Controller
 
         $app->delete();
 
-        return redirect()->route('settings.apps.index');
+        return redirect()->route('developers.index');
     }
 
     public function regenerateSecret(App $app)
@@ -183,6 +184,7 @@ class AppsController extends Controller
             'redirect_uris' => $app->data['redirect_uris'] ?? [],
             'post_logout_redirect_uris' => $app->data['post_logout_redirect_uris'] ?? [],
             'scope' => $app->data['scope'] ?? [],
+            'approved' => $app->isApproved(),
             'created_at' => $app->created_at->toDateTimeString(),
         ];
     }
