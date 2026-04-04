@@ -30,6 +30,7 @@ class Convention extends Model
     public function attendees(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'convention_attendee')
+            ->using(ConventionAttendee::class)
             ->withPivot('is_attended', 'is_staff')
             ->withTimestamps();
     }

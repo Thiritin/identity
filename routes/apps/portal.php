@@ -23,6 +23,7 @@ use App\Http\Controllers\Profile\Settings\TwoFactor\YubikeySetupController;
 use App\Http\Controllers\Profile\Settings\UpdatePasswordController;
 use App\Http\Controllers\Profile\ShowProfileController;
 use App\Http\Controllers\Profile\StoreAvatarController;
+use App\Http\Controllers\Profile\UpdateConventionAttendanceController;
 use App\Http\Controllers\Profile\UpdateGroupCreditAsController;
 use App\Http\Controllers\Profile\UpdatePreferencesController;
 use App\Http\Controllers\Profile\UpdateProfileController;
@@ -44,6 +45,8 @@ Route::post('/settings/staff-profile/update', UpdateStaffProfileController::clas
 Route::post('/settings/staff-profile/credit-as', UpdateGroupCreditAsController::class)
     ->middleware([HandlePrecognitiveRequests::class])
     ->name('settings.staff-profile.credit-as');
+Route::post('/settings/staff-profile/conventions', [UpdateConventionAttendanceController::class, 'updateOwn'])
+    ->name('settings.staff-profile.conventions');
 
 Route::get('/settings/security', [SecurityController::class, 'index'])->name('settings.security');
 
