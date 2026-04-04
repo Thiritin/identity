@@ -46,6 +46,7 @@
                             : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5'"
                     >
                         <div class="min-w-0 flex items-center gap-2">
+                            <component :is="iconMap[dept.icon]" v-if="dept.icon && iconMap[dept.icon]" class="h-4 w-4 shrink-0 text-gray-400" />
                             <div class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{{ dept.name }}</div>
                             <span v-if="dept.is_mine" class="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
                         </div>
@@ -83,6 +84,7 @@
 import { Head, Link } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import { Badge } from '@/Components/ui/badge'
+import { iconMap } from './Components/iconMap'
 
 defineProps({
     myMemberships: Array,

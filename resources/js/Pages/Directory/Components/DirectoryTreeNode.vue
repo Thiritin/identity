@@ -15,6 +15,7 @@
                 <ChevronRight class="h-3.5 w-3.5 transition-transform" :class="expanded ? 'rotate-90' : ''" />
             </button>
             <span v-else class="w-4.5" />
+            <component :is="iconMap[node.icon]" v-if="node.icon && iconMap[node.icon]" class="h-3.5 w-3.5 shrink-0 text-gray-400" />
             <span class="truncate flex-1" :class="node.is_mine ? 'font-semibold' : ''">{{ node.name }}</span>
             <span v-if="node.is_mine" class="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
             <span class="text-xs text-gray-400 dark:text-gray-500 tabular-nums">{{ node.member_count }}</span>
@@ -35,6 +36,7 @@
 import { ref } from 'vue'
 import { Link } from '@inertiajs/vue3'
 import { ChevronRight } from 'lucide-vue-next'
+import { iconMap } from './iconMap'
 
 const props = defineProps({
     node: Object,
