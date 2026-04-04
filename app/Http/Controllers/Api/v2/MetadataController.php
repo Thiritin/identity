@@ -58,6 +58,7 @@ class MetadataController extends Controller
             ],
             [
                 'value' => $request->validated('value'),
+                'expires_at' => $request->validated('expires_at'),
             ]
         );
 
