@@ -11,6 +11,7 @@ use App\Http\Controllers\Profile\ExportMyDataController;
 use App\Http\Controllers\Profile\MyDataController;
 use App\Http\Controllers\Profile\RevokeAppConsentController;
 use App\Http\Controllers\Profile\SecurityController;
+use App\Http\Controllers\Profile\Settings\Apps\NotificationTypesController;
 use App\Http\Controllers\Profile\Settings\AppsController;
 use App\Http\Controllers\Profile\Settings\ChangeEmailController;
 use App\Http\Controllers\Profile\Settings\ConfirmPasswordController;
@@ -166,6 +167,12 @@ Route::middleware('developer')->prefix('developers')->name('developers.')->group
     Route::put('/{app}', [AppsController::class, 'update'])->name('update');
     Route::delete('/{app}', [AppsController::class, 'destroy'])->name('destroy');
     Route::post('/{app}/regenerate-secret', [AppsController::class, 'regenerateSecret'])->name('regenerate-secret');
+
+    Route::get('/{app}/notification-types', [NotificationTypesController::class, 'index'])->name('notification-types.index');
+    Route::post('/{app}/notification-types', [NotificationTypesController::class, 'store'])->name('notification-types.store');
+    Route::put('/{app}/notification-types/{type}', [NotificationTypesController::class, 'update'])->name('notification-types.update');
+    Route::delete('/{app}/notification-types/{type}', [NotificationTypesController::class, 'destroy'])->name('notification-types.destroy');
+    Route::post('/{app}/notification-types/{type}/disable', [NotificationTypesController::class, 'disable'])->name('notification-types.disable');
 });
 
 /** Directory (staff only) */
