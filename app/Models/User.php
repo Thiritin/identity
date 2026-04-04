@@ -157,6 +157,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
                     'level',
                     'title',
                     'credit_as',
+                    'can_manage_members',
                 ]
             );
     }
@@ -179,7 +180,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function conventions(): BelongsToMany
     {
         return $this->belongsToMany(Convention::class, 'convention_attendee')
-            ->withPivot('is_staff')
+            ->withPivot('is_attended', 'is_staff')
             ->withTimestamps();
     }
 

@@ -13,16 +13,24 @@ class Convention extends Model
     protected $fillable = [
         'name',
         'year',
+        'start_date',
+        'end_date',
+        'theme',
     ];
 
-    protected $casts = [
-        'year' => 'integer',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'year' => 'integer',
+            'start_date' => 'date',
+            'end_date' => 'date',
+        ];
+    }
 
     public function attendees(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'convention_attendee')
-            ->withPivot('is_staff')
+            ->withPivot('is_attended', 'is_staff')
             ->withTimestamps();
     }
 }
