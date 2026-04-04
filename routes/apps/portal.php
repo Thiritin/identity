@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Directory\DirectoryController;
 use App\Http\Controllers\Directory\DirectoryMemberController;
 use App\Http\Controllers\Directory\DirectoryTeamController;
+use App\Http\Controllers\Directory\NdaController;
 use App\Http\Controllers\Directory\StaffProfileController;
 use App\Http\Controllers\Profile\DeleteAccountController;
 use App\Http\Controllers\Profile\ExportMyDataController;
@@ -175,6 +176,10 @@ Route::middleware('groupmember:staff')
         Route::get('/members/{user:hashid}', [StaffProfileController::class, 'show'])->name('members.show');
         Route::post('/members/{user:hashid}/conventions', [UpdateConventionAttendanceController::class, 'updateForUser'])
             ->name('members.conventions');
+        Route::post('/members/{user:hashid}/nda/check', [NdaController::class, 'check'])
+            ->name('members.nda.check');
+        Route::post('/members/{user:hashid}/nda/send', [NdaController::class, 'send'])
+            ->name('members.nda.send');
 
         Route::post('/g/{group:hashid}', [DirectoryController::class, 'update'])->name('update');
         Route::delete('/g/{group:hashid}', [DirectoryController::class, 'destroy'])->name('destroy');
