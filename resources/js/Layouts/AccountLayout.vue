@@ -176,7 +176,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { Link, usePage, useForm } from '@inertiajs/vue3'
-import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness, BookUser, Settings, AppWindow, Github, Twitter } from 'lucide-vue-next'
+import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness, BookUser, Settings, Github, Twitter } from 'lucide-vue-next'
 import { Toaster } from '@/Components/ui/sonner'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/Components/ui/dialog'
 import { Input } from '@/Components/ui/input'
@@ -207,9 +207,6 @@ const tabs = computed(() => {
         { name: trans('tab_profile'), route: 'settings.profile', href: route('settings.profile'), icon: UserRound, active: isActive('settings.profile') },
         { name: trans('tab_security'), route: 'settings.security', href: route('settings.security'), icon: ShieldCheck, active: isActive('settings.security') || isActive('settings.security.*') },
     ]
-    if (user.value.isDeveloper) {
-        items.push({ name: trans('tab_my_apps'), route: 'settings.apps.index', href: route('settings.apps.index'), icon: AppWindow, active: isActive('settings.apps.*') })
-    }
     if (user.value.isStaff) {
         items.push({ name: trans('tab_directory'), route: 'directory.index', href: route('directory.index'), icon: BookUser, active: isActive('directory.*') })
     }
@@ -224,6 +221,7 @@ const rightTabs = computed(() => [
 ])
 
 const footerLinks = computed(() => [
+    { name: trans('footer_developers'), href: route('developers.index'), internal: true },
     { name: trans('footer_my_data'), href: route('my-data'), internal: true },
     { name: trans('footer_support_link'), href: 'https://help.eurofurence.org/contact/' },
     { name: trans('footer_legal_notice'), href: 'https://help.eurofurence.org/legal/imprint' },

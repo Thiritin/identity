@@ -68,7 +68,7 @@
                     <Button type="submit" :disabled="form.processing">{{ $t('apps_save') }}</Button>
                     <Button variant="destructive" type="button" @click="showRegenerateDialog = true">{{ $t('apps_regenerate_secret') }}</Button>
                     <Button variant="outline" as-child>
-                        <Link :href="route('settings.apps.index')">{{ $t('apps_back') }}</Link>
+                        <Link :href="route('developers.index')">{{ $t('apps_back') }}</Link>
                     </Button>
                 </div>
             </form>
@@ -130,12 +130,12 @@ function toggleScope(scope) {
 function submit() {
     form.redirect_uris = form.redirect_uris.filter(uri => uri.trim() !== '')
     form.post_logout_redirect_uris = form.post_logout_redirect_uris.filter(uri => uri.trim() !== '')
-    form.put(route('settings.apps.update', props.app.id))
+    form.put(route('developers.update', props.app.id))
 }
 
 function regenerateSecret() {
     regenerating.value = true
-    router.post(route('settings.apps.regenerate-secret', props.app.id), {}, {
+    router.post(route('developers.regenerate-secret', props.app.id), {}, {
         preserveScroll: true,
         onSuccess: (page) => {
             newSecret.value = page.props?.clientSecret

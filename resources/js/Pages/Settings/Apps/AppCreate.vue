@@ -52,7 +52,7 @@
                 <div class="flex gap-2">
                     <Button type="submit" :disabled="form.processing">{{ $t('apps_create') }}</Button>
                     <Button variant="outline" as-child>
-                        <Link :href="route('settings.apps.index')">{{ $t('cancel') }}</Link>
+                        <Link :href="route('developers.index')">{{ $t('cancel') }}</Link>
                     </Button>
                 </div>
             </form>
@@ -89,7 +89,7 @@ function toggleScope(scope) {
 function submit() {
     form.redirect_uris = form.redirect_uris.filter(uri => uri.trim() !== '')
     form.post_logout_redirect_uris = form.post_logout_redirect_uris.filter(uri => uri.trim() !== '')
-    form.post(route('settings.apps.store'))
+    form.post(route('developers.store'))
 }
 </script>
 

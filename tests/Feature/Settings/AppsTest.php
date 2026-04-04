@@ -63,7 +63,7 @@ test('developer user can list their own apps', function () {
         ->get(route('developers.index'))
         ->assertSuccessful()
         ->assertInertia(fn ($page) => $page
-            ->component('Settings/Apps/AppsIndex', false)
+            ->component('Developers', false)
             ->has('apps', 1)
         );
 });
@@ -78,7 +78,7 @@ test('developer user cannot see other users apps', function () {
         ->get(route('developers.index'))
         ->assertSuccessful()
         ->assertInertia(fn ($page) => $page
-            ->component('Settings/Apps/AppsIndex', false)
+            ->component('Developers', false)
             ->has('apps', 0)
         );
 });

@@ -27,7 +27,7 @@ class AppsController extends Controller
                 'created_at' => $app->created_at->toDateTimeString(),
             ]);
 
-        return Inertia::render('Settings/Apps/AppsIndex', [
+        return Inertia::render('Developers', [
             'apps' => $apps,
         ]);
     }

@@ -157,6 +157,8 @@ class AppResource extends Resource
                                 ->relationship('owner', 'name')
                                 ->searchable()
                                 ->required(),
+                            Toggle::make('approved')
+                                ->hint('Allow all users to log in with this app'),
                         ]),
                     Section::make('Dashboard Settings')
                         ->description('These settings control the visibility of the app on the dashboard. This is NOT access control in any way.')
@@ -212,11 +214,13 @@ class AppResource extends Resource
                 TextColumn::make('client_id'),
                 TextColumn::make('data.client_name')->label('Name'),
                 TextColumn::make('owner.name'),
+                IconColumn::make('approved')->boolean(),
                 IconColumn::make('public')->boolean(),
                 TextColumn::make('starts_at')->dateTime()->sortable(),
                 TextColumn::make('ends_at')->dateTime()->sortable(),
             ])
             ->filters([
+                TernaryFilter::make('approved'),
                 TernaryFilter::make('public'),
                 Filter::make('active')
                     ->query(fn (Builder $query): Builder => $query

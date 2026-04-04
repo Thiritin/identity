@@ -6,6 +6,11 @@
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('apps_show_description') }}</p>
         </div>
         <div class="md:col-span-2 space-y-6">
+            <div v-if="!app.approved" class="rounded-lg border border-yellow-300 bg-yellow-50 dark:border-yellow-600 dark:bg-yellow-900/30 p-4">
+                <p class="text-sm font-medium text-yellow-800 dark:text-yellow-200">{{ $t('apps_not_approved_title') }}</p>
+                <p class="text-sm text-yellow-700 dark:text-yellow-300 mt-1">{{ $t('apps_not_approved_description') }}</p>
+            </div>
+
             <div v-if="clientSecret" class="rounded-lg border border-yellow-300 bg-yellow-50 dark:border-yellow-600 dark:bg-yellow-900/30 p-4">
                 <p class="mb-2 text-sm font-medium text-yellow-800 dark:text-yellow-200">{{ $t('apps_secret_warning') }}</p>
                 <div class="flex gap-2">
@@ -49,10 +54,10 @@
 
             <div class="flex gap-2">
                 <Button as-child>
-                    <Link :href="route('settings.apps.edit', app.id)">{{ $t('apps_edit') }}</Link>
+                    <Link :href="route('developers.edit', app.id)">{{ $t('apps_edit') }}</Link>
                 </Button>
                 <Button variant="outline" as-child>
-                    <Link :href="route('settings.apps.index')">{{ $t('apps_back') }}</Link>
+                    <Link :href="route('developers.index')">{{ $t('apps_back') }}</Link>
                 </Button>
             </div>
         </div>
