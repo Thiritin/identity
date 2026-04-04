@@ -54,17 +54,6 @@
                     {{ $t('forgot_password_btn') }}
                 </Link>
             </div>
-            <div class="relative flex items-start">
-                <div class="flex items-center h-5">
-                    <Checkbox id="remember" v-model="form.remember" />
-                </div>
-                <div class="ml-3 text-sm">
-                    <label
-                        class="font-medium text-gray-700 dark:text-primary-300"
-                        for="remember"
-                    >{{ $t('remember_me') }}</label>
-                </div>
-            </div>
         </div>
         <HoneypotFields :honeypot="form" />
         <div v-if="requiresPow" class="space-y-2">
@@ -119,11 +108,11 @@ import AltchaWidget from '@/Components/Auth/AltchaWidget.vue'
 import { Head, Link, useForm, router } from '@inertiajs/vue3'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
-import { Checkbox } from '@/Components/ui/checkbox'
 import { ArrowRight, RefreshCw, Fingerprint } from 'lucide-vue-next'
 import { startAuthentication } from '@simplewebauthn/browser'
 import { useHoneypot } from '@/Composables/useHoneypot'
 import { ref, onMounted, onUnmounted } from 'vue'
+import { trans } from 'laravel-vue-i18n'
 
 defineOptions({
     layout: AuthLayout,
@@ -140,7 +129,6 @@ const props = defineProps({
 const form = useForm('post', route('auth.login.password.submit'), {
     email: props.email,
     password: null,
-    remember: false,
     altcha: null,
     ...useHoneypot(),
 })
@@ -158,6 +146,10 @@ onMounted(() => {
             sessionExpired.value = true
         }
     })
+
+    if (props.hasPasskeys) {
+        loginWithPasskey()
+    }
 })
 
 onUnmounted(() => {
@@ -177,7 +169,7 @@ async function loginWithPasskey() {
         const optionsJSON = await optionsRes.json()
 
         if (!optionsJSON.allowCredentials?.length) {
-            passkeyError.value = 'No passkeys available.'
+            passkeyError.value = trans('passkey_none_available')
             return
         }
 
@@ -185,7 +177,6 @@ async function loginWithPasskey() {
 
         router.post(route('auth.login.passkey.verify'), {
             credential: JSON.stringify(result),
-            remember: form.remember,
         })
     } catch (e) {
         if (e.name !== 'NotAllowedError') {
