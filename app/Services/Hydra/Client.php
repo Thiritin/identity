@@ -46,7 +46,7 @@ class Client
     public function acceptLogin(
         string $subject,
         string $login_challenge,
-        ?int $remember_seconds = 0,
+        ?bool $remember = null,
         ?array $loginRequest = null
     ): string {
         $hydra = new Client();
@@ -61,7 +61,7 @@ class Client
         }
 
         // Accept Login
-        $hydraResponse = $hydra->acceptLoginRequest($subject, $login_challenge, $remember_seconds);
+        $hydraResponse = $hydra->acceptLoginRequest($subject, $login_challenge, $remember);
 
         // Send App Login Event
         event(new AppLoginEvent($loginRequest['client']['client_id'], $subject));
@@ -75,13 +75,13 @@ class Client
         return $hydraResponse['redirect_to'];
     }
 
-    public function acceptLoginRequest(string $userId, string $loginChallenge, ?int $remember = 0)
+    public function acceptLoginRequest(string $userId, string $loginChallenge, ?bool $remember = null, int $rememberFor = 0)
     {
         try {
             $loginRequestBody = ['subject' => $userId];
             if ($remember !== null) {
-                $loginRequestBody['remember'] = ($remember !== 0);
-                $loginRequestBody['remember_for'] = $remember;
+                $loginRequestBody['remember'] = $remember;
+                $loginRequestBody['remember_for'] = $rememberFor;
             }
 
             return Http::hydraAdmin()->put('/admin/oauth2/auth/requests/login/accept?challenge=' . $loginChallenge, $loginRequestBody)->json();
