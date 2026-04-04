@@ -173,9 +173,6 @@ Route::middleware('groupmember:staff')
     ->name('directory.')
     ->group(function () {
         Route::get('/', [DirectoryController::class, 'index'])->name('index');
-        Route::get('/members/{user:hashid}', [StaffProfileController::class, 'show'])->name('members.show');
-        Route::post('/members/{user:hashid}/conventions', [UpdateConventionAttendanceController::class, 'updateForUser'])
-            ->name('members.conventions');
         Route::post('/members/{user:hashid}/nda/check', [NdaController::class, 'check'])
             ->name('members.nda.check');
         Route::post('/members/{user:hashid}/nda/send', [NdaController::class, 'send'])
@@ -188,5 +185,11 @@ Route::middleware('groupmember:staff')
         Route::delete('/g/{group:hashid}/members/{user:hashid}', [DirectoryMemberController::class, 'destroy'])->name('members.destroy');
         Route::post('/g/{group:hashid}/teams', [DirectoryTeamController::class, 'store'])->name('teams.store');
 
+        Route::get('/{slug}/members/{user:hashid}', [StaffProfileController::class, 'show'])
+            ->where('slug', '.*')
+            ->name('members.show');
+        Route::post('/{slug}/members/{user:hashid}/conventions', [UpdateConventionAttendanceController::class, 'updateForUser'])
+            ->where('slug', '.*')
+            ->name('members.conventions');
         Route::get('/{slug}', [DirectoryController::class, 'show'])->where('slug', '.*')->name('show');
     });

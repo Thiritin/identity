@@ -48,7 +48,7 @@ class UpdateConventionAttendanceController extends Controller
         return Redirect::back();
     }
 
-    public function updateForUser(UpdateUserConventionAttendanceRequest $request, User $user)
+    public function updateForUser(UpdateUserConventionAttendanceRequest $request, string $slug, User $user)
     {
         $conventionId = $request->validated('convention_id');
         $action = $request->validated('action');

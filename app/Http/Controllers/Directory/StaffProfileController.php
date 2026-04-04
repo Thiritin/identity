@@ -6,6 +6,7 @@ use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
 use App\Http\Controllers\Controller;
 use App\Models\Convention;
+use App\Models\Group;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -13,10 +14,26 @@ use Inertia\Response;
 
 class StaffProfileController extends Controller
 {
-    public function show(User $user): Response
+    public function show(string $slug, User $user): Response
     {
+        $group = Group::where('slug', $slug)->firstOrFail();
+        $this->authorize('view', $group);
+
         $viewer = request()->user();
 
+        $breadcrumbs = $this->buildBreadcrumbs($group, $user);
+
+        // Get user's membership in this specific group
+        $membership = $user->groups()->where('groups.id', $group->id)->first();
+        $groupMembership = $membership ? [
+            'level' => $membership->pivot->level instanceof GroupUserLevel
+                ? $membership->pivot->level->value
+                : $membership->pivot->level,
+            'title' => $membership->pivot->title,
+            'can_manage_members' => (bool) $membership->pivot->can_manage_members,
+        ] : null;
+
+        // All groups the user belongs to (for the roles section)
         $groups = $user->groups()
             ->whereIn('type', [GroupTypeEnum::Division, GroupTypeEnum::Department, GroupTypeEnum::Team])
             ->orderBy('name')
@@ -40,6 +57,8 @@ class StaffProfileController extends Controller
             ])
             ->all();
 
+        $canEdit = $group->canManageMembers($viewer);
+
         $conventionAttendance = $user->conventions()
             ->orderByDesc('year')
             ->get()
@@ -51,12 +70,21 @@ class StaffProfileController extends Controller
                 'is_staff' => (bool) $convention->pivot->is_staff,
             ]);
 
-        $canManageAttendance = $this->canManageUser($viewer, $user);
-        $allConventions = $canManageAttendance
+        $allConventions = $canEdit
             ? Convention::query()->orderBy('year')->get(['id', 'name', 'year'])
             : null;
 
         return Inertia::render('Directory/StaffProfile', [
+            'directorySelectedSlug' => $group->slug,
+            'breadcrumbs' => $breadcrumbs,
+            'group' => [
+                'hashid' => $group->hashid,
+                'slug' => $group->slug,
+                'name' => $group->name,
+                'type' => $group->type->value,
+            ],
+            'groupMembership' => $groupMembership,
+            'canEdit' => $canEdit,
             'profileUser' => [
                 'hashid' => $user->hashid,
                 'name' => $user->name,
@@ -70,34 +98,44 @@ class StaffProfileController extends Controller
             'visibleFields' => $visibleFields,
             'conventionAttendance' => $conventionAttendance,
             'allConventions' => $allConventions,
-            'canManageAttendance' => $canManageAttendance,
-            'nda' => [
-                'verified_at' => $user->nda_verified_at?->toIso8601String(),
-                'can_manage' => $viewer->hasStaffLevel([
-                    GroupUserLevel::Director,
-                    GroupUserLevel::DivisionDirector,
-                ]),
-            ],
         ]);
     }
 
-    private function canManageUser(User $viewer, User $target): bool
+    /**
+     * @return array<int, array{label: string, href: string|null}>
+     */
+    private function buildBreadcrumbs(Group $group, User $user): array
     {
-        $targetGroupIds = $target->groups()
-            ->whereIn('groups.type', [
-                GroupTypeEnum::Department->value,
-                GroupTypeEnum::Division->value,
-                GroupTypeEnum::Team->value,
-            ])
-            ->pluck('groups.id');
+        $crumbs = [
+            ['label' => __('directory'), 'href' => route('directory.index')],
+        ];
 
-        if ($targetGroupIds->isEmpty()) {
-            return false;
+        // Walk up the ancestry chain (skip root)
+        $ancestors = [];
+        $current = $group;
+        while ($current) {
+            if ($current->type === GroupTypeEnum::Root) {
+                break;
+            }
+            $ancestors[] = $current;
+            $current = $current->parent;
         }
 
-        return $viewer->groups()
-            ->whereIn('groups.id', $targetGroupIds)
-            ->get()
-            ->contains(fn ($group) => $group->pivot->canManageMembers());
+        $ancestors = array_reverse($ancestors);
+
+        foreach ($ancestors as $ancestor) {
+            $crumbs[] = [
+                'label' => $ancestor->name,
+                'href' => route('directory.show', $ancestor->slug),
+            ];
+        }
+
+        // Final crumb: the user (no link)
+        $crumbs[] = [
+            'label' => $user->name,
+            'href' => null,
+        ];
+
+        return $crumbs;
     }
 }
