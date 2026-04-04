@@ -26,12 +26,17 @@
             </div>
         </div>
 
-        <!-- Role in [Group] (group-scoped, read-only) -->
+        <!-- Role in [Group] (group-scoped, read-only with edit button for directors) -->
         <section v-if="groupMembership" class="mb-6">
-            <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                {{ $t('staff_profile_role_in_group', { group: group.name }) }}
-                <Badge variant="outline" class="ml-1 text-xs">{{ $t('staff_profile_group_data') }}</Badge>
-            </h2>
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                    {{ $t('staff_profile_role_in_group', { group: group.name }) }}
+                    <Badge variant="outline" class="ml-1 text-xs">{{ $t('staff_profile_group_data') }}</Badge>
+                </h2>
+                <Button v-if="canEdit" variant="ghost" size="sm" @click="showEditMember = true">
+                    <Pencil class="h-3.5 w-3.5 mr-1" /> {{ $t('directory_edit_group') }}
+                </Button>
+            </div>
             <div class="px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5 space-y-2">
                 <div>
                     <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_level') }}</dt>
@@ -43,6 +48,14 @@
                 </div>
             </div>
         </section>
+
+        <MemberEditModal
+            v-if="canEdit"
+            :open="showEditMember"
+            :member="memberForModal"
+            :group-hashid="group.hashid"
+            @close="showEditMember = false"
+        />
 
         <!-- All roles (global) -->
         <section v-if="groups.length > 0" class="mb-6">
@@ -130,11 +143,15 @@
 </template>
 
 <script setup>
+import { ref, computed } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
 import { Badge } from '@/Components/ui/badge'
+import { Button } from '@/Components/ui/button'
+import { Pencil } from 'lucide-vue-next'
 import ConventionAttendanceEditor from '@/Components/ConventionAttendanceEditor.vue'
+import MemberEditModal from './Components/MemberEditModal.vue'
 
-defineProps({
+const props = defineProps({
     breadcrumbs: Array,
     group: Object,
     groupMembership: Object,
@@ -145,6 +162,16 @@ defineProps({
     conventionAttendance: Array,
     allConventions: Array,
 })
+
+const showEditMember = ref(false)
+
+const memberForModal = computed(() => ({
+    hashid: props.profileUser.hashid,
+    name: props.profileUser.name,
+    level: props.groupMembership?.level,
+    title: props.groupMembership?.title,
+    can_manage_members: props.groupMembership?.can_manage_members,
+}))
 
 function isLead(level) {
     return ['division_director', 'director', 'team_lead'].includes(level)
