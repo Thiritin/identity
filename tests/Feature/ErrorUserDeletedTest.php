@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\App;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -19,8 +20,11 @@ test('If user is deleted, system should reject consent', function () {
     $response->assertRedirect('https://unverified');
 });
 
-test('If user exists, consent should be forwarded', function () {
+test('If user exists and app has skip_consent, consent should be forwarded', function () {
     $user = User::factory()->create();
+    App::withoutEvents(fn () => App::factory()->skipConsent()->create([
+        'client_id' => 'test-client',
+    ]));
     Http::fake([
         '*/admin/oauth2/auth/requests/consent/accept*' => Http::response([
             'redirect_to' => 'https://verified',
@@ -30,6 +34,9 @@ test('If user exists, consent should be forwarded', function () {
             'challenge' => 'TEST123',
             'requested_scope' => ['openid'],
             'requested_access_token_audience' => ['https://localhost/'],
+            'client' => [
+                'client_id' => 'test-client',
+            ],
         ]),
     ]);
     $response = \Pest\Laravel\get(route('auth.consent', ['consent_challenge' => 'TEST123']));
