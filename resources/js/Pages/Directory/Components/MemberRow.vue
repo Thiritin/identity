@@ -17,7 +17,7 @@
         <Badge v-if="isLead" variant="secondary" class="shrink-0 text-xs">
             {{ levelLabel }}
         </Badge>
-        <button v-if="canEdit" @click.prevent="$emit('edit', member)" class="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+        <button v-if="canEdit" @click.prevent="$emit('edit', member)" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 shrink-0">
             <Pencil class="h-3.5 w-3.5" />
         </button>
         <slot name="actions" />
