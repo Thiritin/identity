@@ -27,13 +27,14 @@
                 :node="child"
                 :selected="selected"
                 :default-expanded="isAncestor(child)"
+                :force-expand="forceExpand"
             />
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { Link } from '@inertiajs/vue3'
 import { ChevronRight } from 'lucide-vue-next'
 import { iconMap } from './iconMap'
@@ -42,13 +43,26 @@ const props = defineProps({
     node: Object,
     selected: String,
     defaultExpanded: { type: Boolean, default: false },
+    forceExpand: { type: Boolean, default: false },
 })
 
-const expanded = ref(props.defaultExpanded || props.node.type === 'division')
+const expanded = ref(props.defaultExpanded || props.forceExpand)
+
+watch(() => props.forceExpand, (val) => {
+    if (val) {
+        expanded.value = true
+    } else if (!props.defaultExpanded && !isAncestorOfSelected()) {
+        expanded.value = false
+    }
+})
 
 function isAncestor(child) {
     if (child.slug === props.selected) return true
     return (child.children || []).some(c => isAncestor(c))
+}
+
+function isAncestorOfSelected() {
+    return isAncestor(props.node)
 }
 </script>
 

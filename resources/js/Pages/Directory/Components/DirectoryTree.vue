@@ -15,18 +15,32 @@
             <span class="truncate flex-1">{{ $t('directory_my_groups') }}</span>
             <span class="text-xs text-gray-400 dark:text-gray-500 tabular-nums">{{ myGroupCount }}</span>
         </Link>
-        <div v-if="myGroupCount > 0" class="border-t border-gray-200 dark:border-gray-700 my-1.5" />
+        <div class="border-t border-gray-200 dark:border-gray-700 my-1.5" />
+        <div class="flex items-center justify-between px-3 mb-1">
+            <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                {{ $t('directory_divisions') }}
+            </h4>
+            <button
+                type="button"
+                class="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                @click="showAll = !showAll"
+            >
+                {{ showAll ? $t('directory_collapse_all') : $t('directory_expand_all') }}
+            </button>
+        </div>
         <DirectoryTreeNode
             v-for="node in tree"
             :key="node.hashid"
             :node="node"
             :selected="selected"
-            :default-expanded="true"
+            :default-expanded="showAll || hasMine(node)"
+            :force-expand="showAll"
         />
     </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { Link } from '@inertiajs/vue3'
 import { UserCircle } from 'lucide-vue-next'
 import DirectoryTreeNode from './DirectoryTreeNode.vue'
@@ -36,4 +50,11 @@ defineProps({
     selected: String,
     myGroupCount: { type: Number, default: 0 },
 })
+
+const showAll = ref(false)
+
+function hasMine(node) {
+    if (node.is_mine) return true
+    return (node.children || []).some(c => hasMine(c))
+}
 </script>
