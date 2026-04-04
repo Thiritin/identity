@@ -267,3 +267,30 @@ test('create app validation requires valid urls in redirect_uris', function () {
         ])
         ->assertSessionHasErrors(['redirect_uris.0']);
 });
+
+test('developer cannot create app with restricted scopes', function () {
+    fakeHydra();
+    $user = createDeveloperUser();
+
+    $this->actingAs($user)
+        ->post(route('developers.store'), [
+            'client_name' => 'Evil App',
+            'redirect_uris' => ['https://example.com/callback'],
+            'scope' => ['openid', 'registration.reg.live'],
+        ])
+        ->assertSessionHasErrors(['scope.1']);
+});
+
+test('developer cannot update app with restricted scopes', function () {
+    fakeHydra();
+    $user = createDeveloperUser();
+    $app = App::factory()->create(['user_id' => $user->id, 'client_id' => 'test-client-id']);
+
+    $this->actingAs($user)
+        ->put(route('developers.update', $app), [
+            'client_name' => 'Updated',
+            'redirect_uris' => ['https://example.com/callback'],
+            'scope' => ['openid', 'view_full_staff_details'],
+        ])
+        ->assertSessionHasErrors(['scope.1']);
+});

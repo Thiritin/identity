@@ -13,6 +13,17 @@ use Inertia\Inertia;
 
 class AppsController extends Controller
 {
+    /**
+     * Scopes that developers are not allowed to request for their apps.
+     */
+    public const array RESTRICTED_SCOPES = [
+        'registration.reg.test',
+        'registration.reg.live',
+        'registration.room.test',
+        'registration.room.live',
+        'view_full_staff_details',
+    ];
+
     public function index()
     {
         $apps = auth()->user()->apps()
@@ -34,7 +45,7 @@ class AppsController extends Controller
 
     public function create()
     {
-        $scopes = app(Client::class)->getScopes() ?? [];
+        $scopes = $this->filterRestrictedScopes(app(Client::class)->getScopes() ?? []);
 
         return Inertia::render('Settings/Apps/AppCreate', [
             'availableScopes' => $scopes,
@@ -103,7 +114,7 @@ class AppsController extends Controller
     {
         Gate::authorize('update', $app);
 
-        $scopes = app(Client::class)->getScopes() ?? [];
+        $scopes = $this->filterRestrictedScopes(app(Client::class)->getScopes() ?? []);
 
         return Inertia::render('Settings/Apps/AppEdit', [
             'app' => $this->formatApp($app),
@@ -163,13 +174,25 @@ class AppsController extends Controller
         $app->data = $cleanData;
         $app->saveQuietly();
 
-        $scopes = app(Client::class)->getScopes() ?? [];
+        $scopes = $this->filterRestrictedScopes(app(Client::class)->getScopes() ?? []);
 
         return Inertia::render('Settings/Apps/AppEdit', [
             'app' => $this->formatApp($app),
             'availableScopes' => $scopes,
             'clientSecret' => $newRawSecret,
         ]);
+    }
+
+    /**
+     * @param  array<int, string>  $scopes
+     * @return array<int, string>
+     */
+    private function filterRestrictedScopes(array $scopes): array
+    {
+        return array_values(array_filter(
+            $scopes,
+            fn (string $scope) => ! in_array($scope, self::RESTRICTED_SCOPES, true),
+        ));
     }
 
     /**
