@@ -51,7 +51,9 @@ export default {
                 return trans('error_title_' + this.status)
             }
             if (this.error) {
-                return trans('auth_error_' + this.error)
+                const key = 'auth_error_' + this.error
+                const result = trans(key)
+                return result !== key ? result : trans('auth_error_unknown')
             }
             return trans('auth_error_unknown')
         },
@@ -60,7 +62,9 @@ export default {
                 return trans('error_description_' + this.status)
             }
             if (this.error) {
-                return trans('auth_error_description_' + this.error)
+                const key = 'auth_error_description_' + this.error
+                const result = trans(key)
+                return result !== key ? result : trans('auth_error_description_unknown')
             }
             return trans('auth_error_description_unknown')
         },
