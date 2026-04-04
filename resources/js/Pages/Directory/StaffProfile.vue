@@ -46,13 +46,13 @@
                     <label class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_level') }}</label>
                     <Select v-model="memberForm.level">
                         <SelectTrigger class="mt-1 h-8 text-sm">
-                            <SelectValue :placeholder="levelLabel" />
+                            <span>{{ levelLabel }}</span>
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="member">{{ $t('level_member') }}</SelectItem>
-                            <SelectItem value="team_lead">{{ $t('level_team_lead') }}</SelectItem>
-                            <SelectItem value="director">{{ $t('level_director') }}</SelectItem>
-                            <SelectItem value="division_director">{{ $t('level_division_director') }}</SelectItem>
+                            <SelectItem value="member" :text-value="$t('level_member')">{{ $t('level_member') }}</SelectItem>
+                            <SelectItem value="team_lead" :text-value="$t('level_team_lead')">{{ $t('level_team_lead') }}</SelectItem>
+                            <SelectItem value="director" :text-value="$t('level_director')">{{ $t('level_director') }}</SelectItem>
+                            <SelectItem value="division_director" :text-value="$t('level_division_director')">{{ $t('level_division_director') }}</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
