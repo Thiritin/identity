@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\Activitylog\Models\Activity;
 
 class MyDataController extends Controller
 {
@@ -28,7 +27,6 @@ class MyDataController extends Controller
         $data = [
             'profile' => $profile,
             'isStaff' => $isStaff,
-            'activityLog' => $this->getActivityLog($user),
             'connectedApps' => $this->getConnectedApps($hydra, $user),
         ];
 
@@ -64,24 +62,6 @@ class MyDataController extends Controller
         return Inertia::render('Settings/MyData', $data);
     }
 
-    private function getActivityLog(mixed $user): mixed
-    {
-        return Activity::query()
-            ->where('subject_type', $user->getMorphClass())
-            ->where('subject_id', $user->id)
-            ->with('causer')
-            ->latest()
-            ->paginate(20)
-            ->through(fn (Activity $activity) => [
-                'id' => $activity->id,
-                'description' => $activity->description,
-                'properties' => $activity->properties,
-                'causerName' => $activity->causer?->name,
-                'causedBySelf' => $activity->causer_id === $user->id,
-                'createdAt' => $activity->created_at->toISOString(),
-            ]);
-    }
-
     private function getConnectedApps(HydraClient $hydra, mixed $user): ?array
     {
         try {
@@ -101,24 +81,24 @@ class MyDataController extends Controller
 
         $apps = App::whereIn('client_id', $clientIds)->get()->keyBy('client_id');
 
-        return collect($sessions)->map(function ($session) use ($apps) {
-            $clientId = $session['consent_request']['client']['client_id'] ?? null;
-            $app = $apps->get($clientId);
+        return collect($sessions)
+            ->groupBy(fn ($s) => $s['consent_request']['client']['client_id'] ?? null)
+            ->filter(fn ($group, $clientId) => $clientId && $apps->has($clientId))
+            ->map(function ($group, $clientId) use ($apps) {
+                $app = $apps->get($clientId);
+                $latest = $group->sortByDesc('handled_at')->first();
+                $allScopes = $group->flatMap(fn ($s) => $s['grant_scope'] ?? [])->unique()->values()->all();
 
-            if (! $app) {
-                return null;
-            }
-
-            return [
-                'clientId' => $clientId,
-                'name' => $app->name,
-                'description' => $app->description,
-                'icon' => $app->icon,
-                'policyUri' => $app->data['policy_uri'] ?? null,
-                'tosUri' => $app->data['tos_uri'] ?? null,
-                'scopes' => $session['grant_scope'] ?? [],
-                'consentedAt' => $session['handled_at'] ?? null,
-            ];
-        })->filter()->values()->all();
+                return [
+                    'clientId' => $clientId,
+                    'name' => $app->name,
+                    'description' => $app->description,
+                    'image' => $app->image,
+                    'policyUri' => $app->data['policy_uri'] ?? null,
+                    'tosUri' => $app->data['tos_uri'] ?? null,
+                    'scopes' => $allScopes,
+                    'consentedAt' => $latest['handled_at'] ?? null,
+                ];
+            })->values()->all();
     }
 }

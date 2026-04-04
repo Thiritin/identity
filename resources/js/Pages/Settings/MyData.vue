@@ -2,17 +2,6 @@
     <Head :title="$t('my_data_title')" />
 
     <div class="space-y-8">
-        <!-- Transparency Notice -->
-        <div class="rounded-lg border border-blue-200 bg-blue-50 p-5 dark:border-blue-800 dark:bg-blue-950/30">
-            <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-200">{{ $t('my_data_transparency_title') }}</h3>
-            <p class="mt-2 text-sm text-blue-800 dark:text-blue-300">{{ $t('my_data_transparency_body') }}</p>
-            <p class="mt-2 text-sm text-blue-700 dark:text-blue-400">{{ $t('my_data_transparency_segmentation') }}</p>
-            <div class="mt-3 text-xs text-blue-600 dark:text-blue-400 space-y-0.5">
-                <p><span class="font-medium">{{ $t('my_data_responsible') }}:</span> {{ $t('my_data_responsible_entity') }}</p>
-                <p><span class="font-medium">{{ $t('my_data_privacy_contact') }}:</span> <a href="mailto:datenschutz@eurofurence.de" class="underline">datenschutz@eurofurence.de</a></p>
-            </div>
-        </div>
-
         <!-- Profile Data -->
         <div class="grid md:grid-cols-3 gap-6 md:gap-10">
             <div>
@@ -96,49 +85,6 @@
             </div>
         </div>
 
-        <!-- Activity Log -->
-        <div class="grid md:grid-cols-3 gap-6 md:gap-10 border-t border-gray-200/50 dark:border-gray-700/50 pt-8">
-            <div>
-                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ $t('my_data_activity_title') }}</h3>
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $t('my_data_activity_description') }}</p>
-            </div>
-            <div class="md:col-span-2">
-                <div v-if="!activityLog?.data?.length" class="py-4 text-sm text-gray-500 dark:text-gray-400">
-                    {{ $t('my_data_activity_no_entries') }}
-                </div>
-                <div v-else class="divide-y divide-gray-200 dark:divide-gray-700">
-                    <div v-for="entry in activityLog.data" :key="entry.id" class="py-3" :class="{ 'bg-amber-50/50 dark:bg-amber-950/20 -mx-3 px-3 rounded': !entry.causedBySelf }">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs text-gray-500 dark:text-gray-400">
-                                {{ new Date(entry.createdAt).toLocaleString() }}
-                            </span>
-                            <span class="text-xs" :class="entry.causedBySelf ? 'text-gray-500 dark:text-gray-400' : 'text-amber-600 dark:text-amber-400 font-medium'">
-                                {{ entry.causedBySelf ? $t('my_data_activity_you') : $t('my_data_activity_changed_by', { name: entry.causerName || '?' }) }}
-                            </span>
-                        </div>
-                        <p class="text-sm text-gray-700 dark:text-gray-300 mt-1">{{ entry.description }}</p>
-                        <div v-if="entry.properties?.attributes" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                            <span v-for="(value, key) in entry.properties.attributes" :key="key" class="inline-block mr-3">
-                                {{ key }}: <span class="text-gray-700 dark:text-gray-300">{{ value }}</span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Pagination -->
-                <div v-if="activityLog.links?.length > 3" class="mt-4 flex gap-1">
-                    <Link
-                        v-for="link in activityLog.links"
-                        :key="link.label"
-                        :href="link.url || ''"
-                        class="px-3 py-1 text-xs rounded border"
-                        :class="link.active ? 'bg-indigo-600 text-white border-indigo-600' : 'text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800'"
-                        v-html="link.label"
-                        :preserve-scroll="true"
-                    />
-                </div>
-            </div>
-        </div>
-
         <!-- Connected Apps -->
         <div class="grid md:grid-cols-3 gap-6 md:gap-10 border-t border-gray-200/50 dark:border-gray-700/50 pt-8">
             <div>
@@ -156,8 +102,10 @@
                     <div v-for="app in connectedApps" :key="app.clientId" class="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
                         <div class="flex items-start justify-between">
                             <div class="flex items-center gap-3">
-                                <img v-if="app.icon" :src="app.icon" :alt="app.name" class="h-8 w-8 rounded" />
-                                <div v-else class="h-8 w-8 rounded bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs text-gray-500">{{ app.name?.[0] }}</div>
+                                <img v-if="app.image" :src="app.image" :alt="app.name" class="h-10 w-10 rounded-lg border border-gray-200 dark:border-gray-700 object-cover" />
+                                <div v-else class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800 text-lg font-semibold text-gray-400 dark:text-gray-500">
+                                    {{ app.name?.charAt(0)?.toUpperCase() }}
+                                </div>
                                 <div>
                                     <p class="text-sm font-medium text-gray-900 dark:text-white">{{ app.name }}</p>
                                     <p v-if="app.description" class="text-xs text-gray-500 dark:text-gray-400">{{ app.description }}</p>
@@ -269,7 +217,6 @@ const props = defineProps({
     groups: Array,
     conventions: Array,
     visibility: Object,
-    activityLog: Object,
     connectedApps: Array,
 })
 

@@ -27,7 +27,6 @@ it('renders the my data page for authenticated users', function () {
             ->has('profile')
             ->has('isStaff')
             ->has('connectedApps')
-            ->has('activityLog')
         );
 });
 
@@ -158,24 +157,3 @@ it('filters out consent sessions without a matching local app', function () {
         );
 });
 
-it('paginates activity log entries', function () {
-    $this->mock(HydraClient::class, function ($mock) {
-        $mock->shouldReceive('getConsentSessions')->andReturn([]);
-    });
-
-    $user = User::factory()->create();
-
-    foreach (range(1, 25) as $i) {
-        activity()
-            ->on($user)
-            ->by($user)
-            ->log("test-action-{$i}");
-    }
-
-    $this->actingAs($user)
-        ->get(route('my-data'))
-        ->assertOk()
-        ->assertInertia(fn ($page) => $page
-            ->has('activityLog.data', 20)
-        );
-});
