@@ -7,7 +7,6 @@ use App\Enums\GroupUserLevel;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Directory\UpdateGroupRequest;
 use App\Models\Group;
-use App\Services\DirectoryTreeBuilder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -15,14 +14,11 @@ use Inertia\Response;
 
 class DirectoryController extends Controller
 {
-    public function __construct(private DirectoryTreeBuilder $treeBuilder) {}
-
     public function index(): Response
     {
         $user = request()->user();
 
         $myGroupIds = $user->groups()->pluck('groups.id')->all();
-        $tree = $this->treeBuilder->build($myGroupIds);
 
         $myMemberships = $user->groups()
             ->whereIn('type', [
@@ -55,11 +51,13 @@ class DirectoryController extends Controller
                 'hashid' => $group->hashid,
                 'slug' => $group->slug,
                 'name' => $group->name,
+                'icon' => $group->icon,
                 'member_count' => $group->users_count,
                 'departments' => $group->children->map(fn (Group $dept) => [
                     'hashid' => $dept->hashid,
                     'slug' => $dept->slug,
                     'name' => $dept->name,
+                    'icon' => $dept->icon,
                     'member_count' => $dept->users_count,
                     'is_mine' => in_array($dept->id, $myGroupIds),
                 ])->values(),
@@ -75,11 +73,11 @@ class DirectoryController extends Controller
                 'hashid' => $group->hashid,
                 'slug' => $group->slug,
                 'name' => $group->name,
+                'icon' => $group->icon,
                 'member_count' => $group->users_count,
             ]);
 
         return Inertia::render('Directory/DirectoryIndex', [
-            'tree' => $tree,
             'myMemberships' => $myMemberships,
             'divisions' => $divisions,
             'orphanDepartments' => $orphanDepartments,
@@ -114,6 +112,7 @@ class DirectoryController extends Controller
                 'hashid' => $child->hashid,
                 'slug' => $child->slug,
                 'name' => $child->name,
+                'icon' => $child->icon,
                 'type' => $child->type->value,
                 'member_count' => $child->users_count,
             ]);
@@ -123,17 +122,15 @@ class DirectoryController extends Controller
             ['division_director', 'director', 'team_lead']
         ));
 
-        $myGroupIds = request()->user()->groups()->pluck('groups.id')->all();
-
         return Inertia::render('Directory/DirectoryShow', [
-            'tree' => $this->treeBuilder->build($myGroupIds),
-            'myGroupCount' => count($myGroupIds),
+            'directorySelectedSlug' => $group->slug,
             'group' => [
                 'hashid' => $group->hashid,
                 'slug' => $group->slug,
                 'name' => $group->name,
                 'type' => $group->type->value,
                 'description' => $group->description,
+                'icon' => $group->icon,
                 'logo_url' => $group->logo_url,
             ],
             'leaders' => $leaders->values(),

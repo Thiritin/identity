@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
 use App\Models\User;
+use App\Services\DirectoryTreeBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Middleware;
@@ -80,11 +82,27 @@ class HandleInertiaRequests extends Middleware
                 ->get(['id', 'name']);
         }
 
+        $directoryProps = [];
+        if (Route::is('directory.*') && $request->user()) {
+            $myGroupIds = $request->user()->groups()
+                ->whereIn('type', [
+                    GroupTypeEnum::Division,
+                    GroupTypeEnum::Department,
+                    GroupTypeEnum::Team,
+                ])
+                ->pluck('groups.id')->all();
+            $directoryProps = [
+                'directoryTree' => (new DirectoryTreeBuilder())->build($myGroupIds),
+                'myGroupCount' => count($myGroupIds),
+                'directorySelectedSlug' => null,
+            ];
+        }
+
         return array_merge(parent::share($request), [
             'locale' => app()->getLocale(),
             'user' => Route::is(['auth.login.view']) ? null : $user,
             'hideUserInfo' => Route::is(['auth.login.view', 'verification.notice', 'auth.consent']),
             'staffMemberList' => $staffMembers,
-        ]);
+        ], $directoryProps);
     }
 }
