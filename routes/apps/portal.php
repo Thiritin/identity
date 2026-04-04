@@ -9,6 +9,7 @@ use App\Http\Controllers\Directory\StaffProfileController;
 use App\Http\Controllers\Profile\DeleteAccountController;
 use App\Http\Controllers\Profile\ExportMyDataController;
 use App\Http\Controllers\Profile\MyDataController;
+use App\Http\Controllers\Profile\NotificationPreferencesController;
 use App\Http\Controllers\Profile\RevokeAppConsentController;
 use App\Http\Controllers\Profile\SecurityController;
 use App\Http\Controllers\Profile\Settings\Apps\NotificationTypesController;
@@ -152,6 +153,11 @@ Route::delete('/settings/telegram', [TelegramController::class, 'disconnect'])
 
 Route::post('/settings/preferences', UpdatePreferencesController::class)
     ->name('settings.preferences.update');
+
+Route::get('/settings/notifications', [NotificationPreferencesController::class, 'edit'])
+    ->name('settings.notifications.edit');
+Route::post('/settings/notifications', [NotificationPreferencesController::class, 'update'])
+    ->name('settings.notifications.update');
 
 Route::get('/my-data', MyDataController::class)->name('my-data');
 Route::delete('/my-data/apps/{clientId}', RevokeAppConsentController::class)->name('my-data.revoke-app');
