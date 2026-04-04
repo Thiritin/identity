@@ -80,22 +80,90 @@
                 :endpoint="canManageAttendance ? route('directory.members.conventions', profileUser.hashid) : ''"
             />
         </section>
+
+        <section v-if="nda?.can_manage" class="mb-6">
+            <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">{{ $t('nda_status') }}</h2>
+            <div class="px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5 space-y-3">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span v-if="ndaVerifiedAt" class="text-sm text-green-600 dark:text-green-400 font-medium">
+                            {{ $t('nda_verified') }} — {{ new Date(ndaVerifiedAt).toLocaleDateString() }}
+                        </span>
+                        <span v-else class="text-sm text-amber-600 dark:text-amber-400 font-medium">
+                            {{ $t('nda_not_verified') }}
+                        </span>
+                    </div>
+                </div>
+
+                <div v-if="ndaLastResult === true" class="text-sm text-green-600 dark:text-green-400">
+                    {{ $t('nda_check_result_signed') }}
+                </div>
+                <div v-else-if="ndaLastResult === false" class="text-sm text-red-600 dark:text-red-400">
+                    {{ $t('nda_check_result_not_signed') }}
+                </div>
+                <div v-else-if="ndaLastResult === 'sent'" class="text-sm text-green-600 dark:text-green-400">
+                    {{ $t('nda_sent_success') }}
+                </div>
+
+                <div class="flex gap-2">
+                    <Button size="sm" variant="outline" :disabled="ndaChecking" @click="checkNda">
+                        {{ ndaChecking ? $t('nda_checking') : $t('nda_check') }}
+                    </Button>
+                    <Button v-if="!ndaVerifiedAt" size="sm" variant="outline" :disabled="ndaSending" @click="sendNda">
+                        {{ ndaSending ? $t('nda_sending') : $t('nda_send') }}
+                    </Button>
+                </div>
+            </div>
+        </section>
     </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import axios from 'axios'
 import { Head, Link } from '@inertiajs/vue3'
 import { Badge } from '@/Components/ui/badge'
+import { Button } from '@/Components/ui/button'
 import ConventionAttendanceEditor from '@/Components/ConventionAttendanceEditor.vue'
 
-defineProps({
+const props = defineProps({
     profileUser: Object,
     groups: Array,
     visibleFields: Object,
     conventionAttendance: Array,
     allConventions: Array,
     canManageAttendance: Boolean,
+    nda: Object,
 })
+
+const ndaVerifiedAt = ref(props.nda?.verified_at)
+const ndaChecking = ref(false)
+const ndaSending = ref(false)
+const ndaLastResult = ref(null)
+
+function checkNda() {
+    ndaChecking.value = true
+    ndaLastResult.value = null
+
+    axios.post(route('directory.members.nda.check', props.profileUser.hashid))
+        .then((response) => {
+            ndaLastResult.value = response.data.signed
+            if (response.data.nda_verified_at) {
+                ndaVerifiedAt.value = response.data.nda_verified_at
+            }
+        })
+        .finally(() => { ndaChecking.value = false })
+}
+
+function sendNda() {
+    ndaSending.value = true
+
+    axios.post(route('directory.members.nda.send', props.profileUser.hashid))
+        .then(() => {
+            ndaLastResult.value = 'sent'
+        })
+        .finally(() => { ndaSending.value = false })
+}
 
 function isLead(level) {
     return ['division_director', 'director', 'team_lead'].includes(level)
