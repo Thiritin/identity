@@ -36,7 +36,7 @@
                 :key="scope"
                 class="flex items-center gap-3 text-sm text-gray-700 dark:text-primary-300"
             >
-                <component :is="scopeIcons[scope]" class="size-4 shrink-0 text-primary-500" />
+                <component :is="scopeIcons[scope] || defaultIcon" class="size-4 shrink-0 text-primary-500" />
                 <span>{{ $t(scopeLabels[scope] || scope) }}</span>
             </li>
         </ul>
@@ -64,7 +64,6 @@
         <div class="flex flex-col gap-3 pt-2">
             <Button :disabled="processing" class="w-full" @click="allowAccess">
                 {{ $t('consent_allow') }}
-                <Check class="size-4" />
             </Button>
             <Button :disabled="processing" variant="outline" class="w-full" @click="denyAccess">
                 {{ $t('consent_deny') }}
@@ -76,7 +75,7 @@
 import AuthLayout from '@/Layouts/AuthLayout.vue'
 import { Head, router } from '@inertiajs/vue3'
 import { Button } from '@/Components/ui/button'
-import { Check, Globe, Mail, User, Users } from 'lucide-vue-next'
+import { Globe, Mail, RefreshCw, ShieldQuestion, User, Users } from 'lucide-vue-next'
 import { ref } from 'vue'
 
 defineOptions({ layout: AuthLayout })
@@ -93,13 +92,17 @@ const scopeLabels = {
     email: 'consent_scope_email',
     profile: 'consent_scope_profile',
     groups: 'consent_scope_groups',
+    offline_access: 'consent_scope_offline_access',
 }
 
 const scopeIcons = {
     email: Mail,
     profile: User,
     groups: Users,
+    offline_access: RefreshCw,
 }
+
+const defaultIcon = ShieldQuestion
 
 function allowAccess() {
     processing.value = true
