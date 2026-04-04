@@ -33,6 +33,7 @@ class AppSeeder extends Seeder
             'icon' => 'CogsDuotone',
             'system_name' => $systemName,
             'user_id' => User::first()->id,
+            'skip_consent' => true,
             'data' => [
                 'client_name' => $clientName,
                 'redirect_uris' => [
@@ -43,6 +44,11 @@ class AppSeeder extends Seeder
                 'frontchannel_logout_uri' => route('login.apps.frontchannel-logout', ['app' => $systemName]),
             ],
         ]);
+
+        if (! $app->wasRecentlyCreated) {
+            $app->update(['skip_consent' => true]);
+        }
+
         // Check if App was just created
         if ($app->wasRecentlyCreated && app()->isLocal()) {
             $app->fresh();

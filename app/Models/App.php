@@ -15,6 +15,7 @@ class App extends Model
     protected $casts = [
         'data' => 'array',
         'pinned' => 'boolean',
+        'skip_consent' => 'boolean',
     ];
 
     public function owner(): BelongsTo

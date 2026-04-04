@@ -19,6 +19,7 @@ class AppFactory extends Factory
             'description' => $this->faker->sentence(),
             'public' => false,
             'pinned' => false,
+            'skip_consent' => false,
             'priority' => $this->faker->numberBetween(1, 1000),
             'url' => $this->faker->url(),
             'data' => [
@@ -42,6 +43,11 @@ class AppFactory extends Factory
     public function pinned(): static
     {
         return $this->state(fn () => ['pinned' => true]);
+    }
+
+    public function skipConsent(): static
+    {
+        return $this->state(fn () => ['skip_consent' => true]);
     }
 
     public function withCategory(?AppCategory $category = null): static
