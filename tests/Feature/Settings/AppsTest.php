@@ -46,12 +46,16 @@ function fakeHydra(): void
     ]);
 }
 
-test('non-developer user cannot access apps', function () {
+test('non-developer user can view developers page without app management', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
         ->get(route('developers.index'))
-        ->assertForbidden();
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->component('Developers', false)
+            ->where('isDeveloper', false)
+        );
 });
 
 test('developer user can list their own apps', function () {

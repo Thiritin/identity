@@ -40,6 +40,8 @@ class UpdateAppRequest extends FormRequest
             $rules['terms_of_service_url'] = ['required', 'url', 'max:2000'];
         }
 
+        $rules['icon'] = ['nullable', 'image', 'max:2048'];
+
         return $rules;
     }
 }

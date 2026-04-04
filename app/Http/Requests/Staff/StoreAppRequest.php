@@ -38,6 +38,7 @@ class StoreAppRequest extends FormRequest
             'developer_name' => [$isFirstParty ? 'nullable' : 'required', 'string', 'max:255'],
             'privacy_policy_url' => [$isFirstParty ? 'nullable' : 'required', 'url', 'max:2000'],
             'terms_of_service_url' => [$isFirstParty ? 'nullable' : 'required', 'url', 'max:2000'],
+            'icon' => ['nullable', 'image', 'max:2048'],
         ];
 
         return $rules;

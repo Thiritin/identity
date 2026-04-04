@@ -34,6 +34,16 @@
                 </div>
 
                 <div>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_icon') }}</label>
+                    <div v-if="app.icon_url" class="mb-2">
+                        <img :src="app.icon_url" alt="App icon" class="h-16 w-16 rounded-lg object-cover" />
+                    </div>
+                    <Input type="file" accept="image/*" @change="form.icon = $event.target.files[0]" class="bg-white dark:bg-primary-950" />
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('apps_icon_hint') }}</p>
+                    <p v-if="form.errors.icon" class="text-xs text-destructive mt-1">{{ form.errors.icon }}</p>
+                </div>
+
+                <div>
                     <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_description') }}</label>
                     <Input v-model="form.description" type="text" :required="!app.first_party" class="bg-white dark:bg-primary-950" />
                     <p v-if="form.errors.description" class="text-xs text-destructive mt-1">{{ form.errors.description }}</p>
@@ -163,6 +173,7 @@ const secretCopied = ref(false)
 
 const form = useForm({
     client_name: props.app.client_name,
+    icon: null,
     description: props.app.description || '',
     app_url: props.app.app_url || '',
     developer_name: props.app.developer_name || '',
@@ -187,7 +198,10 @@ function toggleScope(scope) {
 function submit() {
     form.redirect_uris = form.redirect_uris.filter(uri => uri.trim() !== '')
     form.post_logout_redirect_uris = form.post_logout_redirect_uris.filter(uri => uri.trim() !== '')
-    form.put(route('developers.update', props.app.id))
+    form.post(route('developers.update', props.app.id), {
+        _method: 'put',
+        forceFormData: true,
+    })
 }
 
 function regenerateSecret() {

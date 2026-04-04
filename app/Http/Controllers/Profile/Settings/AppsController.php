@@ -26,20 +26,26 @@ class AppsController extends Controller
 
     public function index()
     {
-        $apps = auth()->user()->apps()
-            ->select('id', 'client_id', 'data', 'approved', 'created_at')
-            ->latest()
-            ->get()
-            ->map(fn (App $app) => [
-                'id' => $app->id,
-                'client_id' => $app->client_id,
-                'client_name' => $app->data['client_name'] ?? '',
-                'approved' => $app->isApproved(),
-                'created_at' => $app->created_at->toDateTimeString(),
-            ]);
+        $user = auth()->user();
+        $isDeveloper = (bool) $user->is_developer;
+
+        $apps = $isDeveloper
+            ? $user->apps()
+                ->select('id', 'client_id', 'data', 'approved', 'created_at')
+                ->latest()
+                ->get()
+                ->map(fn (App $app) => [
+                    'id' => $app->id,
+                    'client_id' => $app->client_id,
+                    'client_name' => $app->data['client_name'] ?? '',
+                    'approved' => $app->isApproved(),
+                    'created_at' => $app->created_at->toDateTimeString(),
+                ])
+            : [];
 
         return Inertia::render('Developers', [
             'apps' => $apps,
+            'isDeveloper' => $isDeveloper,
         ]);
     }
 
@@ -76,6 +82,10 @@ class AppsController extends Controller
         ];
 
         try {
+            $iconPath = $request->hasFile('icon')
+                ? $request->file('icon')->store('app-icons', 'public')
+                : null;
+
             $app = auth()->user()->apps()->create([
                 'data' => $data,
                 'name' => $validated['client_name'],
@@ -85,6 +95,7 @@ class AppsController extends Controller
                 'privacy_policy_url' => $firstParty ? null : ($validated['privacy_policy_url'] ?? null),
                 'terms_of_service_url' => $firstParty ? null : ($validated['terms_of_service_url'] ?? null),
                 'url' => $validated['app_url'] ?? null,
+                'image' => $iconPath,
             ]);
         } catch (\Exception $e) {
             if (isset($app) && ! $app->client_id) {
@@ -161,6 +172,10 @@ class AppsController extends Controller
             $updates['developer_name'] = $validated['developer_name'] ?? $app->developer_name;
             $updates['privacy_policy_url'] = $validated['privacy_policy_url'] ?? $app->privacy_policy_url;
             $updates['terms_of_service_url'] = $validated['terms_of_service_url'] ?? $app->terms_of_service_url;
+        }
+
+        if ($request->hasFile('icon')) {
+            $updates['image'] = $request->file('icon')->store('app-icons', 'public');
         }
 
         $app->update($updates);
@@ -241,6 +256,7 @@ class AppsController extends Controller
             'developer_name' => $app->developer_name ?? '',
             'privacy_policy_url' => $app->privacy_policy_url ?? '',
             'terms_of_service_url' => $app->terms_of_service_url ?? '',
+            'icon_url' => $app->image ? asset('storage/' . $app->image) : null,
             'created_at' => $app->created_at->toDateTimeString(),
         ];
     }

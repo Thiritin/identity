@@ -20,6 +20,13 @@
                 </div>
 
                 <div>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_icon') }}</label>
+                    <Input type="file" accept="image/*" @change="form.icon = $event.target.files[0]" class="bg-white dark:bg-primary-950" />
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('apps_icon_hint') }}</p>
+                    <p v-if="form.errors.icon" class="text-xs text-destructive mt-1">{{ form.errors.icon }}</p>
+                </div>
+
+                <div>
                     <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_description') }}</label>
                     <Input v-model="form.description" type="text" :required="!form.first_party" class="bg-white dark:bg-primary-950" />
                     <p v-if="form.errors.description" class="text-xs text-destructive mt-1">{{ form.errors.description }}</p>
@@ -125,6 +132,7 @@ const props = defineProps({
 const form = useForm({
     client_name: '',
     first_party: props.isStaff,
+    icon: null,
     description: '',
     app_url: '',
     developer_name: '',
