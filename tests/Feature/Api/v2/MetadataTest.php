@@ -233,3 +233,28 @@ it('accepts null expires_at meaning never expires', function () {
         ->assertCreated()
         ->assertJson(['expires_at' => null]);
 });
+
+it('clears expires_at when upsert omits the field', function () {
+    $user = User::factory()->create();
+    actingAsApiUser($user, 'app-one', ['metadata.write']);
+
+    UserAppMetadata::create([
+        'user_id' => $user->id,
+        'client_id' => 'app-one',
+        'key' => 'address',
+        'value' => '123 Main St',
+        'expires_at' => now()->addYear(),
+    ]);
+
+    $this->putJson('/api/v2/metadata/address', ['value' => '456 Oak Ave'])
+        ->assertOk()
+        ->assertJson(['expires_at' => null]);
+
+    $this->assertDatabaseHas('user_app_metadata', [
+        'user_id' => $user->id,
+        'client_id' => 'app-one',
+        'key' => 'address',
+        'value' => '456 Oak Ave',
+        'expires_at' => null,
+    ]);
+});
