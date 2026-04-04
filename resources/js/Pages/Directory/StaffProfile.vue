@@ -31,8 +31,7 @@
             <div class="flex items-center justify-between mb-3">
                 <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100">
                     {{ $t('staff_profile_role_in_group', { group: group.name }) }}
-                    <Badge variant="outline" class="ml-1 text-xs">{{ $t('staff_profile_group_data') }}</Badge>
-                </h2>
+                    </h2>
                 <Button v-if="canEdit" variant="ghost" size="sm" @click="showEditMember = true">
                     <Pencil class="h-3.5 w-3.5 mr-1" /> {{ $t('directory_edit_group') }}
                 </Button>
@@ -61,7 +60,6 @@
         <section v-if="groups.length > 0" class="mb-6">
             <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                 {{ $t('staff_profile_roles') }}
-                <Badge variant="outline" class="ml-1 text-xs">{{ $t('staff_profile_global_data') }}</Badge>
             </h2>
             <div class="space-y-2">
                 <Link
@@ -85,7 +83,6 @@
         <section v-if="Object.keys(visibleFields).length > 0" class="mb-6">
             <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                 {{ $t('staff_profile_personal_info') }}
-                <Badge variant="outline" class="ml-1 text-xs">{{ $t('staff_profile_global_data') }}</Badge>
             </h2>
             <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div v-if="visibleFields.firstname" class="px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5">
@@ -122,7 +119,6 @@
         <section v-if="profileUser.spoken_languages?.length" class="mb-6">
             <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                 {{ $t('staff_profile_skills') }}
-                <Badge variant="outline" class="ml-1 text-xs">{{ $t('staff_profile_global_data') }}</Badge>
             </h2>
             <div class="px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5">
                 <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_spoken_languages') }}</dt>
@@ -136,7 +132,6 @@
         <section class="mb-6">
             <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                 {{ $t('convention_attendance') }}
-                <Badge variant="outline" class="ml-1 text-xs">{{ $t('staff_profile_global_data') }}</Badge>
             </h2>
             <ConventionAttendanceEditor
                 :attendance="conventionAttendance"
