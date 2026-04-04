@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\UserAppMetadata;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class PruneExpiredMetadataCommand extends Command
 {
@@ -16,6 +17,7 @@ class PruneExpiredMetadataCommand extends Command
         $count = UserAppMetadata::where('expires_at', '<', now())->delete();
 
         $this->info("Pruned {$count} expired metadata row(s).");
+        Log::info("Pruned {$count} expired metadata row(s).");
 
         return self::SUCCESS;
     }
