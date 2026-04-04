@@ -7,11 +7,50 @@
         </div>
         <div class="md:col-span-2">
             <form class="space-y-6" @submit.prevent="submit">
+                <!-- First Party toggle (staff only) -->
+                <div v-if="isStaff" class="flex items-center gap-2">
+                    <Checkbox id="first_party" v-model="form.first_party" />
+                    <label for="first_party" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('apps_first_party') }}</label>
+                </div>
+
                 <div>
                     <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_name') }}</label>
                     <Input v-model="form.client_name" type="text" required class="bg-white dark:bg-primary-950" />
                     <p v-if="form.errors.client_name" class="text-xs text-destructive mt-1">{{ form.errors.client_name }}</p>
                 </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_description') }}</label>
+                    <Input v-model="form.description" type="text" :required="!form.first_party" class="bg-white dark:bg-primary-950" />
+                    <p v-if="form.errors.description" class="text-xs text-destructive mt-1">{{ form.errors.description }}</p>
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_app_url') }}</label>
+                    <Input v-model="form.app_url" type="url" placeholder="https://" :required="!form.first_party" class="bg-white dark:bg-primary-950" />
+                    <p v-if="form.errors.app_url" class="text-xs text-destructive mt-1">{{ form.errors.app_url }}</p>
+                </div>
+
+                <!-- Third-party required fields -->
+                <template v-if="!form.first_party">
+                    <div>
+                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_developer_name') }}</label>
+                        <Input v-model="form.developer_name" type="text" required class="bg-white dark:bg-primary-950" />
+                        <p v-if="form.errors.developer_name" class="text-xs text-destructive mt-1">{{ form.errors.developer_name }}</p>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_privacy_policy_url') }}</label>
+                        <Input v-model="form.privacy_policy_url" type="url" placeholder="https://" required class="bg-white dark:bg-primary-950" />
+                        <p v-if="form.errors.privacy_policy_url" class="text-xs text-destructive mt-1">{{ form.errors.privacy_policy_url }}</p>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_terms_of_service_url') }}</label>
+                        <Input v-model="form.terms_of_service_url" type="url" placeholder="https://" required class="bg-white dark:bg-primary-950" />
+                        <p v-if="form.errors.terms_of_service_url" class="text-xs text-destructive mt-1">{{ form.errors.terms_of_service_url }}</p>
+                    </div>
+                </template>
 
                 <div>
                     <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_redirect_uris') }}</label>
@@ -33,6 +72,18 @@
                         <Button v-if="form.post_logout_redirect_uris.length > 1" variant="outline" size="sm" type="button" @click="form.post_logout_redirect_uris.splice(index, 1)">×</Button>
                     </div>
                     <Button variant="outline" size="sm" type="button" @click="form.post_logout_redirect_uris.push('')">{{ $t('apps_add_uri') }}</Button>
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_frontchannel_logout_uri') }}</label>
+                    <Input v-model="form.frontchannel_logout_uri" type="url" placeholder="https://" class="bg-white dark:bg-primary-950" />
+                    <p v-if="form.errors.frontchannel_logout_uri" class="text-xs text-destructive mt-1">{{ form.errors.frontchannel_logout_uri }}</p>
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_backchannel_logout_uri') }}</label>
+                    <Input v-model="form.backchannel_logout_uri" type="url" placeholder="https://" class="bg-white dark:bg-primary-950" />
+                    <p v-if="form.errors.backchannel_logout_uri" class="text-xs text-destructive mt-1">{{ form.errors.backchannel_logout_uri }}</p>
                 </div>
 
                 <div>
@@ -66,14 +117,23 @@ import { Button } from '@/Components/ui/button'
 import { Input } from '@/Components/ui/input'
 import { Checkbox } from '@/Components/ui/checkbox'
 
-defineProps({
+const props = defineProps({
     availableScopes: Array,
+    isStaff: Boolean,
 })
 
 const form = useForm({
     client_name: '',
+    first_party: props.isStaff,
+    description: '',
+    app_url: '',
+    developer_name: '',
+    privacy_policy_url: '',
+    terms_of_service_url: '',
     redirect_uris: [''],
     post_logout_redirect_uris: [''],
+    frontchannel_logout_uri: '',
+    backchannel_logout_uri: '',
     scope: ['openid'],
 })
 

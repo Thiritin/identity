@@ -17,6 +17,7 @@ class App extends Model
         'pinned' => 'boolean',
         'skip_consent' => 'boolean',
         'approved' => 'boolean',
+        'first_party' => 'boolean',
     ];
 
     public function owner(): BelongsTo
@@ -37,5 +38,10 @@ class App extends Model
     public function isApproved(): bool
     {
         return (bool) $this->approved;
+    }
+
+    public function isFirstParty(): bool
+    {
+        return (bool) $this->first_party;
     }
 }

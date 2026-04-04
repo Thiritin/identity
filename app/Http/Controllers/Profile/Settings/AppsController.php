@@ -49,6 +49,7 @@ class AppsController extends Controller
 
         return Inertia::render('Settings/Apps/AppCreate', [
             'availableScopes' => $scopes,
+            'isStaff' => auth()->user()->isStaff(),
         ]);
     }
 
@@ -56,10 +57,17 @@ class AppsController extends Controller
     {
         $validated = $request->validated();
 
+        $firstParty = (bool) ($validated['first_party'] ?? false);
+        if (! auth()->user()->isStaff()) {
+            $firstParty = false;
+        }
+
         $data = [
             'client_name' => $validated['client_name'],
             'redirect_uris' => $validated['redirect_uris'],
             'post_logout_redirect_uris' => $validated['post_logout_redirect_uris'] ?? [],
+            'frontchannel_logout_uri' => $validated['frontchannel_logout_uri'] ?? null,
+            'backchannel_logout_uri' => $validated['backchannel_logout_uri'] ?? null,
             'scope' => $validated['scope'] ?? ['openid'],
             'grant_types' => ['authorization_code', 'refresh_token'],
             'response_types' => ['code'],
@@ -71,7 +79,12 @@ class AppsController extends Controller
             $app = auth()->user()->apps()->create([
                 'data' => $data,
                 'name' => $validated['client_name'],
-                'description' => '',
+                'description' => $validated['description'] ?? '',
+                'first_party' => $firstParty,
+                'developer_name' => $firstParty ? null : ($validated['developer_name'] ?? null),
+                'privacy_policy_url' => $firstParty ? null : ($validated['privacy_policy_url'] ?? null),
+                'terms_of_service_url' => $firstParty ? null : ($validated['terms_of_service_url'] ?? null),
+                'url' => $validated['app_url'] ?? null,
             ]);
         } catch (\Exception $e) {
             if (isset($app) && ! $app->client_id) {
@@ -132,13 +145,25 @@ class AppsController extends Controller
             'client_name' => $validated['client_name'],
             'redirect_uris' => $validated['redirect_uris'],
             'post_logout_redirect_uris' => $validated['post_logout_redirect_uris'] ?? [],
+            'frontchannel_logout_uri' => $validated['frontchannel_logout_uri'] ?? null,
+            'backchannel_logout_uri' => $validated['backchannel_logout_uri'] ?? null,
             'scope' => $validated['scope'] ?? ['openid'],
         ]);
 
-        $app->update([
+        $updates = [
             'data' => $data,
             'name' => $validated['client_name'],
-        ]);
+            'description' => $validated['description'] ?? $app->description,
+            'url' => $validated['app_url'] ?? $app->url,
+        ];
+
+        if (! $app->isFirstParty()) {
+            $updates['developer_name'] = $validated['developer_name'] ?? $app->developer_name;
+            $updates['privacy_policy_url'] = $validated['privacy_policy_url'] ?? $app->privacy_policy_url;
+            $updates['terms_of_service_url'] = $validated['terms_of_service_url'] ?? $app->terms_of_service_url;
+        }
+
+        $app->update($updates);
 
         Inertia::flash('toast', [
             'type' => 'success',
@@ -206,8 +231,16 @@ class AppsController extends Controller
             'client_name' => $app->data['client_name'] ?? '',
             'redirect_uris' => $app->data['redirect_uris'] ?? [],
             'post_logout_redirect_uris' => $app->data['post_logout_redirect_uris'] ?? [],
+            'frontchannel_logout_uri' => $app->data['frontchannel_logout_uri'] ?? '',
+            'backchannel_logout_uri' => $app->data['backchannel_logout_uri'] ?? '',
             'scope' => $app->data['scope'] ?? [],
             'approved' => $app->isApproved(),
+            'first_party' => $app->isFirstParty(),
+            'description' => $app->description ?? '',
+            'app_url' => $app->url ?? '',
+            'developer_name' => $app->developer_name ?? '',
+            'privacy_policy_url' => $app->privacy_policy_url ?? '',
+            'terms_of_service_url' => $app->terms_of_service_url ?? '',
             'created_at' => $app->created_at->toDateTimeString(),
         ];
     }

@@ -106,6 +106,11 @@ test('developer user can create an app', function () {
             'redirect_uris' => ['https://myapp.com/callback'],
             'post_logout_redirect_uris' => ['https://myapp.com/logout'],
             'scope' => ['openid', 'profile'],
+            'description' => 'A test app',
+            'app_url' => 'https://myapp.com',
+            'developer_name' => 'Test Dev',
+            'privacy_policy_url' => 'https://myapp.com/privacy',
+            'terms_of_service_url' => 'https://myapp.com/terms',
         ]);
 
     $response->assertSuccessful()
@@ -117,6 +122,7 @@ test('developer user can create an app', function () {
     $app = $user->apps()->first();
     expect($app)->not->toBeNull();
     expect($app->name)->toBe('My New App');
+    expect($app->isFirstParty())->toBeFalse();
 });
 
 test('developer user can view their own app', function () {

@@ -21,6 +21,7 @@ class AppFactory extends Factory
             'pinned' => false,
             'skip_consent' => false,
             'approved' => true,
+            'first_party' => true,
             'priority' => $this->faker->numberBetween(1, 1000),
             'url' => $this->faker->url(),
             'data' => [
@@ -54,6 +55,21 @@ class AppFactory extends Factory
     public function unapproved(): static
     {
         return $this->state(fn () => ['approved' => false]);
+    }
+
+    public function firstParty(): static
+    {
+        return $this->state(fn () => ['first_party' => true]);
+    }
+
+    public function thirdParty(): static
+    {
+        return $this->state(fn () => [
+            'first_party' => false,
+            'developer_name' => $this->faker->company(),
+            'privacy_policy_url' => $this->faker->url(),
+            'terms_of_service_url' => $this->faker->url(),
+        ]);
     }
 
     public function withCategory(?AppCategory $category = null): static

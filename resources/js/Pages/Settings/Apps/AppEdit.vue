@@ -22,11 +22,49 @@
                     <Input :model-value="app.client_id" readonly class="bg-gray-50 dark:bg-primary-950 font-mono text-sm" />
                 </div>
 
+                <!-- First-party indicator (read-only) -->
+                <div v-if="app.first_party" class="rounded-lg border border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-900/30 p-3">
+                    <p class="text-sm font-medium text-blue-800 dark:text-blue-200">{{ $t('apps_first_party') }}</p>
+                </div>
+
                 <div>
                     <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_name') }}</label>
                     <Input v-model="form.client_name" type="text" required class="bg-white dark:bg-primary-950" />
                     <p v-if="form.errors.client_name" class="text-xs text-destructive mt-1">{{ form.errors.client_name }}</p>
                 </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_description') }}</label>
+                    <Input v-model="form.description" type="text" :required="!app.first_party" class="bg-white dark:bg-primary-950" />
+                    <p v-if="form.errors.description" class="text-xs text-destructive mt-1">{{ form.errors.description }}</p>
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_app_url') }}</label>
+                    <Input v-model="form.app_url" type="url" placeholder="https://" :required="!app.first_party" class="bg-white dark:bg-primary-950" />
+                    <p v-if="form.errors.app_url" class="text-xs text-destructive mt-1">{{ form.errors.app_url }}</p>
+                </div>
+
+                <!-- Third-party required fields -->
+                <template v-if="!app.first_party">
+                    <div>
+                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_developer_name') }}</label>
+                        <Input v-model="form.developer_name" type="text" required class="bg-white dark:bg-primary-950" />
+                        <p v-if="form.errors.developer_name" class="text-xs text-destructive mt-1">{{ form.errors.developer_name }}</p>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_privacy_policy_url') }}</label>
+                        <Input v-model="form.privacy_policy_url" type="url" placeholder="https://" required class="bg-white dark:bg-primary-950" />
+                        <p v-if="form.errors.privacy_policy_url" class="text-xs text-destructive mt-1">{{ form.errors.privacy_policy_url }}</p>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_terms_of_service_url') }}</label>
+                        <Input v-model="form.terms_of_service_url" type="url" placeholder="https://" required class="bg-white dark:bg-primary-950" />
+                        <p v-if="form.errors.terms_of_service_url" class="text-xs text-destructive mt-1">{{ form.errors.terms_of_service_url }}</p>
+                    </div>
+                </template>
 
                 <div>
                     <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_redirect_uris') }}</label>
@@ -48,6 +86,18 @@
                         <Button v-if="form.post_logout_redirect_uris.length > 1" variant="outline" size="sm" type="button" @click="form.post_logout_redirect_uris.splice(index, 1)">×</Button>
                     </div>
                     <Button variant="outline" size="sm" type="button" @click="form.post_logout_redirect_uris.push('')">{{ $t('apps_add_uri') }}</Button>
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_frontchannel_logout_uri') }}</label>
+                    <Input v-model="form.frontchannel_logout_uri" type="url" placeholder="https://" class="bg-white dark:bg-primary-950" />
+                    <p v-if="form.errors.frontchannel_logout_uri" class="text-xs text-destructive mt-1">{{ form.errors.frontchannel_logout_uri }}</p>
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('apps_backchannel_logout_uri') }}</label>
+                    <Input v-model="form.backchannel_logout_uri" type="url" placeholder="https://" class="bg-white dark:bg-primary-950" />
+                    <p v-if="form.errors.backchannel_logout_uri" class="text-xs text-destructive mt-1">{{ form.errors.backchannel_logout_uri }}</p>
                 </div>
 
                 <div>
@@ -113,8 +163,15 @@ const secretCopied = ref(false)
 
 const form = useForm({
     client_name: props.app.client_name,
+    description: props.app.description || '',
+    app_url: props.app.app_url || '',
+    developer_name: props.app.developer_name || '',
+    privacy_policy_url: props.app.privacy_policy_url || '',
+    terms_of_service_url: props.app.terms_of_service_url || '',
     redirect_uris: props.app.redirect_uris.length ? [...props.app.redirect_uris] : [''],
     post_logout_redirect_uris: props.app.post_logout_redirect_uris.length ? [...props.app.post_logout_redirect_uris] : [''],
+    frontchannel_logout_uri: props.app.frontchannel_logout_uri || '',
+    backchannel_logout_uri: props.app.backchannel_logout_uri || '',
     scope: [...(props.app.scope || ['openid'])],
 })
 
