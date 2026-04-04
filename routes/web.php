@@ -47,7 +47,9 @@ Route::prefix('auth')->name('auth.')->group(function () {
         ->middleware(['signed', HandlePrecognitiveRequests::class])
         ->name('two-factor.submit');
 
-    Route::get('consent', ConsentController::class)->name('consent');
+    Route::get('consent', [ConsentController::class, 'show'])->name('consent');
+    Route::post('consent', [ConsentController::class, 'accept'])->name('consent.accept');
+    Route::post('consent/deny', [ConsentController::class, 'deny'])->name('consent.deny');
     Route::get('logout', LogoutController::class)->name('logout');
     Route::inertia('logged-out', 'Auth/LoggedOut')->name('logged-out');
 
