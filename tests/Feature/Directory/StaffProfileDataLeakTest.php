@@ -65,7 +65,7 @@ test('same-department staff sees AllStaff and MyDepartments fields', function ()
     $viewer = makeViewer($sg, $dept);
 
     $this->actingAs($viewer)
-        ->get(route('directory.members.show', $pu))
+        ->get(route('directory.members.show', ['slug' => $dept->slug, 'user' => $pu->hashid]))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->component('Directory/StaffProfile')
@@ -81,11 +81,11 @@ test('same-department staff sees AllStaff and MyDepartments fields', function ()
 });
 
 test('different-department staff cannot see MyDepartments fields', function () {
-    ['staffGroup' => $sg, 'otherDept' => $od, 'profileUser' => $pu] = createProfileScenario();
+    ['staffGroup' => $sg, 'department' => $dept, 'otherDept' => $od, 'profileUser' => $pu] = createProfileScenario();
     $viewer = makeViewer($sg, $od);
 
     $this->actingAs($viewer)
-        ->get(route('directory.members.show', $pu))
+        ->get(route('directory.members.show', ['slug' => $dept->slug, 'user' => $pu->hashid]))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->where('visibleFields.firstname', 'Maria')
@@ -101,7 +101,7 @@ test('director sees all fields including DirectorsOnly', function () {
     $director = makeViewer($sg, $dept, GroupUserLevel::Director);
 
     $this->actingAs($director)
-        ->get(route('directory.members.show', $pu))
+        ->get(route('directory.members.show', ['slug' => $dept->slug, 'user' => $pu->hashid]))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->where('visibleFields.firstname', 'Maria')
@@ -117,7 +117,7 @@ test('profileUser prop never contains sensitive fields', function () {
     $viewer = makeViewer($sg, $dept);
 
     $this->actingAs($viewer)
-        ->get(route('directory.members.show', $pu))
+        ->get(route('directory.members.show', ['slug' => $dept->slug, 'user' => $pu->hashid]))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->missing('profileUser.email')
@@ -137,7 +137,7 @@ test('profileUser prop never contains sensitive fields', function () {
 });
 
 test('all fields restricted hides everything from regular staff', function () {
-    ['staffGroup' => $sg, 'profileUser' => $pu] = createProfileScenario();
+    ['staffGroup' => $sg, 'department' => $dept, 'profileUser' => $pu] = createProfileScenario();
 
     $pu->update([
         'staff_profile_visibility' => [
@@ -152,7 +152,7 @@ test('all fields restricted hides everything from regular staff', function () {
     $viewer = makeViewer($sg);
 
     $this->actingAs($viewer)
-        ->get(route('directory.members.show', $pu))
+        ->get(route('directory.members.show', ['slug' => $dept->slug, 'user' => $pu->hashid]))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->where('profileUser.name', 'TestProfileUser')
@@ -162,13 +162,13 @@ test('all fields restricted hides everything from regular staff', function () {
 });
 
 test('non-staff user cannot access staff profile', function () {
-    ['profileUser' => $pu] = createProfileScenario();
+    ['department' => $dept, 'profileUser' => $pu] = createProfileScenario();
 
     $nonStaff = User::factory()->create();
     $nonStaff->twoFactors()->save(TwoFactor::factory()->totp()->make());
 
     $this->actingAs($nonStaff)
-        ->get(route('directory.members.show', $pu))
+        ->get(route('directory.members.show', ['slug' => $dept->slug, 'user' => $pu->hashid]))
         ->assertForbidden();
 });
 
@@ -177,7 +177,7 @@ test('groups prop only contains safe fields', function () {
     $viewer = makeViewer($sg, $dept);
 
     $this->actingAs($viewer)
-        ->get(route('directory.members.show', $pu))
+        ->get(route('directory.members.show', ['slug' => $dept->slug, 'user' => $pu->hashid]))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->has('groups', 1)
@@ -209,7 +209,7 @@ test('LeadsAndDirectors visibility allows team leads but not regular members', f
     $regularMember = makeViewer($sg, $dept);
 
     $this->actingAs($teamLead)
-        ->get(route('directory.members.show', $pu))
+        ->get(route('directory.members.show', ['slug' => $dept->slug, 'user' => $pu->hashid]))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->where('visibleFields.firstname', 'Maria')
@@ -217,7 +217,7 @@ test('LeadsAndDirectors visibility allows team leads but not regular members', f
         );
 
     $this->actingAs($regularMember)
-        ->get(route('directory.members.show', $pu))
+        ->get(route('directory.members.show', ['slug' => $dept->slug, 'user' => $pu->hashid]))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->where('visibleFields', [])

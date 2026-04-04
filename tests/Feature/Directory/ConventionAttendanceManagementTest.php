@@ -25,15 +25,15 @@ function directorAndPeer(): array
     $peer->groups()->attach($department, ['level' => GroupUserLevel::Member]);
     $peer->twoFactors()->save(TwoFactor::factory()->totp()->make());
 
-    return [$director, $peer];
+    return [$director, $peer, $department];
 }
 
 it('allows director to add convention for peer', function () {
-    [$director, $peer] = directorAndPeer();
+    [$director, $peer, $department] = directorAndPeer();
     $convention = Convention::factory()->create();
 
     $this->actingAs($director)
-        ->post(route('directory.members.conventions', $peer->hashid), [
+        ->post(route('directory.members.conventions', ['slug' => $department->slug, 'user' => $peer->hashid]), [
             'action' => 'add',
             'convention_id' => $convention->id,
             'is_attended' => true,
@@ -47,12 +47,12 @@ it('allows director to add convention for peer', function () {
 });
 
 it('allows director to toggle is_staff for peer', function () {
-    [$director, $peer] = directorAndPeer();
+    [$director, $peer, $department] = directorAndPeer();
     $convention = Convention::factory()->create();
     $peer->conventions()->attach($convention, ['is_attended' => true, 'is_staff' => false]);
 
     $this->actingAs($director)
-        ->post(route('directory.members.conventions', $peer->hashid), [
+        ->post(route('directory.members.conventions', ['slug' => $department->slug, 'user' => $peer->hashid]), [
             'action' => 'update',
             'convention_id' => $convention->id,
             'is_attended' => true,
@@ -65,12 +65,12 @@ it('allows director to toggle is_staff for peer', function () {
 });
 
 it('allows director to remove any entry for peer', function () {
-    [$director, $peer] = directorAndPeer();
+    [$director, $peer, $department] = directorAndPeer();
     $convention = Convention::factory()->create();
     $peer->conventions()->attach($convention, ['is_attended' => true, 'is_staff' => true]);
 
     $this->actingAs($director)
-        ->post(route('directory.members.conventions', $peer->hashid), [
+        ->post(route('directory.members.conventions', ['slug' => $department->slug, 'user' => $peer->hashid]), [
             'action' => 'remove',
             'convention_id' => $convention->id,
         ])
@@ -95,7 +95,7 @@ it('blocks user without can_manage_members in shared group', function () {
     $convention = Convention::factory()->create();
 
     $this->actingAs($viewer)
-        ->post(route('directory.members.conventions', $target->hashid), [
+        ->post(route('directory.members.conventions', ['slug' => $department->slug, 'user' => $target->hashid]), [
             'action' => 'add',
             'convention_id' => $convention->id,
         ])
@@ -119,7 +119,7 @@ it('blocks user with can_manage_members but no shared group', function () {
     $convention = Convention::factory()->create();
 
     $this->actingAs($director)
-        ->post(route('directory.members.conventions', $target->hashid), [
+        ->post(route('directory.members.conventions', ['slug' => $dept1->slug, 'user' => $target->hashid]), [
             'action' => 'add',
             'convention_id' => $convention->id,
         ])

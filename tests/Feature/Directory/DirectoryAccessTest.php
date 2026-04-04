@@ -83,12 +83,16 @@ test('show page sets directorySelectedSlug', function () {
 });
 
 test('staff users can view staff profile', function () {
-    [$user, , $staffGroup] = setupStaffUser();
+    [$user, $root, $staffGroup] = setupStaffUser();
+    $department = Group::factory()->department()->create(['parent_id' => $root->id]);
+    $department->users()->attach($user, ['level' => GroupUserLevel::Member]);
+
     $otherUser = User::factory()->create();
     $otherUser->twoFactors()->save(TwoFactor::factory()->totp()->make());
     $staffGroup->users()->attach($otherUser, ['level' => GroupUserLevel::Member]);
+    $department->users()->attach($otherUser, ['level' => GroupUserLevel::Member]);
 
     $this->actingAs($user)
-        ->get(route('directory.members.show', $otherUser))
+        ->get(route('directory.members.show', ['slug' => $department->slug, 'user' => $otherUser->hashid]))
         ->assertOk();
 });
