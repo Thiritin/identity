@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\v2\GroupController as V2GroupController;
 use App\Http\Controllers\Api\v2\GroupMemberController;
 use App\Http\Controllers\Api\v2\IntrospectionController as V2IntrospectionController;
 use App\Http\Controllers\Api\v2\MetadataController;
+use App\Http\Controllers\Api\v2\NotificationController;
 use App\Http\Controllers\Api\v2\StaffController;
 use App\Http\Controllers\Api\v2\UserinfoController as V2UserinfoController;
 use App\Http\Controllers\HealthController;
@@ -80,6 +81,11 @@ Route::middleware('api')->prefix('v2/')->name('api.v2.')->group(function () {
         Route::get('metadata/{key}', [MetadataController::class, 'show'])->name('metadata.show')->where('key', '[a-zA-Z0-9._-]+');
         Route::put('metadata/{key}', [MetadataController::class, 'upsert'])->name('metadata.upsert')->where('key', '[a-zA-Z0-9._-]+');
         Route::delete('metadata/{key}', [MetadataController::class, 'destroy'])->name('metadata.destroy')->where('key', '[a-zA-Z0-9._-]+');
+
+        // Notifications
+        Route::post('notifications', [NotificationController::class, 'store'])
+            ->name('notifications.store')
+            ->middleware('throttle:notifications');
     });
 
     // Introspect (own auth via client credentials)
