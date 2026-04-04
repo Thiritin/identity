@@ -11,8 +11,7 @@ class ErrorController extends Controller
     public function __invoke(Request $request)
     {
         return Inertia::render('Auth/Error', [
-            'title' => $request->get('error'),
-            'description' => $request->get('error_description'),
+            'error' => $request->get('error', 'unknown'),
             'hideUserInfo' => true,
         ]);
     }
