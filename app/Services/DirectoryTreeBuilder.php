@@ -35,6 +35,7 @@ class DirectoryTreeBuilder
                 'hashid' => $group->hashid,
                 'slug' => $group->slug,
                 'name' => $group->name,
+                'icon' => $group->icon,
                 'type' => $group->type->value,
                 'member_count' => $group->users_count,
                 'is_mine' => in_array($group->id, $myGroupIds),

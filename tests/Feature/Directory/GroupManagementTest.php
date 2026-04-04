@@ -121,3 +121,32 @@ test('cannot delete non-team group', function () {
         ->delete(route('directory.destroy', $department))
         ->assertForbidden();
 });
+
+test('manager can update group icon', function () {
+    [$manager, $department] = setupManager();
+
+    $this->actingAs($manager)
+        ->post(route('directory.update', $department), ['icon' => 'shield'])
+        ->assertRedirect();
+
+    expect($department->fresh()->icon)->toBe('shield');
+});
+
+test('invalid icon is rejected', function () {
+    [$manager, $department] = setupManager();
+
+    $this->actingAs($manager)
+        ->post(route('directory.update', $department), ['icon' => 'not-a-real-icon'])
+        ->assertSessionHasErrors('icon');
+});
+
+test('null icon clears existing icon', function () {
+    [$manager, $department] = setupManager();
+    $department->update(['icon' => 'shield']);
+
+    $this->actingAs($manager)
+        ->post(route('directory.update', $department), ['icon' => null])
+        ->assertRedirect();
+
+    expect($department->fresh()->icon)->toBeNull();
+});

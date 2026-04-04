@@ -70,6 +70,13 @@ test('tree nests departments under divisions and teams under departments', funct
     expect($division['children'][0]['children'][0]['name'])->toBe('Badge Team');
 });
 
+test('tree includes icon field', function () {
+    $this->divisionA->update(['icon' => 'shield']);
+    $tree = app(DirectoryTreeBuilder::class)->build();
+    expect($tree[0]['icon'])->toBe('shield');
+    expect($tree[1]['icon'])->toBeNull();
+});
+
 test('tree marks user groups with is_mine', function () {
     $user = User::factory()->create();
     $this->department->users()->attach($user, ['level' => GroupUserLevel::Member]);
