@@ -71,6 +71,13 @@ class StaffProfileController extends Controller
             'conventionAttendance' => $conventionAttendance,
             'allConventions' => $allConventions,
             'canManageAttendance' => $canManageAttendance,
+            'nda' => [
+                'verified_at' => $user->nda_verified_at?->toIso8601String(),
+                'can_manage' => $viewer->hasStaffLevel([
+                    GroupUserLevel::Director,
+                    GroupUserLevel::DivisionDirector,
+                ]),
+            ],
         ]);
     }
 
