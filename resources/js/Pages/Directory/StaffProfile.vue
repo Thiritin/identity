@@ -26,53 +26,20 @@
             </div>
         </div>
 
-        <!-- Role in [Group] (group-scoped, editable) -->
+        <!-- Role in [Group] (group-scoped, read-only) -->
         <section v-if="groupMembership" class="mb-6">
             <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                 {{ $t('staff_profile_role_in_group', { group: group.name }) }}
                 <Badge variant="outline" class="ml-1 text-xs">{{ $t('staff_profile_group_data') }}</Badge>
             </h2>
-            <div class="space-y-3 px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5">
-                <div v-if="canEdit">
-                    <label class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_title') }}</label>
-                    <Input v-model="memberForm.title" class="mt-1 h-8 text-sm" :placeholder="$t('staff_profile_title_placeholder')" />
-                </div>
-                <div v-else-if="groupMembership.title">
-                    <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_title') }}</dt>
-                    <dd class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ groupMembership.title }}</dd>
-                </div>
-
-                <div v-if="canEdit">
-                    <label class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_level') }}</label>
-                    <Select v-model="memberForm.level">
-                        <SelectTrigger class="mt-1 h-8 text-sm">
-                            <span>{{ levelLabel }}</span>
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="member" :text-value="$t('level_member')">{{ $t('level_member') }}</SelectItem>
-                            <SelectItem value="team_lead" :text-value="$t('level_team_lead')">{{ $t('level_team_lead') }}</SelectItem>
-                            <SelectItem value="director" :text-value="$t('level_director')">{{ $t('level_director') }}</SelectItem>
-                            <SelectItem value="division_director" :text-value="$t('level_division_director')">{{ $t('level_division_director') }}</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div v-else>
+            <div class="px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5 space-y-2">
+                <div>
                     <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_level') }}</dt>
                     <dd class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $t('level_' + groupMembership.level) }}</dd>
                 </div>
-
-                <div v-if="canEdit" class="flex items-center gap-2">
-                    <Checkbox id="can_manage" v-model="memberForm.can_manage_members" />
-                    <label for="can_manage" class="text-sm text-gray-700 dark:text-gray-300">{{ $t('staff_profile_can_manage_members') }}</label>
-                </div>
-
-                <div v-if="canEdit" class="flex items-center gap-2 pt-2">
-                    <Button size="sm" @click="saveMembership" :disabled="memberForm.processing">
-                        {{ $t('save') }}
-                    </Button>
-                    <Button size="sm" variant="destructive" @click="removeMember">
-                        {{ $t('staff_profile_remove_from_group') }}
-                    </Button>
+                <div v-if="groupMembership.title">
+                    <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_title') }}</dt>
+                    <dd class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ groupMembership.title }}</dd>
                 </div>
             </div>
         </section>
@@ -145,7 +112,7 @@
             </div>
         </section>
 
-        <!-- Convention attendance (global) -->
+        <!-- Convention attendance (global, editable by directors) -->
         <section class="mb-6">
             <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                 {{ $t('convention_attendance') }}
@@ -163,17 +130,11 @@
 </template>
 
 <script setup>
-import { Head, Link, router } from '@inertiajs/vue3'
-import { reactive, computed } from 'vue'
+import { Head, Link } from '@inertiajs/vue3'
 import { Badge } from '@/Components/ui/badge'
-import { Button } from '@/Components/ui/button'
-import { Input } from '@/Components/ui/input'
-import { Checkbox } from '@/Components/ui/checkbox'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import ConventionAttendanceEditor from '@/Components/ConventionAttendanceEditor.vue'
-import { trans } from 'laravel-vue-i18n'
 
-const props = defineProps({
+defineProps({
     breadcrumbs: Array,
     group: Object,
     groupMembership: Object,
@@ -184,43 +145,6 @@ const props = defineProps({
     conventionAttendance: Array,
     allConventions: Array,
 })
-
-const memberForm = reactive({
-    level: props.groupMembership?.level ?? 'member',
-    title: props.groupMembership?.title ?? '',
-    can_manage_members: props.groupMembership?.can_manage_members ?? false,
-    processing: false,
-})
-
-const levelLabel = computed(() => trans('level_' + (memberForm.level ?? 'member')))
-
-function saveMembership() {
-    memberForm.processing = true
-    router.patch(
-        route('directory.members.update', { group: props.group.hashid, user: props.profileUser.hashid }),
-        {
-            level: memberForm.level,
-            title: memberForm.title || null,
-            can_manage_members: memberForm.can_manage_members,
-        },
-        {
-            preserveScroll: true,
-            onFinish: () => { memberForm.processing = false },
-        },
-    )
-}
-
-function removeMember() {
-    if (!confirm('Are you sure?')) return
-    router.delete(
-        route('directory.members.destroy', { group: props.group.hashid, user: props.profileUser.hashid }),
-        {
-            onSuccess: () => {
-                router.visit(route('directory.show', props.group.slug))
-            },
-        },
-    )
-}
 
 function isLead(level) {
     return ['division_director', 'director', 'team_lead'].includes(level)
