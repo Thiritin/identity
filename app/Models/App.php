@@ -16,6 +16,7 @@ class App extends Model
         'data' => 'array',
         'pinned' => 'boolean',
         'skip_consent' => 'boolean',
+        'approved' => 'boolean',
     ];
 
     public function owner(): BelongsTo
@@ -31,5 +32,10 @@ class App extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(AppCategory::class, 'category_id');
+    }
+
+    public function isApproved(): bool
+    {
+        return (bool) $this->approved;
     }
 }

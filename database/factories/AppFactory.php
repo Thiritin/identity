@@ -20,6 +20,7 @@ class AppFactory extends Factory
             'public' => false,
             'pinned' => false,
             'skip_consent' => false,
+            'approved' => true,
             'priority' => $this->faker->numberBetween(1, 1000),
             'url' => $this->faker->url(),
             'data' => [
@@ -48,6 +49,11 @@ class AppFactory extends Factory
     public function skipConsent(): static
     {
         return $this->state(fn () => ['skip_consent' => true]);
+    }
+
+    public function unapproved(): static
+    {
+        return $this->state(fn () => ['approved' => false]);
     }
 
     public function withCategory(?AppCategory $category = null): static
