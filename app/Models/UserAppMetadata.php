@@ -14,6 +14,11 @@ class UserAppMetadata extends Model
         'client_id',
         'key',
         'value',
+        'expires_at',
+    ];
+
+    protected $casts = [
+        'expires_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
