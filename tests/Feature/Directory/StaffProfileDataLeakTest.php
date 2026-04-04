@@ -32,8 +32,6 @@ function createProfileScenario(): array
         'phone' => '+49123456789',
         'telegram_username' => 'maria_test',
         'spoken_languages' => ['en', 'de'],
-        'first_eurofurence' => 25,
-        'first_year_staff' => 2019,
         'credit_as' => 'MariaS',
         'staff_profile_visibility' => [
             'firstname' => StaffProfileVisibility::AllStaff->value,
@@ -74,8 +72,6 @@ test('same-department staff sees AllStaff and MyDepartments fields', function ()
             ->where('profileUser.name', 'TestProfileUser')
             ->where('profileUser.credit_as', 'MariaS')
             ->where('profileUser.spoken_languages', ['en', 'de'])
-            ->where('profileUser.first_eurofurence', 25)
-            ->where('profileUser.first_year_staff', 2019)
             ->where('visibleFields.firstname', 'Maria')
             ->where('visibleFields.lastname', 'Schmidt')
             ->where('visibleFields.telegram', 'maria_test')
