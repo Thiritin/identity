@@ -19,6 +19,7 @@
                 v-for="member in filtered"
                 :key="member.hashid"
                 :member="member"
+                :group-slug="groupSlug"
             >
                 <template v-if="canEdit" #actions>
                     <slot name="member-actions" :member="member" />
@@ -39,6 +40,7 @@ import MemberRow from './MemberRow.vue'
 const props = defineProps({
     members: Array,
     canEdit: Boolean,
+    groupSlug: String,
 })
 
 const search = ref('')

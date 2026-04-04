@@ -15,7 +15,7 @@
             <Link
                 v-for="leader in leaders"
                 :key="leader.hashid"
-                :href="route('directory.members.show', leader.hashid)"
+                :href="route('directory.members.show', { slug: group.slug, user: leader.hashid })"
                 class="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/5 dark:bg-primary/10 hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors"
             >
                 <div class="h-7 w-7 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden shrink-0">
@@ -35,7 +35,7 @@
 
         <GroupDescription :description="group.description" />
 
-        <MemberList :members="members" :can-edit="canEdit">
+        <MemberList :members="members" :can-edit="canEdit" :group-slug="group.slug">
             <template v-if="canEdit" #actions>
                 <Button variant="outline" size="sm" @click="$emit('add-member')">
                     <UserPlus class="h-3.5 w-3.5 mr-1" /> {{ $t('directory_add_member') }}
