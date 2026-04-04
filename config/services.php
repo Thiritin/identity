@@ -62,6 +62,8 @@ return [
     ],
     'registration' => [
         'client_id' => env('REGISTRATION_APP_CLIENT_ID'),
+        'attendee_service_url' => env('REG_ATTENDEE_SERVICE_URL'),
+        'attendee_service_token' => env('REG_ATTENDEE_SERVICE_TOKEN'),
     ],
     'hydra' => [
         'public' => env('HYDRA_PUBLIC_URL'),
