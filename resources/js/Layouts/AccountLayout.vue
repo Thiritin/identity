@@ -5,7 +5,7 @@
         <!-- Desktop: background + folder tabs + card -->
         <div class="hidden md:block auth-background bg-primary-600 relative min-h-screen">
             <div class="relative z-10 flex min-h-screen justify-center px-4 py-10 lg:py-14">
-                <div class="flex flex-col items-center w-full max-w-4xl">
+                <div class="flex flex-col items-center w-full transition-all" :class="isDirectory ? 'max-w-6xl' : 'max-w-4xl'">
                     <!-- Folder Tabs + Card -->
                     <div class="w-full">
                         <div class="flex px-2">
@@ -55,14 +55,23 @@
                         </div>
                     </div>
 
-                    <!-- Footer: artwork left, legal right -->
+                    <!-- Footer: artwork left, social + legal right -->
                     <div class="w-full flex items-center justify-between bg-black/40 backdrop-blur-sm rounded-b-xl px-4 py-2 text-xs text-white/70">
                         <div>
                             {{ $t('footer_artwork_by') }}
                             <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
                         </div>
-                        <nav aria-label="Legal" class="flex flex-wrap gap-x-4 gap-y-1">
-                            <a v-for="link in footerLinks" :key="link.name" :href="link.href" target="_blank" class="hover:text-white transition-colors">{{ link.name }}</a>
+                        <nav aria-label="Legal" class="flex flex-wrap items-center gap-x-4 gap-y-1">
+                            <a href="https://github.com/thiritin/identity" target="_blank" class="hover:text-white transition-colors" aria-label="GitHub">
+                                <Github class="h-4 w-4" />
+                            </a>
+                            <a href="https://x.com/efnotifications" target="_blank" class="hover:text-white transition-colors" aria-label="X (Twitter)">
+                                <Twitter class="h-4 w-4" />
+                            </a>
+                            <template v-for="link in footerLinks" :key="link.name">
+                                <Link v-if="link.internal" :href="link.href" class="hover:text-white transition-colors">{{ link.name }}</Link>
+                                <a v-else :href="link.href" target="_blank" class="hover:text-white transition-colors">{{ link.name }}</a>
+                            </template>
                         </nav>
                     </div>
                 </div>
@@ -78,7 +87,16 @@
 
             <!-- Mobile footer -->
             <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 px-4 pb-6 text-xs text-gray-400">
-                <a v-for="link in footerLinks" :key="link.name" :href="link.href" target="_blank" class="hover:text-gray-600 dark:hover:text-gray-300 transition-colors">{{ link.name }}</a>
+                <a href="https://github.com/thiritin/identity" target="_blank" class="hover:text-gray-600 dark:hover:text-gray-300 transition-colors" aria-label="GitHub">
+                    <Github class="h-4 w-4" />
+                </a>
+                <a href="https://x.com/efnotifications" target="_blank" class="hover:text-gray-600 dark:hover:text-gray-300 transition-colors" aria-label="X (Twitter)">
+                    <Twitter class="h-4 w-4" />
+                </a>
+                <template v-for="link in footerLinks" :key="link.name">
+                    <Link v-if="link.internal" :href="link.href" class="hover:text-gray-600 dark:hover:text-gray-300 transition-colors">{{ link.name }}</Link>
+                    <a v-else :href="link.href" target="_blank" class="hover:text-gray-600 dark:hover:text-gray-300 transition-colors">{{ link.name }}</a>
+                </template>
             </div>
 
             <!-- Bottom Navigation -->
@@ -147,7 +165,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { Link, usePage, useForm } from '@inertiajs/vue3'
-import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness, BookUser, Settings, AppWindow } from 'lucide-vue-next'
+import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness, BookUser, Settings, AppWindow, Github, Twitter } from 'lucide-vue-next'
 import { Toaster } from '@/Components/ui/sonner'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/Components/ui/dialog'
 import { Input } from '@/Components/ui/input'
@@ -169,6 +187,7 @@ function isActive(routeName) {
 }
 
 const isProfile = computed(() => isActive('settings.profile'))
+const isDirectory = computed(() => isActive('directory.*'))
 
 const tabs = computed(() => {
     const items = [
@@ -193,6 +212,7 @@ const rightTabs = computed(() => [
 ])
 
 const footerLinks = computed(() => [
+    { name: trans('footer_my_data'), href: route('my-data'), internal: true },
     { name: trans('footer_support_link'), href: 'https://help.eurofurence.org/contact/' },
     { name: trans('footer_imprint'), href: 'https://help.eurofurence.org/legal/imprint' },
     { name: trans('footer_privacy'), href: 'https://help.eurofurence.org/legal/privacy' },
