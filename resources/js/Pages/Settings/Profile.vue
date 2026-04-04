@@ -54,7 +54,7 @@
                 <Link
                     v-for="dept in $page.props.user.departments"
                     :key="dept.hashid"
-                    :href="route('directory.show', dept.hashid)"
+                    :href="route('directory.show', dept.slug)"
                     class="flex items-center justify-between px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
                 >
                     <div>
@@ -117,59 +117,6 @@
                                 <p v-if="staffForm.errors.phone" class="text-xs text-destructive mt-1">{{ staffForm.errors.phone }}</p>
                             </div>
                         </div>
-                        <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_telegram') }}</label>
-                                <VisibilityPicker field="telegram" />
-                            </div>
-                            <Button type="button" variant="outline" class="w-full justify-start font-normal text-muted-foreground" disabled>
-                                <MessageCircle class="h-4 w-4 mr-2 opacity-50" />
-                                {{ staffProfile?.telegram_username ? '@' + staffProfile.telegram_username : $t('staff_profile_telegram_not_linked') }}
-                            </Button>
-                        </div>
-                        <div class="flex justify-end">
-                            <Button type="submit" :disabled="staffForm.processing">{{ $t('save') }}</Button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section: Eurofurence History -->
-            <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
-                <div class="grid md:grid-cols-3 gap-6 md:gap-10">
-                    <div>
-                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_history') }}</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('staff_profile_history_description') }}</p>
-                    </div>
-                    <div class="md:col-span-2 space-y-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_first_ef') }}</label>
-                                <Select v-model="staffForm.first_eurofurence">
-                                    <SelectTrigger class="w-full bg-white dark:bg-primary-950">
-                                        <SelectValue :placeholder="$t('staff_profile_select_ef')" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem v-for="edition in eurofurenceEditions" :key="edition.number" :value="String(edition.number)">
-                                            Eurofurence {{ edition.number }} ({{ edition.year }})
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <p v-if="staffForm.errors.first_eurofurence" class="text-xs text-destructive mt-1">{{ staffForm.errors.first_eurofurence }}</p>
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_first_year_staff') }}</label>
-                                <Select v-model="staffForm.first_year_staff">
-                                    <SelectTrigger class="w-full bg-white dark:bg-primary-950">
-                                        <SelectValue :placeholder="$t('staff_profile_select_year')" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem v-for="year in staffYears" :key="year" :value="String(year)">{{ year }}</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <p v-if="staffForm.errors.first_year_staff" class="text-xs text-destructive mt-1">{{ staffForm.errors.first_year_staff }}</p>
-                            </div>
-                        </div>
                         <div class="flex justify-end">
                             <Button type="submit" :disabled="staffForm.processing">{{ $t('save') }}</Button>
                         </div>
@@ -187,31 +134,41 @@
                     <div class="md:col-span-2 space-y-4">
                         <div>
                             <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_spoken_languages') }}</label>
-                            <div v-if="staffForm.spoken_languages.length > 0" class="flex flex-wrap gap-1.5 mb-2">
-                                <span
-                                    v-for="(code, i) in staffForm.spoken_languages"
-                                    :key="code"
-                                    class="inline-flex items-center gap-1 rounded-md bg-primary/10 text-primary px-2 py-1 text-xs font-medium"
-                                >
-                                    {{ languageMap[code] || code }}
-                                    <button type="button" class="hover:text-destructive" @click="staffForm.spoken_languages.splice(i, 1)">
-                                        <X class="h-3 w-3" />
+                            <Popover v-model:open="languagePopoverOpen">
+                                <PopoverTrigger as-child>
+                                    <button type="button" class="flex w-full items-center justify-between rounded-md border border-input bg-white dark:bg-primary-950 px-3 py-2 text-sm shadow-xs hover:bg-accent hover:text-accent-foreground">
+                                        <div v-if="staffForm.spoken_languages.length > 0" class="flex flex-wrap gap-1.5">
+                                            <span
+                                                v-for="(code, i) in staffForm.spoken_languages"
+                                                :key="code"
+                                                class="inline-flex items-center gap-1 rounded-md bg-primary/10 text-primary px-2 py-0.5 text-xs font-medium"
+                                            >
+                                                {{ languageMap[code] || code }}
+                                                <button type="button" class="hover:text-destructive" @click.stop="staffForm.spoken_languages.splice(i, 1)">
+                                                    <X class="h-3 w-3" />
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <span v-else class="text-muted-foreground">{{ $t('staff_profile_search_language') }}</span>
+                                        <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                     </button>
-                                </span>
-                            </div>
-                            <Command class="rounded-md border border-input bg-white dark:bg-primary-950 shadow-xs" :multiple="true" v-model="staffForm.spoken_languages">
-                                <CommandInput :placeholder="$t('staff_profile_search_language')" />
-                                <CommandList class="max-h-32">
-                                    <CommandEmpty>{{ $t('staff_profile_no_language_found') }}</CommandEmpty>
-                                    <CommandGroup>
-                                        <CommandItem v-for="lang in availableLanguages" :key="lang.code" :value="lang.code">
-                                            <Check class="h-4 w-4 mr-2" :class="staffForm.spoken_languages.includes(lang.code) ? 'opacity-100' : 'opacity-0'" />
-                                            {{ lang.name }}
-                                            <span class="ml-auto text-xs text-muted-foreground">{{ lang.code }}</span>
-                                        </CommandItem>
-                                    </CommandGroup>
-                                </CommandList>
-                            </Command>
+                                </PopoverTrigger>
+                                <PopoverContent class="w-[--reka-popover-trigger-width] p-0" align="start">
+                                    <Command :multiple="true" v-model="staffForm.spoken_languages">
+                                        <CommandInput :placeholder="$t('staff_profile_search_language')" />
+                                        <CommandList class="max-h-48">
+                                            <CommandEmpty>{{ $t('staff_profile_no_language_found') }}</CommandEmpty>
+                                            <CommandGroup>
+                                                <CommandItem v-for="lang in availableLanguages" :key="lang.code" :value="lang.code">
+                                                    <Check class="h-4 w-4 mr-2" :class="staffForm.spoken_languages.includes(lang.code) ? 'opacity-100' : 'opacity-0'" />
+                                                    {{ lang.name }}
+                                                    <span class="ml-auto text-xs text-muted-foreground">{{ lang.code }}</span>
+                                                </CommandItem>
+                                            </CommandGroup>
+                                        </CommandList>
+                                    </Command>
+                                </PopoverContent>
+                            </Popover>
                             <p v-if="staffForm.errors.spoken_languages" class="text-xs text-destructive mt-1">{{ staffForm.errors.spoken_languages }}</p>
                         </div>
                         <div class="flex justify-end">
@@ -221,6 +178,24 @@
                 </div>
             </div>
         </form>
+
+        <!-- Section: Convention Attendance -->
+        <div v-if="$page.props.user.isStaff" class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
+            <div class="grid md:grid-cols-3 gap-6 md:gap-10">
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('convention_attendance') }}</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('convention_attendance_description') }}</p>
+                    <p class="text-xs text-amber-600 dark:text-amber-400 mt-2">{{ $t('convention_attendance_staff_note') }}</p>
+                </div>
+                <div class="md:col-span-2">
+                    <ConventionAttendanceEditor
+                        :attendance="conventionAttendance"
+                        :all-conventions="allConventions"
+                        :endpoint="route('settings.staff-profile.conventions')"
+                    />
+                </div>
+            </div>
+        </div>
 
         <!-- Section: ConBook Credits -->
         <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
@@ -275,6 +250,54 @@
             </div>
         </div>
     </template>
+
+    <!-- Section: Telegram -->
+    <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
+        <div class="grid md:grid-cols-3 md:items-center gap-6 md:gap-10">
+            <div>
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('telegram_connect_title') }}</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('telegram_connect_description') }}</p>
+            </div>
+            <div class="md:col-span-2">
+                <!-- Linked state -->
+                <div v-if="telegramState.linked" class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <TelegramIcon class="h-4 w-4 text-[#26A5E4]" />
+                        <span class="text-sm text-gray-900 dark:text-gray-100">{{ $t('telegram_linked_as', { username: telegramState.username }) }}</span>
+                    </div>
+                    <Button type="button" variant="outline" size="sm" @click="disconnectTelegram">
+                        {{ $t('telegram_disconnect') }}
+                    </Button>
+                </div>
+
+                <!-- Linking in progress -->
+                <div v-else-if="telegramState.linking" class="space-y-3">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ $t('telegram_or_send_code') }}:</p>
+                    <div class="flex items-center gap-3">
+                        <code class="text-lg font-mono font-bold tracking-widest bg-gray-100 dark:bg-primary-950 px-4 py-2 rounded-md">{{ telegramState.code }}</code>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <Button type="button" as="a" :href="telegramState.deepLink" target="_blank" size="sm">
+                            <TelegramIcon class="h-4 w-4 mr-1.5" />
+                            {{ $t('telegram_open_bot') }}
+                        </Button>
+                        <Button type="button" variant="ghost" size="sm" @click="cancelLinking">
+                            {{ $t('cancel') }}
+                        </Button>
+                    </div>
+                    <p class="text-xs text-muted-foreground">{{ $t('telegram_code_expires') }}</p>
+                </div>
+
+                <!-- Not linked -->
+                <div v-else>
+                    <Button type="button" variant="outline" @click="startTelegramLink">
+                        <TelegramIcon class="h-4 w-4 mr-1.5" />
+                        {{ $t('telegram_connect') }}
+                    </Button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Section: Preferences -->
     <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
@@ -341,7 +364,7 @@
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3'
 import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
 import AvatarModal from '@/Profile/AvatarModal.vue'
-import { computed, h, nextTick, ref } from 'vue'
+import { h, nextTick, onUnmounted, ref } from 'vue'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 import { Switch } from '@/Components/ui/switch/index.js'
@@ -351,16 +374,24 @@ import {
     DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/Components/ui/dropdown-menu'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/Components/ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
 import { Checkbox } from '@/Components/ui/checkbox'
 import { Badge } from '@/Components/ui/badge'
-import { Camera, Pencil, Check, X, Globe, Users, Shield, Lock, MessageCircle, Sun, Moon, Monitor } from 'lucide-vue-next'
+import { Camera, Pencil, Check, X, Globe, Users, Shield, Lock, Sun, Moon, Monitor, ChevronsUpDown } from 'lucide-vue-next'
+
+const TelegramIcon = (props, { attrs }) => h('svg', { viewBox: '0 0 24 24', fill: 'currentColor', ...attrs }, [
+    h('path', { d: 'M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z' })
+])
+import ConventionAttendanceEditor from '@/Components/ConventionAttendanceEditor.vue'
 import { trans } from 'laravel-vue-i18n'
 
 const props = defineProps({
     errors: Object,
     staffProfile: Object,
     groupMemberships: Array,
-    eurofurenceEditions: Array,
+    conventionAttendance: Array,
+    allConventions: Array,
+    telegram: Object,
 })
 
 const page = usePage()
@@ -376,6 +407,79 @@ const avatarInput = ref(null)
 const nameInput = ref(null)
 const editingName = ref(false)
 const originalName = ref(page.props.user.name)
+
+// Telegram linking
+const telegramState = ref({
+    linking: false,
+    code: null,
+    deepLink: null,
+    linked: props.telegram?.linked ?? false,
+    username: props.telegram?.username ?? null,
+})
+
+let pollInterval = null
+
+async function startTelegramLink() {
+    const response = await fetch(route('settings.telegram.generate-code'), {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+            'Accept': 'application/json',
+        },
+    })
+    const data = await response.json()
+    telegramState.value.code = data.code
+    telegramState.value.deepLink = data.deep_link
+    telegramState.value.linking = true
+    startPolling()
+}
+
+function startPolling() {
+    stopPolling()
+    pollInterval = setInterval(async () => {
+        try {
+            const response = await fetch(route('settings.telegram.status'), {
+                headers: { 'Accept': 'application/json' },
+            })
+            const data = await response.json()
+            if (data.linked) {
+                telegramState.value.linked = true
+                telegramState.value.username = data.telegram_username
+                telegramState.value.linking = false
+                stopPolling()
+            }
+        } catch (e) {
+            // Silently retry on next interval
+        }
+    }, 3000)
+}
+
+function stopPolling() {
+    if (pollInterval) {
+        clearInterval(pollInterval)
+        pollInterval = null
+    }
+}
+
+function cancelLinking() {
+    telegramState.value.linking = false
+    stopPolling()
+}
+
+function disconnectTelegram() {
+    fetch(route('settings.telegram.disconnect'), {
+        method: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+            'Accept': 'application/json',
+        },
+    }).then(() => {
+        telegramState.value.linked = false
+        telegramState.value.username = null
+    })
+}
+
+onUnmounted(() => stopPolling())
 
 function triggerAvatarUpload() { avatarInput.value.click() }
 
@@ -456,8 +560,6 @@ const staffForm = page.props.user.isStaff ? useForm({
     birthdate: props.staffProfile?.birthdate ?? null,
     phone: props.staffProfile?.phone ?? null,
     spoken_languages: props.staffProfile?.spoken_languages ?? [],
-    first_eurofurence: props.staffProfile?.first_eurofurence?.toString() ?? null,
-    first_year_staff: props.staffProfile?.first_year_staff?.toString() ?? null,
     visibility: props.staffProfile?.visibility ?? {},
 }) : null
 
@@ -500,14 +602,10 @@ const availableLanguages = [
 ]
 
 const languageMap = Object.fromEntries(availableLanguages.map(l => [l.code, l.name]))
+const languagePopoverOpen = ref(false)
 
 function getVisibility(field) { return staffForm.visibility[field] ?? 'all_staff' }
 function setVisibility(field, value) { staffForm.visibility[field] = value }
-
-const staffYears = computed(() => {
-    if (!props.eurofurenceEditions) return []
-    return [...new Set(props.eurofurenceEditions.map(e => e.year))].sort((a, b) => a - b)
-})
 
 const VisibilityPicker = (pickerProps) => {
     const field = pickerProps.field
