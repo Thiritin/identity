@@ -10,15 +10,15 @@
   "unlisted": false,
   "tags": [],
   "version": "current",
-  "sidebarPosition": 1,
+  "sidebarPosition": 2,
   "frontMatter": {
-    "sidebar_position": 1,
+    "sidebar_position": 2,
     "title": "Build an Application"
   },
   "sidebar": "identitySidebar",
   "previous": {
-    "title": "Getting Started",
-    "permalink": "/identity/guides/getting-started"
+    "title": "Understanding Tokens",
+    "permalink": "/identity/guides/tokens"
   },
   "next": {
     "title": "Scopes",

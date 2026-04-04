@@ -1,0 +1,41 @@
+{
+  "id": "identity/api/v2/schemas/convention",
+  "title": "Convention",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/convention.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/convention",
+  "permalink": "/identity/api/v2/schemas/convention",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "convention",
+    "title": "Convention",
+    "description": "",
+    "sidebar_label": "Convention",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "id": 29,
+      "name": "Eurofurence 29",
+      "year": 2026,
+      "theme": "Lost in Translation",
+      "start_date": "2026-08-19",
+      "end_date": "2026-08-23"
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "JSONWebKeySet",
+    "permalink": "/identity/api/v2/schemas/jsonwebkeyset"
+  },
+  "next": {
+    "title": "Error",
+    "permalink": "/identity/api/v2/schemas/error"
+  }
+}

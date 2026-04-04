@@ -42,17 +42,17 @@
       "plugin": "plugin---docusaurus-debugb-38-ad3"
     }
   },
-  "/-e8b": {
+  "/-30c": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-f4d": {
+  "/-03c": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
-  "/-7b8": {
+  "/-8a8": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/identity/api/v1/create-group-2ac": {
@@ -119,6 +119,14 @@
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-add-group-member-085-c51"
   },
+  "/identity/api/v2/authorize-user-9ef": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-authorize-user-841-dc6"
+  },
+  "/identity/api/v2/conventions-c95": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-conventions-229-eb5"
+  },
   "/identity/api/v2/create-group-f31": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-create-groupd-75-ec5"
@@ -134,6 +142,14 @@
   "/identity/api/v2/eurofurence-identity-f0f": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-eurofurence-identity-904-4c2"
+  },
+  "/identity/api/v2/get-conventions-17d": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-conventions-285-fb6"
+  },
+  "/identity/api/v2/get-current-convention-220": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-current-convention-12-a-c34"
   },
   "/identity/api/v2/get-group-6e4": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
@@ -151,6 +167,10 @@
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-get-groupsc-96-0bf"
   },
+  "/identity/api/v2/get-jwks-226": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-jwks-86-b-0dd"
+  },
   "/identity/api/v2/get-metadata-4e2": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-get-metadata-695-35b"
@@ -158,6 +178,10 @@
   "/identity/api/v2/get-metadata-key-ab9": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-get-metadata-key-22-b-32d"
+  },
+  "/identity/api/v2/get-open-id-configuration-aa9": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-open-id-configurationbab-b11"
   },
   "/identity/api/v2/get-staff-list-c88": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
@@ -170,6 +194,10 @@
   "/identity/api/v2/get-staff-member-430": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-get-staff-member-7-f-9-dbd"
+  },
+  "/identity/api/v2/get-token-259": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-token-095-c6b"
   },
   "/identity/api/v2/get-userinfo-68f": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
@@ -199,6 +227,86 @@
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-remove-group-memberd-48-28e"
   },
+  "/identity/api/v2/schemas/addmemberform-940": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-addmemberform-15-b-c1d"
+  },
+  "/identity/api/v2/schemas/convention-f49": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-conventionca-4-8b9"
+  },
+  "/identity/api/v2/schemas/error-bde": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-error-233-cc8"
+  },
+  "/identity/api/v2/schemas/group-64c": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-group-782-204"
+  },
+  "/identity/api/v2/schemas/groupform-cb8": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-groupform-173-c36"
+  },
+  "/identity/api/v2/schemas/groupmember-09b": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-groupmember-3-e-1-fa8"
+  },
+  "/identity/api/v2/schemas/groupsummary-898": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-groupsummary-669-350"
+  },
+  "/identity/api/v2/schemas/grouptreenode-529": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-grouptreenode-1-f-4-090"
+  },
+  "/identity/api/v2/schemas/jsonwebkeyset-c71": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-jsonwebkeysetc-15-93e"
+  },
+  "/identity/api/v2/schemas/metadata-238": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-metadata-347-d78"
+  },
+  "/identity/api/v2/schemas/metadatavalue-040": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-metadatavaluef-41-ef1"
+  },
+  "/identity/api/v2/schemas/oautherror-e56": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-oautherror-93-c-b91"
+  },
+  "/identity/api/v2/schemas/openidconfiguration-054": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-openidconfiguration-11-d-66c"
+  },
+  "/identity/api/v2/schemas/staffprofile-d42": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-staffprofile-841-08f"
+  },
+  "/identity/api/v2/schemas/tokenintrospectionrequest-30d": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-tokenintrospectionrequest-553-e46"
+  },
+  "/identity/api/v2/schemas/tokenintrospectionresponse-409": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-tokenintrospectionresponse-00-e-ce3"
+  },
+  "/identity/api/v2/schemas/tokenrequest-1b7": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-tokenrequestf-9-e-870"
+  },
+  "/identity/api/v2/schemas/tokenresponse-f62": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-tokenresponse-486-654"
+  },
+  "/identity/api/v2/schemas/updatememberform-519": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-updatememberformc-2-a-712"
+  },
+  "/identity/api/v2/schemas/userinfo-45a": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-userinfo-6-f-1-689"
+  },
   "/identity/api/v2/staff-e2f": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-stafffb-5-46b"
@@ -215,6 +323,14 @@
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-user-metadatacba-4fd"
   },
+  "/identity/guides/app-to-app-27c": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-guides-app-to-app-9-ce-134"
+  },
+  "/identity/guides/audiences-2af": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-guides-audiencesbc-4-465"
+  },
   "/identity/guides/build-an-application-e47": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-guides-build-an-application-6-d-1-0f7"
@@ -226,6 +342,10 @@
   "/identity/guides/scopes-f1f": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-guides-scopes-4-f-8-709"
+  },
+  "/identity/guides/tokens-66b": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-guides-tokens-00-a-257"
   },
   "/-ce3": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",

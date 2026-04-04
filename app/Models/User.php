@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
 use App\Enums\StaffProfileVisibility;
+use App\Enums\TwoFactorTypeEnum;
 use App\Models\Concerns\HasHashid;
 use App\Notifications\PasswordResetQueuedNotification;
 use App\Notifications\UpdateEmailNotification;
@@ -187,6 +188,16 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function resetTwoFactorAuth()
     {
         $this->twoFactors()->delete();
+    }
+
+    public function deleteBackupCodesIfOrphaned(): void
+    {
+        $remainingMethods = $this->twoFactors()
+            ->whereIn('type', [TwoFactorTypeEnum::TOTP, TwoFactorTypeEnum::YUBIKEY, TwoFactorTypeEnum::SECURITY_KEY])
+            ->count();
+        if ($remainingMethods === 0) {
+            $this->twoFactors()->where('type', TwoFactorTypeEnum::BackupCodes)->delete();
+        }
     }
 
     public function isSuspended(): bool

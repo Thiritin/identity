@@ -1,1 +1,1 @@
-{"parameters":[{"in":"path","name":"user","required":true,"schema":{"type":"string"},"description":"User's hashid","example":"1VJEQAYWW54TZ5VD"}]}
+{"parameters":[{"in":"path","name":"user","required":true,"schema":{"type":"string"},"description":"User's id","example":"1VJEQAYWW54TZ5VD"}]}

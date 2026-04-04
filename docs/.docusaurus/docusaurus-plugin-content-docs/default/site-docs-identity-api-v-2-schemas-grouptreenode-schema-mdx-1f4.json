@@ -1,0 +1,45 @@
+{
+  "id": "identity/api/v2/schemas/grouptreenode",
+  "title": "GroupTreeNode",
+  "description": "Recursive tree node representing a group in the hierarchy",
+  "source": "@site/docs/identity/api/v2/schemas/grouptreenode.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/grouptreenode",
+  "permalink": "/identity/api/v2/schemas/grouptreenode",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "grouptreenode",
+    "title": "GroupTreeNode",
+    "description": "Recursive tree node representing a group in the hierarchy",
+    "sidebar_label": "GroupTreeNode",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "id": "Y6K08PEKXG9Q7ZWJ",
+      "name": "Operations",
+      "type": "division",
+      "slug": "operations",
+      "icon": "briefcase",
+      "member_count": 5,
+      "is_mine": true,
+      "children": [
+        null
+      ]
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "StaffProfile",
+    "permalink": "/identity/api/v2/schemas/staffprofile"
+  },
+  "next": {
+    "title": "Group",
+    "permalink": "/identity/api/v2/schemas/group"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "identity/api/v2/schemas/metadata",
+  "title": "Metadata",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/metadata.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/metadata",
+  "permalink": "/identity/api/v2/schemas/metadata",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "metadata",
+    "title": "Metadata",
+    "description": "",
+    "sidebar_label": "Metadata",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "key": "billing.address.city",
+      "value": "Berlin"
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "UpdateMemberForm",
+    "permalink": "/identity/api/v2/schemas/updatememberform"
+  },
+  "next": {
+    "title": "MetadataValue",
+    "permalink": "/identity/api/v2/schemas/metadatavalue"
+  }
+}

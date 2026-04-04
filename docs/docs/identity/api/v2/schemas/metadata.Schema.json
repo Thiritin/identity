@@ -1,0 +1,1 @@
+{"schema":{"type":"object","properties":{"key":{"type":"string","example":"billing.address.city"},"value":{"type":"string","example":"Berlin"}},"title":"Metadata"},"schemaType":"response"}

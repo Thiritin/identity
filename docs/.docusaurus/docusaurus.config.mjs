@@ -13,12 +13,12 @@ export default {
   "projectName": "identity",
   "onBrokenLinks": "throw",
   "markdown": {
+    "mermaid": true,
     "hooks": {
       "onBrokenMarkdownLinks": "warn",
       "onBrokenMarkdownImages": "throw"
     },
     "format": "mdx",
-    "mermaid": false,
     "emoji": true,
     "mdx1Compat": {
       "comments": true,
@@ -95,6 +95,7 @@ export default {
             "specPath": "static/contracts/identity/api/v2/identity.oas.2.0.yml",
             "outputDir": "docs/identity/api/v2",
             "downloadUrl": "../../contracts/identity/api/v2/identity.oas.2.0.yml",
+            "showSchemas": true,
             "sidebarOptions": {
               "groupPathsBy": "tag",
               "categoryLinkSource": "tag"
@@ -105,7 +106,8 @@ export default {
     ]
   ],
   "themes": [
-    "docusaurus-theme-openapi-docs"
+    "docusaurus-theme-openapi-docs",
+    "@docusaurus/theme-mermaid"
   ],
   "themeConfig": {
     "navbar": {
@@ -137,7 +139,7 @@ export default {
           "items": [
             {
               "label": "API Documentation",
-              "to": "/identity/api/v1/eurofurence-identity"
+              "to": "/identity/api/v2/eurofurence-identity"
             }
           ]
         },
@@ -382,6 +384,13 @@ export default {
     "tableOfContents": {
       "minHeadingLevel": 2,
       "maxHeadingLevel": 3
+    },
+    "mermaid": {
+      "theme": {
+        "dark": "dark",
+        "light": "default"
+      },
+      "options": {}
     }
   },
   "baseUrlIssueBanner": true,

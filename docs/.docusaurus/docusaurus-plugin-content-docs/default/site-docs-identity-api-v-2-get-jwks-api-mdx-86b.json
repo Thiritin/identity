@@ -1,0 +1,35 @@
+{
+  "id": "identity/api/v2/get-jwks",
+  "title": "JSON Web Key Set",
+  "description": "Returns the public keys used to verify ID tokens and other signed JWTs issued by the authorization server.",
+  "source": "@site/docs/identity/api/v2/get-jwks.api.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/get-jwks",
+  "permalink": "/identity/api/v2/get-jwks",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "get-jwks",
+    "title": "JSON Web Key Set",
+    "description": "Returns the public keys used to verify ID tokens and other signed JWTs issued by the authorization server.",
+    "sidebar_label": "JSON Web Key Set",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "eJzlVk1v2zgQ/SuEcmgDOFIQdHsIsMCmaVC4zTZtnG4OSZHQ0shiQ5NakrLjNfLf9w0l+SPpor6vL5Lo+XwznDfLpCCfO1UHZU1ynFxSaJzxIlQk6masVS4eaOFF46kQwYoZOVUuxPA9Ph4IgtIUwkLaCa8mBkIfr6+8UN43eB8voiHZhMo69Y9kJ8KTg5X01tyaU63IBC98ZRtdiFzmkA6V8sKRr63xFO07KvFdCRVEDf+2ULnUeiGsE/OKjCCT28YE/GUmUBCNeTB2bsT9gyruhTJCclSiIlnAcTJIPOWNU2GRHN98HyS9L58cL5Ojw0N+bKNy8QlKuYULE/hfWddAJqaT/fAsskw8Yp9KfguLmqBkxz8oD1CsnUXYQbUOGM4NKemcXEBIBZr6HbQ56JWQD5wyhLbD/UTAnSUGCT3Kaa1Z9nJ0kjwNEhRyNwONlxMSr1FV8XusrURn0P6WTRyzTcC8m83hexaXevJr8RM9QcuEavosiaPf3rIN82sLSFhMbdHoxovX76Snt28apw+4WQoq9tnKDlCwFXpEf6D0PzWzGd7J15N3yRP/BklQIZ59HF18vqYx0h9RWP0pJyjnTXJRo31xmU6tMVxudCNXO3bWEKAmEwofrz+N4GVKuETdEbeFDBU+snROWh/Efs9+zB98GvuRW5xvGTt53sxfHEDJ4wfawWkcVSHU/jjLVIEscS9SapwtUW6TU2odF/m5lXOLO7ibAc2ilfXI/vv67o34vrRNzSigNTaanw+KHpTB9ve3nULeAob1VXGAG1yqSdPC+6LSbRSrUqBKJ3lO3l/xoNsIjj0zwDF+fI9JOnIs346zEeWOwg4K0FCmtCzJpWqjOEoP08Nk3T5n67TEsMu1G0Yyj14wdRQjMqU/MDoBrTJpbvneGBn9XXWnHCLGFqZ27Pvu3/P2pMDUxHQUfw6vXlR1gnvYjNlo1tta4Z6NtR1nCMFk58PTs8+jM3aDWTz1F+UITQjzG6Yq0vWLUmmaSJ1FnZdz4MtQzI4w4ovaKuaKElOfSeVnwERugcNILnt74uIEzHMkRjkawLdneyvhW3Mg7tvOuD8WuNnguu0eEGVj4kWRupfHNC6VJih8g69XXhTK11ouBKMZyUrOZJAuCsfKrEXjp5BFAcJpiTOyaUckwgdMWN9GVZZaGboX2er9TsZmhLXLjg1bAu6zGgVZllHZ81s6XaQOfAf5touZvHsu5vzhlGveRsZkGdVEl594XSrnAyc1EFr2b3WFOTgQFPJ0f8MXyPilMxx2Nqc0HaO/X/XGMY6ZcgGwZz4/4CDETHk1VrotYkCHTfx+n9sHZ5u6RWYSX9eYxu/eQ6XqaJtXGCQH4mfTfMf2N5T7UC/x6PQLCiiNRxAygoSm21SYo+W55KfQDJQ1dYFHq9rWcSoNk2UXxqZqQZqi7vv40in1iV3w4hTFZ4rmd2Wj9V3E7K6LaI3oVvMAQiQXbWURPa18hCzaAlNIRCi3EmWgsbZEREQvsS3ep3nNz58r4Ho+Hmg7iUNre0g4OU/bQcEa3bL0HzMjjgskYhuH5DKJjILPqEz9jBl4LPMHTs5g5Gvr4GTv8PANvckTXh7CFT2GZ5OR0r9Scc5x8VStwTUoycaQYxIWYGHBW8goEujWmFmut7v/yQrccVMAlhkGWMsOsaLLbre4STYoFBrr7QIsHukcIsvlGCsRKPnpiY//bsh1W/VMOiXHzGE332G69RzXEaDJgx19XXMhZlI3cRN+vlTztrDaej6cXaG2/wJBJXRK",
+    "sidebar_class_name": "get api-method",
+    "info_path": "identity/api/v2/eurofurence-identity",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Token Endpoint",
+    "permalink": "/identity/api/v2/get-token"
+  },
+  "next": {
+    "title": "Get userinfo",
+    "permalink": "/identity/api/v2/get-userinfo"
+  }
+}

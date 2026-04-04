@@ -1,0 +1,1 @@
+{"schema":{"type":"object","properties":{"error":{"type":"string","description":"Error code","example":"invalid_grant"},"error_description":{"type":"string","description":"Human-readable error description"}},"title":"OAuthError"},"schemaType":"response"}

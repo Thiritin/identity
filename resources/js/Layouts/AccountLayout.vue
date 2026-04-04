@@ -76,8 +76,8 @@
                             <a href="https://github.com/thiritin/identity" target="_blank" class="hover:text-white transition-colors" aria-label="GitHub">
                                 <Github class="h-4 w-4" />
                             </a>
-                            <a href="https://x.com/efnotifications" target="_blank" class="hover:text-white transition-colors" aria-label="X (Twitter)">
-                                <Twitter class="h-4 w-4" />
+                            <a href="https://t.me/efnotifications" target="_blank" class="hover:text-white transition-colors" aria-label="Telegram">
+                                <Send class="h-4 w-4" />
                             </a>
                             <template v-for="link in footerLinks" :key="link.name">
                                 <Link v-if="link.internal" :href="link.href" class="hover:text-white transition-colors">{{ link.name }}</Link>
@@ -101,8 +101,8 @@
                 <a href="https://github.com/thiritin/identity" target="_blank" class="hover:text-gray-600 dark:hover:text-gray-300 transition-colors" aria-label="GitHub">
                     <Github class="h-4 w-4" />
                 </a>
-                <a href="https://x.com/efnotifications" target="_blank" class="hover:text-gray-600 dark:hover:text-gray-300 transition-colors" aria-label="X (Twitter)">
-                    <Twitter class="h-4 w-4" />
+                <a href="https://t.me/efnotifications" target="_blank" class="hover:text-gray-600 dark:hover:text-gray-300 transition-colors" aria-label="Telegram">
+                    <Send class="h-4 w-4" />
                 </a>
                 <template v-for="link in footerLinks" :key="link.name">
                     <Link v-if="link.internal" :href="link.href" class="hover:text-gray-600 dark:hover:text-gray-300 transition-colors">{{ link.name }}</Link>
@@ -176,7 +176,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { Link, usePage, useForm } from '@inertiajs/vue3'
-import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness, BookUser, Settings, Github, Twitter } from 'lucide-vue-next'
+import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness, BookUser, Settings, Github, Send } from 'lucide-vue-next'
 import { Toaster } from '@/Components/ui/sonner'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/Components/ui/dialog'
 import { Input } from '@/Components/ui/input'

@@ -5,7 +5,7 @@ title: Getting Started
 
 # Getting Started
 
-This guide walks you through the basics of integrating with Eurofurence Identity — from understanding how authentication works to making your first API call.
+This guide walks you through the basics of integrating with Eurofurence Identity, from understanding how authentication works to making your first API call.
 
 ## Prerequisites
 
@@ -40,11 +40,11 @@ If your library needs manual configuration:
 |----------|-----|
 | Authorization | `https://identity.eurofurence.org/oauth2/auth` |
 | Token | `https://identity.eurofurence.org/oauth2/token` |
-| Userinfo | `https://identity.eurofurence.org/api/v1/userinfo` |
+| Userinfo | `https://identity.eurofurence.org/api/v2/userinfo` |
 
 ## Minimal Example
 
-Here's the simplest possible integration — request the user's identity and email:
+Here's the simplest possible integration, requesting the user's identity and email:
 
 **1. Redirect the user to login:**
 
@@ -71,11 +71,40 @@ curl -X POST https://identity.eurofurence.org/oauth2/token \
 **3. Use the access token to fetch user info:**
 
 ```bash
-curl https://identity.eurofurence.org/api/v1/userinfo \
+curl https://identity.eurofurence.org/api/v2/userinfo \
   -H "Authorization: Bearer ACCESS_TOKEN"
 ```
 
+## Userinfo Response
+
+The userinfo endpoint returns claims about the authenticated user based on the scopes your application requested.
+
+With `openid email profile` scopes, you'll get a response like this:
+
+```json
+{
+  "sub": "a1b2c3d4e5",
+  "email": "user@example.com",
+  "email_verified": true,
+  "name": "BlueFox",
+  "avatar": "https://avatars.eurofurence.org/path/to/avatar.jpg"
+}
+```
+
+### Available Scopes
+
+| Scope | Claims |
+|-------|--------|
+| *(always)* | `sub` (unique user identifier) |
+| `email` | `email`, `email_verified` |
+| `profile` | `name`, `avatar` |
+| `groups` | `groups` (array of group memberships with `id`, `name`, `type`, `slug`, `level`, `title`) |
+
+:::tip
+The `sub` claim is a stable, opaque identifier. Use it as your primary key for linking users, never `email` or `name`, as those can change.
+:::
+
 ## What's Next?
 
-- **[Build an Application](/identity/guides/build-an-application)** — Detailed guide covering scopes, tokens, backchannel logout, metadata API, and privacy policy requirements
-- **[API Reference](/identity/api/v1/eurofurence-identity)** — Full interactive API documentation
+- **[Build an Application](/identity/guides/build-an-application):** Detailed guide covering scopes, tokens, backchannel logout, metadata API, and privacy policy requirements
+- **[API Reference](/identity/api/v1/eurofurence-identity):** Full interactive API documentation

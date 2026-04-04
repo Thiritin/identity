@@ -1,1 +1,1 @@
-{"responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"object","properties":{"data":{"type":"array","items":{"type":"object","properties":{"key":{"type":"string","example":"billing.address.city"},"value":{"type":"string","example":"Berlin"}},"title":"Metadata"}}}}}}}}}
+{"responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"array","items":{"type":"object","properties":{"key":{"type":"string","example":"billing.address.city"},"value":{"type":"string","example":"Berlin"}},"title":"Metadata"}}}}}}}

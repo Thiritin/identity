@@ -1,0 +1,27 @@
+{
+  "id": "identity/guides/app-to-app",
+  "title": "App-to-App APIs",
+  "description": "Eurofurence services need to talk to each other. The registration system might need to check group memberships via Identity, or the Dealer's Den might need to verify a registration status. This guide explains how service-to-service communication is secured.",
+  "source": "@site/docs/identity/guides/app-to-app.md",
+  "sourceDirName": "identity/guides",
+  "slug": "/identity/guides/app-to-app",
+  "permalink": "/identity/guides/app-to-app",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "sidebar_position": 5,
+    "title": "App-to-App APIs"
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Audiences",
+    "permalink": "/identity/guides/audiences"
+  },
+  "next": {
+    "title": "Introduction",
+    "permalink": "/identity/api/v1/eurofurence-identity"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "identity/api/v2/schemas/error",
+  "title": "Error",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/error.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/error",
+  "permalink": "/identity/api/v2/schemas/error",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "error",
+    "title": "Error",
+    "description": "",
+    "sidebar_label": "Error",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "message": "string"
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Convention",
+    "permalink": "/identity/api/v2/schemas/convention"
+  }
+}

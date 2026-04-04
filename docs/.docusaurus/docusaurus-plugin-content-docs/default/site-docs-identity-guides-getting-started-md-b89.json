@@ -1,7 +1,7 @@
 {
   "id": "identity/guides/getting-started",
   "title": "Getting Started",
-  "description": "This guide walks you through the basics of integrating with Eurofurence Identity — from understanding how authentication works to making your first API call.",
+  "description": "This guide walks you through the basics of integrating with Eurofurence Identity, from understanding how authentication works to making your first API call.",
   "source": "@site/docs/identity/guides/getting-started.md",
   "sourceDirName": "identity/guides",
   "slug": "/identity/guides/getting-started",
@@ -21,7 +21,7 @@
     "permalink": "/"
   },
   "next": {
-    "title": "Build an Application",
-    "permalink": "/identity/guides/build-an-application"
+    "title": "Understanding Tokens",
+    "permalink": "/identity/guides/tokens"
   }
 }

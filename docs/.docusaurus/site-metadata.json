@@ -39,6 +39,11 @@
       "type": "package",
       "name": "docusaurus-theme-openapi-docs",
       "version": "4.7.1"
+    },
+    "docusaurus-theme-mermaid": {
+      "type": "package",
+      "name": "@docusaurus/theme-mermaid",
+      "version": "3.9.2"
     }
   }
 }

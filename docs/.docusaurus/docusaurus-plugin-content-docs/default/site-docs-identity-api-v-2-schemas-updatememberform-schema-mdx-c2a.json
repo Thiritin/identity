@@ -1,0 +1,37 @@
+{
+  "id": "identity/api/v2/schemas/updatememberform",
+  "title": "UpdateMemberForm",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/updatememberform.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/updatememberform",
+  "permalink": "/identity/api/v2/schemas/updatememberform",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "updatememberform",
+    "title": "UpdateMemberForm",
+    "description": "",
+    "sidebar_label": "UpdateMemberForm",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "level": "member",
+      "title": "string"
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "AddMemberForm",
+    "permalink": "/identity/api/v2/schemas/addmemberform"
+  },
+  "next": {
+    "title": "Metadata",
+    "permalink": "/identity/api/v2/schemas/metadata"
+  }
+}

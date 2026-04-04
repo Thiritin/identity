@@ -15,14 +15,17 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: [
         'identity/guides/getting-started',
+        'identity/guides/tokens',
         'identity/guides/build-an-application',
         'identity/guides/scopes',
+        'identity/guides/audiences',
+        'identity/guides/app-to-app',
       ],
     },
     {
       type: 'category',
-      label: 'API v1',
-      collapsed: false,
+      label: 'API v1 (Deprecated)',
+      collapsed: true,
       items: v1Sidebar,
     },
     {

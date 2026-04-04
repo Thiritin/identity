@@ -91,6 +91,16 @@
               "sidebar": "identitySidebar"
             },
             {
+              "id": "identity/api/v2/authorize-user",
+              "path": "/identity/api/v2/authorize-user",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/conventions",
+              "path": "/identity/api/v2/conventions",
+              "sidebar": "identitySidebar"
+            },
+            {
               "id": "identity/api/v2/create-group",
               "path": "/identity/api/v2/create-group",
               "sidebar": "identitySidebar"
@@ -108,6 +118,16 @@
             {
               "id": "identity/api/v2/eurofurence-identity",
               "path": "/identity/api/v2/eurofurence-identity",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/get-conventions",
+              "path": "/identity/api/v2/get-conventions",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/get-current-convention",
+              "path": "/identity/api/v2/get-current-convention",
               "sidebar": "identitySidebar"
             },
             {
@@ -131,6 +151,11 @@
               "sidebar": "identitySidebar"
             },
             {
+              "id": "identity/api/v2/get-jwks",
+              "path": "/identity/api/v2/get-jwks",
+              "sidebar": "identitySidebar"
+            },
+            {
               "id": "identity/api/v2/get-metadata",
               "path": "/identity/api/v2/get-metadata",
               "sidebar": "identitySidebar"
@@ -138,6 +163,11 @@
             {
               "id": "identity/api/v2/get-metadata-key",
               "path": "/identity/api/v2/get-metadata-key",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/get-open-id-configuration",
+              "path": "/identity/api/v2/get-open-id-configuration",
               "sidebar": "identitySidebar"
             },
             {
@@ -153,6 +183,11 @@
             {
               "id": "identity/api/v2/get-staff-member",
               "path": "/identity/api/v2/get-staff-member",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/get-token",
+              "path": "/identity/api/v2/get-token",
               "sidebar": "identitySidebar"
             },
             {
@@ -191,6 +226,106 @@
               "sidebar": "identitySidebar"
             },
             {
+              "id": "identity/api/v2/schemas/addmemberform",
+              "path": "/identity/api/v2/schemas/addmemberform",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/convention",
+              "path": "/identity/api/v2/schemas/convention",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/error",
+              "path": "/identity/api/v2/schemas/error",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/group",
+              "path": "/identity/api/v2/schemas/group",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/groupform",
+              "path": "/identity/api/v2/schemas/groupform",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/groupmember",
+              "path": "/identity/api/v2/schemas/groupmember",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/groupsummary",
+              "path": "/identity/api/v2/schemas/groupsummary",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/grouptreenode",
+              "path": "/identity/api/v2/schemas/grouptreenode",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/jsonwebkeyset",
+              "path": "/identity/api/v2/schemas/jsonwebkeyset",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/metadata",
+              "path": "/identity/api/v2/schemas/metadata",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/metadatavalue",
+              "path": "/identity/api/v2/schemas/metadatavalue",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/oautherror",
+              "path": "/identity/api/v2/schemas/oautherror",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/openidconfiguration",
+              "path": "/identity/api/v2/schemas/openidconfiguration",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/staffprofile",
+              "path": "/identity/api/v2/schemas/staffprofile",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/tokenintrospectionrequest",
+              "path": "/identity/api/v2/schemas/tokenintrospectionrequest",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/tokenintrospectionresponse",
+              "path": "/identity/api/v2/schemas/tokenintrospectionresponse",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/tokenrequest",
+              "path": "/identity/api/v2/schemas/tokenrequest",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/tokenresponse",
+              "path": "/identity/api/v2/schemas/tokenresponse",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/updatememberform",
+              "path": "/identity/api/v2/schemas/updatememberform",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/userinfo",
+              "path": "/identity/api/v2/schemas/userinfo",
+              "sidebar": "identitySidebar"
+            },
+            {
               "id": "identity/api/v2/staff",
               "path": "/identity/api/v2/staff",
               "sidebar": "identitySidebar"
@@ -211,6 +346,16 @@
               "sidebar": "identitySidebar"
             },
             {
+              "id": "identity/guides/app-to-app",
+              "path": "/identity/guides/app-to-app",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/guides/audiences",
+              "path": "/identity/guides/audiences",
+              "sidebar": "identitySidebar"
+            },
+            {
               "id": "identity/guides/build-an-application",
               "path": "/identity/guides/build-an-application",
               "sidebar": "identitySidebar"
@@ -223,6 +368,11 @@
             {
               "id": "identity/guides/scopes",
               "path": "/identity/guides/scopes",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/guides/tokens",
+              "path": "/identity/guides/tokens",
               "sidebar": "identitySidebar"
             },
             {

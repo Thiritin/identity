@@ -1,0 +1,36 @@
+{
+  "id": "identity/api/v2/schemas/metadatavalue",
+  "title": "MetadataValue",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/metadatavalue.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/metadatavalue",
+  "permalink": "/identity/api/v2/schemas/metadatavalue",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "metadatavalue",
+    "title": "MetadataValue",
+    "description": "",
+    "sidebar_label": "MetadataValue",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "value": "Berlin"
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Metadata",
+    "permalink": "/identity/api/v2/schemas/metadata"
+  },
+  "next": {
+    "title": "OpenIDConfiguration",
+    "permalink": "/identity/api/v2/schemas/openidconfiguration"
+  }
+}

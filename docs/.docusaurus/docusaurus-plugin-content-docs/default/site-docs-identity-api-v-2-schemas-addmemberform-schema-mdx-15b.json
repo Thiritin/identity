@@ -1,0 +1,39 @@
+{
+  "id": "identity/api/v2/schemas/addmemberform",
+  "title": "AddMemberForm",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/addmemberform.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/addmemberform",
+  "permalink": "/identity/api/v2/schemas/addmemberform",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "addmemberform",
+    "title": "AddMemberForm",
+    "description": "",
+    "sidebar_label": "AddMemberForm",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "email": "john@example.com",
+      "user_id": "1VJEQAYWW54TZ5VD",
+      "level": "member",
+      "title": "App Developer"
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "GroupMember",
+    "permalink": "/identity/api/v2/schemas/groupmember"
+  },
+  "next": {
+    "title": "UpdateMemberForm",
+    "permalink": "/identity/api/v2/schemas/updatememberform"
+  }
+}

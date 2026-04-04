@@ -1,0 +1,35 @@
+{
+  "id": "identity/api/v2/authorize-user",
+  "title": "Authorization Endpoint",
+  "description": "The OAuth 2.0 authorization endpoint. Initiates the authorization code flow by redirecting the user to the login and consent screens.",
+  "source": "@site/docs/identity/api/v2/authorize-user.api.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/authorize-user",
+  "permalink": "/identity/api/v2/authorize-user",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "authorize-user",
+    "title": "Authorization Endpoint",
+    "description": "The OAuth 2.0 authorization endpoint. Initiates the authorization code flow by redirecting the user to the login and consent screens.",
+    "sidebar_label": "Authorization Endpoint",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "eJzlWFtPHDcU/ivW8JAgLTOI5omnUkKjlUgTsdCoShB4Z87sWnjtie3ZDUX8937HntkLt0LoW6UoO7bPOf7O/ZibrCJfOtUEZU22n51OSXw6aMNU7OW7QuLDOvW35FNBpmqsMiEXQ6OCkoG8CKDfpCptRaLWdiHG18JRpRyVQZlJJG09ORFs/NZ2ooyQpgKL8WSCABAi4/Nv5ps5nSov8E+KsbMLsO2MpacqSs7FSSd3KfSN7+mSeHCenRyLhYImEWPTONs4Bi2+t+SuRSOdnFEg5/NskHkqW6fCdbb/9XyQrc6wvskUWyZygdLgBEtHvmHYF+G6IWw7+t4CUpXtB9cSBJZTmsls/yaLBPuZDw5WACWZdgaxGRsqO78d3PHAx9YHMSZxyeeXorbuKSNnt4OH8ZVawaQXqnoBtntY/rKtS+GwJ5JAMXz/6JW9sy9gyRdZBDrOZMAOM94DwSF5djJkv7q7bhdjWV7xiazhrU0jPYrTl/ZFLruHaNTIknY8cZgExKRWcJmtBQskzzvxCs/O/iFnjWZh2DCqEgjDWmkSuElpMXG2bfzjSAPkvwbpgRG2kZAq5lK30WYVm6txNGdvHo5OfhcyBFjR5+KL0ppDz1FonQEl8pMtXUqt2dD5o0CNNSUDfT4w4ZD5dtbhYg96b8uYn3zl8D32rsisMriLP0/eR+eeD5Y56PnCX3b3+Gfzmr5O+IerT9FXnpRKQBnkhHM++wRvMYhDawz4M9wGB7oYWEP4IetDjc4gFJqjXEwtH0woZFxBwhSLwjLdXsH/xyrj5n1R2QT62dmqLeNigDTQ2JqG0Pj9olAVEKI05dQidlpHMHVu3SQ6Y1PKsYWrnidAM+nU+hAt2Ze/Efsv2ZMtgGRfuZIDeFj1Bhlsrs+eBbnIF6T1zpWxC1OkhNiBC2o1aZNps7txklAs3QAPHZQlQuCUg2MNHN/cxx+vxyQd/AL6wxg3I0JvCc9gAIcytWVKdlVCgV6Y74IaOsVcPlqpJYadrjiGKsikeEtMb1DO6Fc0I5hWmby0s1XGnHa7DFGrEm2PmK87PU47lWhNhZj9ODy959UJEqMds9Cil7W0ezHWdlwAgimOh4dHf4yO+BpUyJn/VI8QhBC/JmpKurnnKk0TqYvIc88rB5+HYr63HAj8sks9ZBjh04WxrW9t9f1kFEtk2ttaEn8zO+IyRcblvvhNelWKzRgQdWtiokjd03c1FQxnaRSolG+0vBZszThhyLkM0kXi6JkVaarDsqpQTHykhdtVrcrUaLkCtz6hqmutDFpysfy+kDEYIe2EagiYpqK11GoUZF1HZs9f+ew6dyRZsxTFfTHi8sD6l7GddPMMckREtmXPeFsr5wMrNRBa9l/N1Br8UCjz7bW7ULPvX4bNTuaMZmPE95teuBdvuZzGWolCtxNr5Vx5NVY6OTHwFOe3e90+xNYVL0xdbGXTuO5vmKomyl61FBbNOba9xtxDPcFPx19RgGs8QMhoJATdOsMCIc8uPwRnoKJtKu4d6TD6cSaNnFAPY521Ik2R93386Jh6xT7hshQqc0WLi7rV+iLa7KJDtLLoRvDAhFAuyiqi9XgsYJNFWegPEgjlhqJsaEymqTH1FJvkvZpf+PdhBqTnjx30s1i0NouEk4s8FQrm4PqEMHukZsRyAUUw80G5Av2Ygi+ozv2chzQeAFg5g5KvrcMlW7u77+hdiTOpwyn9CHcqI+V/5uKYcXFVbdBr4JK1InewMdIedcXkbrG5yTrY/+PXSdezAmxcoLClrhE9fdNNGl+zNGmwM3jWQE+PzR0HNzeMDQ369pa30+QWJxDl5VjzVFlL7ekJu7896QbQbfHC58kj2K/o+oE3VJwFsZ8mm59B9/CD5UkQ6w+l1wP46cfKvxhq42X1epgveME8Aat/SL0ez3/9Tnkadveq+knYr366PAmuf0mtwJ3zArVhzKPnV/6DwfKt8eHoFLX1H4QIP+o=",
+    "sidebar_class_name": "get api-method",
+    "info_path": "identity/api/v2/eurofurence-identity",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "OpenID Connect Discovery",
+    "permalink": "/identity/api/v2/get-open-id-configuration"
+  },
+  "next": {
+    "title": "Token Endpoint",
+    "permalink": "/identity/api/v2/get-token"
+  }
+}

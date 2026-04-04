@@ -1,0 +1,64 @@
+---
+id: get-current-convention
+title: "Get current convention"
+description: "Returns the next upcoming or currently running convention"
+sidebar_label: "Get current convention"
+hide_title: true
+hide_table_of_contents: true
+api: eJzVVlFv2zYQ/iuE8tAGiCXPC4Y1T+vSoAiWNUXjbg9JkNDSyWJDkypJOTWM/Pd9R0m2HGdDH/qyJ0nU3Xd33x3vbp0U5HOn6qCsSU6STxQaZ7wIFQlD34Jo6twulJkL60TeOEcm6JVwjTF8mFuzxAl0b8xr1iHptCIfBn/EY2U9iXsyxV0hA90LBXxbyBVjapy4w/QGANMKPyBVW2UCC9XNTKtcSFOIwpIXxgbh6GujHAnZwBzwc8k20uQo8QT/VFglJ9e3R4kjX1vjyScn62QyHvNjN9TLP6AENwNg+K+sa93BZV88i6wTn1e0kPwWVjVByc6+UB6gWDtbkwuqNaCKgQy8pzk5CO0aPN1SAvmjhL7JRa2hMXnzdJQYuaABiA8OBA+lkrPG2bJBBnISkzcJdFag+0XDW+jx5BcIgquX0U2jtZyxZHANDa1dWGRRGTF10ngdaWGTPkgXYh5fgiutW0iwmUSB/4Jnx0bjX0c/xUD62vgxmJOfkycOWoV4vOUdx/zjeHy8Xw4f7LbWB8Vb2sYUP65QFuS9nL8Q59DhM+esi77yoZxD83oQhU9Q3wwaXThH6SVzCqft5RwEewRrobLdf3ZFhgof2TY8n3V3Ot4ftyTHtp5T89HZosk7zMZpHFUh1P4ky1TBQGGV0rY4U+vmmaxVtpwgt8/BLmwu9ffhaBZF8wgbtNvtNb9ixltSL2sy5++G5PNBASpMm4Od78/fF0D6SFqPHox9NBnrq2IE3ko1b1re965364XorSJ1b/Mc6Z7aBzID59gy0523dzKZ4RLj0kL+FK3ThCvKHYXvUICGMqVlSU5c68UkHafjZFBLg6Zx3sXalbPMoxXUrWJGFvRbqBSoVSbFPUj6lpRMu1N2EYVP6Kqs1/29aE8KgXtCTvx5Pt1L7lyFqpkxaNZjbXjPZtrOMrhgsovz07MPV2dsBjNh4S/LK5Qk4AdQFel6L1Wa5lJnUWcvK28/novlZDNWPC60i9PtJWKEbw3GcXRwIC7fYspMxFWOAvDt2cFG+MaMxH1bGfcn4nfpMap2a0CUjYnXRupeHt2gVJqg8Bm2XnlRKF9rjEJmM046uZRosVE4ZmYrGj+FLArMNh9lkXZVdq1IoDOHxrdelaVWBpM227zfyViMQPtEJQAqjGDU5SaqqyDLMip7fksXq9SR5MjaKoZ4pG0wdznnrWe4IyKqiS4+8bpUzgcO6ggjvn+rK2vwoJCnhwNbUut9YzjsMBe0mKG+X/XgXrzm6Q6CsSKQG7ETYqm8mindJjGgwub+sI/tvbNN3TIzj69bTuN3b6FSdcTmFQjBYfgxNN+xw4Fy7+onPDr9ggJS4+GEjCSh6IYKjyh5TvkpNANlTc2TrFVt87iQBkOhd2OoWpCmqPsuvnRKfWCXMNaWylLR412JyXgXObvrPNoyulM8oBDBRawssqeVj5RFLEwNCQ/lTqBMNAZfZET0ErvifZh/8/NlBVzPbyNt57Fp7TYJJx/TtlGwRjdu/6VnxHaBQGzjEFwmEVHwGZWpX/LGMJP5Awdn0PI1JulJcjAeH9Nxjn9Shyn22medkdK/UnHBfnFXrTFykJJBk3tPod9+B8vB82az3m4J/+dFuhs7AV5n6E1t44/JWncrxHUyWCF4mnRLBMYzj2sWWK9n0hNm7dMTH39tyHWb+VI61e5v17cArlBdmGa8dTzQijs2Crbmqb2UumFH9vYtXgM2q837symS9g/quoPi
+sidebar_class_name: "get api-method"
+info_path: identity/api/v2/eurofurence-identity
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+import Translate from "@docusaurus/Translate";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get current convention"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"get"}
+  path={"/conventions/current"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Returns the next upcoming or currently running convention
+(the earliest convention whose `end_date` is today or later).
+
+This endpoint is public and does not require authentication.
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  {...require("./get-current-convention.RequestSchema.json")}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  {...require("./get-current-convention.StatusCodes.json")}
+>
+  
+</StatusCodes>
+
+
+      

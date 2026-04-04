@@ -1,0 +1,39 @@
+{
+  "id": "identity/api/v2/schemas/groupform",
+  "title": "GroupForm",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/groupform.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/groupform",
+  "permalink": "/identity/api/v2/schemas/groupform",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "groupform",
+    "title": "GroupForm",
+    "description": "",
+    "sidebar_label": "GroupForm",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "type": "department",
+      "name": "New Department",
+      "description": "string",
+      "parent_id": "string"
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "GroupSummary",
+    "permalink": "/identity/api/v2/schemas/groupsummary"
+  },
+  "next": {
+    "title": "GroupMember",
+    "permalink": "/identity/api/v2/schemas/groupmember"
+  }
+}

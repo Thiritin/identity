@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 title: Scopes
 ---
 
@@ -15,15 +15,15 @@ Every scope you request appears on the consent screen. Asking for more than nece
 
 ### Scopes are not permissions
 
-Scopes gate API access at the OAuth level — they control what your app *can ask for*. Fine-grained permissions (e.g., who can edit a specific group) are enforced server-side regardless of scopes. Having `groups.write` doesn't mean your app can write to *any* group, only that it's allowed to call the write endpoints.
+Scopes gate API access at the OAuth level; they control what your app *can ask for*. Fine-grained permissions (e.g., who can edit a specific group) are enforced server-side regardless of scopes. Having `groups.write` doesn't mean your app can write to *any* group, only that it's allowed to call the write endpoints.
 
 ### Naming convention
 
 Scopes follow a `resource.qualifier.action` pattern:
 
-- **resource** — the data domain (`groups`, `staff`, `registration`)
-- **qualifier** — optional scope narrowing (`my` = own data, `all` = all users' data)
-- **action** — the operation (`read`, `write`, `delete`)
+- **resource:** the data domain (`groups`, `staff`, `registration`)
+- **qualifier:** optional scope narrowing (`my` = own data, `all` = all users' data)
+- **action:** the operation (`read`, `write`, `delete`)
 
 ## Available Scopes
 
@@ -44,7 +44,7 @@ Standard OpenID Connect scopes for basic user information.
 
 ### Groups
 
-Access to Eurofurence's group system — departments, teams, and organizational units.
+Access to Eurofurence's group system: departments, teams, and organizational units.
 
 | Scope | Description |
 |-------|-------------|
@@ -54,7 +54,7 @@ Access to Eurofurence's group system — departments, teams, and organizational 
 | `groups.delete` | Delete groups via the API |
 
 **When to use what:**
-- Need to know *which groups a user belongs to* at login? Use `groups` — the memberships are included directly in the ID token, no API call needed.
+- Need to know *which groups a user belongs to* at login? Use `groups`. The memberships are included directly in the ID token, no API call needed.
 - Need to *browse, search, or display group information* in your app? Use `groups.read`.
 - Building a group management tool? Add `groups.write` and/or `groups.delete`.
 
@@ -69,7 +69,7 @@ Access to staff profile information for convention team members.
 | `staff.all.read` | Read all staff members' profiles via the API. Respects each user's per-field visibility settings. |
 
 **When to use what:**
-- Need the user's real name at login without an API call? Use `staff` — the claims are included directly in the ID token.
+- Need the user's real name at login without an API call? Use `staff`. The claims are included directly in the ID token.
 - Building an app where staff can view or edit their own full profile? Use `staff.my.read`.
 - Building a staff directory or org chart? Use `staff.all.read`.
 
@@ -82,23 +82,33 @@ Per-app, per-user key-value storage managed by Eurofurence Identity. Useful for 
 | `appdata.read` | Read your app's stored data for the authenticated user |
 | `appdata.write` | Write your app's data for the authenticated user |
 
-Data is scoped to your OAuth client ID — you can only access data your app has written. Values are strings up to 64KB.
+Data is scoped to your OAuth client ID; you can only access data your app has written. Values are strings up to 64KB.
 
 ### Registration
 
-Access to the Eurofurence registration system for convention attendance, room booking, and related workflows.
+Access to the Eurofurence registration system for convention attendance, room booking, and related workflows. Read and write scopes are split into granular pieces so third-party apps (Dealers' Den, Summerboat, etc.) can request only the fields they actually need.
 
 | Scope | Description |
 |-------|-------------|
-| `registration.my.read` | Read the authenticated user's own registration (status, packages, options, flags) |
-| `registration.my.write` | Create or update the authenticated user's own registration |
+| `registration.my.read.basic` | Read basic details of the authenticated user's own registration (registration ID, status, nickname, and whether they're attending) |
+| `registration.my.read` | Read the full registration (basic details plus packages, options, and flags) |
+| `registration.my.write.packages` | Update the authenticated user's packages (e.g., stage access, sponsor upgrades) |
+| `registration.my.write.flags` | Update the authenticated user's flags (e.g., dealer, guest of honor markers) |
+| `registration.my.write.options` | Update the authenticated user's options (e.g., newsletter, art show participation) |
+| `registration.my.write` | Create or update any part of the authenticated user's own registration |
 | `registration.all.read` | Search and read any attendee's registration (privileged) |
 | `registration.all.write` | Update any attendee's registration, change status, override due dates (privileged) |
 
 **When to use what:**
-- Building an app where users check their own registration status? Use `registration.my.read`.
-- Building a registration form or self-service tool? Add `registration.my.write`.
+- Just need to confirm a user is registered or show their status? Use `registration.my.read.basic` for minimal data and minimal consent friction.
+- Need full registration details (packages, options, flags) for a self-service dashboard? Use `registration.my.read`.
+- Building a Dealers' Den, Summerboat, or similar system that only toggles a specific flag, package, or option? Request only the narrow write scope you need (`registration.my.write.flags`, `.packages`, or `.options`) instead of full `registration.my.write`.
+- Building a full registration form or self-service tool? Use `registration.my.write`.
 - Building admin tooling or reports across all attendees? Use `registration.all.read` and/or `registration.all.write`.
+
+:::tip
+Prefer the narrow `registration.my.write.*` scopes over `registration.my.write` whenever possible. Users are more likely to approve a scope that says "update your packages" than one that says "update your entire registration."
+:::
 
 :::caution
 The `registration.all.*` scopes grant access to all attendee data and are restricted to first-party and approved applications.
@@ -115,7 +125,9 @@ Here are some common app types and the scopes they typically need:
 | Staff tool (basic) | `openid`, `profile`, `staff` |
 | Staff tool (full profile) | `openid`, `profile`, `staff.my.read` |
 | Staff directory | `openid`, `profile`, `staff.all.read` |
+| Registration status check | `openid`, `profile`, `registration.my.read.basic` |
 | Registration self-service | `openid`, `profile`, `email`, `registration.my.read`, `registration.my.write` |
+| Dealers' Den / Summerboat (narrow write) | `openid`, `profile`, `registration.my.read.basic`, `registration.my.write.flags` |
 | App with persistent user preferences | `openid`, `profile`, `appdata.read`, `appdata.write` |
 | Long-lived background service | Add `offline_access` to any of the above |
 

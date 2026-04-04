@@ -22,6 +22,7 @@ class GroupResource extends JsonResource
             'icon' => $this->icon,
             'logo' => $this->logo_url,
             'parent_id' => $this->parent?->hashid,
+            'parent' => new GroupResource($this->whenLoaded('parent')),
             'member_count' => $this->whenCounted('users'),
             'translations' => $this->translations,
             'created_at' => $this->created_at,

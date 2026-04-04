@@ -91,13 +91,7 @@ class SecurityKeySetupController extends Controller
             ->where('type', TwoFactorTypeEnum::SECURITY_KEY)
             ->delete();
 
-        // Delete backup codes if no other 2FA methods remain
-        $remainingMethods = auth()->user()->twoFactors()
-            ->whereIn('type', [TwoFactorTypeEnum::TOTP, TwoFactorTypeEnum::YUBIKEY, TwoFactorTypeEnum::SECURITY_KEY])
-            ->count();
-        if ($remainingMethods === 0) {
-            auth()->user()->twoFactors()->where('type', TwoFactorTypeEnum::BackupCodes)->delete();
-        }
+        auth()->user()->deleteBackupCodesIfOrphaned();
 
         return redirect()->route('settings.security.security-keys');
     }

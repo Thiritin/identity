@@ -1,0 +1,29 @@
+{
+  "id": "identity/api/v2/conventions",
+  "title": "Conventions",
+  "description": "Conventions",
+  "source": "@site/docs/identity/api/v2/conventions.tag.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/conventions",
+  "permalink": "/identity/api/v2/conventions",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "conventions",
+    "title": "Conventions",
+    "description": "Conventions",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Delete metadata",
+    "permalink": "/identity/api/v2/delete-metadata-key"
+  },
+  "next": {
+    "title": "List conventions",
+    "permalink": "/identity/api/v2/get-conventions"
+  }
+}

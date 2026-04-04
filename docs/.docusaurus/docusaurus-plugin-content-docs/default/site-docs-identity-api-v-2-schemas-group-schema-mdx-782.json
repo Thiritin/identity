@@ -1,0 +1,88 @@
+{
+  "id": "identity/api/v2/schemas/group",
+  "title": "Group",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/group.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/group",
+  "permalink": "/identity/api/v2/schemas/group",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "group",
+    "title": "Group",
+    "description": "",
+    "sidebar_label": "Group",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "id": "Y6K08PEKXG9Q7ZWJ",
+      "type": "department",
+      "name": "Information Technology",
+      "description": "string",
+      "slug": "operations/information-technology",
+      "icon": "code",
+      "logo": "string",
+      "parent_id": "string",
+      "member_count": 12,
+      "translations": {},
+      "created_at": "2024-07-29T15:51:28.071Z",
+      "updated_at": "2024-07-29T15:51:28.071Z",
+      "parent": {
+        "id": "Y6K08PEKXG9Q7ZWJ",
+        "type": "department",
+        "name": "Information Technology",
+        "description": "string",
+        "slug": "operations/information-technology",
+        "icon": "code",
+        "logo": "string",
+        "parent_id": "string",
+        "member_count": 12,
+        "translations": {},
+        "created_at": "2024-07-29T15:51:28.071Z",
+        "updated_at": "2024-07-29T15:51:28.071Z"
+      },
+      "children": [
+        {
+          "id": "Y6K08PEKXG9Q7ZWJ",
+          "type": "department",
+          "name": "Information Technology",
+          "description": "string",
+          "slug": "operations/information-technology",
+          "icon": "code",
+          "logo": "string",
+          "parent_id": "string",
+          "member_count": 12,
+          "translations": {},
+          "created_at": "2024-07-29T15:51:28.071Z",
+          "updated_at": "2024-07-29T15:51:28.071Z"
+        }
+      ],
+      "members": [
+        {
+          "user_id": "1VJEQAYWW54TZ5VD",
+          "name": "John Doe",
+          "email": "string",
+          "avatar": "string",
+          "level": "member",
+          "title": "App Developer",
+          "credit_as": "J. Doe"
+        }
+      ]
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "GroupTreeNode",
+    "permalink": "/identity/api/v2/schemas/grouptreenode"
+  },
+  "next": {
+    "title": "GroupSummary",
+    "permalink": "/identity/api/v2/schemas/groupsummary"
+  }
+}

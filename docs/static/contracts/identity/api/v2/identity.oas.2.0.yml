@@ -4,6 +4,17 @@ servers:
     url: 'https://identity.eurofurence.org/api/v2'
   - description: Local
     url: 'https://identity.eurofurence.localhost/api/v2'
+x-tagGroups:
+  - name: Open ID Connect
+    tags:
+      - Open ID Connect
+  - name: Resources
+    tags:
+      - Staff
+      - Groups
+      - Group Members
+      - User Metadata
+      - Conventions
 info:
   version: 2.0.0
   title: Eurofurence Identity
@@ -45,7 +56,10 @@ info:
     altText: Eurofurence e.V. Logo
 tags:
   - name: Open ID Connect
-    description: Endpoints related to OpenID Connect
+    description: |-
+      OpenID Connect and OAuth2 endpoints.
+
+      The discovery, authorization, token, and JWKS endpoints are served by [Ory Hydra](https://www.ory.sh/hydra/) at the **root domain** (`https://identity.eurofurence.org`), not under `/api/v2`.
   - name: Staff
     description: Staff member profiles with visibility-controlled access
   - name: Groups
@@ -54,6 +68,8 @@ tags:
     description: Manage group memberships with real role levels
   - name: User Metadata
     description: Per-app key-value metadata storage for users. Scoped by OAuth client_id.
+  - name: Conventions
+    description: Public list of Eurofurence conventions. No authentication required.
 security:
   - OpenID:
       - openid
@@ -76,6 +92,146 @@ security:
       - metadata.read
       - metadata.write
 paths:
+  /.well-known/openid-configuration:
+    servers:
+      - description: Production
+        url: 'https://identity.eurofurence.org'
+      - description: Local
+        url: 'https://identity.eurofurence.localhost'
+    get:
+      summary: OpenID Connect Discovery
+      description: |-
+        Returns the OpenID Connect discovery document containing metadata about the authorization server,
+        including endpoint URLs, supported scopes, response types, and signing algorithms.
+
+        This is the standard [OpenID Connect Discovery](https://openid.net/specs/openid-connect-discovery-1_0.html) endpoint.
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenIDConfiguration'
+      tags:
+        - Open ID Connect
+      operationId: getOpenIDConfiguration
+  /oauth2/auth:
+    servers:
+      - description: Production
+        url: 'https://identity.eurofurence.org'
+      - description: Local
+        url: 'https://identity.eurofurence.localhost'
+    get:
+      summary: Authorization Endpoint
+      description: |-
+        The OAuth 2.0 authorization endpoint. Initiates the authorization code flow by redirecting the user to the login and consent screens.
+
+        This is a browser-based flow. Redirect the user's browser to this URL with the appropriate query parameters.
+      security: []
+      parameters:
+        - in: query
+          name: response_type
+          required: true
+          schema:
+            type: string
+            enum: [code]
+          description: Must be `code` for the authorization code flow
+        - in: query
+          name: client_id
+          required: true
+          schema:
+            type: string
+          description: Your OAuth2 client ID
+        - in: query
+          name: redirect_uri
+          required: true
+          schema:
+            type: string
+            format: uri
+          description: The URI to redirect the user back to after authorization
+        - in: query
+          name: scope
+          required: true
+          schema:
+            type: string
+          description: Space-separated list of requested scopes
+          example: openid profile email groups
+        - in: query
+          name: state
+          required: true
+          schema:
+            type: string
+          description: An opaque value used to prevent CSRF attacks. Will be returned in the callback.
+        - in: query
+          name: nonce
+          schema:
+            type: string
+          description: A random value to associate the ID token with the client session
+      responses:
+        '302':
+          description: Redirects the user to the login/consent flow
+      tags:
+        - Open ID Connect
+      operationId: authorizeUser
+  /oauth2/token:
+    servers:
+      - description: Production
+        url: 'https://identity.eurofurence.org'
+      - description: Local
+        url: 'https://identity.eurofurence.localhost'
+    post:
+      summary: Token Endpoint
+      description: |-
+        Exchange an authorization code for access and refresh tokens, or refresh an existing token.
+
+        Requires client authentication via `client_id` and `client_secret` in the request body or via HTTP Basic Auth.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: Bad Request (invalid grant, expired code, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthError'
+      tags:
+        - Open ID Connect
+      operationId: getToken
+  /.well-known/jwks.json:
+    servers:
+      - description: Production
+        url: 'https://identity.eurofurence.org'
+      - description: Local
+        url: 'https://identity.eurofurence.localhost'
+    get:
+      summary: JSON Web Key Set
+      description: |-
+        Returns the public keys used to verify ID tokens and other signed JWTs issued by the authorization server.
+
+        Clients should cache this response and refresh it periodically or when encountering an unknown `kid` in a JWT header.
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JSONWebKeySet'
+      tags:
+        - Open ID Connect
+      operationId: getJWKS
   /userinfo:
     get:
       summary: Get userinfo
@@ -83,7 +239,7 @@ paths:
         Returns identity claims for the authenticated user based on granted scopes.
 
         **Differences from v1:**
-        - `groups` scope returns objects with name, type, slug, level, and title instead of just hashid arrays
+        - `groups` scope returns objects with name, type, slug, level, and title instead of just id arrays
         - `staff.my.read` scope adds staff profile fields (firstname, lastname, etc.)
       security:
         - OpenID:
@@ -142,10 +298,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/StaffProfile'
+                $ref: '#/components/schemas/StaffProfile'
       tags:
         - Staff
       operationId: getStaffMe
@@ -182,12 +335,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/StaffProfile'
+                type: array
+                items:
+                  $ref: '#/components/schemas/StaffProfile'
       tags:
         - Staff
       operationId: getStaffList
@@ -210,7 +360,7 @@ paths:
           required: true
           schema:
             type: string
-          description: User's hashid
+          description: User's id
           example: 1VJEQAYWW54TZ5VD
       responses:
         '200':
@@ -218,10 +368,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/StaffProfile'
+                $ref: '#/components/schemas/StaffProfile'
         '404':
           description: Not Found
           content:
@@ -292,7 +439,7 @@ paths:
           name: include
           schema:
             type: string
-          description: 'Include related data, comma-separated (members, children)'
+          description: 'Include related data, comma-separated (members, children, parent)'
           example: members,children
         - in: query
           name: search
@@ -312,12 +459,81 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Group'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+              examples:
+                basic:
+                  summary: Without includes
+                  value:
+                    - id: Y6K08PEKXG9Q7ZWJ
+                      type: department
+                      name: Information Technology
+                      description: null
+                      slug: operations/information-technology
+                      icon: code
+                      logo: null
+                      parent_id: A1B2C3D4E5F6G7H8
+                      member_count: 12
+                      translations: null
+                      created_at: '2023-02-19T19:22:51.000000Z'
+                      updated_at: '2024-08-14T18:52:24.000000Z'
+                with_children:
+                  summary: With include=children
+                  value:
+                    - id: A1B2C3D4E5F6G7H8
+                      type: division
+                      name: Operations
+                      description: null
+                      slug: operations
+                      icon: briefcase
+                      logo: null
+                      parent_id: null
+                      member_count: 3
+                      translations: null
+                      created_at: '2023-02-19T19:22:51.000000Z'
+                      updated_at: '2024-08-14T18:52:24.000000Z'
+                      children:
+                        - id: Y6K08PEKXG9Q7ZWJ
+                          type: department
+                          name: Information Technology
+                          description: null
+                          slug: operations/information-technology
+                          icon: code
+                          logo: null
+                          parent_id: A1B2C3D4E5F6G7H8
+                          member_count: 12
+                          translations: null
+                          created_at: '2023-02-19T19:22:51.000000Z'
+                          updated_at: '2024-08-14T18:52:24.000000Z'
+                with_parent:
+                  summary: With include=parent
+                  value:
+                    - id: Y6K08PEKXG9Q7ZWJ
+                      type: department
+                      name: Information Technology
+                      description: null
+                      slug: operations/information-technology
+                      icon: code
+                      logo: null
+                      parent_id: A1B2C3D4E5F6G7H8
+                      member_count: 12
+                      translations: null
+                      created_at: '2023-02-19T19:22:51.000000Z'
+                      updated_at: '2024-08-14T18:52:24.000000Z'
+                      parent:
+                        id: A1B2C3D4E5F6G7H8
+                        type: division
+                        name: Operations
+                        description: null
+                        slug: operations
+                        icon: briefcase
+                        logo: null
+                        parent_id: null
+                        member_count: 3
+                        translations: null
+                        created_at: '2023-02-19T19:22:51.000000Z'
+                        updated_at: '2024-08-14T18:52:24.000000Z'
       tags:
         - Groups
       operationId: getGroups
@@ -340,10 +556,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Group'
+                $ref: '#/components/schemas/Group'
       tags:
         - Groups
       operationId: createGroup
@@ -361,13 +574,13 @@ paths:
           required: true
           schema:
             type: string
-          description: Group hashid
+          description: Group id
           example: Y6K08PEKXG9Q7ZWJ
         - in: query
           name: include
           schema:
             type: string
-          description: 'Include related data, comma-separated (members, children)'
+          description: 'Include related data, comma-separated (members, children, parent)'
           example: children,members
       responses:
         '200':
@@ -375,10 +588,79 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Group'
+                $ref: '#/components/schemas/Group'
+              examples:
+                basic:
+                  summary: Without includes
+                  value:
+                    id: Y6K08PEKXG9Q7ZWJ
+                    type: department
+                    name: Information Technology
+                    description: null
+                    slug: operations/information-technology
+                    icon: code
+                    logo: null
+                    parent_id: A1B2C3D4E5F6G7H8
+                    member_count: 12
+                    translations: null
+                    created_at: '2023-02-19T19:22:51.000000Z'
+                    updated_at: '2024-08-14T18:52:24.000000Z'
+                with_children:
+                  summary: With include=children
+                  value:
+                    id: A1B2C3D4E5F6G7H8
+                    type: division
+                    name: Operations
+                    description: null
+                    slug: operations
+                    icon: briefcase
+                    logo: null
+                    parent_id: null
+                    member_count: 3
+                    translations: null
+                    created_at: '2023-02-19T19:22:51.000000Z'
+                    updated_at: '2024-08-14T18:52:24.000000Z'
+                    children:
+                      - id: Y6K08PEKXG9Q7ZWJ
+                        type: department
+                        name: Information Technology
+                        description: null
+                        slug: operations/information-technology
+                        icon: code
+                        logo: null
+                        parent_id: A1B2C3D4E5F6G7H8
+                        member_count: 12
+                        translations: null
+                        created_at: '2023-02-19T19:22:51.000000Z'
+                        updated_at: '2024-08-14T18:52:24.000000Z'
+                with_parent:
+                  summary: With include=parent
+                  value:
+                    id: Y6K08PEKXG9Q7ZWJ
+                    type: department
+                    name: Information Technology
+                    description: null
+                    slug: operations/information-technology
+                    icon: code
+                    logo: null
+                    parent_id: A1B2C3D4E5F6G7H8
+                    member_count: 12
+                    translations: null
+                    created_at: '2023-02-19T19:22:51.000000Z'
+                    updated_at: '2024-08-14T18:52:24.000000Z'
+                    parent:
+                      id: A1B2C3D4E5F6G7H8
+                      type: division
+                      name: Operations
+                      description: null
+                      slug: operations
+                      icon: briefcase
+                      logo: null
+                      parent_id: null
+                      member_count: 3
+                      translations: null
+                      created_at: '2023-02-19T19:22:51.000000Z'
+                      updated_at: '2024-08-14T18:52:24.000000Z'
         '404':
           description: Not Found
           content:
@@ -401,7 +683,7 @@ paths:
           required: true
           schema:
             type: string
-          description: Group hashid
+          description: Group id
           example: Y6K08PEKXG9Q7ZWJ
       requestBody:
         required: true
@@ -415,10 +697,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Group'
+                $ref: '#/components/schemas/Group'
         '404':
           description: Not Found
           content:
@@ -441,7 +720,7 @@ paths:
           required: true
           schema:
             type: string
-          description: Group hashid
+          description: Group id
           example: Y6K08PEKXG9Q7ZWJ
       responses:
         '204':
@@ -470,7 +749,7 @@ paths:
           required: true
           schema:
             type: string
-          description: Group hashid
+          description: Group id
           example: Y6K08PEKXG9Q7ZWJ
         - in: query
           name: level
@@ -501,12 +780,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/GroupMember'
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupMember'
       tags:
         - Group Members
       operationId: getGroupMembers
@@ -524,7 +800,7 @@ paths:
           required: true
           schema:
             type: string
-          description: Group hashid
+          description: Group id
           example: Y6K08PEKXG9Q7ZWJ
       requestBody:
         required: true
@@ -538,10 +814,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/GroupMember'
+                $ref: '#/components/schemas/GroupMember'
         '422':
           description: Validation Error
           content:
@@ -566,14 +839,14 @@ paths:
           required: true
           schema:
             type: string
-          description: Group hashid
+          description: Group id
           example: Y6K08PEKXG9Q7ZWJ
         - in: path
           name: user
           required: true
           schema:
             type: string
-          description: User hashid
+          description: User id
           example: 1VJEQAYWW54TZ5VD
       requestBody:
         required: true
@@ -587,10 +860,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/GroupMember'
+                $ref: '#/components/schemas/GroupMember'
         '404':
           description: Not Found
           content:
@@ -614,14 +884,14 @@ paths:
           required: true
           schema:
             type: string
-          description: Group hashid
+          description: Group id
           example: Y6K08PEKXG9Q7ZWJ
         - in: path
           name: user
           required: true
           schema:
             type: string
-          description: User hashid
+          description: User id
           example: 1VJEQAYWW54TZ5VD
       responses:
         '204':
@@ -644,12 +914,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Metadata'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Metadata'
       tags:
         - User Metadata
       operationId: getMetadata
@@ -677,10 +944,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Metadata'
+                $ref: '#/components/schemas/Metadata'
         '404':
           description: Not Found
           content:
@@ -719,19 +983,13 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Metadata'
+                $ref: '#/components/schemas/Metadata'
         '201':
           description: Created
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Metadata'
+                $ref: '#/components/schemas/Metadata'
       tags:
         - User Metadata
       operationId: putMetadataKey
@@ -764,6 +1022,51 @@ paths:
       tags:
         - User Metadata
       operationId: deleteMetadataKey
+  /conventions:
+    get:
+      summary: List conventions
+      description: |-
+        Returns a list of all Eurofurence conventions ordered by year (ascending).
+
+        This endpoint is public and does not require authentication.
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Convention'
+      tags:
+        - Conventions
+      operationId: getConventions
+  /conventions/current:
+    get:
+      summary: Get current convention
+      description: |-
+        Returns the next upcoming or currently running convention
+        (the earliest convention whose `end_date` is today or later).
+
+        This endpoint is public and does not require authentication.
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Convention'
+        '404':
+          description: No upcoming convention found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Conventions
+      operationId: getCurrentConvention
 components:
   schemas:
     Userinfo:
@@ -771,7 +1074,7 @@ components:
       properties:
         sub:
           type: string
-          description: User's unique identifier (hashid)
+          description: User's unique identifier (id)
           example: 1VJEQAYWW54TZ5VD
         email:
           type: string
@@ -790,7 +1093,7 @@ components:
           description: Avatar URL (requires `profile` scope)
         groups:
           type: array
-          description: 'Group memberships with details (requires `groups` scope). In v2, returns objects instead of just hashid strings.'
+          description: 'Group memberships with details (requires `groups` scope). In v2, returns objects instead of just id strings.'
           items:
             type: object
             properties:
@@ -891,7 +1194,7 @@ components:
       properties:
         id:
           type: string
-          description: User hashid
+          description: User id
           example: 1VJEQAYWW54TZ5VD
         name:
           type: string
@@ -960,7 +1263,7 @@ components:
       type: object
       description: Recursive tree node representing a group in the hierarchy
       properties:
-        hashid:
+        id:
           type: string
           example: Y6K08PEKXG9Q7ZWJ
         name:
@@ -993,7 +1296,7 @@ components:
       properties:
         id:
           type: string
-          description: Group hashid
+          description: Group id
           example: Y6K08PEKXG9Q7ZWJ
         type:
           type: string
@@ -1019,7 +1322,7 @@ components:
         parent_id:
           type: string
           nullable: true
-          description: Parent group hashid
+          description: Parent group id
         member_count:
           type: integer
           example: 12
@@ -1032,16 +1335,62 @@ components:
         updated_at:
           type: string
           format: date-time
+        parent:
+          description: 'Parent group (only present when include=parent)'
+          allOf:
+            - $ref: '#/components/schemas/GroupSummary'
         children:
           type: array
           description: 'Child groups (only present when include=children)'
           items:
-            $ref: '#/components/schemas/Group'
+            $ref: '#/components/schemas/GroupSummary'
         members:
           type: array
           description: 'Group members (only present when include=members)'
           items:
             $ref: '#/components/schemas/GroupMember'
+    GroupSummary:
+      type: object
+      description: Nested group (parent or child) without recursive relations
+      properties:
+        id:
+          type: string
+          example: Y6K08PEKXG9Q7ZWJ
+        type:
+          type: string
+          enum: [none, division, department, team, automated, root]
+          example: department
+        name:
+          type: string
+          example: Information Technology
+        description:
+          type: string
+          nullable: true
+        slug:
+          type: string
+          example: operations/information-technology
+        icon:
+          type: string
+          nullable: true
+          example: code
+        logo:
+          type: string
+          nullable: true
+        parent_id:
+          type: string
+          nullable: true
+        member_count:
+          type: integer
+          example: 12
+        translations:
+          type: object
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
     GroupForm:
       type: object
       properties:
@@ -1058,7 +1407,7 @@ components:
         parent_id:
           type: string
           nullable: true
-          description: Parent group hashid
+          description: Parent group id
       required:
         - type
         - name
@@ -1100,7 +1449,7 @@ components:
           example: john@example.com
         user_id:
           type: string
-          description: 'User hashid (required if email not provided)'
+          description: 'User id (required if email not provided)'
           example: 1VJEQAYWW54TZ5VD
         level:
           type: string
@@ -1137,6 +1486,171 @@ components:
           example: Berlin
       required:
         - value
+    OpenIDConfiguration:
+      type: object
+      properties:
+        issuer:
+          type: string
+          example: 'https://identity.eurofurence.org/'
+        authorization_endpoint:
+          type: string
+          example: 'https://identity.eurofurence.org/oauth2/auth'
+        token_endpoint:
+          type: string
+          example: 'https://identity.eurofurence.org/oauth2/token'
+        userinfo_endpoint:
+          type: string
+          example: 'https://identity.eurofurence.org/userinfo'
+        jwks_uri:
+          type: string
+          example: 'https://identity.eurofurence.org/.well-known/jwks.json'
+        subject_types_supported:
+          type: array
+          items:
+            type: string
+          example: [public]
+        response_types_supported:
+          type: array
+          items:
+            type: string
+          example: [code, id_token, 'code id_token', token]
+        scopes_supported:
+          type: array
+          items:
+            type: string
+          example: [openid, profile, email, offline, offline_access, groups]
+        token_endpoint_auth_methods_supported:
+          type: array
+          items:
+            type: string
+          example: [client_secret_basic, client_secret_post]
+        id_token_signing_alg_values_supported:
+          type: array
+          items:
+            type: string
+          example: [RS256]
+        grant_types_supported:
+          type: array
+          items:
+            type: string
+          example: [authorization_code, refresh_token, client_credentials]
+    TokenRequest:
+      type: object
+      properties:
+        grant_type:
+          type: string
+          enum: [authorization_code, refresh_token, client_credentials]
+          description: The type of grant being requested
+        code:
+          type: string
+          description: The authorization code (required for `authorization_code` grant)
+        redirect_uri:
+          type: string
+          format: uri
+          description: Must match the redirect_uri used in the authorization request
+        client_id:
+          type: string
+          description: Your OAuth2 client ID
+        client_secret:
+          type: string
+          description: Your OAuth2 client secret
+        refresh_token:
+          type: string
+          description: The refresh token (required for `refresh_token` grant)
+        scope:
+          type: string
+          description: Space-separated list of requested scopes
+      required:
+        - grant_type
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: The access token
+        token_type:
+          type: string
+          example: bearer
+        expires_in:
+          type: integer
+          description: Token lifetime in seconds
+          example: 3600
+        refresh_token:
+          type: string
+          description: The refresh token (if `offline` or `offline_access` scope was granted)
+        id_token:
+          type: string
+          description: The ID token (if `openid` scope was requested)
+        scope:
+          type: string
+          description: Space-separated list of granted scopes
+    OAuthError:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+          example: invalid_grant
+        error_description:
+          type: string
+          description: Human-readable error description
+    JSONWebKeySet:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            type: object
+            properties:
+              kty:
+                type: string
+                description: Key type
+                example: RSA
+              use:
+                type: string
+                description: Key usage (sig = signature)
+                example: sig
+              kid:
+                type: string
+                description: Key ID
+              alg:
+                type: string
+                description: Algorithm
+                example: RS256
+              n:
+                type: string
+                description: RSA modulus (Base64url-encoded)
+              e:
+                type: string
+                description: RSA exponent (Base64url-encoded)
+                example: AQAB
+    Convention:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Convention id
+          example: 29
+        name:
+          type: string
+          example: Eurofurence 29
+        year:
+          type: integer
+          example: 2026
+        theme:
+          type: string
+          nullable: true
+          example: Lost in Translation
+        start_date:
+          type: string
+          format: date
+          nullable: true
+          example: '2026-08-19'
+        end_date:
+          type: string
+          format: date
+          nullable: true
+          example: '2026-08-23'
     Error:
       type: object
       properties:

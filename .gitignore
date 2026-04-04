@@ -27,3 +27,10 @@ config.json
 boost.json
 tests/Browser/Screenshots
 docs/superpowers
+
+# Git worktrees
+.worktrees
+
+# Docusaurus build output
+/docs/build
+/docs/node_modules

@@ -1,0 +1,47 @@
+{
+  "id": "identity/api/v2/schemas/groupsummary",
+  "title": "GroupSummary",
+  "description": "Nested group (parent or child) without recursive relations",
+  "source": "@site/docs/identity/api/v2/schemas/groupsummary.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/groupsummary",
+  "permalink": "/identity/api/v2/schemas/groupsummary",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "groupsummary",
+    "title": "GroupSummary",
+    "description": "Nested group (parent or child) without recursive relations",
+    "sidebar_label": "GroupSummary",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "id": "Y6K08PEKXG9Q7ZWJ",
+      "type": "department",
+      "name": "Information Technology",
+      "description": "string",
+      "slug": "operations/information-technology",
+      "icon": "code",
+      "logo": "string",
+      "parent_id": "string",
+      "member_count": 12,
+      "translations": {},
+      "created_at": "2024-07-29T15:51:28.071Z",
+      "updated_at": "2024-07-29T15:51:28.071Z"
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Group",
+    "permalink": "/identity/api/v2/schemas/group"
+  },
+  "next": {
+    "title": "GroupForm",
+    "permalink": "/identity/api/v2/schemas/groupform"
+  }
+}

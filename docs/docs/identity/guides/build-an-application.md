@@ -1,5 +1,5 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
 title: Build an Application
 ---
 
@@ -12,21 +12,21 @@ This guide explains how to integrate your application with Eurofurence Identity 
 Eurofurence Identity implements **OpenID Connect (OIDC)**, which is built on top of **OAuth 2.0**. Here's what that means in simple terms:
 
 - **OAuth 2.0** lets your app request access to a user's data without ever seeing their password. The user logs in on our side, approves your app, and we give your app a token it can use to access the data it was approved for.
-- **OpenID Connect** adds an identity layer on top of OAuth 2.0. Besides getting access to data, your app also gets a verified identity — who the user is, their email, their display name, etc.
+- **OpenID Connect** adds an identity layer on top of OAuth 2.0. Besides getting access to data, your app also gets a verified identity: who the user is, their email, their display name, etc.
 
 Think of it like a hotel key card system: the front desk (Eurofurence Identity) verifies who you are and gives you a key card (token) that only opens the doors (scopes) you're allowed to access.
 
 ## Authentication Flow
 
-```
-┌──────────┐     1. Redirect to login      ┌─────────────────────┐
-│          │ ──────────────────────────────► │                     │
-│ Your App │                                │ Eurofurence Identity│
-│          │ ◄────────────────────────────── │                     │
-└──────────┘   2. Redirect back with code   └─────────────────────┘
-      │                                              ▲
-      │        3. Exchange code for tokens           │
-      └──────────────────────────────────────────────┘
+```mermaid
+sequenceDiagram
+    participant App as Your App
+    participant ID as Eurofurence Identity
+
+    App->>ID: 1. Redirect to login
+    ID-->>App: 2. Redirect back with code
+    App->>ID: 3. Exchange code for tokens
+    ID-->>App: 4. Access + ID tokens
 ```
 
 1. Your app redirects the user to Eurofurence Identity's login page
@@ -66,9 +66,9 @@ Scopes define what your app can access. Only request what you actually need. See
 
 After successful authentication, your app receives:
 
-- **ID Token** — A JWT containing the user's identity claims (sub, name, email, etc.). This token includes a `sid` (session ID) claim used for backchannel logout.
-- **Access Token** — Used to call the Eurofurence Identity API on behalf of the user.
-- **Refresh Token** — (If `offline`/`offline_access` scope was requested) Used to get new access tokens without re-authenticating.
+- **ID Token:** A JWT containing the user's identity claims (sub, name, email, etc.). This token includes a `sid` (session ID) claim used for backchannel logout.
+- **Access Token:** Used to call the Eurofurence Identity API on behalf of the user.
+- **Refresh Token:** (If `offline`/`offline_access` scope was requested) Used to get new access tokens without re-authenticating.
 
 ## Backchannel Logout
 
@@ -125,7 +125,7 @@ Store the `sid` from the ID Token when the user logs in so you can match it late
 
 Your app can store per-user key-value data scoped to your client ID. This is useful for app-specific preferences or state that should persist across sessions.
 
-- Keys are scoped by your OAuth `client_id` — you can only access your own data
+- Keys are scoped by your OAuth `client_id`; you can only access your own data
 - Values are strings up to 64KB
 - See the [API Reference](/identity/api/v1/eurofurence-identity) for endpoint details
 

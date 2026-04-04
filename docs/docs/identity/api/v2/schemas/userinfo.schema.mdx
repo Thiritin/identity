@@ -1,0 +1,32 @@
+---
+id: userinfo
+title: "Userinfo"
+description: ""
+sidebar_label: "Userinfo"
+hide_title: true
+hide_table_of_contents: true
+schema: true
+sample: {"sub":"1VJEQAYWW54TZ5VD","email":"user@example.com","email_verified":true,"name":"FurryUser42","avatar":"string","groups":[{"id":"Y6K08PEKXG9Q7ZWJ","name":"Information Technology","type":"department","slug":"operations/information-technology","level":"member","title":"App Developer"}],"firstname":"John","lastname":"Doe","birthdate":"1990-01-15","phone":"string","telegram_username":"string","spoken_languages":["string"],"credit_as":"string","nda_verified":true}
+custom_edit_url: null
+---
+
+import Schema from "@theme/Schema";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Userinfo"}
+>
+</Heading>
+
+
+
+
+
+<Schema
+  {...require("./userinfo.Schema.json")}
+>
+  
+</Schema>
+            

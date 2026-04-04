@@ -1,0 +1,42 @@
+{
+  "id": "identity/api/v2/schemas/groupmember",
+  "title": "GroupMember",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/groupmember.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/groupmember",
+  "permalink": "/identity/api/v2/schemas/groupmember",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "groupmember",
+    "title": "GroupMember",
+    "description": "",
+    "sidebar_label": "GroupMember",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "user_id": "1VJEQAYWW54TZ5VD",
+      "name": "John Doe",
+      "email": "string",
+      "avatar": "string",
+      "level": "member",
+      "title": "App Developer",
+      "credit_as": "J. Doe"
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "GroupForm",
+    "permalink": "/identity/api/v2/schemas/groupform"
+  },
+  "next": {
+    "title": "AddMemberForm",
+    "permalink": "/identity/api/v2/schemas/addmemberform"
+  }
+}

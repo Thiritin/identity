@@ -1,0 +1,32 @@
+---
+id: staffprofile
+title: "StaffProfile"
+description: "Staff member profile. PII fields may be absent based on the viewer's relationship to the staff member."
+sidebar_label: "StaffProfile"
+hide_title: true
+hide_table_of_contents: true
+schema: true
+sample: {"id":"1VJEQAYWW54TZ5VD","name":"FurryUser42","avatar":"string","nda_verified":true,"firstname":"John","lastname":"Doe","birthdate":"2024-07-29","phone":"string","telegram_username":"string","spoken_languages":["string"],"credit_as":"string","groups":[{"id":"string","name":"string","type":"none","slug":"string","level":"member","title":"string"}]}
+custom_edit_url: null
+---
+
+import Schema from "@theme/Schema";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"StaffProfile"}
+>
+</Heading>
+
+
+
+Staff member profile. PII fields may be absent based on the viewer's relationship to the staff member.
+
+<Schema
+  {...require("./staffprofile.Schema.json")}
+>
+  
+</Schema>
+            

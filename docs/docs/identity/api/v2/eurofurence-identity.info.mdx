@@ -43,7 +43,28 @@ import Export from "@theme/ApiExplorer/Export";
 
 API v2 endpoints for the Eurofurence Identity service.
 
-For the full list of available scopes, see the [Scopes Reference](/identity/guides/scopes).
+## OAuth2 Scopes
+
+### Identity
+- `openid`: Basic OpenID Connect functionality
+- `profile`: User's display name and avatar
+- `email`: User's email address and verification status
+- `offline` / `offline_access`: Refresh tokens
+
+### Staff
+- `staff.my.read`: Access to the authenticated user's own staff profile (firstname, lastname, phone, etc.)
+- `staff.all.read`: Access to all staff members' profiles (respects per-user visibility settings)
+
+### Groups
+- `groups`: User's group memberships (returned in userinfo)
+- `groups.read`: Read group details via the API
+- `groups.write`: Create/update groups and manage members
+- `groups.delete`: Delete groups
+
+### Other
+- `view_full_staff_details`: Access email addresses in group/user listings
+- `metadata.read`: Read per-app user metadata
+- `metadata.write`: Write per-app user metadata
 
 <div
   style={{"marginBottom":"2rem"}}

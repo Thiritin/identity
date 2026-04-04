@@ -1,0 +1,27 @@
+{
+  "id": "identity/guides/tokens",
+  "title": "Understanding Tokens",
+  "description": "After a successful login, Eurofurence Identity hands your application up to three different tokens. They look similar but serve very different purposes, and mixing them up is one of the most common sources of bugs and security issues. This page explains what each token is for, who is supposed to verify it, and how to use it correctly.",
+  "source": "@site/docs/identity/guides/tokens.md",
+  "sourceDirName": "identity/guides",
+  "slug": "/identity/guides/tokens",
+  "permalink": "/identity/guides/tokens",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1,
+    "title": "Understanding Tokens"
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Getting Started",
+    "permalink": "/identity/guides/getting-started"
+  },
+  "next": {
+    "title": "Build an Application",
+    "permalink": "/identity/guides/build-an-application"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "identity/api/v2/schemas/tokenintrospectionrequest",
+  "title": "TokenIntrospectionRequest",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/tokenintrospectionrequest.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/tokenintrospectionrequest",
+  "permalink": "/identity/api/v2/schemas/tokenintrospectionrequest",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "tokenintrospectionrequest",
+    "title": "TokenIntrospectionRequest",
+    "description": "",
+    "sidebar_label": "TokenIntrospectionRequest",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "token": "string",
+      "scope": "string"
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Userinfo",
+    "permalink": "/identity/api/v2/schemas/userinfo"
+  },
+  "next": {
+    "title": "TokenIntrospectionResponse",
+    "permalink": "/identity/api/v2/schemas/tokenintrospectionresponse"
+  }
+}

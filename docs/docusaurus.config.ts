@@ -18,6 +18,7 @@ const config: Config = {
   onBrokenLinks: 'throw',
 
   markdown: {
+    mermaid: true,
     hooks: {
       onBrokenMarkdownLinks: 'warn',
     },
@@ -87,6 +88,7 @@ const config: Config = {
             outputDir: "docs/identity/api/v2",
             downloadUrl:
               "../../contracts/identity/api/v2/identity.oas.2.0.yml",
+            showSchemas: true,
             sidebarOptions: {
               groupPathsBy: "tag",
               categoryLinkSource: "tag",
@@ -97,7 +99,7 @@ const config: Config = {
     ],
   ],
 
-  themes: ["docusaurus-theme-openapi-docs"],
+  themes: ["docusaurus-theme-openapi-docs", "@docusaurus/theme-mermaid"],
 
   themeConfig: {
     navbar: {
@@ -128,7 +130,7 @@ const config: Config = {
           items: [
             {
               label: 'API Documentation',
-              to: '/identity/api/v1/eurofurence-identity',
+              to: '/identity/api/v2/eurofurence-identity',
             },
           ],
         },

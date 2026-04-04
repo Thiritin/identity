@@ -1,0 +1,69 @@
+{
+  "id": "identity/api/v2/schemas/openidconfiguration",
+  "title": "OpenIDConfiguration",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/openidconfiguration.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/openidconfiguration",
+  "permalink": "/identity/api/v2/schemas/openidconfiguration",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "openidconfiguration",
+    "title": "OpenIDConfiguration",
+    "description": "",
+    "sidebar_label": "OpenIDConfiguration",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "issuer": "https://identity.eurofurence.org/",
+      "authorization_endpoint": "https://identity.eurofurence.org/oauth2/auth",
+      "token_endpoint": "https://identity.eurofurence.org/oauth2/token",
+      "userinfo_endpoint": "https://identity.eurofurence.org/userinfo",
+      "jwks_uri": "https://identity.eurofurence.org/.well-known/jwks.json",
+      "subject_types_supported": [
+        "public"
+      ],
+      "response_types_supported": [
+        "code",
+        "id_token",
+        "code id_token",
+        "token"
+      ],
+      "scopes_supported": [
+        "openid",
+        "profile",
+        "email",
+        "offline",
+        "offline_access",
+        "groups"
+      ],
+      "token_endpoint_auth_methods_supported": [
+        "client_secret_basic",
+        "client_secret_post"
+      ],
+      "id_token_signing_alg_values_supported": [
+        "RS256"
+      ],
+      "grant_types_supported": [
+        "authorization_code",
+        "refresh_token",
+        "client_credentials"
+      ]
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "MetadataValue",
+    "permalink": "/identity/api/v2/schemas/metadatavalue"
+  },
+  "next": {
+    "title": "TokenRequest",
+    "permalink": "/identity/api/v2/schemas/tokenrequest"
+  }
+}

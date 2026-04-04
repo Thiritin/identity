@@ -1,0 +1,35 @@
+{
+  "id": "identity/api/v2/get-conventions",
+  "title": "List conventions",
+  "description": "Returns a list of all Eurofurence conventions ordered by year (ascending).",
+  "source": "@site/docs/identity/api/v2/get-conventions.api.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/get-conventions",
+  "permalink": "/identity/api/v2/get-conventions",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "get-conventions",
+    "title": "List conventions",
+    "description": "Returns a list of all Eurofurence conventions ordered by year (ascending).",
+    "sidebar_label": "List conventions",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "eJzNVlFv2zYQ/iuE8tAGsCXPK4Y1T+vSoAiWLUXjbg9pkdLSyWJDkSpJOTGM/Pd9R8m2lGRDH/Ywv5gi7z7efXe8u21SkM+daoKyJjlJPlBonfFCCq18ELYUUmtx1jpbto5MTiK3Zk2Gxb2wriBHhVhuxIakEy+lz8kUyqyO00/mk1lUygtsNFaZILBu2qVWuZCmEIUlL4wNwtG3VjkSsg0VA+eSwdNkknjKW6fCJjm5/jxJHPkGl5JPTrbJfDbjv7Hxl79BCfYFwPCpbBrdw2VfPYtsE59XVEtehU1DUJLOyQ30VKDaD/bt8ivlAQeNsw25oLqLVTGQgVe0IgehsSGne44E5CcJ3cu60dCYv36YJEbWNADxwYGwoVQy5Hv+OoEO0/vsxQfo2fwnCILD59FNq7VcsmRwLQ1vu7CItDJi4aTxOtLFV/ogXbgpZHgWrrSulmA5iQL/Bs+GTWc/T3+IjiAb/kPM+Y/JAzutQtw+8I5t/uFIrhC368GRT5BMHNLo6TnimawoDM8nSU2hsv0Jp4AMFT6yfCTkya3JMfrjRHzvbNHm8WOStE5jqwqh8SdZpgoGCJuUDjFOrVtlslHZeg6KHoNd2Fzq78PRLFohnHu0z4dXdMWZ3yXxZUPm/O0w2XmjAAemy/nR98fvcyC9I62nt8bemYz1VTEFX6VatR3TT15JZ4XY3Ypgvclz8n5hb8kMjOObme68S+1kibeA3If8qVYw5opyR+E7FKChTGlZkgPXWTFPZ+ksOeTQ8O2d9772ZUXm8RbUD8WM1PRLqBSoVSbNbZ3sXnay6HfZRBQgQtFivf70otspRGtQPcXv54snwV2pULVLBs12WHves6W2ywwmmOzi/PTsj6szviaQq/1leYWUBPwAqiLdPAmVppXUWdR5EpU378/Fer6v2l7gVQpUFfEcMcJ3F8Zqf3QkLt+giM/FVY4E8N3e0V74k5mKL11mfDkRv0qPTjDOAVG2Jj4bqXfyqL6l0gSFj7jrhReF8o2WG8FsxkYi1xKVKgrHyBxE46eQRYHW4aMswq7KviUIFLjQ+s6qstTK0BeR7dc3MiYj0D5QCYBKBM7LvVdXQZZlVPa8SutN6kiyZ10WQzzSNmhrHPPOMrwREdVE7594WSrnAzs1EVruVk1lDf4o5Onx4C705KeXcaPuMGuql8jvFztwL15y8wTB6MDkpmyEWCuvlkp3QQzIsJU/3vn2ztm26ZhZxeWB0/i9u6FSTcTmmQHOoYcwNL+x44HyztQP+Ov1CwoIjYcRMpKEpBsq3CHlOeSn0AyUtQ03hE61i2MtjVzRzoyhakGaou7buOiVdo5d4rIuVdaK7m5KNJibyNlNb9GB0VHygEI4F7GyyB5PR0xZxEK3kLBQjhxlojGAREbETmIsvnPzL/5/XgHP836q7SoWrXGRcPIu7QoFa/Rjzz/UjFgu4IhtHZzLJDwKPqMy9WtuvEuZ37JzBiVfWwwaydFs9ope5TiTOizoPjyqjJT+mYoLtouraoOWg5CMihxminG7HJWZ7WFO+3/NnH0LCXA5Q53pingkftuPAddJPp4luOHy9na7lJ7QLR8eePtbS64fXdfSqW6Quf4MuAr5gX7Ec8MtbbjmIuUa7rtrqds4lD6eXLmR74eSd2cL0P43NEogBw==",
+    "sidebar_class_name": "get api-method",
+    "info_path": "identity/api/v2/eurofurence-identity",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Conventions",
+    "permalink": "/identity/api/v2/conventions"
+  },
+  "next": {
+    "title": "Get current convention",
+    "permalink": "/identity/api/v2/get-current-convention"
+  }
+}

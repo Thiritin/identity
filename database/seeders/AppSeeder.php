@@ -34,6 +34,8 @@ class AppSeeder extends Seeder
             'system_name' => $systemName,
             'user_id' => User::first()->id,
             'skip_consent' => true,
+            'approved' => true,
+            'first_party' => true,
             'data' => [
                 'client_name' => $clientName,
                 'redirect_uris' => [
@@ -46,7 +48,11 @@ class AppSeeder extends Seeder
         ]);
 
         if (! $app->wasRecentlyCreated) {
-            $app->update(['skip_consent' => true]);
+            $app->update([
+                'skip_consent' => true,
+                'approved' => true,
+                'first_party' => true,
+            ]);
         }
 
         // Check if App was just created

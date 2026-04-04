@@ -39,15 +39,15 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'e8b'),
+    component: ComponentCreator('/', '30c'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'f4d'),
+        component: ComponentCreator('/', '03c'),
         routes: [
           {
             path: '/',
-            component: ComponentCreator('/', '7b8'),
+            component: ComponentCreator('/', '8a8'),
             routes: [
               {
                 path: '/identity/api/v1/create-group',
@@ -146,6 +146,18 @@ export default [
                 sidebar: "identitySidebar"
               },
               {
+                path: '/identity/api/v2/authorize-user',
+                component: ComponentCreator('/identity/api/v2/authorize-user', '9ef'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/conventions',
+                component: ComponentCreator('/identity/api/v2/conventions', 'c95'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
                 path: '/identity/api/v2/create-group',
                 component: ComponentCreator('/identity/api/v2/create-group', 'f31'),
                 exact: true,
@@ -166,6 +178,18 @@ export default [
               {
                 path: '/identity/api/v2/eurofurence-identity',
                 component: ComponentCreator('/identity/api/v2/eurofurence-identity', 'f0f'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/get-conventions',
+                component: ComponentCreator('/identity/api/v2/get-conventions', '17d'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/get-current-convention',
+                component: ComponentCreator('/identity/api/v2/get-current-convention', '220'),
                 exact: true,
                 sidebar: "identitySidebar"
               },
@@ -194,6 +218,12 @@ export default [
                 sidebar: "identitySidebar"
               },
               {
+                path: '/identity/api/v2/get-jwks',
+                component: ComponentCreator('/identity/api/v2/get-jwks', '226'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
                 path: '/identity/api/v2/get-metadata',
                 component: ComponentCreator('/identity/api/v2/get-metadata', '4e2'),
                 exact: true,
@@ -202,6 +232,12 @@ export default [
               {
                 path: '/identity/api/v2/get-metadata-key',
                 component: ComponentCreator('/identity/api/v2/get-metadata-key', 'ab9'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/get-open-id-configuration',
+                component: ComponentCreator('/identity/api/v2/get-open-id-configuration', 'aa9'),
                 exact: true,
                 sidebar: "identitySidebar"
               },
@@ -220,6 +256,12 @@ export default [
               {
                 path: '/identity/api/v2/get-staff-member',
                 component: ComponentCreator('/identity/api/v2/get-staff-member', '430'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/get-token',
+                component: ComponentCreator('/identity/api/v2/get-token', '259'),
                 exact: true,
                 sidebar: "identitySidebar"
               },
@@ -266,6 +308,126 @@ export default [
                 sidebar: "identitySidebar"
               },
               {
+                path: '/identity/api/v2/schemas/addmemberform',
+                component: ComponentCreator('/identity/api/v2/schemas/addmemberform', '940'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/convention',
+                component: ComponentCreator('/identity/api/v2/schemas/convention', 'f49'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/error',
+                component: ComponentCreator('/identity/api/v2/schemas/error', 'bde'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/group',
+                component: ComponentCreator('/identity/api/v2/schemas/group', '64c'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/groupform',
+                component: ComponentCreator('/identity/api/v2/schemas/groupform', 'cb8'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/groupmember',
+                component: ComponentCreator('/identity/api/v2/schemas/groupmember', '09b'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/groupsummary',
+                component: ComponentCreator('/identity/api/v2/schemas/groupsummary', '898'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/grouptreenode',
+                component: ComponentCreator('/identity/api/v2/schemas/grouptreenode', '529'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/jsonwebkeyset',
+                component: ComponentCreator('/identity/api/v2/schemas/jsonwebkeyset', 'c71'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/metadata',
+                component: ComponentCreator('/identity/api/v2/schemas/metadata', '238'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/metadatavalue',
+                component: ComponentCreator('/identity/api/v2/schemas/metadatavalue', '040'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/oautherror',
+                component: ComponentCreator('/identity/api/v2/schemas/oautherror', 'e56'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/openidconfiguration',
+                component: ComponentCreator('/identity/api/v2/schemas/openidconfiguration', '054'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/staffprofile',
+                component: ComponentCreator('/identity/api/v2/schemas/staffprofile', 'd42'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/tokenintrospectionrequest',
+                component: ComponentCreator('/identity/api/v2/schemas/tokenintrospectionrequest', '30d'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/tokenintrospectionresponse',
+                component: ComponentCreator('/identity/api/v2/schemas/tokenintrospectionresponse', '409'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/tokenrequest',
+                component: ComponentCreator('/identity/api/v2/schemas/tokenrequest', '1b7'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/tokenresponse',
+                component: ComponentCreator('/identity/api/v2/schemas/tokenresponse', 'f62'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/updatememberform',
+                component: ComponentCreator('/identity/api/v2/schemas/updatememberform', '519'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/userinfo',
+                component: ComponentCreator('/identity/api/v2/schemas/userinfo', '45a'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
                 path: '/identity/api/v2/staff',
                 component: ComponentCreator('/identity/api/v2/staff', 'e2f'),
                 exact: true,
@@ -290,6 +452,18 @@ export default [
                 sidebar: "identitySidebar"
               },
               {
+                path: '/identity/guides/app-to-app',
+                component: ComponentCreator('/identity/guides/app-to-app', '27c'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/guides/audiences',
+                component: ComponentCreator('/identity/guides/audiences', '2af'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
                 path: '/identity/guides/build-an-application',
                 component: ComponentCreator('/identity/guides/build-an-application', 'e47'),
                 exact: true,
@@ -304,6 +478,12 @@ export default [
               {
                 path: '/identity/guides/scopes',
                 component: ComponentCreator('/identity/guides/scopes', 'f1f'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/guides/tokens',
+                component: ComponentCreator('/identity/guides/tokens', '66b'),
                 exact: true,
                 sidebar: "identitySidebar"
               },

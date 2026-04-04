@@ -1,0 +1,45 @@
+{
+  "id": "identity/api/v2/schemas/jsonwebkeyset",
+  "title": "JSONWebKeySet",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/jsonwebkeyset.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/jsonwebkeyset",
+  "permalink": "/identity/api/v2/schemas/jsonwebkeyset",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "jsonwebkeyset",
+    "title": "JSONWebKeySet",
+    "description": "",
+    "sidebar_label": "JSONWebKeySet",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "keys": [
+        {
+          "kty": "RSA",
+          "use": "sig",
+          "kid": "string",
+          "alg": "RS256",
+          "n": "string",
+          "e": "AQAB"
+        }
+      ]
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "OAuthError",
+    "permalink": "/identity/api/v2/schemas/oautherror"
+  },
+  "next": {
+    "title": "Convention",
+    "permalink": "/identity/api/v2/schemas/convention"
+  }
+}

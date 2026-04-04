@@ -1,0 +1,37 @@
+{
+  "id": "identity/api/v2/schemas/oautherror",
+  "title": "OAuthError",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/oautherror.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/oautherror",
+  "permalink": "/identity/api/v2/schemas/oautherror",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "oautherror",
+    "title": "OAuthError",
+    "description": "",
+    "sidebar_label": "OAuthError",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "error": "invalid_grant",
+      "error_description": "string"
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "TokenResponse",
+    "permalink": "/identity/api/v2/schemas/tokenresponse"
+  },
+  "next": {
+    "title": "JSONWebKeySet",
+    "permalink": "/identity/api/v2/schemas/jsonwebkeyset"
+  }
+}

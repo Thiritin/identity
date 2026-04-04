@@ -10,9 +10,9 @@
   "unlisted": false,
   "tags": [],
   "version": "current",
-  "sidebarPosition": 2,
+  "sidebarPosition": 3,
   "frontMatter": {
-    "sidebar_position": 2,
+    "sidebar_position": 3,
     "title": "Scopes"
   },
   "sidebar": "identitySidebar",
@@ -21,7 +21,7 @@
     "permalink": "/identity/guides/build-an-application"
   },
   "next": {
-    "title": "Introduction",
-    "permalink": "/identity/api/v1/eurofurence-identity"
+    "title": "Audiences",
+    "permalink": "/identity/guides/audiences"
   }
 }

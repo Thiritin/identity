@@ -5,17 +5,17 @@ title: Introduction
 
 # Eurofurence Identity
 
-Eurofurence Identity is the central authentication and authorization service for the Eurofurence ecosystem. It allows users to sign in once and access all connected Eurofurence applications — from event registration to community tools — with a single account.
+Eurofurence Identity is the central authentication and authorization service for the Eurofurence ecosystem. It allows users to sign in once and access all connected Eurofurence applications, from event registration to community tools, with a single account.
 
 Under the hood, it implements **OpenID Connect (OIDC)** on top of **OAuth 2.0**, providing secure, standards-based authentication that any application can integrate with.
 
 ## What It Does
 
-- **Single Sign-On (SSO)** — One account for all Eurofurence services. Log in once, access everything.
-- **Third-Party Integration** — External developers can build apps that authenticate against Eurofurence Identity.
-- **Group Management** — Organize users into divisions, departments, and teams with hierarchical group structures.
-- **Scoped Permissions** — Applications only get access to the data they need, nothing more.
-- **Backchannel Logout** — When a user logs out, all connected applications are notified automatically.
+- **Single Sign-On (SSO):** One account for all Eurofurence services. Log in once, access everything.
+- **Third-Party Integration:** External developers can build apps that authenticate against Eurofurence Identity.
+- **Group Management:** Organize users into divisions, departments, and teams with hierarchical group structures.
+- **Scoped Permissions:** Applications only get access to the data they need, nothing more.
+- **Backchannel Logout:** When a user logs out, all connected applications are notified automatically.
 
 ## Documentation
 

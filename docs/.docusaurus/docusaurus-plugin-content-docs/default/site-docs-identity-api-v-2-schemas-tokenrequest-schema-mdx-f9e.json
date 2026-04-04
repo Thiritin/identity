@@ -1,0 +1,42 @@
+{
+  "id": "identity/api/v2/schemas/tokenrequest",
+  "title": "TokenRequest",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/tokenrequest.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/tokenrequest",
+  "permalink": "/identity/api/v2/schemas/tokenrequest",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "tokenrequest",
+    "title": "TokenRequest",
+    "description": "",
+    "sidebar_label": "TokenRequest",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "grant_type": "authorization_code",
+      "code": "string",
+      "redirect_uri": "string",
+      "client_id": "string",
+      "client_secret": "string",
+      "refresh_token": "string",
+      "scope": "string"
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "OpenIDConfiguration",
+    "permalink": "/identity/api/v2/schemas/openidconfiguration"
+  },
+  "next": {
+    "title": "TokenResponse",
+    "permalink": "/identity/api/v2/schemas/tokenresponse"
+  }
+}

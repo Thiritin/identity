@@ -23,7 +23,7 @@
     "permalink": "/identity/api/v2/eurofurence-identity"
   },
   "next": {
-    "title": "Get userinfo",
-    "permalink": "/identity/api/v2/get-userinfo"
+    "title": "OpenID Connect Discovery",
+    "permalink": "/identity/api/v2/get-open-id-configuration"
   }
 }

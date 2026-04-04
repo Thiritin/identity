@@ -1,0 +1,60 @@
+{
+  "id": "identity/api/v2/schemas/userinfo",
+  "title": "Userinfo",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/userinfo.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/userinfo",
+  "permalink": "/identity/api/v2/schemas/userinfo",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "userinfo",
+    "title": "Userinfo",
+    "description": "",
+    "sidebar_label": "Userinfo",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "sub": "1VJEQAYWW54TZ5VD",
+      "email": "user@example.com",
+      "email_verified": true,
+      "name": "FurryUser42",
+      "avatar": "string",
+      "groups": [
+        {
+          "id": "Y6K08PEKXG9Q7ZWJ",
+          "name": "Information Technology",
+          "type": "department",
+          "slug": "operations/information-technology",
+          "level": "member",
+          "title": "App Developer"
+        }
+      ],
+      "firstname": "John",
+      "lastname": "Doe",
+      "birthdate": "1990-01-15",
+      "phone": "string",
+      "telegram_username": "string",
+      "spoken_languages": [
+        "string"
+      ],
+      "credit_as": "string",
+      "nda_verified": true
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Get current convention",
+    "permalink": "/identity/api/v2/get-current-convention"
+  },
+  "next": {
+    "title": "TokenIntrospectionRequest",
+    "permalink": "/identity/api/v2/schemas/tokenintrospectionrequest"
+  }
+}

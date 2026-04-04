@@ -1,0 +1,27 @@
+{
+  "id": "identity/guides/audiences",
+  "title": "Audiences",
+  "description": "Audiences control where a token can be used. While scopes define what an app can do, audiences define which service should accept the token. This prevents a token meant for one service from being replayed against another.",
+  "source": "@site/docs/identity/guides/audiences.md",
+  "sourceDirName": "identity/guides",
+  "slug": "/identity/guides/audiences",
+  "permalink": "/identity/guides/audiences",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "sidebar_position": 4,
+    "title": "Audiences"
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Scopes",
+    "permalink": "/identity/guides/scopes"
+  },
+  "next": {
+    "title": "App-to-App APIs",
+    "permalink": "/identity/guides/app-to-app"
+  }
+}

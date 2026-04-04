@@ -1,0 +1,58 @@
+{
+  "id": "identity/api/v2/schemas/staffprofile",
+  "title": "StaffProfile",
+  "description": "Staff member profile. PII fields may be absent based on the viewer's relationship to the staff member.",
+  "source": "@site/docs/identity/api/v2/schemas/staffprofile.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/staffprofile",
+  "permalink": "/identity/api/v2/schemas/staffprofile",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "staffprofile",
+    "title": "StaffProfile",
+    "description": "Staff member profile. PII fields may be absent based on the viewer's relationship to the staff member.",
+    "sidebar_label": "StaffProfile",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "id": "1VJEQAYWW54TZ5VD",
+      "name": "FurryUser42",
+      "avatar": "string",
+      "nda_verified": true,
+      "firstname": "John",
+      "lastname": "Doe",
+      "birthdate": "2024-07-29",
+      "phone": "string",
+      "telegram_username": "string",
+      "spoken_languages": [
+        "string"
+      ],
+      "credit_as": "string",
+      "groups": [
+        {
+          "id": "string",
+          "name": "string",
+          "type": "none",
+          "slug": "string",
+          "level": "member",
+          "title": "string"
+        }
+      ]
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "TokenIntrospectionResponse",
+    "permalink": "/identity/api/v2/schemas/tokenintrospectionresponse"
+  },
+  "next": {
+    "title": "GroupTreeNode",
+    "permalink": "/identity/api/v2/schemas/grouptreenode"
+  }
+}

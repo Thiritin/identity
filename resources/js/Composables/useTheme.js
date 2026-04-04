@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 
 const systemDark = ref(window.matchMedia('(prefers-color-scheme: dark)').matches)
@@ -16,6 +16,12 @@ export function useTheme() {
         if (theme.value === 'dark') return true
         if (theme.value === 'light') return false
         return systemDark.value
+    })
+
+    // Sync `.dark` onto <html> so teleported portals (dialogs, popovers,
+    // dropdowns) also receive the dark variant.
+    watchEffect(() => {
+        document.documentElement.classList.toggle('dark', darkMode.value)
     })
 
     return { darkMode, theme }

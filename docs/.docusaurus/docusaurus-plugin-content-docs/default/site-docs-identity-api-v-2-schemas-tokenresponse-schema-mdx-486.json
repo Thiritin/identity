@@ -1,0 +1,41 @@
+{
+  "id": "identity/api/v2/schemas/tokenresponse",
+  "title": "TokenResponse",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/tokenresponse.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/tokenresponse",
+  "permalink": "/identity/api/v2/schemas/tokenresponse",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "tokenresponse",
+    "title": "TokenResponse",
+    "description": "",
+    "sidebar_label": "TokenResponse",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "access_token": "string",
+      "token_type": "bearer",
+      "expires_in": 3600,
+      "refresh_token": "string",
+      "id_token": "string",
+      "scope": "string"
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "TokenRequest",
+    "permalink": "/identity/api/v2/schemas/tokenrequest"
+  },
+  "next": {
+    "title": "OAuthError",
+    "permalink": "/identity/api/v2/schemas/oautherror"
+  }
+}

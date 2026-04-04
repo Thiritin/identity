@@ -1,0 +1,44 @@
+{
+  "id": "identity/api/v2/schemas/tokenintrospectionresponse",
+  "title": "TokenIntrospectionResponse",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/tokenintrospectionresponse.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/tokenintrospectionresponse",
+  "permalink": "/identity/api/v2/schemas/tokenintrospectionresponse",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "tokenintrospectionresponse",
+    "title": "TokenIntrospectionResponse",
+    "description": "",
+    "sidebar_label": "TokenIntrospectionResponse",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "active": true,
+      "sub": "string",
+      "client_id": "string",
+      "scope": "string",
+      "exp": 0,
+      "iat": 0,
+      "iss": "string",
+      "token_type": "string",
+      "token_use": "string"
+    },
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "TokenIntrospectionRequest",
+    "permalink": "/identity/api/v2/schemas/tokenintrospectionrequest"
+  },
+  "next": {
+    "title": "StaffProfile",
+    "permalink": "/identity/api/v2/schemas/staffprofile"
+  }
+}

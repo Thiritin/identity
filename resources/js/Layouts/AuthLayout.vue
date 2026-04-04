@@ -35,8 +35,8 @@
                             <a href="https://github.com/thiritin/identity" target="_blank" class="hover:text-white transition-colors" aria-label="GitHub">
                                 <Github class="h-4 w-4" />
                             </a>
-                            <a href="https://x.com/efnotifications" target="_blank" class="hover:text-white transition-colors" aria-label="X (Twitter)">
-                                <Twitter class="h-4 w-4" />
+                            <a href="https://t.me/efnotifications" target="_blank" class="hover:text-white transition-colors" aria-label="Telegram">
+                                <Send class="h-4 w-4" />
                             </a>
                             <a v-for="item in visibleNavigation" :key="item.name" :href="item.href" target="_blank" class="hover:text-white transition-colors">
                                 {{ $t(item.name) }}
@@ -52,7 +52,7 @@
 import { ref, computed } from 'vue'
 import { usePage } from "@inertiajs/vue3"
 import { useTheme } from '@/Composables/useTheme'
-import { Github, Twitter } from 'lucide-vue-next'
+import { Github, Send } from 'lucide-vue-next'
 import SkipToContent from '@/Components/SkipToContent.vue'
 
 const { darkMode } = useTheme()

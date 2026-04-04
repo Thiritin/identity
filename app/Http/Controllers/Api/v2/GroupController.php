@@ -59,6 +59,10 @@ class GroupController extends Controller
             if (in_array('members', $includes, true)) {
                 $query->with('users');
             }
+
+            if (in_array('parent', $includes, true)) {
+                $query->with('parent');
+            }
         }
 
         return GroupResource::collection($query->simplePaginate(25));
@@ -82,6 +86,10 @@ class GroupController extends Controller
 
             if (in_array('members', $includes, true)) {
                 $group->load('users');
+            }
+
+            if (in_array('parent', $includes, true)) {
+                $group->load('parent');
             }
         }
 

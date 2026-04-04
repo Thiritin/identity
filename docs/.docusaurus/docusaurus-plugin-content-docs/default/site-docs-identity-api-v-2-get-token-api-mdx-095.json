@@ -1,0 +1,35 @@
+{
+  "id": "identity/api/v2/get-token",
+  "title": "Token Endpoint",
+  "description": "Exchange an authorization code for access and refresh tokens, or refresh an existing token.",
+  "source": "@site/docs/identity/api/v2/get-token.api.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/get-token",
+  "permalink": "/identity/api/v2/get-token",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "get-token",
+    "title": "Token Endpoint",
+    "description": "Exchange an authorization code for access and refresh tokens, or refresh an existing token.",
+    "sidebar_label": "Token Endpoint",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "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",
+    "sidebar_class_name": "post api-method",
+    "info_path": "identity/api/v2/eurofurence-identity",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Authorization Endpoint",
+    "permalink": "/identity/api/v2/authorize-user"
+  },
+  "next": {
+    "title": "JSON Web Key Set",
+    "permalink": "/identity/api/v2/get-jwks"
+  }
+}
