@@ -118,6 +118,33 @@
             </div>
         </div>
 
+        <!-- Staff Profile Consent -->
+        <div v-if="$page.props.staffProfileConsent?.is_staff" class="grid md:grid-cols-3 gap-6 md:gap-10 border-t border-gray-200/50 dark:border-gray-700/50 pt-8">
+            <div>
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ $t('staff_profile_consent_state_heading') }}</h3>
+            </div>
+            <div class="md:col-span-2 space-y-3">
+                <template v-if="$page.props.staffProfileConsent.granted">
+                    <p class="text-sm">
+                        {{ $t('staff_profile_consent_state_granted', {
+                            date: new Date($page.props.staffProfileConsent.granted_at).toLocaleDateString(),
+                            version: $page.props.staffProfileConsent.version,
+                        }) }}
+                    </p>
+                    <p v-if="!$page.props.staffProfileConsent.is_current" class="text-sm text-amber-600 dark:text-amber-400">
+                        {{ $t('staff_profile_consent_notice_updated') }}
+                    </p>
+                    <Button variant="destructive" size="sm" @click="showConsentWithdrawDialog = true">
+                        {{ $t('staff_profile_consent_withdraw_button') }}
+                    </Button>
+                </template>
+                <template v-else>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ $t('staff_profile_consent_state_not_granted') }}</p>
+                    <Link :href="route('settings.profile')" class="text-sm underline">{{ $t('staff_profile_consent_reminder_expand') }}</Link>
+                </template>
+            </div>
+        </div>
+
         <!-- Account Deletion -->
         <div class="grid md:grid-cols-3 gap-6 md:gap-10 border-t border-red-200/50 dark:border-red-900/30 pt-8">
             <div>
@@ -154,6 +181,20 @@
         </div>
     </div>
 
+    <!-- Withdraw Staff Profile Consent Dialog -->
+    <Dialog v-model:open="showConsentWithdrawDialog">
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>{{ $t('staff_profile_consent_withdraw_confirm_heading') }}</DialogTitle>
+            </DialogHeader>
+            <p class="text-sm text-gray-600 dark:text-gray-400">{{ $t('staff_profile_consent_withdraw_confirm_body') }}</p>
+            <DialogFooter>
+                <Button variant="outline" @click="showConsentWithdrawDialog = false">{{ $t('cancel') }}</Button>
+                <Button variant="destructive" @click="withdrawStaffProfileConsent">{{ $t('staff_profile_consent_withdraw_button') }}</Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
+
     <!-- Delete Account Confirmation Dialog -->
     <div v-if="showDeleteDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" @click.self="showDeleteDialog = false">
         <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md mx-4 shadow-xl">
@@ -176,6 +217,8 @@ import { ref } from 'vue'
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import { ChevronDown } from 'lucide-vue-next'
+import { Button } from '@/Components/ui/button'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/Components/ui/dialog'
 
 const props = defineProps({
     isStaff: Boolean,
@@ -225,6 +268,16 @@ function confirmRevoke() {
             showRevokeDialog.value = false
             revokeClientId.value = null
         },
+    })
+}
+
+// Withdraw staff profile consent
+const showConsentWithdrawDialog = ref(false)
+
+function withdrawStaffProfileConsent() {
+    router.delete(route('settings.staff-profile.consent.withdraw'), {
+        onSuccess: () => { showConsentWithdrawDialog.value = false },
+        preserveScroll: true,
     })
 }
 
