@@ -54,7 +54,7 @@
 
 **Tests**
 - `tests/Unit/Webhooks/WebhookSignerTest.php`
-- `tests/Unit/Webhooks/WebhookDispatcherTest.php`
+- `tests/Feature/Webhooks/WebhookDispatcherTest.php`
 - `tests/Feature/Webhooks/UserUpdatedDispatchTest.php`
 - `tests/Feature/Webhooks/DeliverWebhookTest.php`
 - `tests/Feature/Webhooks/PruneWebhookDeliveriesTest.php`
@@ -498,14 +498,14 @@ git commit -m "feat: add WebhookSigner with HMAC sign/verify"
 
 **Files:**
 - Create: `app/Services/Webhooks/WebhookDispatcher.php`
-- Create: `tests/Unit/Webhooks/WebhookDispatcherTest.php`
+- Create: `tests/Feature/Webhooks/WebhookDispatcherTest.php`
 
 - [ ] **Step 1:** Write failing test. Use `RefreshDatabase`, model factories, `Queue::fake()`.
 
 ```php
 <?php
 
-namespace Tests\Unit\Webhooks;
+namespace Tests\Feature\Webhooks;
 
 use App\Jobs\Webhooks\DeliverWebhook;
 use App\Models\App;
@@ -641,7 +641,7 @@ class WebhookDispatcherTest extends TestCase
 - [ ] **Step 2:** Run, expect failure (class missing).
 
 ```bash
-php artisan test tests/Unit/Webhooks/WebhookDispatcherTest.php
+php artisan test tests/Feature/Webhooks/WebhookDispatcherTest.php
 ```
 
 - [ ] **Step 3:** Implement.
@@ -769,7 +769,7 @@ class DeliverWebhook implements ShouldQueue
 Verify with:
 
 ```bash
-php artisan test tests/Unit/Webhooks/WebhookDispatcherTest.php
+php artisan test tests/Feature/Webhooks/WebhookDispatcherTest.php
 ```
 
 Expected: pass.
@@ -777,7 +777,7 @@ Expected: pass.
 - [ ] **Step 6:** Commit.
 
 ```bash
-git add app/Services/Webhooks/WebhookDispatcher.php app/Jobs/Webhooks/DeliverWebhook.php tests/Unit/Webhooks/WebhookDispatcherTest.php
+git add app/Services/Webhooks/WebhookDispatcher.php app/Jobs/Webhooks/DeliverWebhook.php tests/Feature/Webhooks/WebhookDispatcherTest.php
 git commit -m "feat: add WebhookDispatcher with subscription filtering"
 ```
 
@@ -991,13 +991,16 @@ class DeliverWebhook implements ShouldQueue
 
     private function markRetryingOrThrow(WebhookDelivery $delivery, string $reason, ?Throwable $rethrow = null): void
     {
+        // NOTE: when $attempts >= $tries we intentionally do NOT touch $delivery->status here.
+        // We still rethrow so the worker records the failure; the failed() hook then marks
+        // status=failed after the final attempt. Do not "fix" this by setting status='failed'
+        // in this branch — it would race with failed() and lose the final error message.
         $attempts = $this->attempts();
         if ($attempts < $this->tries) {
             $delivery->status = 'retrying';
             $nextBackoff = $this->backoff()[$attempts] ?? 21600;
             $delivery->next_retry_at = now()->addSeconds($nextBackoff);
         }
-        // else: failed() hook will mark it as failed after the final throw
         $delivery->save();
 
         throw $rethrow ?? new \RuntimeException($reason);
@@ -1360,8 +1363,7 @@ git commit -m "feat: add webhook policy methods"
 - Create: `app/Http/Requests/Developer/UpdateAppOAuthRequest.php`
 - Create: `app/Http/Requests/Developer/UpdateAppLogoutRequest.php`
 - Create: `app/Http/Requests/Developer/UpdateAppWebhookRequest.php`
-- Delete: `app/Http/Requests/Staff/StoreAppRequest.php`
-- Delete: `app/Http/Requests/Staff/UpdateAppRequest.php`
+- (Deletion of `app/Http/Requests/Staff/StoreAppRequest.php` and `app/Http/Requests/Staff/UpdateAppRequest.php` is deferred to Task 7.1 so the repo stays compilable at every commit.)
 
 - [ ] **Step 1:** Create `Developer/StoreAppRequest.php` — trimmed to three fields.
 
@@ -1529,13 +1531,9 @@ class UpdateAppWebhookRequest extends FormRequest
 }
 ```
 
-- [ ] **Step 6:** Delete the old Staff request classes and grep for usages to make sure nothing else references them (the old `AppsController` does — you'll rewire it in Phase 7).
+- [ ] **Step 6:** Leave the old `app/Http/Requests/Staff/{Store,Update}AppRequest.php` files in place for now — `AppsController` still references them. They will be deleted in Task 7.1 alongside the controller rewire so the tree compiles at every commit.
 
-```bash
-git rm app/Http/Requests/Staff/StoreAppRequest.php app/Http/Requests/Staff/UpdateAppRequest.php
-```
-
-- [ ] **Step 7:** Commit (won't compile yet — that's OK, next phase wires the controller). Use `--allow-empty` escape hatch isn't needed; just don't run tests until Phase 7.
+- [ ] **Step 7:** Commit. Everything compiles because we only added new files.
 
 ```bash
 git add app/Http/Requests/Developer
@@ -1550,6 +1548,8 @@ git commit -m "feat: add developer form requests for per-section app updates"
 
 **Files:**
 - Modify: `app/Http/Controllers/Profile/Settings/AppsController.php`
+- Delete: `app/Http/Requests/Staff/StoreAppRequest.php`
+- Delete: `app/Http/Requests/Staff/UpdateAppRequest.php`
 
 - [ ] **Step 1:** Replace the controller. Key changes:
 
@@ -1610,10 +1610,16 @@ public function updateGeneral(\App\Http\Requests\Developer\UpdateAppGeneralReque
 
 - [ ] **Step 4:** Do NOT delete `regenerateSecret` and `destroy` — they move under `credentials` and `danger` sections respectively (routes still hit these controller methods).
 
-- [ ] **Step 5:** Commit — still no tests run (routes rewire is next).
+- [ ] **Step 5:** Delete the now-unreferenced old request classes in the same commit so the tree compiles.
 
 ```bash
-git add app/Http/Controllers/Profile/Settings/AppsController.php
+git rm app/Http/Requests/Staff/StoreAppRequest.php app/Http/Requests/Staff/UpdateAppRequest.php
+```
+
+- [ ] **Step 6:** Commit. Routes still reference the old `update`/`edit`/`show` names — that's wired up in Task 7.3; until then, tests touching those route names will fail, which is expected. Do not run the suite between Task 7.1 and Task 7.3.
+
+```bash
+git add app/Http/Controllers/Profile/Settings/AppsController.php app/Http/Requests/Staff
 git commit -m "refactor: split AppsController update into per-section endpoints"
 ```
 
