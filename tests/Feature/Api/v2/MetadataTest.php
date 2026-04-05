@@ -30,7 +30,7 @@ it('returns empty data when user has no metadata', function () {
 
     $this->getJson('/api/v2/metadata')
         ->assertOk()
-        ->assertJsonCount(0, 'data');
+        ->assertJsonCount(0);
 });
 
 it('returns all metadata keys for the authenticated user and app', function () {
@@ -42,7 +42,7 @@ it('returns all metadata keys for the authenticated user and app', function () {
 
     $this->getJson('/api/v2/metadata')
         ->assertOk()
-        ->assertJsonCount(2, 'data')
+        ->assertJsonCount(2)
         ->assertJsonFragment(['key' => 'theme', 'value' => 'dark'])
         ->assertJsonFragment(['key' => 'locale', 'value' => 'en']);
 });
@@ -133,7 +133,7 @@ it('isolates metadata between apps', function () {
 
     $this->getJson('/api/v2/metadata')
         ->assertOk()
-        ->assertJsonCount(0, 'data');
+        ->assertJsonCount(0);
 
     $this->getJson('/api/v2/metadata/secret')
         ->assertNotFound();

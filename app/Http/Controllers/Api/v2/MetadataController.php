@@ -31,7 +31,9 @@ class MetadataController extends Controller
             ->where('client_id', $this->clientId())
             ->get();
 
-        return MetadataResource::collection($metadata);
+        return response()->json(
+            MetadataResource::collection($metadata)->toArray($request),
+        );
     }
 
     public function show(Request $request, string $key)
