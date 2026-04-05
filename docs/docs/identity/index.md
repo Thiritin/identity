@@ -27,7 +27,7 @@ Under the hood, it implements **OpenID Connect (OIDC)** on top of **OAuth 2.0**,
 
 New to Eurofurence Identity? Learn the basics of how authentication works and how to register your application.
 
-**[Read the guide &rarr;](/identity/guides/getting-started)**
+**[Read the guide &rarr;](/identity/integration/getting-started)**
 
 </div>
 
@@ -37,7 +37,7 @@ New to Eurofurence Identity? Learn the basics of how authentication works and ho
 
 Interactive API documentation with request/response examples for all available endpoints.
 
-**[Explore the API &rarr;](/identity/api/v1/eurofurence-identity)**
+**[Explore the API &rarr;](/identity/api/v2/eurofurence-identity)**
 
 </div>
 

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             AppSeeder::class, // Relies on User Seeder
             GroupSeeder::class,
             DivisionDepartmentSeeder::class,
+            NotificationTypeSeeder::class,
         ]);
     }
 }

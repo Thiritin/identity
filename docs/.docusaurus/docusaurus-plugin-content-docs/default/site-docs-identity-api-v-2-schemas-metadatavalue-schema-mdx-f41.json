@@ -30,7 +30,7 @@
     "permalink": "/identity/api/v2/schemas/metadata"
   },
   "next": {
-    "title": "OpenIDConfiguration",
-    "permalink": "/identity/api/v2/schemas/openidconfiguration"
+    "title": "SendNotificationRequest",
+    "permalink": "/identity/api/v2/schemas/sendnotificationrequest"
   }
 }

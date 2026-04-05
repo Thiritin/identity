@@ -3,51 +3,16 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 
 export default [
   {
-    path: '/__docusaurus/debug',
-    component: ComponentCreator('/__docusaurus/debug', '5ff'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/config',
-    component: ComponentCreator('/__docusaurus/debug/config', '5ba'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/content',
-    component: ComponentCreator('/__docusaurus/debug/content', 'a2b'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/globalData',
-    component: ComponentCreator('/__docusaurus/debug/globalData', 'c3c'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/metadata',
-    component: ComponentCreator('/__docusaurus/debug/metadata', '156'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/registry',
-    component: ComponentCreator('/__docusaurus/debug/registry', '88c'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/routes',
-    component: ComponentCreator('/__docusaurus/debug/routes', '000'),
-    exact: true
-  },
-  {
     path: '/',
-    component: ComponentCreator('/', '30c'),
+    component: ComponentCreator('/', '680'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '03c'),
+        component: ComponentCreator('/', '59a'),
         routes: [
           {
             path: '/',
-            component: ComponentCreator('/', '8a8'),
+            component: ComponentCreator('/', '8a0'),
             routes: [
               {
                 path: '/identity/api/v1/create-group',
@@ -290,6 +255,12 @@ export default [
                 sidebar: "identitySidebar"
               },
               {
+                path: '/identity/api/v2/notifications',
+                component: ComponentCreator('/identity/api/v2/notifications', '216'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
                 path: '/identity/api/v2/open-id-connect',
                 component: ComponentCreator('/identity/api/v2/open-id-connect', '68a'),
                 exact: true,
@@ -386,6 +357,12 @@ export default [
                 sidebar: "identitySidebar"
               },
               {
+                path: '/identity/api/v2/schemas/sendnotificationrequest',
+                component: ComponentCreator('/identity/api/v2/schemas/sendnotificationrequest', '212'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
                 path: '/identity/api/v2/schemas/staffprofile',
                 component: ComponentCreator('/identity/api/v2/schemas/staffprofile', 'd42'),
                 exact: true,
@@ -428,6 +405,12 @@ export default [
                 sidebar: "identitySidebar"
               },
               {
+                path: '/identity/api/v2/send-notification',
+                component: ComponentCreator('/identity/api/v2/send-notification', 'b3a'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
                 path: '/identity/api/v2/staff',
                 component: ComponentCreator('/identity/api/v2/staff', 'e2f'),
                 exact: true,
@@ -452,38 +435,62 @@ export default [
                 sidebar: "identitySidebar"
               },
               {
-                path: '/identity/guides/app-to-app',
-                component: ComponentCreator('/identity/guides/app-to-app', '27c'),
+                path: '/identity/concepts/audiences',
+                component: ComponentCreator('/identity/concepts/audiences', '4a6'),
                 exact: true,
                 sidebar: "identitySidebar"
               },
               {
-                path: '/identity/guides/audiences',
-                component: ComponentCreator('/identity/guides/audiences', '2af'),
+                path: '/identity/concepts/oauth-oidc-primer',
+                component: ComponentCreator('/identity/concepts/oauth-oidc-primer', '2b7'),
                 exact: true,
                 sidebar: "identitySidebar"
               },
               {
-                path: '/identity/guides/build-an-application',
-                component: ComponentCreator('/identity/guides/build-an-application', 'e47'),
+                path: '/identity/concepts/scopes',
+                component: ComponentCreator('/identity/concepts/scopes', 'fb2'),
                 exact: true,
                 sidebar: "identitySidebar"
               },
               {
-                path: '/identity/guides/getting-started',
-                component: ComponentCreator('/identity/guides/getting-started', 'bf0'),
+                path: '/identity/concepts/tokens',
+                component: ComponentCreator('/identity/concepts/tokens', '69f'),
                 exact: true,
                 sidebar: "identitySidebar"
               },
               {
-                path: '/identity/guides/scopes',
-                component: ComponentCreator('/identity/guides/scopes', 'f1f'),
+                path: '/identity/integration/app-to-app',
+                component: ComponentCreator('/identity/integration/app-to-app', 'bde'),
                 exact: true,
                 sidebar: "identitySidebar"
               },
               {
-                path: '/identity/guides/tokens',
-                component: ComponentCreator('/identity/guides/tokens', '66b'),
+                path: '/identity/integration/build-an-application',
+                component: ComponentCreator('/identity/integration/build-an-application', '320'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/integration/getting-started',
+                component: ComponentCreator('/identity/integration/getting-started', '4e3'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/platform-services/conventions',
+                component: ComponentCreator('/identity/platform-services/conventions', 'add'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/platform-services/metadata',
+                component: ComponentCreator('/identity/platform-services/metadata', 'a4e'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/platform-services/notification-service',
+                component: ComponentCreator('/identity/platform-services/notification-service', 'e20'),
                 exact: true,
                 sidebar: "identitySidebar"
               },

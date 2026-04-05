@@ -4,53 +4,91 @@
         <div>
             <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">Notification Preferences</h3>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Choose how you want to receive notifications from each app. Transactional notifications always deliver via their default channels and cannot be disabled.
+                Choose how you want to receive notifications. Transactional messages always deliver via their default channels and cannot be turned off.
             </p>
         </div>
-        <div class="md:col-span-2 space-y-6">
-            <div class="rounded-lg border border-gray-200 dark:border-gray-800 p-4 space-y-3">
-                <h4 class="text-sm font-semibold">Master channels</h4>
-                <div class="flex gap-6">
-                    <label class="inline-flex items-center gap-2">
-                        <input type="checkbox" v-model="form.channels.email" /> Email
-                    </label>
-                    <label class="inline-flex items-center gap-2">
-                        <input type="checkbox" v-model="form.channels.telegram" /> Telegram
-                    </label>
-                    <label class="inline-flex items-center gap-2">
-                        <input type="checkbox" v-model="form.channels.database" /> In-app
-                    </label>
-                </div>
-            </div>
 
-            <div v-for="(types, appName) in groupedTypes" :key="appName" class="rounded-lg border border-gray-200 dark:border-gray-800 p-4">
-                <h4 class="text-sm font-semibold mb-3">{{ appName }}</h4>
-                <div v-for="type in types" :key="type.id" class="py-2 border-b last:border-0 border-gray-100 dark:border-gray-800">
-                    <div class="flex items-center justify-between">
+        <div class="md:col-span-2 space-y-8">
+            <!-- Master channels -->
+            <section>
+                <h4 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2">Master channels</h4>
+                <div class="rounded-lg border border-gray-200 dark:border-gray-800 divide-y divide-gray-100 dark:divide-gray-800">
+                    <label
+                        v-for="channel in channels"
+                        :key="channel.key"
+                        class="flex items-center justify-between px-4 py-3 cursor-pointer"
+                    >
                         <div>
-                            <div class="text-sm font-medium">{{ type.name }}</div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">{{ type.description }}</div>
-                            <div v-if="type.category === 'transactional'" class="text-xs text-yellow-600 mt-1">Always delivered (transactional)</div>
+                            <div class="text-sm font-medium">{{ channel.label }}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">{{ channel.description }}</div>
                         </div>
-                        <div class="flex gap-3">
-                            <label
-                                v-for="channel in type.default_channels"
-                                :key="channel"
-                                class="inline-flex items-center gap-1 text-xs"
-                                :class="{ 'opacity-50 cursor-not-allowed': type.category === 'transactional' }"
-                            >
-                                <input
-                                    type="checkbox"
-                                    :checked="isChecked(type, channel)"
-                                    :disabled="type.category === 'transactional'"
-                                    @change="toggle(type, channel)"
-                                />
-                                {{ channel }}
-                            </label>
-                        </div>
-                    </div>
+                        <Switch v-model="form.channels[channel.key]" />
+                    </label>
                 </div>
-            </div>
+            </section>
+
+            <!-- Per-app matrix -->
+            <section v-for="(types, appName) in groupedTypes" :key="appName">
+                <h4 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2">{{ appName }}</h4>
+                <div class="rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-900/40 text-xs text-gray-500 dark:text-gray-400">
+                            <tr>
+                                <th class="text-left font-medium px-4 py-2">Notification</th>
+                                <th
+                                    v-for="channel in channels"
+                                    :key="channel.key"
+                                    class="font-medium px-3 py-2 w-20 text-center"
+                                >
+                                    {{ channel.label }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                            <tr v-for="type in types" :key="type.id" class="align-top">
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-2">
+                                        <div class="text-sm font-medium">{{ type.name }}</div>
+                                        <span
+                                            v-if="type.category === 'transactional'"
+                                            class="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 text-[10px] font-medium px-1.5 py-0.5"
+                                            title="Transactional — always delivered"
+                                        >
+                                            Required
+                                        </span>
+                                    </div>
+                                    <div v-if="type.description" class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                        {{ type.description }}
+                                    </div>
+                                </td>
+                                <td
+                                    v-for="channel in channels"
+                                    :key="channel.key"
+                                    class="px-3 py-3 text-center"
+                                >
+                                    <template v-if="type.default_channels.includes(channel.key)">
+                                        <input
+                                            type="checkbox"
+                                            class="h-4 w-4 rounded border-gray-300 dark:border-gray-700 text-indigo-600 focus:ring-indigo-500 disabled:opacity-60"
+                                            :checked="isChecked(type, channel.key)"
+                                            :disabled="type.category === 'transactional' || !form.channels[channel.key]"
+                                            @change="toggle(type, channel.key)"
+                                            :title="
+                                                type.category === 'transactional'
+                                                    ? 'Always delivered'
+                                                    : !form.channels[channel.key]
+                                                        ? channel.label + ' is off in master channels'
+                                                        : ''
+                                            "
+                                        />
+                                    </template>
+                                    <span v-else class="text-gray-300 dark:text-gray-700 select-none">–</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
             <div class="flex justify-end">
                 <Button @click="save" :disabled="form.processing">Save preferences</Button>
@@ -62,11 +100,18 @@
 <script setup>
 import { Head, useForm } from '@inertiajs/vue3'
 import { Button } from '@/Components/ui/button'
+import { Switch } from '@/Components/ui/switch'
 
 const props = defineProps({
     preferences: Object,
     groupedTypes: Object,
 })
+
+const channels = [
+    { key: 'email', label: 'Email', description: 'Delivered to your registered email address.' },
+    { key: 'telegram', label: 'Telegram', description: 'Sent via the Eurofurence Telegram bot.' },
+    { key: 'database', label: 'Inbox', description: 'Shown in the notification bell and inbox on this site.' },
+]
 
 const form = useForm({
     channels: { ...props.preferences.channels },

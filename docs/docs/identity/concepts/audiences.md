@@ -5,7 +5,7 @@ title: Audiences
 
 # Audiences
 
-Audiences control **where** a token can be used. While [scopes](/identity/guides/scopes) define what an app can do, audiences define which service should accept the token. This prevents a token meant for one service from being replayed against another.
+Audiences control **where** a token can be used. While [scopes](/identity/concepts/scopes) define what an app can do, audiences define which service should accept the token. This prevents a token meant for one service from being replayed against another.
 
 ## How It Works
 

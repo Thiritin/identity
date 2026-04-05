@@ -211,6 +211,11 @@
               "sidebar": "identitySidebar"
             },
             {
+              "id": "identity/api/v2/notifications",
+              "path": "/identity/api/v2/notifications",
+              "sidebar": "identitySidebar"
+            },
+            {
               "id": "identity/api/v2/open-id-connect",
               "path": "/identity/api/v2/open-id-connect",
               "sidebar": "identitySidebar"
@@ -291,6 +296,11 @@
               "sidebar": "identitySidebar"
             },
             {
+              "id": "identity/api/v2/schemas/sendnotificationrequest",
+              "path": "/identity/api/v2/schemas/sendnotificationrequest",
+              "sidebar": "identitySidebar"
+            },
+            {
               "id": "identity/api/v2/schemas/staffprofile",
               "path": "/identity/api/v2/schemas/staffprofile",
               "sidebar": "identitySidebar"
@@ -326,6 +336,11 @@
               "sidebar": "identitySidebar"
             },
             {
+              "id": "identity/api/v2/send-notification",
+              "path": "/identity/api/v2/send-notification",
+              "sidebar": "identitySidebar"
+            },
+            {
               "id": "identity/api/v2/staff",
               "path": "/identity/api/v2/staff",
               "sidebar": "identitySidebar"
@@ -346,38 +361,58 @@
               "sidebar": "identitySidebar"
             },
             {
-              "id": "identity/guides/app-to-app",
-              "path": "/identity/guides/app-to-app",
+              "id": "identity/concepts/audiences",
+              "path": "/identity/concepts/audiences",
               "sidebar": "identitySidebar"
             },
             {
-              "id": "identity/guides/audiences",
-              "path": "/identity/guides/audiences",
+              "id": "identity/concepts/oauth-oidc-primer",
+              "path": "/identity/concepts/oauth-oidc-primer",
               "sidebar": "identitySidebar"
             },
             {
-              "id": "identity/guides/build-an-application",
-              "path": "/identity/guides/build-an-application",
+              "id": "identity/concepts/scopes",
+              "path": "/identity/concepts/scopes",
               "sidebar": "identitySidebar"
             },
             {
-              "id": "identity/guides/getting-started",
-              "path": "/identity/guides/getting-started",
-              "sidebar": "identitySidebar"
-            },
-            {
-              "id": "identity/guides/scopes",
-              "path": "/identity/guides/scopes",
-              "sidebar": "identitySidebar"
-            },
-            {
-              "id": "identity/guides/tokens",
-              "path": "/identity/guides/tokens",
+              "id": "identity/concepts/tokens",
+              "path": "/identity/concepts/tokens",
               "sidebar": "identitySidebar"
             },
             {
               "id": "identity/index",
               "path": "/",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/integration/app-to-app",
+              "path": "/identity/integration/app-to-app",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/integration/build-an-application",
+              "path": "/identity/integration/build-an-application",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/integration/getting-started",
+              "path": "/identity/integration/getting-started",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/platform-services/conventions",
+              "path": "/identity/platform-services/conventions",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/platform-services/metadata",
+              "path": "/identity/platform-services/metadata",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/platform-services/notification-service",
+              "path": "/identity/platform-services/notification-service",
               "sidebar": "identitySidebar"
             }
           ],

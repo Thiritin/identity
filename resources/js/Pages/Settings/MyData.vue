@@ -2,6 +2,12 @@
     <Head :title="$t('my_data_title')" />
 
     <div class="space-y-8">
+        <!-- Page header -->
+        <div>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ $t('my_data_title') }}</h2>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ $t('my_data_subtitle') }}</p>
+        </div>
+
         <!-- Group Memberships (staff only) -->
         <div v-if="isStaff && groups?.length" class="grid md:grid-cols-3 gap-6 md:gap-10 border-t border-gray-200/50 dark:border-gray-700/50 pt-8">
             <div>

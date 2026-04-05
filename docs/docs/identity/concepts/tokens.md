@@ -37,7 +37,7 @@ The ID Token is Eurofurence Identity's signed statement: *"I confirm that user X
 }
 ```
 
-The exact claims you get depend on which scopes your app requested (see [Scopes](/identity/guides/scopes)).
+The exact claims you get depend on which scopes your app requested (see [Scopes](/identity/concepts/scopes)).
 
 ### What You Do With It
 
@@ -48,7 +48,7 @@ The exact claims you get depend on which scopes your app requested (see [Scopes]
    - `exp` is in the future
    - `nonce` matches the one you sent (if you used one)
 2. **Trust the claims.** Once verified, you can use `sub`, `email`, `name`, etc. to create or look up the user in your database and render them in your UI.
-3. **Store the `sid`.** You'll need it to match incoming [backchannel logout](/identity/guides/build-an-application#backchannel-logout) requests.
+3. **Store the `sid`.** You'll need it to match incoming [backchannel logout](/identity/integration/build-an-application#backchannel-logout) requests.
 
 :::tip
 The `sub` claim is your stable user identifier. Use it as a foreign key, never `email` or `name`, which can change.
@@ -122,7 +122,7 @@ Calling `/api/v2/userinfo` is a perfectly reasonable liveness check: a `200` res
 
 If your app received the token through its own OIDC flow, the answer is *yes, by construction*. Eurofurence Identity issued it in response to your client's own request. There is nothing to check.
 
-If your app received the token from somewhere else (forwarded by another service, passed through an untrusted context), then you do need to validate the audience. Use the [introspection endpoint](/identity/guides/audiences#validating-tokens) and check that your audience identifier appears in the `aud` claim.
+If your app received the token from somewhere else (forwarded by another service, passed through an untrusted context), then you do need to validate the audience. Use the [introspection endpoint](/identity/concepts/audiences#validating-tokens) and check that your audience identifier appears in the `aud` claim.
 
 ### "Do I need to call both `/userinfo` and `/introspect`?"
 
@@ -136,19 +136,8 @@ Almost never. Pick one based on what you actually need:
 If you find yourself calling both endpoints on every request, stop and ask: *what am I actually trying to protect against?* Usually the answer is in the ID Token you already verified at login.
 :::
 
-## Common Pitfalls
-
-| Mistake | What to do instead |
-|---------|-------------------|
-| Sending the ID Token as a bearer to APIs | Send the access token |
-| Trying to decode the access token as a JWT | Treat it as opaque, call `/userinfo` or `/introspect` if you need claims |
-| Checking `aud` on every request when tokens come from your own flow | Trust the flow; the audience is correct by construction |
-| Storing tokens in `localStorage` | Use secure, HTTP-only cookies or server-side session storage |
-| Keeping the old refresh token after a refresh returns a new one | Always use the most recently issued refresh token |
-| Ignoring backchannel logout because "we have short token lifetimes" | Implement it; it's how revocation propagates to your session |
-
 ## What's Next?
 
-- **[Build an Application](/identity/guides/build-an-application):** Full integration guide including backchannel logout
-- **[Scopes](/identity/guides/scopes):** Choose which claims and permissions your app needs
-- **[Audiences](/identity/guides/audiences):** When and how to validate the `aud` claim
+- **[Build an Application](/identity/integration/build-an-application):** Full integration guide including backchannel logout
+- **[Scopes](/identity/concepts/scopes):** Choose which claims and permissions your app needs
+- **[Audiences](/identity/concepts/audiences):** When and how to validate the `aud` claim

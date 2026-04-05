@@ -1,0 +1,27 @@
+{
+  "id": "identity/integration/getting-started",
+  "title": "Getting Started",
+  "description": "This guide walks you through the basics of integrating with Eurofurence Identity, from understanding how authentication works to making your first API call.",
+  "source": "@site/docs/identity/integration/getting-started.md",
+  "sourceDirName": "identity/integration",
+  "slug": "/identity/integration/getting-started",
+  "permalink": "/identity/integration/getting-started",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 0,
+  "frontMatter": {
+    "sidebar_position": 0,
+    "title": "Getting Started"
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Audiences",
+    "permalink": "/identity/concepts/audiences"
+  },
+  "next": {
+    "title": "Build a User-Facing App",
+    "permalink": "/identity/integration/build-an-application"
+  }
+}

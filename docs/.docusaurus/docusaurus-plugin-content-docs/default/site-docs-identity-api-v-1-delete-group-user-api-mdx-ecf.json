@@ -27,9 +27,5 @@
   "previous": {
     "title": "Add member",
     "permalink": "/identity/api/v1/create-group-user"
-  },
-  "next": {
-    "title": "Introduction",
-    "permalink": "/identity/api/v2/eurofurence-identity"
   }
 }

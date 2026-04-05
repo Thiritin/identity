@@ -557,6 +557,7 @@
     "staff_totp_required_button": "Login to Identity Portal & Setup 2-Factor",
     "footer_my_data": "My Data",
     "my_data_title": "My Data",
+    "my_data_subtitle": "Review the data we store about you, manage connected apps, export your data, or delete your account.",
     "my_data_transparency_title": "Data Processing Notice",
     "my_data_transparency_body": "The Identity Provider is the central authentication system of Eurofurence e.V. On this page you can see which data we have stored about you, who has access to it, and which connected services data has been shared with. You can view, edit, and delete your data at any time.",
     "my_data_transparency_segmentation": "Please note: Eurofurence applications are segmented. The Identity Provider has no knowledge of data stored in other services (e.g. registration data, files in Nextcloud, etc.).",

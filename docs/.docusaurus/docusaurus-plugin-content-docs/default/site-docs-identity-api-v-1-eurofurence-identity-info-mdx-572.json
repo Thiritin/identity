@@ -23,8 +23,8 @@
   },
   "sidebar": "identitySidebar",
   "previous": {
-    "title": "App-to-App APIs",
-    "permalink": "/identity/guides/app-to-app"
+    "title": "Error",
+    "permalink": "/identity/api/v2/schemas/error"
   },
   "next": {
     "title": "Open ID Connect",

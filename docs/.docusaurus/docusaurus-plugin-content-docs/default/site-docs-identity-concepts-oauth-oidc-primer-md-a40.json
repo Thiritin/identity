@@ -1,0 +1,25 @@
+{
+  "id": "identity/concepts/oauth-oidc-primer",
+  "title": "OAuth2 & OpenID Connect Primer",
+  "description": "Read this first if terms like \"access token\", \"authorization code\", or \"client credentials\" don't mean anything to you yet. This page is a plain-language tour of the two protocols Eurofurence Identity speaks, and a pointer to the right integration guide for your use case.",
+  "source": "@site/docs/identity/concepts/oauth-oidc-primer.md",
+  "sourceDirName": "identity/concepts",
+  "slug": "/identity/concepts/oauth-oidc-primer",
+  "permalink": "/identity/concepts/oauth-oidc-primer",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "OAuth2 & OpenID Connect Primer"
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Introduction",
+    "permalink": "/"
+  },
+  "next": {
+    "title": "Understanding Tokens",
+    "permalink": "/identity/concepts/tokens"
+  }
+}

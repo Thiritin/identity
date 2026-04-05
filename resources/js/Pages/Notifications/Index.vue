@@ -1,11 +1,14 @@
 <script setup>
-import { Head, router } from '@inertiajs/vue3'
+import { computed } from 'vue'
+import { Head, Link, router } from '@inertiajs/vue3'
 import axios from 'axios'
 import { Button } from '@/Components/ui/button'
 
 const props = defineProps({
   notifications: Object,
 })
+
+const hasNotifications = computed(() => (props.notifications?.data?.length ?? 0) > 0)
 
 function groupByTime(list) {
   const now = Date.now()
@@ -60,8 +63,20 @@ async function clickItem(n) {
     </div>
     <div class="md:col-span-2 space-y-6">
       <div class="flex justify-end gap-2">
-        <Button variant="outline" size="sm" @click="markAllRead">Mark all as read</Button>
-        <Button variant="outline" size="sm" @click="clearAll">Clear all</Button>
+        <Button as-child variant="outline" size="sm">
+          <Link :href="route('settings.notifications.edit')">Preferences</Link>
+        </Button>
+        <template v-if="hasNotifications">
+          <Button variant="outline" size="sm" @click="markAllRead">Mark all as read</Button>
+          <Button variant="outline" size="sm" @click="clearAll">Clear all</Button>
+        </template>
+      </div>
+
+      <div
+        v-if="!hasNotifications"
+        class="rounded-md border border-dashed dark:border-gray-700 p-6 text-center text-sm text-gray-500 dark:text-gray-400"
+      >
+        No notifications
       </div>
 
       <template v-for="(items, bucket) in groupByTime(notifications.data)" :key="bucket">

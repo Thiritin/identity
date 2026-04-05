@@ -60,7 +60,7 @@ This is both an Eurofurence e.V. requirement and a legal requirement under GDPR.
 
 ## Available Scopes
 
-Scopes define what your app can access. Only request what you actually need. See the [Scopes Reference](/identity/guides/scopes) for the full list, guidance on choosing scopes, and common examples.
+Scopes define what your app can access. Only request what you actually need. See the [Scopes Reference](/identity/concepts/scopes) for the full list, guidance on choosing scopes, and common examples.
 
 ## Tokens
 

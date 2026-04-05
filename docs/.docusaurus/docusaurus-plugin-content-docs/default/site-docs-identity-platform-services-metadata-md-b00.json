@@ -1,0 +1,25 @@
+{
+  "id": "identity/platform-services/metadata",
+  "title": "User Metadata",
+  "description": "The User Metadata API is a small key/value store attached to each user, scoped to the calling OAuth client. Reach for it when you need to persist lightweight per-user state — UI preferences, onboarding flags, last-used settings — without standing up a database of your own.",
+  "source": "@site/docs/identity/platform-services/metadata.md",
+  "sourceDirName": "identity/platform-services",
+  "slug": "/identity/platform-services/metadata",
+  "permalink": "/identity/platform-services/metadata",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "User Metadata"
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Conventions API",
+    "permalink": "/identity/platform-services/conventions"
+  },
+  "next": {
+    "title": "Notification Service",
+    "permalink": "/identity/platform-services/notification-service"
+  }
+}

@@ -28,5 +28,9 @@
   "previous": {
     "title": "Convention",
     "permalink": "/identity/api/v2/schemas/convention"
+  },
+  "next": {
+    "title": "Introduction",
+    "permalink": "/identity/api/v1/eurofurence-identity"
   }
 }

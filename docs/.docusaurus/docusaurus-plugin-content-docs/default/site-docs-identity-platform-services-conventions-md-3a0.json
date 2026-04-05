@@ -1,0 +1,25 @@
+{
+  "id": "identity/platform-services/conventions",
+  "title": "Conventions API",
+  "description": "Eurofurence Identity exposes the current and historical conventions as a first-class resource. Use this service when your app needs to know which convention is \"live\" right now, or when it needs to reason about attendance across years.",
+  "source": "@site/docs/identity/platform-services/conventions.md",
+  "sourceDirName": "identity/platform-services",
+  "slug": "/identity/platform-services/conventions",
+  "permalink": "/identity/platform-services/conventions",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Conventions API"
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "App-to-App APIs",
+    "permalink": "/identity/integration/app-to-app"
+  },
+  "next": {
+    "title": "User Metadata",
+    "permalink": "/identity/platform-services/metadata"
+  }
+}

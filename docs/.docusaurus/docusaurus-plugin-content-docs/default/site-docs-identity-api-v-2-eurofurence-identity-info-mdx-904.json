@@ -23,8 +23,8 @@
   },
   "sidebar": "identitySidebar",
   "previous": {
-    "title": "Remove member",
-    "permalink": "/identity/api/v1/delete-group-user"
+    "title": "Notification Service",
+    "permalink": "/identity/platform-services/notification-service"
   },
   "next": {
     "title": "Open ID Connect",

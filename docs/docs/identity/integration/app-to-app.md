@@ -17,7 +17,7 @@ App-to-app communication uses the **Client Credentials Grant** ([RFC 6749 §4.4]
 
 The Client Credentials Grant is the OAuth 2.0 flow where a service logs in with its own `client_id` and `client_secret`, with no user involved. The service *is* the one being authenticated, and the resulting access token represents the service itself. Whenever this guide says "the app gets a token" or "service-to-service token", that's the Client Credentials Grant in action.
 
-If you're not familiar with audiences, read the [Audiences](/identity/guides/audiences) guide first.
+If you're not familiar with audiences, read the [Audiences](/identity/concepts/audiences) guide first.
 
 ## How It Works
 
@@ -80,7 +80,7 @@ Before responding, the Registration system [introspects the token](/identity/api
 
 If any check fails, the request is rejected with `401` or `403`.
 
-Your own service should do the same when it receives a token. See [Validating Tokens](/identity/guides/audiences#validating-tokens) for the exact steps.
+Your own service should do the same when it receives a token. See [Validating Tokens](/identity/concepts/audiences#validating-tokens) for the exact steps.
 
 ## Security Model
 

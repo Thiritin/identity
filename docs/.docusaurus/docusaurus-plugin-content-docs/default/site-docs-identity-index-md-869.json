@@ -16,7 +16,7 @@
   },
   "sidebar": "identitySidebar",
   "next": {
-    "title": "Getting Started",
-    "permalink": "/identity/guides/getting-started"
+    "title": "OAuth2 & OpenID Connect Primer",
+    "permalink": "/identity/concepts/oauth-oidc-primer"
   }
 }

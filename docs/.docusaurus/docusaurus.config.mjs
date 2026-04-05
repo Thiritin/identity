@@ -110,6 +110,13 @@ export default {
     "@docusaurus/theme-mermaid"
   ],
   "themeConfig": {
+    "announcementBar": {
+      "id": "technical_preview",
+      "content": "⚠️ <strong>Technical Preview</strong> — this documentation describes an unreleased version of the Eurofurence Identity Service and is subject to change.",
+      "backgroundColor": "#fef3c7",
+      "textColor": "#78350f",
+      "isCloseable": false
+    },
     "navbar": {
       "title": "Eurofurence Identity",
       "logo": {

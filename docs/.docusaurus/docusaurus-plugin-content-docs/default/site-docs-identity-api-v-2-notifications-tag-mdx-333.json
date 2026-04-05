@@ -1,0 +1,29 @@
+{
+  "id": "identity/api/v2/notifications",
+  "title": "Notifications",
+  "description": "Notifications",
+  "source": "@site/docs/identity/api/v2/notifications.tag.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/notifications",
+  "permalink": "/identity/api/v2/notifications",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "notifications",
+    "title": "Notifications",
+    "description": "Notifications",
+    "custom_edit_url": null
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "Delete metadata",
+    "permalink": "/identity/api/v2/delete-metadata-key"
+  },
+  "next": {
+    "title": "Send a notification",
+    "permalink": "/identity/api/v2/send-notification"
+  }
+}

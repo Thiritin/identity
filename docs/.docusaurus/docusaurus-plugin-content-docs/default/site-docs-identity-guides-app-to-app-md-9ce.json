@@ -21,7 +21,7 @@
     "permalink": "/identity/guides/audiences"
   },
   "next": {
-    "title": "Introduction",
-    "permalink": "/identity/api/v1/eurofurence-identity"
+    "title": "Notification Service",
+    "permalink": "/identity/guides/notification-service"
   }
 }

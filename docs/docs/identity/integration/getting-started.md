@@ -11,7 +11,7 @@ This guide walks you through the basics of integrating with Eurofurence Identity
 
 Before you begin, you'll need:
 
-- A registered OAuth2 client (see [Registering Your Application](/identity/guides/build-an-application#registering-your-application))
+- A registered OAuth2 client (see [Registering Your Application](/identity/integration/build-an-application#registering-your-application))
 - Your **Client ID** and **Client Secret**
 - A **Redirect URI** configured for your application
 
@@ -106,5 +106,5 @@ The `sub` claim is a stable, opaque identifier. Use it as your primary key for l
 
 ## What's Next?
 
-- **[Build an Application](/identity/guides/build-an-application):** Detailed guide covering scopes, tokens, backchannel logout, metadata API, and privacy policy requirements
+- **[Build an Application](/identity/integration/build-an-application):** Detailed guide covering scopes, tokens, backchannel logout, metadata API, and privacy policy requirements
 - **[API Reference](/identity/api/v1/eurofurence-identity):** Full interactive API documentation

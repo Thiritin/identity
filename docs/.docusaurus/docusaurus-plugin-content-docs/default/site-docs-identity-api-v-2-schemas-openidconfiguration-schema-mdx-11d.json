@@ -59,8 +59,8 @@
   },
   "sidebar": "identitySidebar",
   "previous": {
-    "title": "MetadataValue",
-    "permalink": "/identity/api/v2/schemas/metadatavalue"
+    "title": "SendNotificationRequest",
+    "permalink": "/identity/api/v2/schemas/sendnotificationrequest"
   },
   "next": {
     "title": "TokenRequest",

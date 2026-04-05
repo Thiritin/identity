@@ -38,19 +38,19 @@ onMounted(load)
     </button>
     <div
       v-if="open"
-      class="absolute right-0 mt-2 w-80 rounded-md border bg-white dark:bg-gray-900 dark:border-gray-700 shadow-lg z-50"
+      class="absolute right-0 mt-2 w-80 rounded-md bg-white/95 backdrop-blur-sm text-gray-900 dark:bg-primary-900/95 dark:text-primary-100 shadow-2xl z-50"
     >
-      <div class="px-3 py-2 border-b dark:border-gray-700 text-sm font-semibold">Notifications</div>
-      <div v-if="recent.length === 0" class="px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
+      <div class="px-3 py-2 border-b border-gray-100 dark:border-primary-800 text-sm font-semibold">Notifications</div>
+      <div v-if="recent.length === 0" class="px-3 py-4 text-sm text-gray-500 dark:text-primary-300">
         No notifications
       </div>
       <div
         v-for="n in recent"
         :key="n.id"
-        class="px-3 py-2 border-b last:border-0 dark:border-gray-700 text-sm"
+        class="px-3 py-2 border-b border-gray-100 last:border-0 dark:border-primary-800 text-sm"
         :class="{ 'font-semibold': !n.read_at }"
       >
-        <div class="text-xs text-gray-500 dark:text-gray-400">{{ n.app?.name }}</div>
+        <div class="text-xs text-gray-500 dark:text-primary-300">{{ n.app?.name }}</div>
         <div class="truncate">{{ n.subject }}</div>
       </div>
       <Link href="/notifications" class="block text-center text-sm px-3 py-2 hover:bg-black/5 dark:hover:bg-white/5">

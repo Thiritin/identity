@@ -19,8 +19,8 @@
   },
   "sidebar": "identitySidebar",
   "previous": {
-    "title": "Delete metadata",
-    "permalink": "/identity/api/v2/delete-metadata-key"
+    "title": "Send a notification",
+    "permalink": "/identity/api/v2/send-notification"
   },
   "next": {
     "title": "List conventions",

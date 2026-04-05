@@ -1,0 +1,27 @@
+{
+  "id": "identity/guides/notification-service",
+  "title": "Notification Service",
+  "description": "The Eurofurence Identity service provides a centralized notification system that first-party OAuth apps can use to send notifications to users through email, Telegram, and the in-app notification bell.",
+  "source": "@site/docs/identity/guides/notification-service.md",
+  "sourceDirName": "identity/guides",
+  "slug": "/identity/guides/notification-service",
+  "permalink": "/identity/guides/notification-service",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "sidebar_position": 6,
+    "title": "Notification Service"
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "App-to-App APIs",
+    "permalink": "/identity/guides/app-to-app"
+  },
+  "next": {
+    "title": "Introduction",
+    "permalink": "/identity/api/v1/eurofurence-identity"
+  }
+}

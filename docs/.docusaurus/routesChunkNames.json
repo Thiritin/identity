@@ -1,354 +1,339 @@
 {
-  "/__docusaurus/debug-5ff": {
-    "__comp": "__comp---theme-debug-config-23-a-2ff",
+  "/-680": {
+    "__comp": "5e95c892",
     "__context": {
-      "plugin": "plugin---docusaurus-debugb-38-ad3"
+      "plugin": "aba21aa0"
     }
   },
-  "/__docusaurus/debug/config-5ba": {
-    "__comp": "__comp---theme-debug-config-23-a-2ff",
-    "__context": {
-      "plugin": "plugin---docusaurus-debugb-38-ad3"
-    }
+  "/-59a": {
+    "__comp": "a7bd4aaa",
+    "__props": "22dd74f7"
   },
-  "/__docusaurus/debug/content-a2b": {
-    "__comp": "__comp---theme-debug-contentba-8-ce7",
-    "__context": {
-      "plugin": "plugin---docusaurus-debugb-38-ad3"
-    },
-    "__props": "__props---docusaurus-debug-content-3-c-0-be2"
-  },
-  "/__docusaurus/debug/globalData-c3c": {
-    "__comp": "__comp---theme-debug-global-dataede-0fa",
-    "__context": {
-      "plugin": "plugin---docusaurus-debugb-38-ad3"
-    }
-  },
-  "/__docusaurus/debug/metadata-156": {
-    "__comp": "__comp---theme-debug-site-metadata-68-e-3d4",
-    "__context": {
-      "plugin": "plugin---docusaurus-debugb-38-ad3"
-    }
-  },
-  "/__docusaurus/debug/registry-88c": {
-    "__comp": "__comp---theme-debug-registry-679-501",
-    "__context": {
-      "plugin": "plugin---docusaurus-debugb-38-ad3"
-    }
-  },
-  "/__docusaurus/debug/routes-000": {
-    "__comp": "__comp---theme-debug-routes-946-699",
-    "__context": {
-      "plugin": "plugin---docusaurus-debugb-38-ad3"
-    }
-  },
-  "/-30c": {
-    "__comp": "__comp---theme-docs-root-5-e-9-0b6",
-    "__context": {
-      "plugin": "plugin---aba-d70"
-    }
-  },
-  "/-03c": {
-    "__comp": "__comp---theme-doc-version-roota-7-b-5de",
-    "__props": "__props---22-d-307"
-  },
-  "/-8a8": {
-    "__comp": "__comp---theme-doc-roota-94-67a"
+  "/-8a0": {
+    "__comp": "a94703ab"
   },
   "/identity/api/v1/create-group-2ac": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-1-create-group-8-d-9-686"
+    "__comp": "4c5e977b",
+    "content": "8d91f312"
   },
   "/identity/api/v1/create-group-user-aa9": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-1-create-group-user-951-3f3"
+    "__comp": "4c5e977b",
+    "content": "9510f883"
   },
   "/identity/api/v1/delete-group-302": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-1-delete-groupb-1-c-7b7"
+    "__comp": "4c5e977b",
+    "content": "b1cc5fe1"
   },
   "/identity/api/v1/delete-group-user-9d4": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-1-delete-group-userecf-8cd"
+    "__comp": "4c5e977b",
+    "content": "ecf33e9f"
   },
   "/identity/api/v1/eurofurence-identity-969": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-1-eurofurence-identity-572-167"
+    "__comp": "4c5e977b",
+    "content": "57270216"
   },
   "/identity/api/v1/get-group-c3e": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-1-get-group-68-a-2b2"
+    "__comp": "4c5e977b",
+    "content": "68aec2e6"
   },
   "/identity/api/v1/get-group-users-a3f": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-1-get-group-users-2-df-403"
+    "__comp": "4c5e977b",
+    "content": "2df7bfcd"
   },
   "/identity/api/v1/get-groups-ccc": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-1-get-groups-733-386"
+    "__comp": "4c5e977b",
+    "content": "733601b5"
   },
   "/identity/api/v1/get-userinfo-ce4": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-1-get-userinfoc-88-3a9"
+    "__comp": "4c5e977b",
+    "content": "c88434a9"
   },
   "/identity/api/v1/group-memberships-74e": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-1-group-memberships-481-fd6"
+    "__comp": "4c5e977b",
+    "content": "4810e327"
   },
   "/identity/api/v1/groups-1fe": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-1-groupsa-35-c5b"
+    "__comp": "4c5e977b",
+    "content": "a350f7a7"
   },
   "/identity/api/v1/introspect-token-295": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-1-introspect-tokenc-73-7b1"
+    "__comp": "4c5e977b",
+    "content": "c73fe79c"
   },
   "/identity/api/v1/open-id-connect-48c": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-1-open-id-connect-6-ed-e3f"
+    "__comp": "4c5e977b",
+    "content": "6ede60e5"
   },
   "/identity/api/v1/patch-group-359": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-1-patch-groupad-7-dcd"
+    "__comp": "4c5e977b",
+    "content": "ad72d58c"
   },
   "/identity/api/v1/put-group-6d4": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-1-put-group-345-c45"
+    "__comp": "4c5e977b",
+    "content": "34587539"
   },
   "/identity/api/v2/add-group-member-847": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-add-group-member-085-c51"
+    "__comp": "4c5e977b",
+    "content": "08532e6a"
   },
   "/identity/api/v2/authorize-user-9ef": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-authorize-user-841-dc6"
+    "__comp": "4c5e977b",
+    "content": "841c6a7c"
   },
   "/identity/api/v2/conventions-c95": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-conventions-229-eb5"
+    "__comp": "4c5e977b",
+    "content": "2297a114"
   },
   "/identity/api/v2/create-group-f31": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-create-groupd-75-ec5"
+    "__comp": "4c5e977b",
+    "content": "d75cb27b"
   },
   "/identity/api/v2/delete-group-27f": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-delete-groupbd-5-757"
+    "__comp": "4c5e977b",
+    "content": "bd574fd6"
   },
   "/identity/api/v2/delete-metadata-key-2fd": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-delete-metadata-key-8-d-3-50b"
+    "__comp": "4c5e977b",
+    "content": "8d3704b7"
   },
   "/identity/api/v2/eurofurence-identity-f0f": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-eurofurence-identity-904-4c2"
+    "__comp": "4c5e977b",
+    "content": "904b9c35"
   },
   "/identity/api/v2/get-conventions-17d": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-get-conventions-285-fb6"
+    "__comp": "4c5e977b",
+    "content": "285ee5d4"
   },
   "/identity/api/v2/get-current-convention-220": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-get-current-convention-12-a-c34"
+    "__comp": "4c5e977b",
+    "content": "12a6ff07"
   },
   "/identity/api/v2/get-group-6e4": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-get-group-6-bc-89b"
+    "__comp": "4c5e977b",
+    "content": "6bc8df5d"
   },
   "/identity/api/v2/get-group-members-a84": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-get-group-membersd-46-9b4"
+    "__comp": "4c5e977b",
+    "content": "d46a1639"
   },
   "/identity/api/v2/get-group-tree-5ac": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-get-group-tree-775-55c"
+    "__comp": "4c5e977b",
+    "content": "775e17f3"
   },
   "/identity/api/v2/get-groups-0aa": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-get-groupsc-96-0bf"
+    "__comp": "4c5e977b",
+    "content": "c964c573"
   },
   "/identity/api/v2/get-jwks-226": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-get-jwks-86-b-0dd"
+    "__comp": "4c5e977b",
+    "content": "86baff19"
   },
   "/identity/api/v2/get-metadata-4e2": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-get-metadata-695-35b"
+    "__comp": "4c5e977b",
+    "content": "695ebe11"
   },
   "/identity/api/v2/get-metadata-key-ab9": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-get-metadata-key-22-b-32d"
+    "__comp": "4c5e977b",
+    "content": "22b2149b"
   },
   "/identity/api/v2/get-open-id-configuration-aa9": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-get-open-id-configurationbab-b11"
+    "__comp": "4c5e977b",
+    "content": "babbbcd6"
   },
   "/identity/api/v2/get-staff-list-c88": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-get-staff-liste-16-d81"
+    "__comp": "4c5e977b",
+    "content": "e1669a28"
   },
   "/identity/api/v2/get-staff-me-83c": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-get-staff-me-1-fe-6ab"
+    "__comp": "4c5e977b",
+    "content": "1fe9c16a"
   },
   "/identity/api/v2/get-staff-member-430": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-get-staff-member-7-f-9-dbd"
+    "__comp": "4c5e977b",
+    "content": "7f9b2c8f"
   },
   "/identity/api/v2/get-token-259": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-get-token-095-c6b"
+    "__comp": "4c5e977b",
+    "content": "0953cd80"
   },
   "/identity/api/v2/get-userinfo-68f": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-get-userinfof-3-b-197"
+    "__comp": "4c5e977b",
+    "content": "f3b4ab20"
   },
   "/identity/api/v2/group-members-a2c": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-group-membersc-2-b-e89"
+    "__comp": "4c5e977b",
+    "content": "c2b8c775"
   },
   "/identity/api/v2/groups-976": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-groups-52-f-a76"
+    "__comp": "4c5e977b",
+    "content": "52f370c9"
   },
   "/identity/api/v2/introspect-token-f37": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-introspect-tokene-76-d6a"
+    "__comp": "4c5e977b",
+    "content": "e7602b0d"
+  },
+  "/identity/api/v2/notifications-216": {
+    "__comp": "4c5e977b",
+    "content": "333a1601"
   },
   "/identity/api/v2/open-id-connect-68a": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-open-id-connect-84-b-996"
+    "__comp": "4c5e977b",
+    "content": "84bb54fe"
   },
   "/identity/api/v2/put-metadata-key-483": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-put-metadata-keye-67-6bd"
+    "__comp": "4c5e977b",
+    "content": "e67b5b76"
   },
   "/identity/api/v2/remove-group-member-983": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-remove-group-memberd-48-28e"
+    "__comp": "4c5e977b",
+    "content": "d48416c8"
   },
   "/identity/api/v2/schemas/addmemberform-940": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-addmemberform-15-b-c1d"
+    "__comp": "4c5e977b",
+    "content": "15ba8f15"
   },
   "/identity/api/v2/schemas/convention-f49": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-conventionca-4-8b9"
+    "__comp": "4c5e977b",
+    "content": "ca49eacf"
   },
   "/identity/api/v2/schemas/error-bde": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-error-233-cc8"
+    "__comp": "4c5e977b",
+    "content": "2335f800"
   },
   "/identity/api/v2/schemas/group-64c": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-group-782-204"
+    "__comp": "4c5e977b",
+    "content": "7824a89e"
   },
   "/identity/api/v2/schemas/groupform-cb8": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-groupform-173-c36"
+    "__comp": "4c5e977b",
+    "content": "1737ae2f"
   },
   "/identity/api/v2/schemas/groupmember-09b": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-groupmember-3-e-1-fa8"
+    "__comp": "4c5e977b",
+    "content": "3e1c571f"
   },
   "/identity/api/v2/schemas/groupsummary-898": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-groupsummary-669-350"
+    "__comp": "4c5e977b",
+    "content": "669a7019"
   },
   "/identity/api/v2/schemas/grouptreenode-529": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-grouptreenode-1-f-4-090"
+    "__comp": "4c5e977b",
+    "content": "1f4c7214"
   },
   "/identity/api/v2/schemas/jsonwebkeyset-c71": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-jsonwebkeysetc-15-93e"
+    "__comp": "4c5e977b",
+    "content": "c156ee7a"
   },
   "/identity/api/v2/schemas/metadata-238": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-metadata-347-d78"
+    "__comp": "4c5e977b",
+    "content": "3470db14"
   },
   "/identity/api/v2/schemas/metadatavalue-040": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-metadatavaluef-41-ef1"
+    "__comp": "4c5e977b",
+    "content": "f4186f43"
   },
   "/identity/api/v2/schemas/oautherror-e56": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-oautherror-93-c-b91"
+    "__comp": "4c5e977b",
+    "content": "93c7ba37"
   },
   "/identity/api/v2/schemas/openidconfiguration-054": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-openidconfiguration-11-d-66c"
+    "__comp": "4c5e977b",
+    "content": "11d0248e"
+  },
+  "/identity/api/v2/schemas/sendnotificationrequest-212": {
+    "__comp": "4c5e977b",
+    "content": "954e25ab"
   },
   "/identity/api/v2/schemas/staffprofile-d42": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-staffprofile-841-08f"
+    "__comp": "4c5e977b",
+    "content": "84106dbb"
   },
   "/identity/api/v2/schemas/tokenintrospectionrequest-30d": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-tokenintrospectionrequest-553-e46"
+    "__comp": "4c5e977b",
+    "content": "55388f4b"
   },
   "/identity/api/v2/schemas/tokenintrospectionresponse-409": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-tokenintrospectionresponse-00-e-ce3"
+    "__comp": "4c5e977b",
+    "content": "00e0334d"
   },
   "/identity/api/v2/schemas/tokenrequest-1b7": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-tokenrequestf-9-e-870"
+    "__comp": "4c5e977b",
+    "content": "f9e32395"
   },
   "/identity/api/v2/schemas/tokenresponse-f62": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-tokenresponse-486-654"
+    "__comp": "4c5e977b",
+    "content": "4869c0e2"
   },
   "/identity/api/v2/schemas/updatememberform-519": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-updatememberformc-2-a-712"
+    "__comp": "4c5e977b",
+    "content": "c2a18da8"
   },
   "/identity/api/v2/schemas/userinfo-45a": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-schemas-userinfo-6-f-1-689"
+    "__comp": "4c5e977b",
+    "content": "6f1edd8f"
+  },
+  "/identity/api/v2/send-notification-b3a": {
+    "__comp": "4c5e977b",
+    "content": "d50ac5e2"
   },
   "/identity/api/v2/staff-e2f": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-stafffb-5-46b"
+    "__comp": "4c5e977b",
+    "content": "fb52f16e"
   },
   "/identity/api/v2/update-group-623": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-update-group-3-b-2-25b"
+    "__comp": "4c5e977b",
+    "content": "3b261334"
   },
   "/identity/api/v2/update-group-member-2e5": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-update-group-member-17-a-605"
+    "__comp": "4c5e977b",
+    "content": "17adcfe2"
   },
   "/identity/api/v2/user-metadata-8f4": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-api-v-2-user-metadatacba-4fd"
+    "__comp": "4c5e977b",
+    "content": "cbaa0929"
   },
-  "/identity/guides/app-to-app-27c": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-guides-app-to-app-9-ce-134"
+  "/identity/concepts/audiences-4a6": {
+    "__comp": "4c5e977b",
+    "content": "a7df39ac"
   },
-  "/identity/guides/audiences-2af": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-guides-audiencesbc-4-465"
+  "/identity/concepts/oauth-oidc-primer-2b7": {
+    "__comp": "4c5e977b",
+    "content": "a40643c0"
   },
-  "/identity/guides/build-an-application-e47": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-guides-build-an-application-6-d-1-0f7"
+  "/identity/concepts/scopes-fb2": {
+    "__comp": "4c5e977b",
+    "content": "2785cc98"
   },
-  "/identity/guides/getting-started-bf0": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-guides-getting-startedb-89-290"
+  "/identity/concepts/tokens-69f": {
+    "__comp": "4c5e977b",
+    "content": "c5adaf52"
   },
-  "/identity/guides/scopes-f1f": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-guides-scopes-4-f-8-709"
+  "/identity/integration/app-to-app-bde": {
+    "__comp": "4c5e977b",
+    "content": "986bc60e"
   },
-  "/identity/guides/tokens-66b": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---identity-guides-tokens-00-a-257"
+  "/identity/integration/build-an-application-320": {
+    "__comp": "4c5e977b",
+    "content": "34d65be6"
+  },
+  "/identity/integration/getting-started-4e3": {
+    "__comp": "4c5e977b",
+    "content": "938a09d4"
+  },
+  "/identity/platform-services/conventions-add": {
+    "__comp": "4c5e977b",
+    "content": "3a0e210b"
+  },
+  "/identity/platform-services/metadata-a4e": {
+    "__comp": "4c5e977b",
+    "content": "b009b3ab"
+  },
+  "/identity/platform-services/notification-service-e20": {
+    "__comp": "4c5e977b",
+    "content": "dcd5dd01"
   },
   "/-ce3": {
-    "__comp": "__comp---theme-api-item-4-c-5-a29",
-    "content": "content---869-6bf"
+    "__comp": "4c5e977b",
+    "content": "8692771d"
   }
 }
