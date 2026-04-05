@@ -16,6 +16,11 @@ function staffUser(): User
     $user->groups()->attach($staffGroup, ['level' => GroupUserLevel::Member]);
     $user->twoFactors()->save(TwoFactor::factory()->totp()->make());
 
+    $user->forceFill([
+        'staff_profile_consent_at' => now(),
+        'staff_profile_consent_version' => \App\Support\StaffProfile\ConsentNotice::CURRENT_VERSION,
+    ])->save();
+
     return $user;
 }
 
