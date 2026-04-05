@@ -27,6 +27,14 @@ it('allows staff to update their profile', function () {
             'lastname' => 'Doe',
             'pronouns' => 'he/him',
             'phone' => '+49123456789',
+            'address_line1' => '123 Main St',
+            'address_line2' => 'Apt 4B',
+            'city' => 'Berlin',
+            'postal_code' => '10115',
+            'country' => 'DE',
+            'emergency_contact_name' => 'Jane Doe',
+            'emergency_contact_phone' => '+49987654321',
+            'emergency_contact_telegram' => 'jane_doe',
             'credit_as' => 'JohnD',
             'spoken_languages' => ['en', 'de'],
             'visibility' => [
@@ -34,6 +42,8 @@ it('allows staff to update their profile', function () {
                 'lastname' => 'all_staff',
                 'pronouns' => 'my_departments',
                 'phone' => 'directors_only',
+                'address' => 'directors_only',
+                'emergency_contact' => 'all_staff',
             ],
         ])
         ->assertRedirect();
@@ -43,6 +53,14 @@ it('allows staff to update their profile', function () {
     expect($user->lastname)->toBe('Doe');
     expect($user->pronouns)->toBe('he/him');
     expect($user->phone)->toBe('+49123456789');
+    expect($user->address_line1)->toBe('123 Main St');
+    expect($user->address_line2)->toBe('Apt 4B');
+    expect($user->city)->toBe('Berlin');
+    expect($user->postal_code)->toBe('10115');
+    expect($user->country)->toBe('DE');
+    expect($user->emergency_contact_name)->toBe('Jane Doe');
+    expect($user->emergency_contact_phone)->toBe('+49987654321');
+    expect($user->emergency_contact_telegram)->toBe('jane_doe');
     expect($user->credit_as)->toBe('JohnD');
     expect($user->spoken_languages)->toBe(['en', 'de']);
     expect($user->staff_profile_visibility)->toEqual([
@@ -50,6 +68,8 @@ it('allows staff to update their profile', function () {
         'lastname' => 'all_staff',
         'pronouns' => 'my_departments',
         'phone' => 'directors_only',
+        'address' => 'directors_only',
+        'emergency_contact' => 'all_staff',
     ]);
 });
 
