@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\appsSyncCommand;
 use App\Console\Commands\ClearUnverifiedCommand;
 use App\Console\Commands\PruneExpiredMetadataCommand;
+use App\Console\Commands\PruneWebhookDeliveries;
 use App\Console\Commands\User\UserChangePasswordCommand;
 use App\Jobs\PurgeOldNotificationsJob;
 use Illuminate\Console\Scheduling\Schedule;
@@ -22,6 +23,7 @@ class Kernel extends ConsoleKernel
         appsSyncCommand::class,
         ClearUnverifiedCommand::class,
         PruneExpiredMetadataCommand::class,
+        PruneWebhookDeliveries::class,
         UserChangePasswordCommand::class,
     ];
 
@@ -38,6 +40,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('metadata:prune-expired')->daily();
         $schedule->command('model:prune')->daily();
         $schedule->job(new PurgeOldNotificationsJob())->dailyAt('03:00');
+        $schedule->command('webhooks:prune-deliveries')->dailyAt('03:00');
     }
 
     /**
