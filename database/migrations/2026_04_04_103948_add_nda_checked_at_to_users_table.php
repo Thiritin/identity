@@ -12,7 +12,7 @@ return new class() extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->timestamp('nda_verified_at')->nullable()->after('staff_profile_visibility');
+            $table->timestamp('nda_checked_at')->nullable()->after('staff_profile_visibility');
         });
     }
 
@@ -22,7 +22,7 @@ return new class() extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('nda_verified_at');
+            $table->dropColumn('nda_checked_at');
         });
     }
 };

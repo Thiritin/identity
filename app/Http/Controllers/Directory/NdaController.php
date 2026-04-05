@@ -19,13 +19,13 @@ class NdaController extends Controller
         $result = $this->ednaService->check($user->name, $user->email);
 
         if ($result->signed) {
-            $user->update(['nda_verified_at' => now()]);
+            $user->update(['nda_checked_at' => now()]);
         }
 
         return response()->json([
             'signed' => $result->signed,
             'raw_status' => $result->rawStatus,
-            'nda_verified_at' => $user->fresh()->nda_verified_at?->toIso8601String(),
+            'nda_checked_at' => $user->fresh()->nda_checked_at?->toIso8601String(),
         ]);
     }
 

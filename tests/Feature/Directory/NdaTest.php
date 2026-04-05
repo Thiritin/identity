@@ -33,7 +33,7 @@ function makeNdaStaffUser(Group $staffGroup, ?Group $group = null, GroupUserLeve
 
 it('allows a director to check NDA status', function () {
     Http::fake([
-        'www.furcom.org/*' => Http::response(
+        'edna.test/*' => Http::response(
             '<html><form id="searchform"></form>Eurofurence NDA EN sent (01.04.26 20:09 UTC) – COMPLETED<br></html>'
         ),
     ]);
@@ -49,12 +49,12 @@ it('allows a director to check NDA status', function () {
     $response->assertSuccessful()
         ->assertJson(['signed' => true]);
 
-    expect($target->fresh()->nda_verified_at)->not->toBeNull();
+    expect($target->fresh()->nda_checked_at)->not->toBeNull();
 });
 
-it('stores nda_verified_at only when signed', function () {
+it('stores nda_checked_at only when signed', function () {
     Http::fake([
-        'www.furcom.org/*' => Http::response(
+        'edna.test/*' => Http::response(
             '<html><form id="searchform"></form>Eurofurence NDA DE sent (01.04.26 20:09 UTC) – <font color=\'red\'>NOT COMPLETED</font><br></html>'
         ),
     ]);
@@ -70,7 +70,7 @@ it('stores nda_verified_at only when signed', function () {
     $response->assertSuccessful()
         ->assertJson(['signed' => false]);
 
-    expect($target->fresh()->nda_verified_at)->toBeNull();
+    expect($target->fresh()->nda_checked_at)->toBeNull();
 });
 
 it('forbids non-directors from checking NDA', function () {
@@ -87,7 +87,7 @@ it('forbids non-directors from checking NDA', function () {
 
 it('allows a director to send an NDA', function () {
     Http::fake([
-        'www.furcom.org/*' => Http::response('<html>NDA sent</html>'),
+        'edna.test/*' => Http::response('<html>NDA sent</html>'),
     ]);
 
     $staffGroup = createStaffGroupForNda();
@@ -109,7 +109,7 @@ it('allows a director to send an NDA', function () {
 
 it('sends NDA in user preferred language', function () {
     Http::fake([
-        'www.furcom.org/*' => Http::response('<html>NDA sent</html>'),
+        'edna.test/*' => Http::response('<html>NDA sent</html>'),
     ]);
 
     $staffGroup = createStaffGroupForNda();
@@ -158,7 +158,7 @@ it('requires authentication for NDA send', function () {
 
 it('allows division directors to check NDA', function () {
     Http::fake([
-        'www.furcom.org/*' => Http::response(
+        'edna.test/*' => Http::response(
             '<html><form id="searchform"></form>Eurofurence NDA EN – COMPLETED<br></html>'
         ),
     ]);

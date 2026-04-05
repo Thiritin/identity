@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Http;
 
 it('parses a completed NDA response', function () {
     Http::fake([
-        'www.furcom.org/*' => Http::response(
+        'edna.test/*' => Http::response(
             '<html><form id="searchform"></form>Eurofurence NDA EN sent (01.04.26 20:09 UTC) – COMPLETED<br></html>'
         ),
     ]);
@@ -27,7 +27,7 @@ it('parses a completed NDA response', function () {
 
 it('parses a not completed NDA response', function () {
     Http::fake([
-        'www.furcom.org/*' => Http::response(
+        'edna.test/*' => Http::response(
             '<html><form id="searchform"></form>Eurofurence NDA DE sent (01.04.26 20:09 UTC) – <font color=\'red\'>NOT COMPLETED</font><br></html>'
         ),
     ]);
@@ -41,7 +41,7 @@ it('parses a not completed NDA response', function () {
 
 it('handles response with no status line', function () {
     Http::fake([
-        'www.furcom.org/*' => Http::response(
+        'edna.test/*' => Http::response(
             '<html><form id="searchform"></form></html>'
         ),
     ]);
@@ -55,7 +55,7 @@ it('handles response with no status line', function () {
 
 it('sends an NDA request', function () {
     Http::fake([
-        'www.furcom.org/*' => Http::response('<html>NDA sent</html>'),
+        'edna.test/*' => Http::response('<html>NDA sent</html>'),
     ]);
 
     $service = new EdnaService();
@@ -73,7 +73,7 @@ it('sends an NDA request', function () {
 
 it('uses english as default language when sending', function () {
     Http::fake([
-        'www.furcom.org/*' => Http::response('<html>NDA sent</html>'),
+        'edna.test/*' => Http::response('<html>NDA sent</html>'),
     ]);
 
     $service = new EdnaService();
@@ -84,7 +84,7 @@ it('uses english as default language when sending', function () {
 
 it('throws on HTTP failure when checking', function () {
     Http::fake([
-        'www.furcom.org/*' => Http::response('', 500),
+        'edna.test/*' => Http::response('', 500),
     ]);
 
     $service = new EdnaService();
@@ -93,7 +93,7 @@ it('throws on HTTP failure when checking', function () {
 
 it('throws on HTTP failure when sending', function () {
     Http::fake([
-        'www.furcom.org/*' => Http::response('', 500),
+        'edna.test/*' => Http::response('', 500),
     ]);
 
     $service = new EdnaService();

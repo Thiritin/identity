@@ -41,7 +41,7 @@ class StaffResource extends JsonResource
             'avatar' => $this->profile_photo_path
                 ? Storage::disk('s3-avatars')->url($this->profile_photo_path)
                 : null,
-            'nda_verified' => ! is_null($this->nda_verified_at),
+            'nda_checked_at' => $this->nda_checked_at?->toIso8601String(),
         ];
 
         $piiFields = [

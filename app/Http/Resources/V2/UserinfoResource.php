@@ -50,7 +50,7 @@ class UserinfoResource extends JsonResource
             $data['telegram_username'] = $this->telegram_username;
             $data['spoken_languages'] = $this->spoken_languages;
             $data['credit_as'] = $this->credit_as;
-            $data['nda_verified'] = ! is_null($this->nda_verified_at);
+            $data['nda_checked_at'] = $this->nda_checked_at?->toIso8601String();
         }
 
         if ($this->scopeCheck('nextcloud')) {
