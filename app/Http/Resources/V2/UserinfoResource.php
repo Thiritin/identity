@@ -45,8 +45,17 @@ class UserinfoResource extends JsonResource
         if ($this->scopeCheck('staff.my.read')) {
             $data['firstname'] = $this->firstname;
             $data['lastname'] = $this->lastname;
+            $data['pronouns'] = $this->pronouns;
             $data['birthdate'] = $this->birthdate?->toDateString();
             $data['phone'] = $this->phone;
+            $data['address_line1'] = $this->address_line1;
+            $data['address_line2'] = $this->address_line2;
+            $data['city'] = $this->city;
+            $data['postal_code'] = $this->postal_code;
+            $data['country'] = $this->country;
+            $data['emergency_contact_name'] = $this->emergency_contact_name;
+            $data['emergency_contact_phone'] = $this->emergency_contact_phone;
+            $data['emergency_contact_telegram'] = $this->emergency_contact_telegram;
             $data['telegram_username'] = $this->telegram_username;
             $data['spoken_languages'] = $this->spoken_languages;
             $data['credit_as'] = $this->credit_as;
