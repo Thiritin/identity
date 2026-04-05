@@ -21,7 +21,10 @@
                 </div>
             </div>
             <div>
-                <h1 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ profileUser.name }}</h1>
+                <div class="flex items-center">
+                    <h1 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ profileUser.name }}</h1>
+                    <DevHashid :id="profileUser.hashid" />
+                </div>
                 <p v-if="profileUser.credit_as" class="text-sm text-gray-500 dark:text-gray-400">{{ profileUser.credit_as }}</p>
             </div>
         </div>
@@ -176,6 +179,7 @@ import { Button } from '@/Components/ui/button'
 import { Pencil } from 'lucide-vue-next'
 import ConventionAttendanceEditor from '@/Components/ConventionAttendanceEditor.vue'
 import MemberEditModal from './Components/MemberEditModal.vue'
+import DevHashid from '@/Components/DevHashid.vue'
 
 const props = defineProps({
     breadcrumbs: Array,
