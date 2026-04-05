@@ -3,6 +3,7 @@
 use App\Providers\AppServiceProvider;
 use App\Providers\EventServiceProvider;
 use App\Providers\Filament\AdminPanelProvider;
+use App\Providers\Filament\ConventionPanelProvider;
 use App\Providers\HorizonServiceProvider;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\AuthServiceProvider;
@@ -205,6 +206,7 @@ return [
         EventServiceProvider::class,
         HorizonServiceProvider::class,
         AdminPanelProvider::class,
+        ConventionPanelProvider::class,
         RouteServiceProvider::class,
 
     ],
