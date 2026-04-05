@@ -69,6 +69,8 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'credit_as',
         'staff_profile_visibility',
         'nda_checked_at',
+        'staff_profile_consent_at',
+        'staff_profile_consent_version',
     ];
 
     /**
@@ -119,6 +121,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'spoken_languages' => 'array',
         'staff_profile_visibility' => 'array',
         'nda_checked_at' => 'datetime',
+        'staff_profile_consent_at' => 'datetime',
     ];
 
     /**
@@ -455,5 +458,15 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         return $this->groups()
             ->wherePivotIn('level', array_map(fn ($l) => $l->value, $levels))
             ->exists();
+    }
+
+    public function hasStaffProfileConsent(): bool
+    {
+        return $this->staff_profile_consent_at !== null;
+    }
+
+    public function hasCurrentStaffProfileConsent(): bool
+    {
+        return $this->staff_profile_consent_version === \App\Support\StaffProfile\ConsentNotice::CURRENT_VERSION;
     }
 }
