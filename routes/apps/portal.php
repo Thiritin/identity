@@ -181,11 +181,32 @@ Route::get('/developers', [AppsController::class, 'index'])->name('developers.in
 Route::middleware('developer')->prefix('developers')->name('developers.')->group(function () {
     Route::get('/create', [AppsController::class, 'create'])->name('create');
     Route::post('/', [AppsController::class, 'store'])->name('store');
-    Route::get('/{app}', [AppsController::class, 'show'])->name('show');
-    Route::get('/{app}/edit', [AppsController::class, 'edit'])->name('edit');
-    Route::put('/{app}', [AppsController::class, 'update'])->name('update');
-    Route::delete('/{app}', [AppsController::class, 'destroy'])->name('destroy');
+
+    Route::get('/{app}', fn (\App\Models\App $app) => redirect()->route('developers.general', $app))
+        ->name('show');
+
+    Route::get('/{app}/general', [AppsController::class, 'general'])->name('general');
+    Route::put('/{app}/general', [AppsController::class, 'updateGeneral'])->name('general.update');
+
+    Route::get('/{app}/oauth', [AppsController::class, 'oauth'])->name('oauth');
+    Route::put('/{app}/oauth', [AppsController::class, 'updateOAuth'])->name('oauth.update');
+
+    Route::get('/{app}/logout', [AppsController::class, 'logout'])->name('logout');
+    Route::put('/{app}/logout', [AppsController::class, 'updateLogout'])->name('logout.update');
+
+    Route::get('/{app}/credentials', [AppsController::class, 'credentials'])->name('credentials');
     Route::post('/{app}/regenerate-secret', [AppsController::class, 'regenerateSecret'])->name('regenerate-secret');
+
+    Route::get('/{app}/webhooks', [\App\Http\Controllers\Profile\Settings\AppWebhookController::class, 'show'])->name('webhooks');
+    Route::put('/{app}/webhooks', [\App\Http\Controllers\Profile\Settings\AppWebhookController::class, 'update'])->name('webhooks.update');
+    Route::post('/{app}/webhooks/reveal-secret', [\App\Http\Controllers\Profile\Settings\AppWebhookController::class, 'revealSecret'])->name('webhooks.reveal-secret');
+    Route::post('/{app}/webhooks/rotate-secret', [\App\Http\Controllers\Profile\Settings\AppWebhookController::class, 'rotateSecret'])->name('webhooks.rotate-secret');
+    Route::post('/{app}/webhooks/test', [\App\Http\Controllers\Profile\Settings\AppWebhookController::class, 'sendTest'])->name('webhooks.test');
+    Route::get('/{app}/webhooks/deliveries', [\App\Http\Controllers\Profile\Settings\AppWebhookController::class, 'deliveries'])->name('webhooks.deliveries');
+    Route::post('/{app}/webhooks/deliveries/{delivery}/redeliver', [\App\Http\Controllers\Profile\Settings\AppWebhookController::class, 'redeliver'])->name('webhooks.redeliver');
+
+    Route::get('/{app}/danger', [AppsController::class, 'danger'])->name('danger');
+    Route::delete('/{app}', [AppsController::class, 'destroy'])->name('destroy');
 
     Route::get('/{app}/notification-types', [NotificationTypesController::class, 'index'])->name('notification-types.index');
     Route::post('/{app}/notification-types', [NotificationTypesController::class, 'store'])->name('notification-types.store');
