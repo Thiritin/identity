@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Api\v2;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V2\ConventionResource;
 use App\Models\Convention;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ConventionController extends Controller
 {
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): JsonResponse
     {
-        return ConventionResource::collection(
-            Convention::query()->orderBy('year')->get()
+        $conventions = Convention::query()->orderBy('year')->get();
+
+        return response()->json(
+            ConventionResource::collection($conventions)->toArray($request),
         );
     }
 
