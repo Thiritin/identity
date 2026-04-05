@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
+use App\Models\Convention;
 use App\Models\User;
 use App\Services\DirectoryTreeBuilder;
 use Illuminate\Http\Request;
@@ -103,6 +104,7 @@ class HandleInertiaRequests extends Middleware
             'user' => Route::is(['auth.login.view']) ? null : $user,
             'hideUserInfo' => Route::is(['auth.login.view', 'verification.notice', 'auth.consent']),
             'staffMemberList' => $staffMembers,
+            'backgroundImageUrl' => fn () => Convention::current()->first()?->background_image_url,
         ], $directoryProps);
     }
 }
