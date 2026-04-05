@@ -28,6 +28,7 @@ function createProfileScenario(): array
         'email' => 'secret-email@example.com',
         'firstname' => 'Maria',
         'lastname' => 'Schmidt',
+        'pronouns' => 'she/her',
         'birthdate' => '1990-06-15',
         'phone' => '+49123456789',
         'telegram_username' => 'maria_test',
@@ -36,6 +37,7 @@ function createProfileScenario(): array
         'staff_profile_visibility' => [
             'firstname' => StaffProfileVisibility::AllStaff->value,
             'lastname' => StaffProfileVisibility::AllStaff->value,
+            'pronouns' => StaffProfileVisibility::AllStaff->value,
             'birthdate' => StaffProfileVisibility::DirectorsOnly->value,
             'phone' => StaffProfileVisibility::DirectorsOnly->value,
             'telegram' => StaffProfileVisibility::MyDepartments->value,
@@ -74,6 +76,7 @@ test('same-department staff sees AllStaff and MyDepartments fields', function ()
             ->where('profileUser.spoken_languages', ['en', 'de'])
             ->where('visibleFields.firstname', 'Maria')
             ->where('visibleFields.lastname', 'Schmidt')
+            ->where('visibleFields.pronouns', 'she/her')
             ->where('visibleFields.telegram', 'maria_test')
             ->missing('visibleFields.birthdate')
             ->missing('visibleFields.phone')
@@ -124,6 +127,7 @@ test('profileUser prop never contains sensitive fields', function () {
             ->missing('profileUser.password')
             ->missing('profileUser.firstname')
             ->missing('profileUser.lastname')
+            ->missing('profileUser.pronouns')
             ->missing('profileUser.birthdate')
             ->missing('profileUser.phone')
             ->missing('profileUser.telegram_username')
@@ -143,6 +147,7 @@ test('all fields restricted hides everything from regular staff', function () {
         'staff_profile_visibility' => [
             'firstname' => StaffProfileVisibility::DirectorsOnly->value,
             'lastname' => StaffProfileVisibility::DirectorsOnly->value,
+            'pronouns' => StaffProfileVisibility::DirectorsOnly->value,
             'birthdate' => StaffProfileVisibility::DirectorsOnly->value,
             'phone' => StaffProfileVisibility::DirectorsOnly->value,
             'telegram' => StaffProfileVisibility::DirectorsOnly->value,
@@ -199,6 +204,7 @@ test('LeadsAndDirectors visibility allows team leads but not regular members', f
         'staff_profile_visibility' => [
             'firstname' => StaffProfileVisibility::LeadsAndDirectors->value,
             'lastname' => StaffProfileVisibility::LeadsAndDirectors->value,
+            'pronouns' => StaffProfileVisibility::LeadsAndDirectors->value,
             'birthdate' => StaffProfileVisibility::LeadsAndDirectors->value,
             'phone' => StaffProfileVisibility::LeadsAndDirectors->value,
             'telegram' => StaffProfileVisibility::LeadsAndDirectors->value,

@@ -102,6 +102,16 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <div class="flex items-center justify-between mb-1">
+                                    <label for="pronouns" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_pronouns') }}</label>
+                                    <VisibilityPicker field="pronouns" />
+                                </div>
+                                <Input id="pronouns" v-model="staffForm.pronouns" class="w-full bg-white dark:bg-primary-950" />
+                                <p v-if="staffForm.errors.pronouns" class="text-xs text-destructive mt-1">{{ staffForm.errors.pronouns }}</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
                                     <label for="birthdate" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_birthdate') }}</label>
                                     <VisibilityPicker field="birthdate" />
                                 </div>
@@ -558,6 +568,7 @@ function getVisibilityOption(field) {
 const staffForm = page.props.user.isStaff ? useForm({
     firstname: props.staffProfile?.firstname ?? null,
     lastname: props.staffProfile?.lastname ?? null,
+    pronouns: props.staffProfile?.pronouns ?? null,
     birthdate: props.staffProfile?.birthdate ?? null,
     phone: props.staffProfile?.phone ?? null,
     spoken_languages: props.staffProfile?.spoken_languages ?? [],

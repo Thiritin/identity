@@ -15,13 +15,14 @@ class UpdateStaffProfileRequest extends FormRequest
         return $this->user()->isStaff();
     }
 
-    private const VISIBILITY_FIELDS = ['firstname', 'lastname', 'birthdate', 'phone'];
+    private const VISIBILITY_FIELDS = ['firstname', 'lastname', 'pronouns', 'birthdate', 'phone'];
 
     public function rules(): array
     {
         return [
             'firstname' => ['nullable', 'string', 'max:100'],
             'lastname' => ['nullable', 'string', 'max:100'],
+            'pronouns' => ['nullable', 'string', 'max:50'],
             'birthdate' => ['nullable', 'date', 'before:today'],
             'phone' => ['nullable', 'string', 'max:50'],
             'spoken_languages' => ['nullable', 'array'],

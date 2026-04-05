@@ -25,12 +25,14 @@ it('allows staff to update their profile', function () {
         ->post(route('settings.staff-profile.update'), [
             'firstname' => 'John',
             'lastname' => 'Doe',
+            'pronouns' => 'he/him',
             'phone' => '+49123456789',
             'credit_as' => 'JohnD',
             'spoken_languages' => ['en', 'de'],
             'visibility' => [
                 'firstname' => 'all_staff',
                 'lastname' => 'all_staff',
+                'pronouns' => 'my_departments',
                 'phone' => 'directors_only',
             ],
         ])
@@ -39,12 +41,14 @@ it('allows staff to update their profile', function () {
     $user->refresh();
     expect($user->firstname)->toBe('John');
     expect($user->lastname)->toBe('Doe');
+    expect($user->pronouns)->toBe('he/him');
     expect($user->phone)->toBe('+49123456789');
     expect($user->credit_as)->toBe('JohnD');
     expect($user->spoken_languages)->toBe(['en', 'de']);
     expect($user->staff_profile_visibility)->toEqual([
         'firstname' => 'all_staff',
         'lastname' => 'all_staff',
+        'pronouns' => 'my_departments',
         'phone' => 'directors_only',
     ]);
 });

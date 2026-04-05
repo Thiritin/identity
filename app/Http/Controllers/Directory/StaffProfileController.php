@@ -50,7 +50,7 @@ class StaffProfileController extends Controller
                 'credit_as' => $g->pivot->credit_as,
             ]);
 
-        $visibleFields = collect(['firstname', 'lastname', 'birthdate', 'phone', 'telegram'])
+        $visibleFields = collect(['firstname', 'lastname', 'pronouns', 'birthdate', 'phone', 'telegram'])
             ->filter(fn ($field) => $user->canViewStaffField($field, $viewer))
             ->mapWithKeys(fn ($field) => [
                 $field => $user->getAttributeValue($field === 'telegram' ? 'telegram_username' : $field),

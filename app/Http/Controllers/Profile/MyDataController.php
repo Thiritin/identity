@@ -34,6 +34,7 @@ class MyDataController extends Controller
             $data['profile'] = array_merge($profile, [
                 'firstname' => $user->firstname,
                 'lastname' => $user->lastname,
+                'pronouns' => $user->pronouns,
                 'birthdate' => $user->birthdate?->format('Y-m-d'),
                 'phone' => $user->phone,
                 'telegram' => $user->telegram_username,

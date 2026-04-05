@@ -24,6 +24,7 @@ class ShowProfileController extends Controller
             $staffProfile = [
                 'firstname' => $user->firstname,
                 'lastname' => $user->lastname,
+                'pronouns' => $user->pronouns,
                 'birthdate' => $user->birthdate?->format('Y-m-d'),
                 'phone' => $user->phone,
                 'spoken_languages' => $user->spoken_languages ?? [],
