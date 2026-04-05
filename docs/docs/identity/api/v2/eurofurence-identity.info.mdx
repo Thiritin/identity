@@ -43,6 +43,30 @@ import Export from "@theme/ApiExplorer/Export";
 
 API v2 endpoints for the Eurofurence Identity service.
 
+## Response format
+
+All v2 endpoints return JSON at the top level. List endpoints return a **bare JSON array**
+(no `data`/`links`/`meta` envelope). Single resources return a bare object.
+
+## Pagination
+
+List endpoints are paginated. Pagination metadata is returned via HTTP response headers,
+following the GitHub REST API convention ([RFC 5988](https://tools.ietf.org/html/rfc5988)):
+
+| Header | Description |
+|---|---|
+| `Link` | Relational URLs for `prev`, `next`, and (when available) `first` / `last` pages. |
+| `X-Per-Page` | Number of items per page. |
+| `X-Current-Page` | The current page number. |
+| `X-Total-Count` | Total number of items (only present on endpoints that compute a total). |
+| `X-Total-Pages` | Total number of pages (only present on endpoints that compute a total). |
+
+Clients should follow `Link: ...; rel="next"` until it is absent rather than computing page
+numbers themselves. Most list endpoints use cursor-style pagination without a total count
+(for performance) — `X-Total-Count` will not be present on those.
+
+Supported query parameters: `page` (page number, 1-based) and, where noted, `per_page`.
+
 ## OAuth2 Scopes
 
 ### Identity
@@ -65,6 +89,7 @@ API v2 endpoints for the Eurofurence Identity service.
 - `view_full_staff_details`: Access email addresses in group/user listings
 - `metadata.read`: Read per-app user metadata
 - `metadata.write`: Write per-app user metadata
+- `notifications.send`: Send notifications to users via the notification service (client credentials only)
 
 <div
   style={{"marginBottom":"2rem"}}

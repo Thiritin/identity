@@ -14,6 +14,7 @@ x-tagGroups:
       - Groups
       - Group Members
       - User Metadata
+      - Notifications
       - Conventions
 info:
   version: 2.0.0
@@ -27,6 +28,30 @@ info:
   termsOfService: 'https://help.eurofurence.org/legal/terms'
   description: |-
     API v2 endpoints for the Eurofurence Identity service.
+
+    ## Response format
+
+    All v2 endpoints return JSON at the top level. List endpoints return a **bare JSON array**
+    (no `data`/`links`/`meta` envelope). Single resources return a bare object.
+
+    ## Pagination
+
+    List endpoints are paginated. Pagination metadata is returned via HTTP response headers,
+    following the GitHub REST API convention ([RFC 5988](https://tools.ietf.org/html/rfc5988)):
+
+    | Header | Description |
+    |---|---|
+    | `Link` | Relational URLs for `prev`, `next`, and (when available) `first` / `last` pages. |
+    | `X-Per-Page` | Number of items per page. |
+    | `X-Current-Page` | The current page number. |
+    | `X-Total-Count` | Total number of items (only present on endpoints that compute a total). |
+    | `X-Total-Pages` | Total number of pages (only present on endpoints that compute a total). |
+
+    Clients should follow `Link: ...; rel="next"` until it is absent rather than computing page
+    numbers themselves. Most list endpoints use cursor-style pagination without a total count
+    (for performance) — `X-Total-Count` will not be present on those.
+
+    Supported query parameters: `page` (page number, 1-based) and, where noted, `per_page`.
 
     ## OAuth2 Scopes
 
@@ -50,6 +75,7 @@ info:
     - `view_full_staff_details`: Access email addresses in group/user listings
     - `metadata.read`: Read per-app user metadata
     - `metadata.write`: Write per-app user metadata
+    - `notifications.send`: Send notifications to users via the notification service (client credentials only)
   x-logo:
     url: 'https://raw.githubusercontent.com/Thiritin/identity/main/resources/assets/ef.svg'
     backgroundColor: '#004e4c'
@@ -68,6 +94,11 @@ tags:
     description: Manage group memberships with real role levels
   - name: User Metadata
     description: Per-app key-value metadata storage for users. Scoped by OAuth client_id.
+  - name: Notifications
+    description: |-
+      Send notifications to users through email, Telegram, and in-app channels.
+
+      Requires client credentials authentication and the `notifications.send` scope. The owning app must have notifications enabled by an admin.
   - name: Conventions
     description: Public list of Eurofurence conventions. No authentication required.
 security:
@@ -332,6 +363,13 @@ paths:
       responses:
         '200':
           description: OK
+          headers:
+            Link:
+              $ref: '#/components/headers/Link'
+            X-Per-Page:
+              $ref: '#/components/headers/X-Per-Page'
+            X-Current-Page:
+              $ref: '#/components/headers/X-Current-Page'
           content:
             application/json:
               schema:
@@ -407,12 +445,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/GroupTreeNode'
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupTreeNode'
       tags:
         - Groups
       operationId: getGroupTree
@@ -456,6 +491,13 @@ paths:
       responses:
         '200':
           description: OK
+          headers:
+            Link:
+              $ref: '#/components/headers/Link'
+            X-Per-Page:
+              $ref: '#/components/headers/X-Per-Page'
+            X-Current-Page:
+              $ref: '#/components/headers/X-Current-Page'
           content:
             application/json:
               schema:
@@ -777,6 +819,13 @@ paths:
       responses:
         '200':
           description: OK
+          headers:
+            Link:
+              $ref: '#/components/headers/Link'
+            X-Per-Page:
+              $ref: '#/components/headers/X-Per-Page'
+            X-Current-Page:
+              $ref: '#/components/headers/X-Current-Page'
           content:
             application/json:
               schema:
@@ -1022,6 +1071,45 @@ paths:
       tags:
         - User Metadata
       operationId: deleteMetadataKey
+  /notifications:
+    post:
+      summary: Send a notification
+      description: |-
+        Dispatch a notification to a single user. The type must be registered under your app. Channel delivery is resolved based on the user's notification preferences, with transactional types always delivered via their default channels regardless of user preferences.
+      security:
+        - ClientSecret: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendNotificationRequest'
+      responses:
+        '202':
+          description: Accepted and queued for delivery
+        '403':
+          description: Forbidden (missing scope or app not enabled)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Type or user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Validation failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded
+      tags:
+        - Notifications
+      operationId: sendNotification
   /conventions:
     get:
       summary: List conventions
@@ -1486,6 +1574,47 @@ components:
           example: Berlin
       required:
         - value
+    SendNotificationRequest:
+      type: object
+      required: [type, user_id, subject, body]
+      properties:
+        type:
+          type: string
+          description: The notification type key registered under your app
+          example: payment_reminder
+        user_id:
+          type: string
+          description: The recipient user's id
+          example: 1VJEQAYWW54TZ5VD
+        subject:
+          type: string
+          maxLength: 255
+          example: Your registration payment is due
+        body:
+          type: string
+          maxLength: 10000
+          description: Plain text body. Used by email (fallback), telegram, and bell channels.
+          example: You have 7 days to complete payment.
+        html:
+          type: string
+          nullable: true
+          description: Optional HTML body used only by the email channel.
+          example: <p>You have <strong>7 days</strong>...</p>
+        cta:
+          type: object
+          nullable: true
+          description: Optional call-to-action button. Both label and url must be provided together.
+          required: [label, url]
+          properties:
+            label:
+              type: string
+              maxLength: 255
+              example: Pay now
+            url:
+              type: string
+              format: uri
+              maxLength: 2048
+              example: https://reg.eurofurence.org/pay
     OpenIDConfiguration:
       type: object
       properties:
@@ -1656,6 +1785,35 @@ components:
       properties:
         message:
           type: string
+  headers:
+    Link:
+      description: |-
+        RFC 5988 pagination links. A comma-separated list of URL/relation pairs for
+        `prev`, `next`, and (on length-aware paginators) `first` / `last`. Follow
+        `rel="next"` until it is absent to iterate a list.
+      schema:
+        type: string
+      example: '<https://identity.eurofurence.org/api/v2/groups/Y6K08PEKXG9Q7ZWJ/members?page=3>; rel="next", <https://identity.eurofurence.org/api/v2/groups/Y6K08PEKXG9Q7ZWJ/members?page=1>; rel="prev"'
+    X-Per-Page:
+      description: Number of items per page.
+      schema:
+        type: integer
+      example: 25
+    X-Current-Page:
+      description: The current page number (1-based).
+      schema:
+        type: integer
+      example: 2
+    X-Total-Count:
+      description: Total number of items. Only present on endpoints that compute a total.
+      schema:
+        type: integer
+      example: 142
+    X-Total-Pages:
+      description: Total number of pages. Only present on endpoints that compute a total.
+      schema:
+        type: integer
+      example: 6
   securitySchemes:
     OpenID:
       type: openIdConnect

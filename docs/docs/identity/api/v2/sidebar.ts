@@ -196,6 +196,22 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
+      label: "Notifications",
+      link: {
+        type: "doc",
+        id: "identity/api/v2/notifications",
+      },
+      items: [
+        {
+          type: "doc",
+          id: "identity/api/v2/send-notification",
+          label: "Send a notification",
+          className: "api-method post",
+        },
+      ],
+    },
+    {
+      type: "category",
       label: "Conventions",
       link: {
         type: "doc",
@@ -296,6 +312,12 @@ const sidebar: SidebarsConfig = {
           type: "doc",
           id: "identity/api/v2/schemas/metadatavalue",
           label: "MetadataValue",
+          className: "schema",
+        },
+        {
+          type: "doc",
+          id: "identity/api/v2/schemas/sendnotificationrequest",
+          label: "SendNotificationRequest",
           className: "schema",
         },
         {
