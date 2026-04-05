@@ -26,7 +26,7 @@ class ConventionResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([
+        return $schema->inlineLabel()->components([
             Tabs::make('Convention')
                 ->tabs([
                     Tab::make('Details')

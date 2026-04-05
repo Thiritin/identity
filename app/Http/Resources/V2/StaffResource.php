@@ -44,19 +44,34 @@ class StaffResource extends JsonResource
             'nda_checked_at' => $this->nda_checked_at?->toIso8601String(),
         ];
 
-        $piiFields = [
-            'firstname' => $this->firstname,
-            'lastname' => $this->lastname,
-            'birthdate' => $this->birthdate?->toDateString(),
-            'phone' => $this->phone,
-            'telegram_username' => $this->telegram_username,
-            'spoken_languages' => $this->spoken_languages,
-            'credit_as' => $this->credit_as,
+        $piiGroups = [
+            'firstname' => ['firstname' => $this->firstname],
+            'lastname' => ['lastname' => $this->lastname],
+            'pronouns' => ['pronouns' => $this->pronouns],
+            'birthdate' => ['birthdate' => $this->birthdate?->toDateString()],
+            'phone' => ['phone' => $this->phone],
+            'telegram_username' => ['telegram_username' => $this->telegram_username],
+            'spoken_languages' => ['spoken_languages' => $this->spoken_languages],
+            'credit_as' => ['credit_as' => $this->credit_as],
+            'address' => [
+                'address_line1' => $this->address_line1,
+                'address_line2' => $this->address_line2,
+                'city' => $this->city,
+                'postal_code' => $this->postal_code,
+                'country' => $this->country,
+            ],
+            'emergency_contact' => [
+                'emergency_contact_name' => $this->emergency_contact_name,
+                'emergency_contact_phone' => $this->emergency_contact_phone,
+                'emergency_contact_telegram' => $this->emergency_contact_telegram,
+            ],
         ];
 
-        foreach ($piiFields as $field => $value) {
-            if ($isSelf || $this->resource->canViewStaffField($field, $viewer)) {
-                $data[$field] = $value;
+        foreach ($piiGroups as $visibilityKey => $wireFields) {
+            if ($isSelf || $this->resource->canViewStaffField($visibilityKey, $viewer)) {
+                foreach ($wireFields as $wireKey => $value) {
+                    $data[$wireKey] = $value;
+                }
             }
         }
 
