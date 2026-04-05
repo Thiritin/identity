@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Convention\Resources;
 
-use App\Filament\Resources\ConventionResource\Pages\CreateConvention;
-use App\Filament\Resources\ConventionResource\Pages\EditConvention;
-use App\Filament\Resources\ConventionResource\Pages\ListConventions;
+use App\Filament\Convention\Resources\ConventionResource\Pages\CreateConvention;
+use App\Filament\Convention\Resources\ConventionResource\Pages\EditConvention;
+use App\Filament\Convention\Resources\ConventionResource\Pages\ListConventions;
 use App\Models\Convention;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
@@ -17,8 +17,6 @@ class ConventionResource extends Resource
     protected static ?string $model = Convention::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-calendar-days';
-
-    protected static string|\UnitEnum|null $navigationGroup = 'Staff';
 
     public static function form(Schema $schema): Schema
     {

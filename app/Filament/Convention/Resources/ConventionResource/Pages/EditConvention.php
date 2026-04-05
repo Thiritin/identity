@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\ConventionResource\Pages;
+namespace App\Filament\Convention\Resources\ConventionResource\Pages;
 
-use App\Filament\Resources\ConventionResource;
+use App\Filament\Convention\Resources\ConventionResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
