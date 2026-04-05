@@ -95,7 +95,7 @@ git rev-parse --abbrev-ref HEAD
 - [ ] **Step 2:** Run the existing test suite once to establish a green baseline.
 
 ```bash
-php artisan test --parallel
+php artisan test
 ```
 
 Expected: all tests pass. If anything is red before we start, stop and surface to the human.
@@ -1846,7 +1846,7 @@ git commit -m "feat: route developer portal to per-section endpoints"
 - [ ] **Step 1:** Run the full backend test suite.
 
 ```bash
-php artisan test --parallel
+php artisan test
 ```
 
 Expected: previously-passing tests still pass; any tests that hit the old `developers.edit`/`developers.update` routes by name will need updating (next task).
@@ -1864,7 +1864,7 @@ rg "developers\.(edit|update|show)" tests/ -l
 - [ ] **Step 3:** Run tests.
 
 ```bash
-php artisan test --parallel
+php artisan test
 ```
 
 - [ ] **Step 4:** Commit.
@@ -2421,7 +2421,7 @@ git commit -m "test: cover AppWebhookController endpoints"
 - [ ] **Step 1:** Run the full backend test suite.
 
 ```bash
-php artisan test --parallel
+php artisan test
 ```
 
 Expected: all green.
