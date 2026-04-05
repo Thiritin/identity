@@ -15,7 +15,15 @@ class UpdateStaffProfileRequest extends FormRequest
         return $this->user()->isStaff();
     }
 
-    private const VISIBILITY_FIELDS = ['firstname', 'lastname', 'pronouns', 'birthdate', 'phone'];
+    private const VISIBILITY_FIELDS = [
+        'firstname',
+        'lastname',
+        'pronouns',
+        'birthdate',
+        'phone',
+        'address',
+        'emergency_contact',
+    ];
 
     public function rules(): array
     {
@@ -25,6 +33,14 @@ class UpdateStaffProfileRequest extends FormRequest
             'pronouns' => ['nullable', 'string', 'max:50'],
             'birthdate' => ['nullable', 'date', 'before:today'],
             'phone' => ['nullable', 'string', 'max:50'],
+            'address_line1' => ['nullable', 'string', 'max:255'],
+            'address_line2' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:100'],
+            'postal_code' => ['nullable', 'string', 'max:20'],
+            'country' => ['nullable', 'string', 'size:2'],
+            'emergency_contact_name' => ['nullable', 'string', 'max:100'],
+            'emergency_contact_phone' => ['nullable', 'string', 'max:50'],
+            'emergency_contact_telegram' => ['nullable', 'string', 'max:100'],
             'spoken_languages' => ['nullable', 'array'],
             'spoken_languages.*' => ['string', Rule::in($this->validLanguageCodes())],
             'credit_as' => ['nullable', 'string', 'max:100'],
