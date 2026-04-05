@@ -78,7 +78,7 @@ There is an important, implicit relationship between staff and the hierarchy:
 
 Concretely:
 
-- When a user is added to a `department`, a background listener (`CheckStaffGroupMembership`) adds them to the `staff` group automatically.
+- When a user is added to a `department`, a background listener (`SyncAutomatedSystemGroups`) adds them to the `staff` group automatically.
 - When the user is removed from their **last** department, the same listener removes them from `staff` again.
 - `team` additions do not trigger the listener, but the API still treats them as staff-implying — see below.
 

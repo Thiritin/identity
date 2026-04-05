@@ -106,7 +106,7 @@ class GroupMemberController extends Controller
             'title' => $request->validated('title'),
         ]);
 
-        // The CheckStaffGroupMembership listener auto-promotes on department additions.
+        // The SyncAutomatedSystemGroups listener auto-promotes on department additions.
         // For teams, the listener does not fire, so we promote explicitly when allowed.
         if ($staffPromoting && $group->type === GroupTypeEnum::Team) {
             $staffGroup = Group::where('system_name', 'staff')->first();

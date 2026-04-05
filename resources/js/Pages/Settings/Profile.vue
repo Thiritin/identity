@@ -4,11 +4,11 @@
 
     <!-- Profile hero (glassy) -->
     <div class="relative overflow-hidden bg-white/40 dark:bg-white/5 backdrop-blur-xl rounded-t-xl px-6 py-5 sm:px-10">
-        <!-- Staff gradient overlay -->
-        <div v-if="$page.props.user.isStaff" class="absolute inset-0 bg-gradient-to-t from-amber-500/25 to-transparent pointer-events-none" />
-        <!-- Staff badge -->
-        <span v-if="$page.props.user.isStaff" class="absolute top-3 right-3 bg-amber-500 text-white text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md shadow-sm">
-            {{ $t('staff') }}
+        <!-- Staff/role gradient overlay -->
+        <div v-if="roleBadge" :class="['absolute inset-0 bg-gradient-to-t to-transparent pointer-events-none', roleBadge.gradientClass]" />
+        <!-- Role badge -->
+        <span v-if="roleBadge" :class="['absolute top-3 right-3 text-white text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md shadow-sm', roleBadge.pillClass]">
+            {{ $t(roleBadge.label) }}
         </span>
         <div class="relative flex items-center gap-4">
             <div class="relative group cursor-pointer shrink-0 -ml-2" @click="triggerAvatarUpload">
@@ -452,7 +452,7 @@
 import { Head, useForm, usePage, router, Link } from '@inertiajs/vue3'
 import AvatarImage from '@/Pages/Profile/AvatarImage.vue'
 import AvatarModal from '@/Profile/AvatarModal.vue'
-import { h, nextTick, onUnmounted, ref } from 'vue'
+import { computed, h, nextTick, onUnmounted, ref } from 'vue'
 import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 import { Switch } from '@/Components/ui/switch/index.js'
@@ -484,6 +484,16 @@ const props = defineProps({
 })
 
 const page = usePage()
+
+const roleBadge = computed(() => {
+    const u = page.props.user
+    if (!u) return null
+    if (u.isDivisionDirector) return { label: 'role_division_director', pillClass: 'bg-red-600', gradientClass: 'from-red-600/25' }
+    if (u.isDirector) return { label: 'role_director', pillClass: 'bg-red-600', gradientClass: 'from-red-600/25' }
+    if (u.isTeamLead) return { label: 'role_staff_team_lead', pillClass: 'bg-amber-500', gradientClass: 'from-amber-500/25' }
+    if (u.isStaff) return { label: 'staff', pillClass: 'bg-amber-500', gradientClass: 'from-amber-500/25' }
+    return null
+})
 
 const form = useForm('post', route('settings.update-profile.update'), {
     name: page.props.user.name,

@@ -10,7 +10,7 @@ use App\Events\GroupUserAdded;
 use App\Events\GroupUserRemoved;
 use App\Events\GroupUserUpdated;
 use App\Listeners\AssignGroupOwner;
-use App\Listeners\CheckStaffGroupMembership;
+use App\Listeners\SyncAutomatedSystemGroups;
 use App\Listeners\LogFailedLoginListener;
 use App\Listeners\LogUserAppLoginListener;
 use App\Listeners\LogUserLockoutListener;
@@ -72,14 +72,15 @@ class EventServiceProvider extends ServiceProvider
             LogUserAppLoginListener::class,
         ],
         GroupUserAdded::class => [
-            CheckStaffGroupMembership::class,
+            SyncAutomatedSystemGroups::class,
             AddUserToNextcloudGroup::class,
         ],
         GroupUserUpdated::class => [
+            SyncAutomatedSystemGroups::class,
             UpdateUserNextcloudGroupLevel::class,
         ],
         GroupUserRemoved::class => [
-            CheckStaffGroupMembership::class,
+            SyncAutomatedSystemGroups::class,
             RemoveUserFromNextcloudGroup::class,
         ],
         GroupCreated::class => [

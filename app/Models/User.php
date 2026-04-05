@@ -133,13 +133,33 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function isStaff(): bool
     {
-        $staffGroup = Group::where('system_name', 'staff')->first();
+        return $this->inSystemGroup('staff');
+    }
 
-        if (! $staffGroup) {
+    public function isTeamLead(): bool
+    {
+        return $this->inSystemGroup('team_leads');
+    }
+
+    public function isDirector(): bool
+    {
+        return $this->inSystemGroup('directors');
+    }
+
+    public function isDivisionDirector(): bool
+    {
+        return $this->inSystemGroup('division_directors');
+    }
+
+    private function inSystemGroup(string $systemName): bool
+    {
+        $group = Group::where('system_name', $systemName)->first();
+
+        if (! $group) {
             return false;
         }
 
-        return $this->inGroup($staffGroup->id);
+        return $this->inGroup($group->id);
     }
 
     public function sendEmailVerificationNotification(): void
