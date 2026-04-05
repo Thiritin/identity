@@ -5,8 +5,9 @@ use App\Models\UserAppMetadata;
 use App\Services\Auth\ApiGuard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
+use Tests\Concerns\ValidatesOpenApiV2;
 
-uses(RefreshDatabase::class);
+uses(RefreshDatabase::class, ValidatesOpenApiV2::class);
 
 function actingAsApiUser(User $user, string $clientId, array $scopes = []): void
 {
@@ -28,9 +29,11 @@ it('returns empty data when user has no metadata', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['metadata.read']);
 
-    $this->getJson('/api/v2/metadata')
+    $response = $this->getJson('/api/v2/metadata')
         ->assertOk()
         ->assertJsonCount(0);
+
+    $this->assertMatchesOpenApiV2($response, '/metadata');
 });
 
 it('returns all metadata keys for the authenticated user and app', function () {
@@ -40,11 +43,13 @@ it('returns all metadata keys for the authenticated user and app', function () {
     UserAppMetadata::create(['user_id' => $user->id, 'client_id' => 'app-one', 'key' => 'theme', 'value' => 'dark']);
     UserAppMetadata::create(['user_id' => $user->id, 'client_id' => 'app-one', 'key' => 'locale', 'value' => 'en']);
 
-    $this->getJson('/api/v2/metadata')
+    $response = $this->getJson('/api/v2/metadata')
         ->assertOk()
         ->assertJsonCount(2)
         ->assertJsonFragment(['key' => 'theme', 'value' => 'dark'])
         ->assertJsonFragment(['key' => 'locale', 'value' => 'en']);
+
+    $this->assertMatchesOpenApiV2($response, '/metadata');
 });
 
 it('returns a single metadata key', function () {
@@ -53,26 +58,32 @@ it('returns a single metadata key', function () {
 
     UserAppMetadata::create(['user_id' => $user->id, 'client_id' => 'app-one', 'key' => 'theme', 'value' => 'dark']);
 
-    $this->getJson('/api/v2/metadata/theme')
+    $response = $this->getJson('/api/v2/metadata/theme')
         ->assertOk()
         ->assertJson(['key' => 'theme', 'value' => 'dark']);
+
+    $this->assertMatchesOpenApiV2($response, '/metadata/{key}');
 });
 
 it('returns 404 for a non-existent key', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['metadata.read']);
 
-    $this->getJson('/api/v2/metadata/nonexistent')
+    $response = $this->getJson('/api/v2/metadata/nonexistent')
         ->assertNotFound();
+
+    $this->assertMatchesOpenApiV2($response, '/metadata/{key}');
 });
 
 it('creates a new metadata key via PUT and returns 201', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['metadata.write']);
 
-    $this->putJson('/api/v2/metadata/theme', ['value' => 'dark'])
+    $response = $this->putJson('/api/v2/metadata/theme', ['value' => 'dark'])
         ->assertCreated()
         ->assertJson(['key' => 'theme', 'value' => 'dark']);
+
+    $this->assertMatchesOpenApiV2($response, '/metadata/{key}', 'put');
 
     $this->assertDatabaseHas('user_app_metadata', [
         'user_id' => $user->id,
@@ -88,9 +99,11 @@ it('updates an existing metadata key via PUT and returns 200', function () {
 
     UserAppMetadata::create(['user_id' => $user->id, 'client_id' => 'app-one', 'key' => 'theme', 'value' => 'dark']);
 
-    $this->putJson('/api/v2/metadata/theme', ['value' => 'light'])
+    $response = $this->putJson('/api/v2/metadata/theme', ['value' => 'light'])
         ->assertOk()
         ->assertJson(['key' => 'theme', 'value' => 'light']);
+
+    $this->assertMatchesOpenApiV2($response, '/metadata/{key}', 'put');
 
     $this->assertDatabaseHas('user_app_metadata', [
         'user_id' => $user->id,
@@ -106,8 +119,10 @@ it('deletes an existing metadata key and returns 204', function () {
 
     UserAppMetadata::create(['user_id' => $user->id, 'client_id' => 'app-one', 'key' => 'theme', 'value' => 'dark']);
 
-    $this->deleteJson('/api/v2/metadata/theme')
+    $response = $this->deleteJson('/api/v2/metadata/theme')
         ->assertNoContent();
+
+    $this->assertMatchesOpenApiV2($response, '/metadata/{key}', 'delete');
 
     $this->assertDatabaseMissing('user_app_metadata', [
         'user_id' => $user->id,
@@ -120,8 +135,10 @@ it('returns 404 when deleting a non-existent key', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['metadata.write']);
 
-    $this->deleteJson('/api/v2/metadata/nonexistent')
+    $response = $this->deleteJson('/api/v2/metadata/nonexistent')
         ->assertNotFound();
+
+    $this->assertMatchesOpenApiV2($response, '/metadata/{key}', 'delete');
 });
 
 it('isolates metadata between apps', function () {
@@ -131,18 +148,23 @@ it('isolates metadata between apps', function () {
 
     actingAsApiUser($user, 'app-b', ['metadata.read']);
 
-    $this->getJson('/api/v2/metadata')
+    $indexResponse = $this->getJson('/api/v2/metadata')
         ->assertOk()
         ->assertJsonCount(0);
 
-    $this->getJson('/api/v2/metadata/secret')
+    $this->assertMatchesOpenApiV2($indexResponse, '/metadata');
+
+    $showResponse = $this->getJson('/api/v2/metadata/secret')
         ->assertNotFound();
+
+    $this->assertMatchesOpenApiV2($showResponse, '/metadata/{key}');
 });
 
 it('requires metadata.read scope for GET index', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['other.scope']);
 
+    // OAS does not document this error shape — contract check skipped
     $this->getJson('/api/v2/metadata')
         ->assertForbidden();
 });
@@ -151,6 +173,7 @@ it('requires metadata.read scope for GET show', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['other.scope']);
 
+    // OAS does not document this error shape — contract check skipped
     $this->getJson('/api/v2/metadata/theme')
         ->assertForbidden();
 });
@@ -159,6 +182,7 @@ it('requires metadata.write scope for PUT', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['metadata.read']);
 
+    // OAS does not document this error shape — contract check skipped
     $this->putJson('/api/v2/metadata/theme', ['value' => 'dark'])
         ->assertForbidden();
 });
@@ -167,6 +191,7 @@ it('requires metadata.write scope for DELETE', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['metadata.read']);
 
+    // OAS does not document this error shape — contract check skipped
     $this->deleteJson('/api/v2/metadata/theme')
         ->assertForbidden();
 });
@@ -175,12 +200,14 @@ it('rejects value exceeding 65535 characters', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['metadata.write']);
 
+    // OAS does not document this error shape — contract check skipped
     $this->putJson('/api/v2/metadata/theme', ['value' => str_repeat('a', 65536)])
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['value']);
 });
 
 it('returns 401 for unauthenticated requests', function () {
+    // OAS does not document this error shape — contract check skipped
     $this->getJson('/api/v2/metadata')
         ->assertUnauthorized();
 });
@@ -191,7 +218,7 @@ it('accepts a valid future expires_at on upsert', function () {
 
     $expiresAt = now()->addYears(3)->startOfSecond();
 
-    $this->putJson('/api/v2/metadata/address', [
+    $response = $this->putJson('/api/v2/metadata/address', [
         'value' => '123 Main St',
         'expires_at' => $expiresAt->toIso8601String(),
     ])
@@ -201,6 +228,8 @@ it('accepts a valid future expires_at on upsert', function () {
             'value' => '123 Main St',
             'expires_at' => $expiresAt->toIso8601String(),
         ]);
+
+    $this->assertMatchesOpenApiV2($response, '/metadata/{key}', 'put');
 
     $this->assertDatabaseHas('user_app_metadata', [
         'user_id' => $user->id,
@@ -214,6 +243,7 @@ it('rejects expires_at in the past', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['metadata.write']);
 
+    // OAS does not document this error shape — contract check skipped
     $this->putJson('/api/v2/metadata/address', [
         'value' => '123 Main St',
         'expires_at' => now()->subDay()->toIso8601String(),
@@ -226,12 +256,14 @@ it('accepts null expires_at meaning never expires', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['metadata.write']);
 
-    $this->putJson('/api/v2/metadata/address', [
+    $response = $this->putJson('/api/v2/metadata/address', [
         'value' => '123 Main St',
         'expires_at' => null,
     ])
         ->assertCreated()
         ->assertJson(['expires_at' => null]);
+
+    $this->assertMatchesOpenApiV2($response, '/metadata/{key}', 'put');
 
     $this->assertDatabaseHas('user_app_metadata', [
         'user_id' => $user->id,
@@ -254,9 +286,11 @@ it('returns expires_at on GET show', function () {
         'expires_at' => $expiresAt,
     ]);
 
-    $this->getJson('/api/v2/metadata/address')
+    $response = $this->getJson('/api/v2/metadata/address')
         ->assertOk()
         ->assertJson(['expires_at' => $expiresAt->toIso8601String()]);
+
+    $this->assertMatchesOpenApiV2($response, '/metadata/{key}');
 });
 
 it('clears expires_at when upsert omits the field', function () {
@@ -271,9 +305,11 @@ it('clears expires_at when upsert omits the field', function () {
         'expires_at' => now()->addYear(),
     ]);
 
-    $this->putJson('/api/v2/metadata/address', ['value' => '456 Oak Ave'])
+    $response = $this->putJson('/api/v2/metadata/address', ['value' => '456 Oak Ave'])
         ->assertOk()
         ->assertJson(['expires_at' => null]);
+
+    $this->assertMatchesOpenApiV2($response, '/metadata/{key}', 'put');
 
     $this->assertDatabaseHas('user_app_metadata', [
         'user_id' => $user->id,
