@@ -19,8 +19,8 @@
 ### New files
 
 **Backend — Models, migrations, commands**
-- `database/migrations/2026_04_06_000001_add_webhook_columns_to_apps_table.php`
-- `database/migrations/2026_04_06_000002_create_webhook_deliveries_table.php`
+- `database/migrations/2026_04_06_100001_add_webhook_columns_to_apps_table.php`
+- `database/migrations/2026_04_06_100002_create_webhook_deliveries_table.php`
 - `app/Models/WebhookDelivery.php`
 - `app/Console/Commands/PruneWebhookDeliveries.php`
 
@@ -107,7 +107,7 @@ Expected: all tests pass. If anything is red before we start, stop and surface t
 ### Task 1.1: Migration — add webhook columns to `apps`
 
 **Files:**
-- Create: `database/migrations/2026_04_06_000001_add_webhook_columns_to_apps_table.php`
+- Create: `database/migrations/2026_04_06_100001_add_webhook_columns_to_apps_table.php`
 
 - [ ] **Step 1:** Create migration.
 
@@ -150,14 +150,14 @@ Expected: new columns present. Verify with `php artisan tinker` → `Schema::get
 - [ ] **Step 3:** Commit.
 
 ```bash
-git add database/migrations/2026_04_06_000001_add_webhook_columns_to_apps_table.php
+git add database/migrations/2026_04_06_100001_add_webhook_columns_to_apps_table.php
 git commit -m "feat: add webhook columns to apps table"
 ```
 
 ### Task 1.2: Migration — create `webhook_deliveries`
 
 **Files:**
-- Create: `database/migrations/2026_04_06_000002_create_webhook_deliveries_table.php`
+- Create: `database/migrations/2026_04_06_100002_create_webhook_deliveries_table.php`
 
 - [ ] **Step 1:** Create migration.
 
@@ -209,7 +209,7 @@ php artisan migrate
 - [ ] **Step 3:** Commit.
 
 ```bash
-git add database/migrations/2026_04_06_000002_create_webhook_deliveries_table.php
+git add database/migrations/2026_04_06_100002_create_webhook_deliveries_table.php
 git commit -m "feat: create webhook_deliveries table"
 ```
 
