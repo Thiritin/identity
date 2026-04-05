@@ -81,6 +81,6 @@ return [
         'password' => env('NEXTCLOUD_PASSWORD'),
     ],
     'edna' => [
-        'url' => env('EDNA_URL', 'https://www.furcom.org/eurofurence/edna.php'),
+        'url' => env('EDNA_URL'),
     ],
 ];
