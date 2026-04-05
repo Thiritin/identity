@@ -28,10 +28,12 @@
 - Modify: `resources/js/Layouts/AccountLayout.vue` (footer version button, both desktop + mobile)
 - Modify: `resources/js/Pages/Settings/Profile.vue` (own hashid)
 - Modify: `resources/js/Pages/Directory/DirectoryIndex.vue` (hashids + System groups section)
-- Modify: `resources/js/Pages/Directory/DirectoryShow.vue` (group + members + leaders + subGroups)
+- Modify: `resources/js/Pages/Directory/Components/GroupDetail.vue` (group title + leaders hashids)
+- Modify: `resources/js/Pages/Directory/Components/MemberRow.vue` (member hashid)
+- Modify: `resources/js/Pages/Directory/Components/SubGroupList.vue` (sub-group hashids)
 - Modify: `resources/js/Pages/Directory/StaffProfile.vue` (viewed user hashid)
-- Modify: `resources/js/Pages/Directory/Components/DirectoryTree.vue` (tree nodes)
-- Modify: `lang/en.json`, `lang/de.json`, `lang/fr.json` (toast strings)
+- Modify: `resources/js/Pages/Directory/Components/DirectoryTreeNode.vue` (recursive tree nodes)
+- Modify: `resources/lang/en.json`, `resources/lang/de.json`, `resources/lang/fr.json` (toast strings)
 
 **Note on frontend tests:** This repo has no JS test framework installed (no Vitest/Jest in `package.json`). The composable is verified manually in the verification task rather than via unit tests — adding a JS test framework is out of scope.
 
@@ -183,19 +185,16 @@ test('directory index includes systemMemberships with viewer non-DDT groups', fu
         );
 });
 
-test('systemMemberships is empty when viewer has no non-DDT memberships', function () {
-    $user = User::factory()->create();
-    $user->twoFactors()->save(TwoFactor::factory()->totp()->make());
-    // Attach to the existing Staff group so the user passes the staff gate,
-    // then explicitly detach to test emptiness... easier: just make them staff
-    // via isStaff() — but that requires the staff group. Use setupDevModeStaff
-    // and accept that staff itself will appear.
-    [$user2] = setupDevModeStaff();
+test('systemMemberships only includes non-DDT groups the viewer belongs to', function () {
+    [$user, $staffGroup] = setupDevModeStaff();
 
-    // The staff membership is the only non-DDT membership, so exactly 1.
-    $this->actingAs($user2)
+    // User belongs only to the Automated 'staff' group (non-DDT), nothing else.
+    $this->actingAs($user)
         ->get(route('directory.index'))
-        ->assertInertia(fn ($page) => $page->has('systemMemberships', 1));
+        ->assertInertia(fn ($page) => $page
+            ->has('systemMemberships', 1)
+            ->where('systemMemberships.0.name', 'Staff')
+        );
 });
 ```
 
@@ -358,16 +357,16 @@ git commit -m "feat: add useDevMode composable"
 
 **Files:**
 - Create: `resources/js/Components/DevHashid.vue`
-- Modify: `lang/en.json`, `lang/de.json`, `lang/fr.json`
+- Modify: `resources/lang/en.json`, `resources/lang/de.json`, `resources/lang/fr.json`
 
 - [ ] **Step 1: Create DevHashid component**
 
-Create `resources/js/Components/DevHashid.vue`:
+Create `resources/js/Components/DevHashid.vue`. Note: `devMode.enabled` is a `ref` which auto-unwraps in Vue templates — use `devMode.enabled`, not `devMode.enabled.value`:
 
 ```vue
 <template>
     <span
-        v-if="devMode.enabled.value && id"
+        v-if="devMode.enabled && id"
         class="text-xs font-mono text-muted-foreground ml-2 select-all"
         :title="id"
     >
@@ -386,37 +385,23 @@ const devMode = useDevMode()
 </script>
 ```
 
-**Note:** `devMode.enabled` is a `ref`, so in the template it auto-unwraps to the boolean — `devMode.enabled` is what you write (not `.value`). Correcting the template:
-
-```vue
-<template>
-    <span
-        v-if="devMode.enabled && id"
-        class="text-xs font-mono text-muted-foreground ml-2 select-all"
-        :title="id"
-    >
-        {{ id }}
-    </span>
-</template>
-```
-
 - [ ] **Step 2: Add i18n strings**
 
-Edit `lang/en.json` and add two new keys (keep the file's existing alphabetical or insertion order — just add at the end before the closing `}` if there's no clear order):
+Edit `resources/lang/en.json` and add two new keys (keep the file's existing alphabetical or insertion order — just add at the end before the closing `}` if there's no clear order):
 
 ```json
 "devmode_enabled": "Developer mode enabled",
 "devmode_disabled": "Developer mode disabled",
 ```
 
-Repeat for `lang/de.json`:
+Repeat for `resources/lang/de.json`:
 
 ```json
 "devmode_enabled": "Entwicklermodus aktiviert",
 "devmode_disabled": "Entwicklermodus deaktiviert",
 ```
 
-And `lang/fr.json`:
+And `resources/lang/fr.json`:
 
 ```json
 "devmode_enabled": "Mode développeur activé",
@@ -432,7 +417,7 @@ Expected: success.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add resources/js/Components/DevHashid.vue lang/en.json lang/de.json lang/fr.json
+git add resources/js/Components/DevHashid.vue resources/lang/en.json resources/lang/de.json resources/lang/fr.json
 git commit -m "feat: add DevHashid component and i18n strings"
 ```
 
@@ -546,12 +531,7 @@ Edit `resources/js/Pages/Settings/Profile.vue`. Import the component near the ot
 import DevHashid from '@/Components/DevHashid.vue'
 ```
 
-Find where the user's name is rendered (usually in a header section near the avatar). Add `<DevHashid :id="page.props.user.id" />` immediately after the name element. If the page uses `usePage()`, reuse the existing `page` ref; otherwise, add:
-
-```javascript
-import { usePage } from '@inertiajs/vue3'
-const page = usePage()
-```
+Find where the user's name is rendered (usually in a header section near the avatar). Add `<DevHashid :id="page.props.user.id" />` immediately after the name element. This file already imports and uses `usePage()` — reuse the existing `page` ref.
 
 **Important:** The shared user prop exposes the hashid as `page.props.user.id` (see `HandleInertiaRequests.php:51`), **not** `page.props.user.hashid`.
 
@@ -582,10 +562,14 @@ git commit -m "feat: show hashids on profile pages in dev mode"
 
 ## Task 8: `DevHashid` placements — directory pages
 
+**Important architectural note:** `DirectoryShow.vue` is a thin wrapper — it delegates all rendering to sub-components: `GroupDetail.vue` (group title + leaders), `MemberRow.vue` (individual member rows inside `MemberList.vue`), and `SubGroupList.vue` (child groups). Similarly, `DirectoryTree.vue` delegates node rendering to the recursive `DirectoryTreeNode.vue`. Edit the sub-components, not the wrappers.
+
 **Files:**
 - Modify: `resources/js/Pages/Directory/DirectoryIndex.vue`
-- Modify: `resources/js/Pages/Directory/DirectoryShow.vue`
-- Modify: `resources/js/Pages/Directory/Components/DirectoryTree.vue`
+- Modify: `resources/js/Pages/Directory/Components/GroupDetail.vue`
+- Modify: `resources/js/Pages/Directory/Components/MemberRow.vue`
+- Modify: `resources/js/Pages/Directory/Components/SubGroupList.vue`
+- Modify: `resources/js/Pages/Directory/Components/DirectoryTreeNode.vue`
 
 - [ ] **Step 1: Add DevHashid to DirectoryIndex**
 
@@ -599,34 +583,64 @@ Add `<DevHashid :id="group.hashid" />`:
 - Next to each `myMemberships` entry's name (inside the `Link`, after `{{ group.name }}`).
 - Next to each division name (after `{{ division.name }}` in the division header).
 - Next to each department name (after `{{ dept.name }}`).
-- Next to each `orphanDepartments` entry, if the page renders them.
+- Next to each `orphanDepartments` entry (the page does render them, lines 62–79).
 
-- [ ] **Step 2: Add DevHashid to DirectoryShow**
+- [ ] **Step 2: Add DevHashid to GroupDetail**
 
-Edit `resources/js/Pages/Directory/DirectoryShow.vue`. Import the component. Read the file first to locate the relevant templates, then add `<DevHashid :id="X.hashid" />`:
-- Next to the group title (`group.hashid`).
-- Next to each member's name in the members list (`member.hashid`).
-- Next to each leader's name in the leaders section (`leader.hashid`).
-- Next to each sub-group in the `subGroups` list (`child.hashid`).
+Edit `resources/js/Pages/Directory/Components/GroupDetail.vue`. Import:
 
-- [ ] **Step 3: Add DevHashid to DirectoryTree**
+```javascript
+import DevHashid from '@/Components/DevHashid.vue'
+```
 
-Edit `resources/js/Pages/Directory/Components/DirectoryTree.vue`. Import the component. Read the file first to understand the recursive tree rendering. Add `<DevHashid :id="node.hashid" />` next to each rendered tree node label. The tree is rendered as a persistent sidebar across all `directory.*` routes, so this single change lights up hashids across every directory page.
+Placements:
+- After `<h1 ...>{{ group.name }}</h1>` (line ~13), add `<DevHashid :id="group.hashid" />`. May need to wrap both in a `<div class="flex items-center">` to keep them inline.
+- Inside the `v-for="leader in leaders"` loop, after `{{ leader.name }}`, add `<DevHashid :id="leader.hashid" />`.
 
-- [ ] **Step 4: Verify build**
+- [ ] **Step 3: Add DevHashid to MemberRow**
+
+Edit `resources/js/Pages/Directory/Components/MemberRow.vue`. Import:
+
+```javascript
+import DevHashid from '@/Components/DevHashid.vue'
+```
+
+After `{{ member.name }}` (inside the `<Link>` that renders the member name, around line 13), add `<DevHashid :id="member.hashid" />`.
+
+- [ ] **Step 4: Add DevHashid to SubGroupList**
+
+Edit `resources/js/Pages/Directory/Components/SubGroupList.vue`. Import:
+
+```javascript
+import DevHashid from '@/Components/DevHashid.vue'
+```
+
+After `{{ group.name }}` inside the `v-for="group in groups"` loop, add `<DevHashid :id="group.hashid" />`.
+
+- [ ] **Step 5: Add DevHashid to DirectoryTreeNode**
+
+Edit `resources/js/Pages/Directory/Components/DirectoryTreeNode.vue` (not `DirectoryTree.vue`). Import:
+
+```javascript
+import DevHashid from '@/Components/DevHashid.vue'
+```
+
+After `<span class="truncate flex-1" ...>{{ node.name }}</span>` (line ~19), add `<DevHashid :id="node.hashid" />`. Because this is a recursive component used for every tree level, this single edit lights up hashids on every node across all `directory.*` pages (the tree is a persistent sidebar built via `HandleInertiaRequests`).
+
+- [ ] **Step 6: Verify build**
 
 Run: `npm run build`
 
 Expected: success.
 
-- [ ] **Step 5: Manual verification**
+- [ ] **Step 7: Manual verification**
 
 With dev mode enabled, visit `/directory` — hashids appear next to all groups and in the sidebar tree. Click into a group — group title, members, leaders, and sub-groups all show hashids.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 8: Commit**
 
 ```bash
-git add resources/js/Pages/Directory/DirectoryIndex.vue resources/js/Pages/Directory/DirectoryShow.vue resources/js/Pages/Directory/Components/DirectoryTree.vue
+git add resources/js/Pages/Directory/DirectoryIndex.vue resources/js/Pages/Directory/Components/GroupDetail.vue resources/js/Pages/Directory/Components/MemberRow.vue resources/js/Pages/Directory/Components/SubGroupList.vue resources/js/Pages/Directory/Components/DirectoryTreeNode.vue
 git commit -m "feat: show hashids on directory pages in dev mode"
 ```
 
@@ -639,18 +653,16 @@ git commit -m "feat: show hashids on directory pages in dev mode"
 
 - [ ] **Step 1: Accept the new prop**
 
-Edit `resources/js/Pages/Directory/DirectoryIndex.vue`. Locate the `defineProps` call (or equivalent) that declares `myMemberships`, `divisions`, `orphanDepartments`. Add `systemMemberships` as a new prop of the same shape:
+Edit `resources/js/Pages/Directory/DirectoryIndex.vue`. Locate the `defineProps` call (line 89) that currently declares `{ myMemberships: Array, divisions: Array, orphanDepartments: Array }`. Add `systemMemberships` in the same shorthand style:
 
 ```javascript
-const props = defineProps({
-    myMemberships: { type: Array, default: () => [] },
-    divisions: { type: Array, default: () => [] },
-    orphanDepartments: { type: Array, default: () => [] },
-    systemMemberships: { type: Array, default: () => [] },
+defineProps({
+    myMemberships: Array,
+    divisions: Array,
+    orphanDepartments: Array,
+    systemMemberships: Array,
 })
 ```
-
-(Match the existing style in that file — if it uses positional array syntax or `withDefaults`, adapt accordingly.)
 
 - [ ] **Step 2: Import useDevMode**
 
