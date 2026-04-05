@@ -78,10 +78,26 @@ class DirectoryController extends Controller
                 'member_count' => $group->users_count,
             ]);
 
+        $systemMemberships = $user->groups()
+            ->whereNotIn('type', [
+                GroupTypeEnum::Division,
+                GroupTypeEnum::Department,
+                GroupTypeEnum::Team,
+            ])
+            ->orderBy('name')
+            ->get()
+            ->map(fn (Group $group) => [
+                'hashid' => $group->hashid,
+                'slug' => $group->slug,
+                'name' => $group->name,
+                'type' => $group->type->value,
+            ]);
+
         return Inertia::render('Directory/DirectoryIndex', [
             'myMemberships' => $myMemberships,
             'divisions' => $divisions,
             'orphanDepartments' => $orphanDepartments,
+            'systemMemberships' => $systemMemberships,
         ]);
     }
 
