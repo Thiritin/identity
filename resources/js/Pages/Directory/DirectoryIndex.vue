@@ -77,6 +77,28 @@
                     </Link>
                 </div>
             </section>
+
+            <!-- System groups (dev mode only) -->
+            <section v-if="devMode.enabled && systemMemberships.length > 0">
+                <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                    System groups
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div
+                        v-for="group in systemMemberships"
+                        :key="group.hashid"
+                        class="flex items-center justify-between gap-3 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700"
+                    >
+                        <div class="min-w-0 flex items-center gap-2">
+                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                                {{ group.name }}
+                            </div>
+                            <DevHashid :id="group.hashid" />
+                        </div>
+                        <Badge variant="outline" class="shrink-0 capitalize">{{ group.type }}</Badge>
+                    </div>
+                </div>
+            </section>
     </div>
 </template>
 
@@ -86,11 +108,14 @@ import { trans } from 'laravel-vue-i18n'
 import { Badge } from '@/Components/ui/badge'
 import { iconMap } from './Components/iconMap'
 import DevHashid from '@/Components/DevHashid.vue'
+import { useDevMode } from '@/Composables/useDevMode'
+const devMode = useDevMode()
 
 defineProps({
     myMemberships: Array,
     divisions: Array,
     orphanDepartments: Array,
+    systemMemberships: Array,
 })
 
 function levelLabel(level) {
