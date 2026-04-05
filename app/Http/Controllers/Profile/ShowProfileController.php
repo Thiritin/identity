@@ -27,6 +27,14 @@ class ShowProfileController extends Controller
                 'pronouns' => $user->pronouns,
                 'birthdate' => $user->birthdate?->format('Y-m-d'),
                 'phone' => $user->phone,
+                'address_line1' => $user->address_line1,
+                'address_line2' => $user->address_line2,
+                'city' => $user->city,
+                'postal_code' => $user->postal_code,
+                'country' => $user->country,
+                'emergency_contact_name' => $user->emergency_contact_name,
+                'emergency_contact_phone' => $user->emergency_contact_phone,
+                'emergency_contact_telegram' => $user->emergency_contact_telegram,
                 'spoken_languages' => $user->spoken_languages ?? [],
                 'credit_as' => $user->credit_as,
                 'visibility' => $user->staff_profile_visibility ?? [],
@@ -69,6 +77,7 @@ class ShowProfileController extends Controller
 
         return Inertia::render('Settings/Profile', [
             'staffProfile' => $staffProfile,
+            'staffProfileVisibilityDefaults' => \App\Models\User::staffFieldDefaultVisibility(),
             'groupMemberships' => $groupMemberships,
             'conventionAttendance' => $conventionAttendance,
             'allConventions' => $allConventions,
