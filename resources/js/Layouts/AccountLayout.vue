@@ -76,6 +76,15 @@
                             <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
                         </div>
                         <nav aria-label="Legal" class="flex flex-wrap items-center gap-x-4 gap-y-1">
+                            <button
+                                v-if="appVersion"
+                                type="button"
+                                @click="devMode.registerClick()"
+                                class="font-mono text-white/50 hover:text-white transition-colors"
+                                aria-label="Application version"
+                            >
+                                {{ appVersion }}
+                            </button>
                             <a href="https://github.com/thiritin/identity" target="_blank" class="hover:text-white transition-colors" aria-label="GitHub">
                                 <Github class="h-4 w-4" />
                             </a>
@@ -101,6 +110,15 @@
 
             <!-- Mobile footer -->
             <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 px-4 pb-6 text-xs text-gray-400">
+                <button
+                    v-if="appVersion"
+                    type="button"
+                    @click="devMode.registerClick()"
+                    class="font-mono hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                    aria-label="Application version"
+                >
+                    {{ appVersion }}
+                </button>
                 <a href="https://github.com/thiritin/identity" target="_blank" class="hover:text-gray-600 dark:hover:text-gray-300 transition-colors" aria-label="GitHub">
                     <Github class="h-4 w-4" />
                 </a>
@@ -190,6 +208,7 @@ import { Input } from '@/Components/ui/input'
 import { Button } from '@/Components/ui/button'
 import { trans } from 'laravel-vue-i18n'
 import { useTheme } from '@/Composables/useTheme'
+import { useDevMode } from '@/Composables/useDevMode'
 import SkipToContent from '@/Components/SkipToContent.vue'
 import DirectoryTree from '@/Pages/Directory/Components/DirectoryTree.vue'
 import NotificationBell from '@/Components/notifications/NotificationBell.vue'
@@ -198,6 +217,8 @@ const { darkMode } = useTheme()
 const page = usePage()
 const bgUrl = computed(() => page.props.backgroundImageUrl ?? defaultBg)
 const user = computed(() => page.props.user)
+const devMode = useDevMode()
+const appVersion = computed(() => page.props.version ?? null)
 const currentUrl = computed(() => page.url)
 const card = ref(null)
 let previousHeight = 0
