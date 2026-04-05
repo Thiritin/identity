@@ -98,5 +98,6 @@ class Kernel extends HttpKernel
         'groupmember' => GroupMember::class,
         'developer' => EnsureIsDeveloper::class,
         'staff.2fa' => EnsureStaffTwoFactor::class,
+        'staff.profile.consent' => \App\Http\Middleware\EnsureStaffProfileConsent::class,
     ];
 }

@@ -44,12 +44,13 @@ Route::post('/settings/profile/update', UpdateProfileController::class)
     ->middleware([HandlePrecognitiveRequests::class])
     ->name('settings.update-profile.update');
 Route::post('/settings/staff-profile/update', UpdateStaffProfileController::class)
-    ->middleware([HandlePrecognitiveRequests::class])
+    ->middleware([HandlePrecognitiveRequests::class, 'staff.profile.consent'])
     ->name('settings.staff-profile.update');
 Route::post('/settings/staff-profile/credit-as', UpdateGroupCreditAsController::class)
-    ->middleware([HandlePrecognitiveRequests::class])
+    ->middleware([HandlePrecognitiveRequests::class, 'staff.profile.consent'])
     ->name('settings.staff-profile.credit-as');
 Route::post('/settings/staff-profile/conventions', [UpdateConventionAttendanceController::class, 'updateOwn'])
+    ->middleware('staff.profile.consent')
     ->name('settings.staff-profile.conventions');
 
 Route::get('/settings/security', [SecurityController::class, 'index'])->name('settings.security');

@@ -1,4 +1,5 @@
 {
+    "staff_profile_consent_required_error": "Staff profile consent is required for this action. Please enable your staff profile first.",
     "loginscreen_welcome": "Welcome,",
     "loginscreen_sign_in_to_continue": "Please sign in to continue",
     "sign_in": "Login",
