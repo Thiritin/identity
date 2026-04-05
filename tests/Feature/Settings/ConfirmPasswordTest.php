@@ -80,6 +80,46 @@ it('rejects wrong password on confirm', function () {
         ->assertSessionHasErrors('password');
 });
 
+it('treats a fresh login as password-confirmed within the grace window', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->withSession(['auth.logged_in_at' => now()->unix()])
+        ->get(route('settings.security.password'))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->missing('passwordConfirmRequired')
+        );
+});
+
+it('requires confirmation once the login grace window has elapsed', function () {
+    $user = User::factory()->create();
+
+    // login_sudo_grace defaults to 300s; 301s ago must fail.
+    $this->actingAs($user)
+        ->withSession(['auth.logged_in_at' => now()->subSeconds(301)->unix()])
+        ->get(route('settings.security.password'))
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->where('passwordConfirmRequired', true)
+        );
+});
+
+it('allows POST within the login grace window without explicit confirmation', function () {
+    $user = User::factory()->create([
+        'password' => Hash::make('known-password'),
+    ]);
+
+    $this->actingAs($user)
+        ->withSession(['auth.logged_in_at' => now()->unix()])
+        ->postJson(route('settings.update-password.store'), [
+            'current_password' => 'known-password',
+            'password' => 'NewPassword1',
+            'password_confirmation' => 'NewPassword1',
+        ])
+        ->assertStatus(302); // redirect on success, not 423
+});
+
 it('throttles confirm password attempts', function () {
     $user = User::factory()->create();
 

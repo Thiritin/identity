@@ -120,6 +120,13 @@ return [
 
     'sudo_timeout' => env('AUTH_SUDO_TIMEOUT', 1800),
 
+    /*
+    | Grace window after a fresh web login during which the sudo (password
+    | confirmation) modal is skipped. Lets users walk straight from login
+    | into sensitive settings without re-typing their password.
+    */
+    'login_sudo_grace' => env('AUTH_LOGIN_SUDO_GRACE', 300),
+
     'password_timeout' => 10800,
 
 ];

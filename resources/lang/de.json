@@ -314,6 +314,7 @@
     "security_confirm_password_title": "Passwort bestätigen",
     "security_confirm_password_subtitle": "Bitte gib dein Passwort ein, um fortzufahren",
     "security_confirm_password_submit": "Bestätigen",
+    "security_confirm_password_cancel": "Zurück",
     "security_confirm_password_error": "Das Passwort ist falsch.",
     "security_email": "E-Mail-Adresse",
     "security_email_subtitle": "Ändere die E-Mail-Adresse deines Kontos",

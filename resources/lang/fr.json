@@ -288,6 +288,7 @@
     "security_confirm_password_title": "Confirmer le mot de passe",
     "security_confirm_password_subtitle": "Entre ton mot de passe pour continuer",
     "security_confirm_password_submit": "Confirmer",
+    "security_confirm_password_cancel": "Retour",
     "security_confirm_password_error": "Le mot de passe est incorrect.",
     "security_email": "Adresse e-mail",
     "security_email_subtitle": "Change l'adresse e-mail associée à ton compte",

@@ -142,8 +142,8 @@
         </div>
         </main>
         <!-- Sudo mode: confirm password modal -->
-        <Dialog :open="passwordConfirmRequired">
-            <DialogContent :show-close-button="false" @interact-outside.prevent @escape-key-down.prevent>
+        <Dialog :open="passwordConfirmRequired" @update:open="(open) => { if (!open) cancelConfirmPassword() }">
+            <DialogContent @interact-outside.prevent>
                 <DialogHeader>
                     <DialogTitle>{{ $t('security_confirm_password_title') }}</DialogTitle>
                     <DialogDescription>{{ $t('security_confirm_password_subtitle') }}</DialogDescription>
@@ -164,7 +164,10 @@
                             {{ confirmForm.errors.password }}
                         </p>
                     </div>
-                    <DialogFooter class="mt-4">
+                    <DialogFooter class="mt-4 gap-2 sm:gap-2">
+                        <Button type="button" variant="outline" @click="cancelConfirmPassword">
+                            {{ $t('security_confirm_password_cancel') }}
+                        </Button>
                         <Button type="submit" :disabled="confirmForm.processing">
                             {{ $t('security_confirm_password_submit') }}
                         </Button>
@@ -178,7 +181,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { Link, usePage, useForm } from '@inertiajs/vue3'
+import { Link, usePage, useForm, router } from '@inertiajs/vue3'
 import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness, BookUser, Settings, Github, Send } from 'lucide-vue-next'
 import { Toaster } from '@/Components/ui/sonner'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/Components/ui/dialog'
@@ -243,6 +246,12 @@ function submitConfirmPassword() {
         preserveScroll: true,
         onSuccess: () => confirmForm.reset(),
     })
+}
+
+function cancelConfirmPassword() {
+    confirmForm.reset()
+    // Leave the current (sudo-protected) page and return to the security index.
+    router.visit(route('settings.security'))
 }
 
 function onBeforeLeave() {

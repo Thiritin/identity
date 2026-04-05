@@ -69,6 +69,10 @@ class AuthController extends Controller
 
         Auth::guard($this->getGuard($app))->loginUsingId($user->id);
 
+        // Grace window for the sudo (password confirmation) modal — a user who
+        // just logged in shouldn't be asked for their password again immediately.
+        Session::put('auth.logged_in_at', now()->unix());
+
         $sid = $provider->getSid();
         if ($sid) {
             DB::table('sessions')
