@@ -18,11 +18,8 @@ class ConventionController extends Controller
 
     public function current(): ConventionResource
     {
-        $convention = Convention::query()
-            ->where('end_date', '>=', now()->toDateString())
-            ->orderBy('start_date')
-            ->firstOrFail();
-
-        return new ConventionResource($convention);
+        return new ConventionResource(
+            Convention::current()->firstOrFail()
+        );
     }
 }
