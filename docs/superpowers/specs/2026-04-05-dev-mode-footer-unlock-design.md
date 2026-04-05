@@ -25,8 +25,19 @@ Both needs are solved by a single feature: the app version is shown in the foote
 
 ### Version plumbing
 
-- **Build time.** `Dockerfile` declares `ARG APP_VERSION` in the production stage and sets `ENV APP_VERSION=${APP_VERSION}` so it is available to Laravel at runtime. `.github/workflows/docker.yml` passes `build-args: APP_VERSION=${{ github.ref_type == 'tag' && github.ref_name || github.sha }}` to `docker/build-push-action`. Tag builds get e.g. `v2.3.1`; main builds get the commit SHA.
-- **Runtime.** `config/app.php` adds `'version' => env('APP_VERSION', 'dev')`. Local `php artisan serve` thus shows `dev`.
+- **Dockerfile edits.** In the `production` stage (currently `Dockerfile:42`), add two lines before the `CMD`:
+  ```dockerfile
+  ARG APP_VERSION=dev
+  ENV APP_VERSION=${APP_VERSION}
+  ```
+  The production stage does not run `php artisan config:cache`, so Octane/FrankenPHP workers read `env('APP_VERSION')` at worker boot and see the Docker-provided ENV. No config cache interaction to worry about.
+- **Workflow edits.** In `.github/workflows/docker.yml`, add a `build-args:` key under the existing `docker/build-push-action@v6` step (currently lines 57-68, which has no `build-args` today):
+  ```yaml
+  build-args: |
+    APP_VERSION=${{ github.ref_type == 'tag' && github.ref_name || github.sha }}
+  ```
+  Tag builds resolve to e.g. `v2.3.1`; main builds resolve to the commit SHA.
+- **Laravel config.** `config/app.php` adds `'version' => env('APP_VERSION', 'dev')`. Local `php artisan serve` shows `dev`.
 - **Shared prop.** `HandleInertiaRequests::share()` adds `'version' => config('app.version')` alongside the existing `user` prop, so every Inertia page receives `page.props.version`.
 
 ### Footer + click-to-unlock
@@ -36,11 +47,13 @@ Both needs are solved by a single feature: the app version is shown in the foote
 A new composable at `resources/js/Composables/useDevMode.js` owns state:
 
 - `enabled` — reactive boolean, initial value hydrated from `sessionStorage.getItem('devMode:enabled')`.
-- `registerClick()` — if `enabled` is already true, flips it off and shows a toast ("Developer mode disabled"). Otherwise increments an internal click counter with a 1.5s rolling reset timer; on reaching 5 it flips `enabled` to true and shows a toast ("Developer mode enabled").
+- `registerClick()` — if `enabled` is already true, flips it off and shows a toast. Otherwise increments an internal click counter; each click (re)arms a 1.5s timeout that resets the counter to 0 if no further click arrives. On reaching 5 it flips `enabled` to true, shows a toast, and clears the counter/timer.
 - `disable()` — setter for programmatic disable.
 - Any change to `enabled` is mirrored into `sessionStorage`.
 
 The composable is a singleton module (state declared at module scope) so all components share one reactive instance.
+
+Toast strings use `trans()` keys (`devmode_enabled`, `devmode_disabled`) to match the codebase's existing i18n pattern — added to the relevant `lang/*.json` files. Values: "Developer mode enabled" / "Developer mode disabled" in English.
 
 ### Hashid display
 
@@ -48,26 +61,30 @@ A single presentational component `resources/js/Components/DevHashid.vue`:
 
 ```vue
 <template>
-  <span v-if="devMode.enabled" class="text-xs font-mono text-muted-foreground ml-2">{{ id }}</span>
+  <span v-if="devMode.enabled && id" class="text-xs font-mono text-muted-foreground ml-2">{{ id }}</span>
 </template>
 <script setup>
 import { useDevMode } from '@/Composables/useDevMode'
-const props = defineProps({ id: { type: String, required: true } })
+const props = defineProps({ id: { type: String, default: null } })
 const devMode = useDevMode()
 </script>
 ```
 
-Placements (all receive `hashid` in existing payloads — no backend changes for these):
+The `v-if="id"` guard prevents rendering when a payload happens to carry a null hashid.
 
-- `Pages/Settings/Profile.vue` — next to the user's name/avatar block.
+Placements (hashids already in existing payloads — no backend changes for these):
+
+- `Pages/Settings/Profile.vue` — next to the user's name. **Note:** the shared user prop exposes the hashid as `page.props.user.id` (see `HandleInertiaRequests.php:51` which sets `'id' => $request->user()->hashid`), not `user.hashid`. Use `user.id`.
 - `Pages/Directory/DirectoryIndex.vue` — next to each division/department card title.
-- `Pages/Directory/DirectoryShow.vue` — next to the group title and next to each member row.
+- `Pages/Directory/DirectoryShow.vue` — next to the group title, next to each member row, next to each entry in `subGroups`, and in the `leaders` section.
 - `Pages/Directory/StaffProfile.vue` — next to the viewed user's name.
-- `Pages/Directory/Components/DirectoryTree.vue` — next to each tree node.
+- `Pages/Directory/Components/DirectoryTree.vue` — next to each tree node. This component is rendered as a persistent sidebar across all `directory.*` routes (payload comes from `App\Services\DirectoryTreeBuilder` via `HandleInertiaRequests`), so adding `DevHashid` here lights it up on every directory page simultaneously.
 
 ### System groups section
 
-`DirectoryController@index` adds a query for the viewer's memberships in groups whose `type` is not in `[Division, Department, Team]`:
+Because `DirectoryController@index` is staff-only by route gating, this section is staff-only by construction — non-staff users have no way to reach the code path regardless of dev mode state.
+
+The controller adds a query for the viewer's memberships in groups whose `type` is not in `[Division, Department, Team]`. This deliberately includes `Automated`, `Root`, and `Default (none)` — the union of all currently-hidden types. The `staff` group (a named example) typically lives in one of those; all other hidden memberships the viewer holds are also surfaced for completeness.
 
 ```php
 $systemMemberships = $user->groups()
