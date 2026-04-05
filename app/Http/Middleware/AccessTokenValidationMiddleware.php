@@ -17,16 +17,6 @@ class AccessTokenValidationMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        // Determine Guard by Route
-        $guard = match (true) {
-            $request->routeIs('filament.*') => 'admin',
-            $request->routeIs('staff.*') => 'staff',
-            default => 'web',
-        };
-        $systemName = match ($guard) {
-            'web' => 'portal',
-            default => $guard,
-        };
         /**
          * Skip for tests, as Hydra is not available during tests.
          */
@@ -35,7 +25,7 @@ class AccessTokenValidationMiddleware
         }
 
         /* @var SocialiteIdentityProvider $provider */
-        $provider = Socialite::driver('idp-' . $systemName);
+        $provider = Socialite::driver('idp-identity');
         $token = $provider->getToken();
         $refreshToken = $provider->getRefreshToken();
         $tokenExpiresAt = $provider->getExpiresIn();
@@ -46,14 +36,14 @@ class AccessTokenValidationMiddleware
         if ($token === null || $refreshToken === null || $tokenExpiresAt === null) {
             Auth::logout();
 
-            return Redirect::route('login.apps.redirect', ['app' => $systemName]);
+            return Redirect::route('login.redirect');
         }
 
         /**
          * If token expired, refresh using refresh token.
          */
         if ($tokenExpiresAt->isPast()) {
-            $oidcService = (new OpenIDService())->setupOIDC($request, $systemName);
+            $oidcService = (new OpenIDService())->setupOIDC($request);
             try {
                 $token = $oidcService->getAccessToken('refresh_token', [
                     'refresh_token' => $refreshToken,
@@ -62,7 +52,7 @@ class AccessTokenValidationMiddleware
                 // If refresh fails, try to reauth user.
                 Auth::logout();
 
-                return Redirect::route('login.apps.redirect', ['app' => $systemName]);
+                return Redirect::route('login.redirect');
             }
             /* @var SocialiteIdentityProvider $provider */
             $provider->putToken(

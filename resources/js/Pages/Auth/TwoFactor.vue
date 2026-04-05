@@ -1,6 +1,6 @@
 <script setup>
 
-import { computed, ref, watch, onMounted } from "vue";
+import { computed, nextTick, ref, watch, onMounted } from "vue";
 import LoginScreenWelcome from "@/Auth/LoginScreenWelcome.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { Input } from '@/Components/ui/input';
@@ -35,6 +35,7 @@ const methodNames = {
 const selectedMethod = ref(props.lastUsedMethod);
 const showMethodPicker = ref(false);
 const securityKeyError = ref(null);
+const codeInput = ref(null);
 
 const selectedMethodName = computed(() => methodNames[selectedMethod.value] || selectedMethod.value)
 
@@ -102,7 +103,9 @@ async function triggerSecurityKey() {
 onMounted(() => {
     if (props.lastUsedMethod === 'security_key') {
         triggerSecurityKey()
+        return
     }
+    nextTick(() => codeInput.value?.$el?.focus())
 })
 
 </script>
@@ -145,6 +148,7 @@ onMounted(() => {
                     />
                     <!-- TOTP input -->
                     <Input v-else id="code"
+                               ref="codeInput"
                                type="text"
                                inputmode="numeric"
                                autocomplete="one-time-code"

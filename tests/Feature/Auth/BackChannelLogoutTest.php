@@ -18,7 +18,7 @@ function generateLogoutToken(array $claims = [], $key = null, string $alg = 'RS2
 
     $defaults = [
         'iss' => config('services.hydra.public'),
-        'aud' => config('services.apps.portal.client_id'),
+        'aud' => config('services.apps.identity.client_id'),
         'iat' => time(),
         'jti' => Str::uuid()->toString(),
         'events' => ['http://schemas.openid.net/event/backchannel-logout' => (object) []],
@@ -151,7 +151,7 @@ it('rejects a logout token missing sid claim', function () {
 
     $payload = [
         'iss' => config('services.hydra.public'),
-        'aud' => config('services.apps.portal.client_id'),
+        'aud' => config('services.apps.identity.client_id'),
         'iat' => time(),
         'jti' => Str::uuid()->toString(),
         'events' => ['http://schemas.openid.net/event/backchannel-logout' => (object) []],
@@ -205,7 +205,7 @@ it('deletes multiple Laravel sessions matching the same hydra_sid', function () 
     OauthSession::create([
         'user_id' => $user->id,
         'session_id' => 'multi-session-sid',
-        'client_ids' => ['portal', 'staff'],
+        'client_ids' => ['identity'],
         'authenticated_at' => now(),
         'last_seen_at' => now(),
     ]);

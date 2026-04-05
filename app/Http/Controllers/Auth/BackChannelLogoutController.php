@@ -102,7 +102,7 @@ class BackChannelLogoutController extends Controller
         }
 
         return Cache::remember($cacheKey, now()->addHour(), function () {
-            $discoveryUrl = config('services.apps.portal.openid_configuration');
+            $discoveryUrl = config('services.apps.identity.openid_configuration');
             $config = Cache::remember('identity_config', now()->addDay(), function () use ($discoveryUrl) {
                 return Http::get($discoveryUrl)->throw()->json();
             });
@@ -126,9 +126,7 @@ class BackChannelLogoutController extends Controller
         }
 
         $knownAudiences = array_filter([
-            config('services.apps.portal.client_id'),
-            config('services.apps.staff.client_id'),
-            config('services.apps.admin.client_id'),
+            config('services.apps.identity.client_id'),
         ]);
         $tokenAud = is_array($claims->aud) ? $claims->aud : [$claims->aud];
         if ($knownAudiences && ! array_intersect($tokenAud, $knownAudiences)) {

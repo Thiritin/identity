@@ -53,7 +53,7 @@ class EmailController extends Controller
         }
 
         if (! Session::has('auth.login_challenge')) {
-            return Redirect::route('login.apps.redirect', ['app' => 'portal']);
+            return Redirect::route('login.redirect');
         }
 
         if (Session::get('auth.login_challenge.skip') === true) {

@@ -12,35 +12,31 @@ function fakeHydraForSeeder(): void
 {
     Http::fake([
         '*/admin/clients' => Http::sequence()
-            ->push(['client_id' => 'seed-portal-' . uniqid(), 'client_secret' => 'secret'])
-            ->push(['client_id' => 'seed-admin-' . uniqid(), 'client_secret' => 'secret'])
-            ->push(['client_id' => 'seed-staff-' . uniqid(), 'client_secret' => 'secret']),
+            ->push(['client_id' => 'seed-identity-' . uniqid(), 'client_secret' => 'secret']),
         '*/admin/clients/*' => Http::response(['client_id' => 'seed-id']),
     ]);
 }
 
-it('seeds system apps as approved first-party apps with skip_consent', function () {
+it('seeds the identity app as an approved first-party app with skip_consent', function () {
     User::factory()->create();
     fakeHydraForSeeder();
 
     $this->seed(AppSeeder::class);
 
-    foreach (['portal', 'admin', 'staff'] as $systemName) {
-        $app = App::where('system_name', $systemName)->first();
+    $app = App::where('system_name', 'identity')->first();
 
-        expect($app)->not->toBeNull()
-            ->and($app->approved)->toBeTrue()
-            ->and($app->first_party)->toBeTrue()
-            ->and($app->skip_consent)->toBeTrue();
-    }
+    expect($app)->not->toBeNull()
+        ->and($app->approved)->toBeTrue()
+        ->and($app->first_party)->toBeTrue()
+        ->and($app->skip_consent)->toBeTrue();
 });
 
-it('updates flags on existing system apps when re-seeded', function () {
+it('updates flags on an existing identity app when re-seeded', function () {
     $owner = User::factory()->create();
 
     App::withoutEvents(fn () => App::factory()->unapproved()->create([
-        'system_name' => 'portal',
-        'client_id' => 'portal-existing',
+        'system_name' => 'identity',
+        'client_id' => 'identity-existing',
         'user_id' => $owner->id,
         'skip_consent' => false,
         'first_party' => false,
@@ -50,9 +46,30 @@ it('updates flags on existing system apps when re-seeded', function () {
 
     $this->seed(AppSeeder::class);
 
-    $app = App::where('system_name', 'portal')->first();
+    $app = App::where('system_name', 'identity')->first();
 
     expect($app->approved)->toBeTrue()
         ->and($app->first_party)->toBeTrue()
         ->and($app->skip_consent)->toBeTrue();
+});
+
+it('removes legacy portal/admin/staff apps on seed', function () {
+    $owner = User::factory()->create();
+
+    App::withoutEvents(function () use ($owner) {
+        foreach (['portal', 'admin', 'staff'] as $legacy) {
+            App::factory()->create([
+                'system_name' => $legacy,
+                'client_id' => $legacy . '-legacy',
+                'user_id' => $owner->id,
+            ]);
+        }
+    });
+
+    fakeHydraForSeeder();
+
+    $this->seed(AppSeeder::class);
+
+    expect(App::whereIn('system_name', ['portal', 'admin', 'staff'])->count())->toBe(0);
+    expect(App::where('system_name', 'identity')->exists())->toBeTrue();
 });

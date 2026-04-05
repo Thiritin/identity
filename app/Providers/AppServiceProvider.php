@@ -77,14 +77,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $socialite = $this->app->make(Factory::class);
-        $socialite->extend('idp-portal', function () use ($socialite) {
-            return $socialite->buildProvider(SocialiteIdentityProvider::class, config('services.apps.portal'));
-        });
-        $socialite->extend('idp-admin', function () use ($socialite) {
-            return $socialite->buildProvider(SocialiteIdentityProvider::class, config('services.apps.admin'));
-        });
-        $socialite->extend('idp-staff', function () use ($socialite) {
-            return $socialite->buildProvider(SocialiteIdentityProvider::class, config('services.apps.staff'));
+        $socialite->extend('idp-identity', function () use ($socialite) {
+            return $socialite->buildProvider(SocialiteIdentityProvider::class, config('services.apps.identity'));
         });
     }
 }

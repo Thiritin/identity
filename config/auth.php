@@ -43,16 +43,6 @@ return [
             'provider' => 'users',
         ],
 
-        'staff' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-
-        'admin' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-
         'api' => [
             'driver' => 'hydra',
             'provider' => 'users',

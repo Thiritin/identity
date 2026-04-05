@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-test('unverified user can login to portal app', function () {
+test('unverified user can login to identity app', function () {
     $password = 'TestPassword123!';
     $user = User::factory()->create([
         'password' => Hash::make($password),
@@ -15,9 +15,9 @@ test('unverified user can login to portal app', function () {
 
     App::withoutEvents(function () use ($user) {
         App::create([
-            'client_id' => 'test-portal-client',
-            'name' => 'Portal',
-            'system_name' => 'portal',
+            'client_id' => 'test-identity-client',
+            'name' => 'Identity',
+            'system_name' => 'identity',
             'user_id' => $user->id,
         ]);
     });
@@ -30,7 +30,7 @@ test('unverified user can login to portal app', function () {
         if (str_contains($request->url(), '/requests/login')) {
             return Http::response([
                 'challenge' => 'test-challenge',
-                'client' => ['client_id' => 'test-portal-client'],
+                'client' => ['client_id' => 'test-identity-client'],
                 'request_url' => 'http://localhost',
                 'requested_scope' => ['openid', 'email', 'profile'],
                 'skip' => false,
@@ -53,7 +53,7 @@ test('unverified user can login to portal app', function () {
     $response->assertRedirect();
 });
 
-test('unverified user cannot login to non-portal app', function () {
+test('unverified user cannot login to non-identity app', function () {
     $password = 'TestPassword123!';
     $user = User::factory()->create([
         'password' => Hash::make($password),
@@ -92,8 +92,8 @@ test('unverified user cannot login to non-portal app', function () {
         'remember' => false,
     ]);
 
-    // Should redirect to portal login (not allowed to use non-portal app)
-    $response->assertRedirect(route('login.apps.redirect', ['app' => 'portal']));
+    // Should redirect to the identity login flow
+    $response->assertRedirect(route('login.redirect'));
 });
 
 test('verified user can login to any app', function () {

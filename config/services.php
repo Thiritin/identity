@@ -35,29 +35,12 @@ return [
     |--------------------------------------------------------------------------
     */
     'apps' => [
-        'admin' => [
+        'identity' => [
             'openid_configuration' => env('IDENTITY_OPENID_CONFIGURATION'),
-            'client_id' => env('IDENTITY_ADMIN_ID'),
-            'client_secret' => env('IDENTITY_ADMIN_SECRET'),
-            'redirect' => env('IDENTITY_ADMIN_CALLBACK_URL'),
+            'client_id' => env('IDENTITY_CLIENT_ID'),
+            'client_secret' => env('IDENTITY_CLIENT_SECRET'),
+            'redirect' => env('IDENTITY_CALLBACK_URL'),
             'scopes' => 'openid offline_access email profile groups',
-            'home_route' => 'filament.admin.pages.dashboard',
-        ],
-        'portal' => [
-            'openid_configuration' => env('IDENTITY_OPENID_CONFIGURATION'),
-            'client_id' => env('IDENTITY_PORTAL_ID'),
-            'client_secret' => env('IDENTITY_PORTAL_SECRET'),
-            'redirect' => env('IDENTITY_PORTAL_CALLBACK_URL'),
-            'scopes' => 'openid offline_access email profile groups',
-            'home_route' => 'dashboard',
-        ],
-        'staff' => [
-            'openid_configuration' => env('IDENTITY_OPENID_CONFIGURATION'),
-            'client_id' => env('IDENTITY_STAFF_ID'),
-            'client_secret' => env('IDENTITY_STAFF_SECRET'),
-            'redirect' => env('IDENTITY_STAFF_CALLBACK_URL'),
-            'scopes' => 'openid offline_access email profile groups',
-            'home_route' => 'staff.dashboard',
         ],
     ],
     'registration' => [

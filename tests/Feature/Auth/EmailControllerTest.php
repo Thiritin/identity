@@ -59,9 +59,9 @@ test('email page renders when login_challenge in session', function () {
         ->assertInertia(fn ($page) => $page->component('Auth/Email'));
 });
 
-test('email page without login_challenge redirects to portal', function () {
+test('email page without login_challenge redirects to identity login', function () {
     $this->get(route('auth.login.view'))
-        ->assertRedirect(route('login.apps.redirect', ['app' => 'portal']));
+        ->assertRedirect(route('login.redirect'));
 });
 
 test('email submit with existing user redirects to password page', function () {

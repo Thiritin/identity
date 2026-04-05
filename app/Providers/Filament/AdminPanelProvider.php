@@ -3,7 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Http\Middleware\AccessTokenValidationMiddleware;
-use App\Http\Middleware\Admin\AuthenticateMiddleware;
+use App\Http\Middleware\Authenticate as AuthenticateMiddleware;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
@@ -28,7 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->authGuard('admin')
+            ->authGuard('web')
             ->brandName('EF Identity')
             ->brandLogo(asset('images/ef-logo.svg'))
             ->darkModeBrandLogo(asset('images/ef-logo-dark.svg'))

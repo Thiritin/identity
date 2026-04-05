@@ -85,7 +85,7 @@ class VerifyCodeController extends Controller
         if (! $challengeData) {
             Session::put('justRegisteredSkipLogin.user_id', $user->id);
 
-            return Redirect::route('login.apps.redirect', ['app' => 'portal']);
+            return Redirect::route('login.redirect');
         }
 
         Session::put('auth.pending_login', [

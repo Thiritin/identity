@@ -14,55 +14,9 @@ class NotificationTypeSeeder extends Seeder
         $types = [
             'portal' => [
                 [
-                    'key' => 'registration.confirmed',
-                    'name' => 'Registration confirmed',
-                    'description' => 'Sent when your convention registration is confirmed.',
-                    'category' => NotificationCategory::Transactional,
-                    'default_channels' => ['email', 'database'],
-                ],
-                [
-                    'key' => 'registration.payment_due',
-                    'name' => 'Payment reminder',
-                    'description' => 'Sent when a payment for your registration is due.',
-                    'category' => NotificationCategory::Transactional,
-                    'default_channels' => ['email'],
-                ],
-                [
-                    'key' => 'announcements.general',
-                    'name' => 'General announcements',
-                    'description' => 'News and announcements from the Eurofurence team.',
-                    'category' => NotificationCategory::Informational,
-                    'default_channels' => ['email', 'database'],
-                ],
-                [
-                    'key' => 'announcements.promotions',
-                    'name' => 'Promotions & offers',
-                    'description' => 'Occasional promotions, merchandise drops and special offers.',
-                    'category' => NotificationCategory::Promotional,
-                    'default_channels' => ['email'],
-                ],
-            ],
-            'staff' => [
-                [
-                    'key' => 'shifts.assigned',
-                    'name' => 'Shift assigned',
-                    'description' => 'Sent when a new shift has been assigned to you.',
-                    'category' => NotificationCategory::Operational,
-                    'default_channels' => ['email', 'telegram', 'database'],
-                ],
-                [
-                    'key' => 'shifts.reminder',
-                    'name' => 'Shift reminder',
-                    'description' => 'Reminder shortly before one of your shifts starts.',
-                    'category' => NotificationCategory::Operational,
-                    'default_channels' => ['telegram', 'database'],
-                ],
-            ],
-            'admin' => [
-                [
                     'key' => 'security.login_alert',
                     'name' => 'New sign-in alert',
-                    'description' => 'Sent when a new device signs in to your admin account.',
+                    'description' => 'Sent when a new device or location signs in to your account.',
                     'category' => NotificationCategory::Transactional,
                     'default_channels' => ['email', 'database'],
                 ],

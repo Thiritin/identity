@@ -15,35 +15,29 @@ use Laravel\Socialite\Two\InvalidStateException;
 
 class AuthController extends Controller
 {
-    public function login($app)
+    public function login()
     {
-        $this->checkApp($app);
-        // Redirect to the app if already logged in
-        $guard = $this->getGuard($app);
-        if (Auth::guard($guard)->check()) {
-            return redirect()->route(config('services.apps')[$app]['home_route']);
+        if (Auth::guard('web')->check()) {
+            return redirect()->intended(route('dashboard'));
         }
 
-        $url = Socialite::driver('idp-' . $app)
-            ->scopes(config('services.apps')[$app]['scopes'])
+        $url = Socialite::driver('idp-identity')
+            ->scopes(config('services.apps.identity.scopes'))
             ->redirect();
 
         return Inertia::location($url->getTargetUrl());
     }
 
-    public function loginCallback($app)
+    public function loginCallback()
     {
-        $this->checkApp($app);
-
-        $provider = Socialite::driver('idp-' . $app);
+        $provider = Socialite::driver('idp-identity');
 
         try {
             $userInfo = $provider->user();
         } catch (InvalidStateException $e) {
-            return redirect()->route('login.apps.redirect', ['app' => $app]);
+            return redirect()->route('login.redirect');
         } catch (ClientException $e) {
             Log::warning('OAuth token exchange failed', [
-                'app' => $app,
                 'status' => $e->getResponse()->getStatusCode(),
                 'body' => $e->getResponse()->getBody()->getContents(),
             ]);
@@ -58,7 +52,6 @@ class AuthController extends Controller
         if ($user === null) {
             Log::error('User not found during login callback', [
                 'hashid' => $userInfo->id,
-                'app' => $app,
             ]);
 
             return redirect()->route('auth.error', [
@@ -67,7 +60,7 @@ class AuthController extends Controller
             ]);
         }
 
-        Auth::guard($this->getGuard($app))->loginUsingId($user->id);
+        Auth::guard('web')->loginUsingId($user->id);
 
         // Grace window for the sudo (password confirmation) modal — a user who
         // just logged in shouldn't be asked for their password again immediately.
@@ -81,7 +74,7 @@ class AuthController extends Controller
 
             $oauthSession = OauthSession::where('session_id', $sid)->first();
             if ($oauthSession) {
-                $oauthSession->addClientId(config('services.apps.' . $app . '.client_id'));
+                $oauthSession->addClientId(config('services.apps.identity.client_id'));
             }
         }
 
@@ -91,36 +84,17 @@ class AuthController extends Controller
             expiresIn: now()->addSeconds($userInfo->expiresIn),
         );
 
-        return redirect()->route(config('services.apps')[$app]['home_route']);
+        return redirect()->intended(route('dashboard'));
     }
 
-    public function logout($app)
+    public function logout()
     {
-        $this->checkApp($app);
-
-        return Socialite::driver('idp-' . $app)->logoutAll();
+        return Socialite::driver('idp-identity')->logoutAll();
     }
 
-    public function frontchannelLogout($app)
+    public function frontchannelLogout()
     {
-        $this->checkApp($app);
-        Auth::guard($this->getGuard($app))->logout();
-        Socialite::driver('idp-' . $app)->clearToken();
-    }
-
-    private function checkApp($app): void
-    {
-        if (in_array($app, ['portal', 'admin']) === false) {
-            Log::warning('Unknown app requested in auth flow', ['app' => $app]);
-            abort(404, "Unknown application: {$app}");
-        }
-    }
-
-    private function getGuard($app)
-    {
-        return match ($app) {
-            'portal' => 'web',
-            'admin' => 'admin',
-        };
+        Auth::guard('web')->logout();
+        Socialite::driver('idp-identity')->clearToken();
     }
 }

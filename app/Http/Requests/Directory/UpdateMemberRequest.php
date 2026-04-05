@@ -4,7 +4,6 @@ namespace App\Http\Requests\Directory;
 
 use App\Enums\GroupUserLevel;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class UpdateMemberRequest extends FormRequest
@@ -30,7 +29,7 @@ class UpdateMemberRequest extends FormRequest
         $requestedLevel = GroupUserLevel::from($value);
 
         // Admins can assign any level
-        if (Auth::guard('admin')->check() || $this->user()->is_admin) {
+        if ($this->user()->is_admin) {
             return;
         }
 

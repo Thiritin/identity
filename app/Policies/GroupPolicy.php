@@ -27,7 +27,7 @@ class GroupPolicy
      */
     public function viewAny(User $user): bool|Response
     {
-        if (Auth::guard('admin')->check()) {
+        if (Auth::guard('web')->check()) {
             return $user->can('admin.groups.view');
         }
         if (Auth::guard('web')->check()) {
@@ -108,7 +108,7 @@ class GroupPolicy
             })
             ->exists();
 
-        return (Auth::guard('admin')->check() && $user->can('admin.groups.update')) || (($userManagerInGroup || $userManagerInParentGroup) && $user->scopeCheck('groups.update'));
+        return (Auth::guard('web')->check() && $user->can('admin.groups.update')) || (($userManagerInGroup || $userManagerInParentGroup) && $user->scopeCheck('groups.update'));
     }
 
     public function delete(User $user, Group $group): bool
@@ -133,6 +133,6 @@ class GroupPolicy
             })
             ->exists();
 
-        return (Auth::guard('admin')->check() && $user->can('admin.groups.delete')) || (($userManagerInGroup || $userManagerInParentGroup) && $user->scopeCheck('groups.delete'));
+        return (Auth::guard('web')->check() && $user->can('admin.groups.delete')) || (($userManagerInGroup || $userManagerInParentGroup) && $user->scopeCheck('groups.delete'));
     }
 }

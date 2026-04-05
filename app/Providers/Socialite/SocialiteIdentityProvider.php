@@ -54,7 +54,7 @@ class SocialiteIdentityProvider extends AbstractProvider
         }
         // Get from services.identity.openid_configuration url and cache it
         $config = Cache::remember('identity_config', now()->addDay(), function () {
-            return Http::get(config('services.apps.portal.openid_configuration'))->throw()->json();
+            return Http::get(config('services.apps.identity.openid_configuration'))->throw()->json();
         });
         $this->issuer = $config['issuer'];
         $this->userinfoEndpoint = $config['userinfo_endpoint'];

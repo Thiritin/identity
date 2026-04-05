@@ -78,7 +78,7 @@ class LoginController extends Controller
         if ($subject !== null) {
             $emailVerified = $this->checkEmailVerification($loginRequest, $subject);
             if ($emailVerified === false) {
-                return Redirect::route('login.apps.redirect', ['app' => 'portal']);
+                return Redirect::route('login.redirect');
             }
         }
 
@@ -164,7 +164,7 @@ class LoginController extends Controller
 
         $emailVerified = $this->checkEmailVerification($loginRequest, $user);
         if ($emailVerified === false) {
-            return Redirect::route('login.apps.redirect', ['app' => 'portal']);
+            return Redirect::route('login.redirect');
         }
 
         // Check for 2FA (passkey replaces password only, not 2FA)
@@ -234,7 +234,7 @@ class LoginController extends Controller
 
             $emailVerified = $this->checkEmailVerification($loginRequest, $user);
             if ($emailVerified === false) {
-                return Redirect::route('login.apps.redirect', ['app' => 'portal']);
+                return Redirect::route('login.redirect');
             }
 
             if ($user->twoFactors()->whereIn('type', [TwoFactorTypeEnum::TOTP, TwoFactorTypeEnum::YUBIKEY, TwoFactorTypeEnum::SECURITY_KEY])->exists()) {
@@ -279,14 +279,14 @@ class LoginController extends Controller
         return null;
     }
 
-    private function isPortalClient(array $loginRequest): bool
+    private function isIdentityClient(array $loginRequest): bool
     {
         $clientId = $loginRequest['client']['client_id'] ?? null;
         if (! $clientId) {
             return false;
         }
 
-        return App::where('client_id', $clientId)->where('system_name', 'portal')->exists();
+        return App::where('client_id', $clientId)->where('system_name', 'identity')->exists();
     }
 
     private function checkLoginEnforcement(User $user, array $loginRequest): ?InertiaResponse
@@ -295,11 +295,11 @@ class LoginController extends Controller
             return Inertia::render('Auth/Suspended');
         }
 
-        if ($user->isStaff() && ! $this->isPortalClient($loginRequest)) {
+        if ($user->isStaff() && ! $this->isIdentityClient($loginRequest)) {
             $hasTotp = $user->twoFactors()->where('type', TwoFactorTypeEnum::TOTP)->exists();
             if (! $hasTotp) {
                 return Inertia::render('Auth/StaffTotpRequired', [
-                    'portalLoginUrl' => route('login.apps.redirect', ['app' => 'portal']),
+                    'portalLoginUrl' => route('login.redirect'),
                 ]);
             }
         }
@@ -329,8 +329,9 @@ class LoginController extends Controller
         if ($user->hasVerifiedEmail() === true) {
             return true;
         }
-        // If not, check if app system_name is portal then allow users to login
-        if ($clientModel->system_name === 'portal') {
+        // For first-party identity login, allow unverified users to log in
+        // (email verification is enforced downstream at the portal UI layer).
+        if ($clientModel->system_name === 'identity') {
             return true;
         }
 

@@ -49,7 +49,7 @@ test('login password page auto logs in when hydra marks login as skippable', fun
 
     $app = new App();
     $app->client_id = 'test-client';
-    $app->system_name = 'portal';
+    $app->system_name = 'identity';
     $app->user_id = $user->id;
     $app->saveQuietly();
 

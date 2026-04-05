@@ -83,8 +83,9 @@ class DivisionDepartmentSeeder extends Seeder
 
     public function run(): void
     {
-        if (app()->environment() !== 'local') {
-            $this->command->warn('DivisionDepartmentSeeder only runs in local environment.');
+        $hasExistingStructure = Group::whereIn('type', [GroupTypeEnum::Division, GroupTypeEnum::Department])->exists();
+        if ($hasExistingStructure) {
+            $this->command->warn('DivisionDepartmentSeeder skipped: divisions or departments already exist.');
 
             return;
         }

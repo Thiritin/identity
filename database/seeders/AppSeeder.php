@@ -5,19 +5,26 @@ namespace Database\Seeders;
 use App\Models\App;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class AppSeeder extends Seeder
 {
     /**
-     * This seeder makes sure that we always have two apps in the system.
-     * One for the Client Application and one for the Admin Application.
+     * Ensures the single first-party "Identity" OAuth client exists.
+     * The Identity app is this Laravel application itself (portal + admin
+     * panel), registered with Hydra as its own OIDC client.
      */
     public function run()
     {
-        $this->createApp('portal', 'Eurofurence Portal');
-        $this->createApp('admin', 'Eurofurence Admin');
-        $this->createApp('staff', 'Eurofurence StaffNet');
+        // Clean up legacy split-app rows from the portal/admin/staff era.
+        // Iterate per-model (not ->delete() on the query builder) so
+        // AppObserver::deleted fires for each row and the corresponding
+        // Hydra client is removed. A mass delete would skip observers
+        // and leave orphan clients in Hydra.
+        App::whereIn('system_name', ['portal', 'admin', 'staff'])
+            ->get()
+            ->each(fn (App $app) => $app->delete());
+
+        $this->createApp('identity', 'Eurofurence Identity');
     }
 
     public function createApp(
@@ -39,11 +46,11 @@ class AppSeeder extends Seeder
             'data' => [
                 'client_name' => $clientName,
                 'redirect_uris' => [
-                    route('login.apps.callback', ['app' => $systemName]),
+                    route('login.callback'),
                 ],
                 'scope' => explode(' ', config('services.apps')[$systemName]['scopes']),
                 'token_endpoint_auth_method' => 'client_secret_post',
-                'frontchannel_logout_uri' => route('login.apps.frontchannel-logout', ['app' => $systemName]),
+                'frontchannel_logout_uri' => route('login.frontchannel-logout'),
             ],
         ]);
 
@@ -61,9 +68,8 @@ class AppSeeder extends Seeder
             $client_id = $app->data['client_id'];
             $client_secret = $app->data['client_secret'];
 
-            $envName = Str::upper($systemName);
-            shell_exec('sed -i "s/.*IDENTITY_' . $envName . '_ID=.*/IDENTITY_' . $envName . "_ID=$client_id/\" .env");
-            shell_exec('sed -i "s/.*IDENTITY_' . $envName . '_SECRET=.*/IDENTITY_' . $envName . "_SECRET=$client_secret/\" .env");
+            shell_exec('sed -i "s/.*IDENTITY_CLIENT_ID=.*/IDENTITY_CLIENT_ID=' . $client_id . '/" .env');
+            shell_exec('sed -i "s/.*IDENTITY_CLIENT_SECRET=.*/IDENTITY_CLIENT_SECRET=' . $client_secret . '/" .env');
         }
     }
 }

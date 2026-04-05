@@ -55,7 +55,7 @@ test('verify code activates account', function () {
         ],
     ])->post(route('auth.register.code.submit'), [
         'code' => 'abc123',
-    ])->assertRedirect(route('login.apps.redirect', ['app' => 'portal']));
+    ])->assertRedirect(route('login.redirect'));
 
     expect($user->fresh()->email_verified_at)->not->toBeNull();
 });

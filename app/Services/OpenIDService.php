@@ -10,26 +10,22 @@ use League\OAuth2\Client\Provider\GenericProvider;
 
 class OpenIDService
 {
-    public function setupOIDC(Request $request, $systemName): GenericProvider
+    public function setupOIDC(Request $request): GenericProvider
     {
         $config = Cache::remember('identity_config', now()->addDay(), function () {
-            return Http::get(config('services.apps.portal.openid_configuration'))->throw()->json();
+            return Http::get(config('services.apps.identity.openid_configuration'))->throw()->json();
         });
 
-        $clientId = config('services.apps')[$systemName]['client_id'];
-        $clientSecret = config('services.apps')[$systemName]['client_secret'];
-        $clientCallback = route('login.apps.callback', ['app' => $systemName]);
-
         return new GenericProvider([
-            'clientId' => $clientId,
-            'clientSecret' => $clientSecret,
-            'redirectUri' => $clientCallback,
+            'clientId' => config('services.apps.identity.client_id'),
+            'clientSecret' => config('services.apps.identity.client_secret'),
+            'redirectUri' => route('login.callback'),
             'urlAuthorize' => $config['authorization_endpoint'],
             'urlAccessToken' => $config['token_endpoint'],
             'urlResourceOwnerDetails' => $config['userinfo_endpoint'],
             'accessTokenMethod' => AbstractProvider::METHOD_POST,
             'scopeSeparator' => ' ',
-            'scopes' => explode(' ', config('services.apps')[$systemName]['scopes']),
+            'scopes' => explode(' ', config('services.apps.identity.scopes')),
         ]);
     }
 }

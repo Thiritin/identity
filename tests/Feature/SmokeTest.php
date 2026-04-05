@@ -74,9 +74,9 @@ test('login page loads with valid login challenge', function () {
         ->assertInertia(fn ($page) => $page->component('Auth/Email'));
 });
 
-test('login page without challenge redirects to portal login', function () {
+test('login page without challenge redirects to identity login', function () {
     $this->get(route('auth.login.view'))
-        ->assertRedirect(route('login.apps.redirect', ['app' => 'portal']));
+        ->assertRedirect(route('login.redirect'));
 });
 
 test('login submit with valid credentials returns redirect', function () {
@@ -132,7 +132,7 @@ test('login submit with valid credentials returns redirect', function () {
         App::create([
             'client_id' => 'smoke-test-client',
             'name' => 'smoke-test',
-            'system_name' => 'portal',
+            'system_name' => 'identity',
             'user_id' => $user->id,
         ]);
     });
