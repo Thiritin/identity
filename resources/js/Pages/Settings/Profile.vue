@@ -134,6 +134,84 @@
                 </div>
             </div>
 
+            <!-- Section: Address -->
+            <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
+                <div class="grid md:grid-cols-3 gap-6 md:gap-10">
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_address') }}</h3>
+                        <div class="mt-2">
+                            <VisibilityPicker field="address" />
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 space-y-4">
+                        <div>
+                            <label for="address_line1" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_address_line1') }}</label>
+                            <Input id="address_line1" v-model="staffForm.address_line1" class="w-full bg-white dark:bg-primary-950" />
+                            <p v-if="staffForm.errors.address_line1" class="text-xs text-destructive mt-1">{{ staffForm.errors.address_line1 }}</p>
+                        </div>
+                        <div>
+                            <label for="address_line2" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_address_line2') }}</label>
+                            <Input id="address_line2" v-model="staffForm.address_line2" class="w-full bg-white dark:bg-primary-950" />
+                            <p v-if="staffForm.errors.address_line2" class="text-xs text-destructive mt-1">{{ staffForm.errors.address_line2 }}</p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label for="postal_code" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_postal_code') }}</label>
+                                <Input id="postal_code" v-model="staffForm.postal_code" class="w-full bg-white dark:bg-primary-950" />
+                                <p v-if="staffForm.errors.postal_code" class="text-xs text-destructive mt-1">{{ staffForm.errors.postal_code }}</p>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label for="city" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_city') }}</label>
+                                <Input id="city" v-model="staffForm.city" class="w-full bg-white dark:bg-primary-950" />
+                                <p v-if="staffForm.errors.city" class="text-xs text-destructive mt-1">{{ staffForm.errors.city }}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="country" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_country') }}</label>
+                            <Input id="country" v-model="staffForm.country" maxlength="2" class="w-full bg-white dark:bg-primary-950 uppercase" placeholder="DE" />
+                            <p v-if="staffForm.errors.country" class="text-xs text-destructive mt-1">{{ staffForm.errors.country }}</p>
+                        </div>
+                        <div class="flex justify-end">
+                            <Button type="submit" :disabled="staffForm.processing">{{ $t('save') }}</Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Emergency Contact -->
+            <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
+                <div class="grid md:grid-cols-3 gap-6 md:gap-10">
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_emergency_contact') }}</h3>
+                        <div class="mt-2">
+                            <VisibilityPicker field="emergency_contact" />
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 space-y-4">
+                        <div>
+                            <label for="emergency_contact_name" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_emergency_contact_name') }}</label>
+                            <Input id="emergency_contact_name" v-model="staffForm.emergency_contact_name" class="w-full bg-white dark:bg-primary-950" />
+                            <p v-if="staffForm.errors.emergency_contact_name" class="text-xs text-destructive mt-1">{{ staffForm.errors.emergency_contact_name }}</p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="emergency_contact_phone" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_emergency_contact_phone') }}</label>
+                                <Input id="emergency_contact_phone" type="tel" v-model="staffForm.emergency_contact_phone" class="w-full bg-white dark:bg-primary-950" />
+                                <p v-if="staffForm.errors.emergency_contact_phone" class="text-xs text-destructive mt-1">{{ staffForm.errors.emergency_contact_phone }}</p>
+                            </div>
+                            <div>
+                                <label for="emergency_contact_telegram" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_emergency_contact_telegram') }}</label>
+                                <Input id="emergency_contact_telegram" v-model="staffForm.emergency_contact_telegram" class="w-full bg-white dark:bg-primary-950" placeholder="@handle" />
+                                <p v-if="staffForm.errors.emergency_contact_telegram" class="text-xs text-destructive mt-1">{{ staffForm.errors.emergency_contact_telegram }}</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <Button type="submit" :disabled="staffForm.processing">{{ $t('save') }}</Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Section: Kenntnisse (Skills) -->
             <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
                 <div class="grid md:grid-cols-3 gap-6 md:gap-10">
@@ -560,8 +638,10 @@ const visibilityOptions = [
     { value: 'directors_only', label: 'staff_profile_visibility_directors_only', icon: Lock },
 ]
 
+const visibilityDefaults = page.props.staffProfileVisibilityDefaults ?? {}
+
 function getVisibilityOption(field) {
-    const value = staffForm.visibility[field] ?? 'all_staff'
+    const value = getVisibility(field)
     return visibilityOptions.find(o => o.value === value) ?? visibilityOptions[0]
 }
 
@@ -571,6 +651,14 @@ const staffForm = page.props.user.isStaff ? useForm({
     pronouns: props.staffProfile?.pronouns ?? null,
     birthdate: props.staffProfile?.birthdate ?? null,
     phone: props.staffProfile?.phone ?? null,
+    address_line1: props.staffProfile?.address_line1 ?? null,
+    address_line2: props.staffProfile?.address_line2 ?? null,
+    city: props.staffProfile?.city ?? null,
+    postal_code: props.staffProfile?.postal_code ?? null,
+    country: props.staffProfile?.country ?? null,
+    emergency_contact_name: props.staffProfile?.emergency_contact_name ?? null,
+    emergency_contact_phone: props.staffProfile?.emergency_contact_phone ?? null,
+    emergency_contact_telegram: props.staffProfile?.emergency_contact_telegram ?? null,
     spoken_languages: props.staffProfile?.spoken_languages ?? [],
     visibility: props.staffProfile?.visibility ?? {},
 }) : null
@@ -595,7 +683,9 @@ function submitCreditAs() {
 const languageMap = Object.fromEntries((props.availableLanguages ?? []).map(l => [l.code, l.name]))
 const languagePopoverOpen = ref(false)
 
-function getVisibility(field) { return staffForm.visibility[field] ?? 'all_staff' }
+function getVisibility(field) {
+    return staffForm.visibility[field] ?? visibilityDefaults[field] ?? 'all_staff'
+}
 function setVisibility(field, value) { staffForm.visibility[field] = value }
 
 const VisibilityPicker = (pickerProps) => {
