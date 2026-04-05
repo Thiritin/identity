@@ -32,6 +32,7 @@ const sidebars: SidebarsConfig = {
           label: 'Build a User-Facing App',
         },
         'identity/integration/app-to-app',
+        'identity/integration/webhooks',
       ],
     },
     {

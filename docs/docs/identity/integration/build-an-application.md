@@ -142,6 +142,10 @@ OIDC Discovery:    https://identity.eurofurence.org/.well-known/openid-configura
 
 Most OAuth2/OIDC libraries can auto-configure themselves using the discovery URL above. Just point your library at it, and it will fetch all the endpoints automatically.
 
+## Webhooks
+
+First-party apps can receive real-time notifications when user profile data changes. See [Webhooks](./webhooks.md) for setup, payload schema, and verification.
+
 ## Need Help?
 
 - Reach out to [Thiritin on Telegram](https://t.me/thiritin)
