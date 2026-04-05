@@ -998,7 +998,9 @@ class DeliverWebhook implements ShouldQueue
         $attempts = $this->attempts();
         if ($attempts < $this->tries) {
             $delivery->status = 'retrying';
-            $nextBackoff = $this->backoff()[$attempts] ?? 21600;
+            // Laravel schedules the next retry using backoff()[attempts - 1] (0-indexed on attempts).
+            // Match that here so the displayed next_retry_at matches the worker's actual schedule.
+            $nextBackoff = $this->backoff()[$attempts - 1] ?? 21600;
             $delivery->next_retry_at = now()->addSeconds($nextBackoff);
         }
         $delivery->save();
