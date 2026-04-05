@@ -91,7 +91,11 @@ it('canAccessPanel blocks suspended admins', function () {
 it('canAccessPanel allows active admins', function () {
     $user = User::factory()->admin()->create();
 
-    expect($user->canAccessPanel(null))->toBeTrue();
+    $panel = new class {
+        public function getId(): string { return 'admin'; }
+    };
+
+    expect($user->canAccessPanel($panel))->toBeTrue();
 });
 
 it('blocks suspended user on skip-login path', function () {

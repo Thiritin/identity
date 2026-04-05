@@ -93,6 +93,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password_changed_at' => 'datetime',
         'is_admin' => 'boolean',
+        'is_convention_manager' => 'boolean',
         'is_developer' => 'boolean',
         'preferences' => 'array',
         'notification_preferences' => 'array',
@@ -320,7 +321,14 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function canAccessPanel($panel): bool
     {
-        return $this->is_admin && ! $this->isSuspended();
+        if ($this->isSuspended()) {
+            return false;
+        }
+
+        return match ($panel->getId()) {
+            'convention' => $this->is_admin || $this->is_convention_manager,
+            default => $this->is_admin,
+        };
     }
 
     public function getActivitylogOptions(): LogOptions
