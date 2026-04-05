@@ -22,8 +22,10 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\CausesActivity;
@@ -95,6 +97,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'preferences' => 'array',
         'notification_preferences' => 'array',
         'suspended_at' => 'datetime',
+        'anonymized_at' => 'datetime',
         'birthdate' => 'date',
         'spoken_languages' => 'array',
         'staff_profile_visibility' => 'array',
@@ -206,6 +209,54 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function isSuspended(): bool
     {
         return $this->suspended_at !== null;
+    }
+
+    public function isAnonymized(): bool
+    {
+        return $this->anonymized_at !== null;
+    }
+
+    /**
+     * GDPR anonymization: scramble PII, revoke all credentials, and retain only
+     * the primary key so foreign keys (activity log, group history, etc.) stay
+     * valid. The row is flagged as suspended so the existing login gate blocks
+     * any further access.
+     */
+    public function anonymize(): void
+    {
+        $id = $this->id;
+
+        $this->forceFill([
+            'name' => 'deleted-user-' . $id,
+            'email' => 'deleted-' . $id . '@deleted.invalid',
+            'email_verified_at' => null,
+            'password' => Hash::make(Str::random(64)),
+            'password_changed_at' => now(),
+            'remember_token' => null,
+            'profile_photo_path' => null,
+            'preferences' => null,
+            'firstname' => null,
+            'lastname' => null,
+            'pronouns' => null,
+            'birthdate' => null,
+            'phone' => null,
+            'telegram_id' => null,
+            'telegram_username' => null,
+            'spoken_languages' => null,
+            'credit_as' => null,
+            'staff_profile_visibility' => null,
+            'nda_verified_at' => null,
+            'suspended_at' => now(),
+            'anonymized_at' => now(),
+        ])->save();
+
+        $this->tokens()->delete();
+        $this->twoFactors()->delete();
+        $this->groups()->detach();
+
+        activity()
+            ->on($this)
+            ->log('user-anonymized');
     }
 
     public function suspend(): void

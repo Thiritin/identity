@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-it('deletes account when no active registration', function () {
+it('anonymizes account when no active registration', function () {
     $this->mock(RegistrationService::class, function ($mock) {
         $mock->shouldReceive('hasActiveRegistration')->andReturn(false);
     });
@@ -18,7 +18,15 @@ it('deletes account when no active registration', function () {
         $mock->shouldReceive('invalidateAllSessions')->once();
     });
 
-    $user = User::factory()->create();
+    $user = User::factory()->create([
+        'name' => 'OriginalName',
+        'email' => 'original@example.com',
+        'firstname' => 'Jane',
+        'lastname' => 'Doe',
+        'pronouns' => 'she/her',
+        'phone' => '+49123',
+        'telegram_username' => 'jane',
+    ]);
     OauthSession::factory()->create(['user_id' => $user->id]);
 
     $this->actingAs($user)
@@ -27,8 +35,20 @@ it('deletes account when no active registration', function () {
         ->assertRedirect('/');
 
     $this->assertGuest();
-    $this->assertDatabaseMissing('users', ['id' => $user->id]);
     $this->assertDatabaseMissing('oauth_sessions', ['user_id' => $user->id]);
+
+    $user->refresh();
+    expect($user->name)->toBe('deleted-user-' . $user->id);
+    expect($user->email)->toBe('deleted-' . $user->id . '@deleted.invalid');
+    expect($user->firstname)->toBeNull();
+    expect($user->lastname)->toBeNull();
+    expect($user->pronouns)->toBeNull();
+    expect($user->phone)->toBeNull();
+    expect($user->telegram_username)->toBeNull();
+    expect($user->anonymized_at)->not->toBeNull();
+    expect($user->suspended_at)->not->toBeNull();
+    expect($user->isAnonymized())->toBeTrue();
+    expect($user->isSuspended())->toBeTrue();
 });
 
 it('blocks deletion when active registration exists', function () {

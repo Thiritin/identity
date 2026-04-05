@@ -48,8 +48,11 @@ class DeleteAccountController extends Controller
 
         OauthSession::where('user_id', $user->id)->delete();
 
+        $user->anonymize();
+
         Auth::logout();
-        $user->delete();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
 
         return redirect('/')->with('success', trans('my_data_delete_success'));
     }
