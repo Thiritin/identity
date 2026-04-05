@@ -20,6 +20,7 @@ const sidebars: SidebarsConfig = {
         'identity/guides/scopes',
         'identity/guides/audiences',
         'identity/guides/app-to-app',
+        'identity/guides/notification-service',
       ],
     },
     {
