@@ -283,8 +283,18 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             'telegram_id' => null,
             'telegram_username' => null,
             'spoken_languages' => null,
+            'address_line1' => null,
+            'address_line2' => null,
+            'city' => null,
+            'postal_code' => null,
+            'country' => null,
+            'emergency_contact_name' => null,
+            'emergency_contact_phone' => null,
+            'emergency_contact_telegram' => null,
             'credit_as' => null,
             'staff_profile_visibility' => null,
+            'staff_profile_consent_at' => null,
+            'staff_profile_consent_version' => null,
             'nda_checked_at' => null,
             'suspended_at' => now(),
             'anonymized_at' => now(),
@@ -293,6 +303,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         $this->tokens()->delete();
         $this->twoFactors()->delete();
         $this->groups()->detach();
+        $this->conventions()->detach();
 
         activity()
             ->on($this)
