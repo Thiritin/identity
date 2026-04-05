@@ -5,7 +5,7 @@
             <div class="grid md:grid-cols-3 gap-6 md:gap-10">
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_consent_state_heading') }}</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('staff_profile_consent_notice_v1_intro') }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('staff_profile_consent_state_not_granted') }}</p>
                 </div>
                 <div class="md:col-span-2 flex items-center">
                     <Button @click="showModal = true" data-testid="staff-profile-consent-open">
