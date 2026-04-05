@@ -20,6 +20,14 @@ class ConventionResource extends JsonResource
             'theme' => $this->theme,
             'start_date' => $this->start_date?->toDateString(),
             'end_date' => $this->end_date?->toDateString(),
+            'location' => $this->location,
+            'website_url' => $this->website_url,
+            'conbook_url' => $this->conbook_url,
+            'attendees_count' => $this->attendees_count,
+            'background_image_url' => $this->background_image_url,
+            'dailies' => $this->dailies ?? [],
+            'videos' => $this->videos ?? [],
+            'photos' => $this->photos ?? [],
         ];
     }
 }
