@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Profile;
 use App\Http\Controllers\Controller;
 use App\Models\App;
 use App\Services\Hydra\Client as HydraClient;
+use App\Support\StaffProfile\ConsentNotice;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -28,6 +29,14 @@ class MyDataController extends Controller
             'profile' => $profile,
             'isStaff' => $isStaff,
             'connectedApps' => $this->getConnectedApps($hydra, $user),
+            'staffProfileConsent' => [
+                'granted'         => $user->hasStaffProfileConsent(),
+                'granted_at'      => $user->staff_profile_consent_at?->toIso8601String(),
+                'version'         => $user->staff_profile_consent_version,
+                'current_version' => ConsentNotice::CURRENT_VERSION,
+                'is_current'      => $user->hasCurrentStaffProfileConsent(),
+                'is_staff'        => $user->isStaff(),
+            ],
         ];
 
         if ($isStaff) {
