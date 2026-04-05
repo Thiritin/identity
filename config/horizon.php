@@ -167,7 +167,7 @@ return [
     'defaults' => [
         'supervisor' => [
             'connection' => 'redis',
-            'queue' => ['default'],
+            'queue' => ['default', 'webhooks'],
             'balance' => 'auto',
             'maxProcesses' => 1,
             'memory' => 128,
