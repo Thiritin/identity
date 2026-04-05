@@ -621,8 +621,8 @@ function submitName() {
     })
 }
 
-function grantStaffProfileConsent() {
-    router.post(route('settings.staff-profile.consent.grant'), {}, {
+function grantStaffProfileConsent(visibility = {}) {
+    router.post(route('settings.staff-profile.consent.grant'), { visibility }, {
         preserveScroll: true,
     })
 }

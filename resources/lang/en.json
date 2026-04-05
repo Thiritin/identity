@@ -4,7 +4,7 @@
     "staff_profile_consent_notice_v1_intro": "To enable your Eurofurence staff profile, we need your permission to store the data described below. Providing this data is entirely optional.",
     "staff_profile_consent_notice_v1_category_identity_title": "Identity and contact",
     "staff_profile_consent_notice_v1_category_identity_fields": "First name, last name, pronouns, date of birth, phone number, Telegram handle.",
-    "staff_profile_consent_notice_v1_category_identity_purpose": "Published to the internal staff directory. Other staff members can use this information to contact you. You can control the visibility of each field.",
+    "staff_profile_consent_notice_v1_category_identity_purpose": "Published to the internal staff directory. Other staff members can use this information to contact you.",
     "staff_profile_consent_notice_v1_category_address_title": "Postal address",
     "staff_profile_consent_notice_v1_category_address_fields": "Street address, city, postal code, country.",
     "staff_profile_consent_notice_v1_category_address_purpose": "Published to the internal staff directory. For example, if you work in logistics you could share your address within your team to coordinate shipments. You can control who sees your address via visibility settings.",
