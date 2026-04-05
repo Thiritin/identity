@@ -1,7 +1,7 @@
 <template>
     <div :class="{ dark: darkMode }">
         <SkipToContent />
-        <div class="bg-primary-600 auth-background relative min-h-screen dark:text-primary-300">
+        <div class="bg-primary-600 auth-background relative min-h-screen dark:text-primary-300" :style="{ backgroundImage: `url(${bgUrl})` }">
             <!-- Centered Content -->
             <div class="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
                 <div class="flex flex-col items-center w-full max-w-md">
@@ -51,12 +51,14 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { usePage } from "@inertiajs/vue3"
+import defaultBg from '../../assets/fantastic_furry_festival.jpg'
 import { useTheme } from '@/Composables/useTheme'
 import { Github, Send } from 'lucide-vue-next'
 import SkipToContent from '@/Components/SkipToContent.vue'
 
 const { darkMode } = useTheme()
 const user = usePage().props.user
+const bgUrl = computed(() => usePage().props.backgroundImageUrl ?? defaultBg)
 const card = ref(null)
 
 const navigation = [
@@ -141,7 +143,8 @@ export default {
 .auth-background {
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url('../../assets/fantastic_furry_festival.jpg');
+    background-attachment: fixed;
+    background-position: center;
 }
 
 </style>

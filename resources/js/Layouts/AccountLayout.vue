@@ -3,7 +3,7 @@
         <SkipToContent />
         <main id="main-content">
         <!-- Desktop: background + folder tabs + card -->
-        <div class="hidden md:block auth-background bg-primary-600 relative min-h-screen">
+        <div class="hidden md:block auth-background bg-primary-600 relative min-h-screen" :style="{ backgroundImage: `url(${bgUrl})` }">
             <div class="relative z-10 flex min-h-screen justify-center px-4 py-10 lg:py-14">
                 <div class="flex flex-col items-center w-full transition-all" :class="isDirectory ? 'max-w-6xl' : 'max-w-4xl'">
                     <!-- Folder Tabs + Card -->
@@ -182,6 +182,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { Link, usePage, useForm, router } from '@inertiajs/vue3'
+import defaultBg from '../../assets/fantastic_furry_festival.jpg'
 import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness, BookUser, Settings, Github, Send } from 'lucide-vue-next'
 import { Toaster } from '@/Components/ui/sonner'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/Components/ui/dialog'
@@ -195,6 +196,7 @@ import NotificationBell from '@/Components/notifications/NotificationBell.vue'
 
 const { darkMode } = useTheme()
 const page = usePage()
+const bgUrl = computed(() => page.props.backgroundImageUrl ?? defaultBg)
 const user = computed(() => page.props.user)
 const currentUrl = computed(() => page.url)
 const card = ref(null)
@@ -291,7 +293,6 @@ function onAfterEnter() {
 .auth-background {
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url('../../assets/fantastic_furry_festival.jpg');
 }
 
 .safe-bottom {
