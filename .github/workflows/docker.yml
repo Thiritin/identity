@@ -64,5 +64,7 @@ jobs:
           file: ./Dockerfile
           target: production
           push: true
+          build-args: |
+            APP_VERSION=${{ github.ref_type == 'tag' && github.ref_name || github.sha }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

@@ -49,4 +49,6 @@ RUN chmod 777 -R bootstrap storage \
     && rm -rf .env bootstrap/cache/*.php auth.json \
     && chown -R www-data:www-data /app \
     && php artisan matice:generate
+ARG APP_VERSION=dev
+ENV APP_VERSION=${APP_VERSION}
 CMD sh -c "php artisan octane:start --host=0.0.0.0 --port=80 --admin-port=2019 --server=frankenphp"
