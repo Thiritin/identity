@@ -61,11 +61,17 @@ Newly created groups are empty — the creator does not automatically become a l
 
 ### Member management
 
-Who can add/remove plain Members from a group:
+Who can add/remove Members from a group:
 - Admin / HR
 - The lead of that group (Director in a Department, TeamLead in a Team)
 - The lead of the parent group (DD can manage members in child Departments)
 - A delegate (`can_manage_members`) in that group or parent group
+
+**Removal scope:** A viewer can only remove members whose level they could assign. A Director cannot remove a peer Director — that requires admin/HR. This follows from the assignment hierarchy: if a level is not in the viewer's `assignableLevels()` for that group, they cannot add or remove users at that level.
+
+### `can_manage_members` constraints
+
+The `can_manage_members` flag must be rejected (set to `false`) when storing/updating members on Division groups — the backend silently ignores it or the form request strips it for Division group types.
 
 ## Architecture
 
@@ -120,10 +126,15 @@ effectiveLevel(User, Group): ?GroupUserLevel
     → Otherwise null.
 
 assignableLevels(User, Group): GroupUserLevel[]
-    → Admin/HR: return group->type->allowedLevels() (or all levels if empty).
-    → Otherwise: union of effectiveLevel(viewer, group)->assignableLevels()
-      and effectiveLevel(viewer, parent)->assignableLevels(),
-      intersected with group->type->allowedLevels().
+    → Admin/HR: return group->type->allowedLevels() (or all GroupUserLevel cases if empty).
+    → Otherwise: compute the union of levels from:
+        - effectiveLevel(viewer, group)?->assignableLevels() ?? []
+        - effectiveLevel(viewer, parent)?->assignableLevels() ?? []
+      Null-safe: if effectiveLevel returns null, that arm contributes an empty set.
+      Then intersect with group->type->allowedLevels() (skip intersection if empty/unrestricted).
+    → The existing GroupUserLevel::assignableLevels() method already encodes the
+      hierarchy: DD→[Director, TeamLead, Member], Director→[TeamLead, Member],
+      TeamLead→[Member], Member→[].
 
 canManageMembers(User, Group): bool
     → Admin/HR: true.
