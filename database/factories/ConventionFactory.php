@@ -22,6 +22,14 @@ class ConventionFactory extends Factory
             'start_date' => $startDate->format('Y-m-d'),
             'end_date' => $endDate->format('Y-m-d'),
             'theme' => $this->faker->optional()->words(3, true),
+            'location' => null,
+            'website_url' => null,
+            'conbook_url' => null,
+            'attendees_count' => null,
+            'background_image_path' => null,
+            'dailies' => [],
+            'videos' => [],
+            'photos' => [],
         ];
     }
 }
