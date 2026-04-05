@@ -989,6 +989,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Metadata'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden (missing `metadata.read` scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
       tags:
         - User Metadata
       operationId: getMetadata
@@ -1017,6 +1029,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Metadata'
+        '403':
+          description: Forbidden (missing `metadata.read` scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Not Found
           content:
@@ -1062,6 +1080,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Metadata'
+        '403':
+          description: Forbidden (missing `metadata.write` scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: |
+            Validation Error. Common cases:
+            - `value` exceeds the 65535-character limit.
+            - `expires_at` is not a date in the future.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
       tags:
         - User Metadata
       operationId: putMetadataKey
@@ -1085,6 +1118,12 @@ paths:
       responses:
         '204':
           description: No Content
+        '403':
+          description: Forbidden (missing `metadata.write` scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '404':
           description: Not Found
           content:
@@ -1968,6 +2007,23 @@ components:
       properties:
         message:
           type: string
+    ValidationError:
+      type: object
+      description: Laravel-style validation error with per-field messages.
+      required:
+        - message
+        - errors
+      properties:
+        message:
+          type: string
+          description: Human-readable summary (typically the first field error).
+        errors:
+          type: object
+          description: Map of field name to an array of error messages for that field.
+          additionalProperties:
+            type: array
+            items:
+              type: string
   headers:
     Link:
       description: |-
