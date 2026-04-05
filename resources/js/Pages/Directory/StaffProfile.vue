@@ -113,6 +113,29 @@
                         </a>
                     </dd>
                 </div>
+                <div v-if="visibleFields.address_line1 !== undefined" class="sm:col-span-2 px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5">
+                    <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_address') }}</dt>
+                    <dd class="text-sm font-medium text-gray-900 dark:text-gray-100 whitespace-pre-line">
+                        <template v-if="formattedAddress">{{ formattedAddress }}</template>
+                        <span v-else class="text-gray-400 italic">—</span>
+                    </dd>
+                </div>
+                <div v-if="visibleFields.emergency_contact_name !== undefined" class="sm:col-span-2 px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5">
+                    <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_emergency_contact') }}</dt>
+                    <dd class="text-sm font-medium text-gray-900 dark:text-gray-100 space-y-0.5">
+                        <div v-if="visibleFields.emergency_contact_name">{{ visibleFields.emergency_contact_name }}</div>
+                        <div v-if="visibleFields.emergency_contact_phone">
+                            <a :href="'tel:' + visibleFields.emergency_contact_phone" class="text-primary-600 hover:text-primary-500 dark:text-primary-300 dark:hover:text-primary-200">
+                                {{ visibleFields.emergency_contact_phone }}
+                            </a>
+                        </div>
+                        <div v-if="visibleFields.emergency_contact_telegram">
+                            <a :href="'https://t.me/' + visibleFields.emergency_contact_telegram" target="_blank" class="text-primary-600 hover:text-primary-500 dark:text-primary-300 dark:hover:text-primary-200">
+                                @{{ visibleFields.emergency_contact_telegram }}
+                            </a>
+                        </div>
+                    </dd>
+                </div>
             </dl>
         </section>
 
@@ -174,6 +197,18 @@ const formattedBirthdate = computed(() => {
     return new Date(props.visibleFields.birthdate).toLocaleDateString(undefined, {
         year: 'numeric', month: 'long', day: 'numeric',
     })
+})
+
+const formattedAddress = computed(() => {
+    const v = props.visibleFields ?? {}
+    if (v.address_line1 === undefined) return ''
+    const lines = [
+        v.address_line1,
+        v.address_line2,
+        [v.postal_code, v.city].filter(Boolean).join(' '),
+        v.country,
+    ].filter(Boolean)
+    return lines.join('\n')
 })
 
 const age = computed(() => {
