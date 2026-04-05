@@ -19,6 +19,8 @@ class App extends Model
         'approved' => 'boolean',
         'first_party' => 'boolean',
         'allow_notifications' => 'boolean',
+        'webhook_subscribed_fields' => 'array',
+        'webhook_secret' => 'encrypted',
     ];
 
     public function owner(): BelongsTo
@@ -39,6 +41,11 @@ class App extends Model
     public function notificationTypes(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(NotificationType::class);
+    }
+
+    public function webhookDeliveries(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(WebhookDelivery::class);
     }
 
     public function isApproved(): bool
