@@ -50,12 +50,30 @@ class StaffProfileController extends Controller
                 'credit_as' => $g->pivot->credit_as,
             ]);
 
-        $visibleFields = collect(['firstname', 'lastname', 'pronouns', 'birthdate', 'phone', 'telegram'])
-            ->filter(fn ($field) => $user->canViewStaffField($field, $viewer))
-            ->mapWithKeys(fn ($field) => [
-                $field => $user->getAttributeValue($field === 'telegram' ? 'telegram_username' : $field),
-            ])
-            ->all();
+        // Each entry: visibility key => array of column names to emit.
+        // Single-column keys pass through; group keys fan out atomically.
+        $fieldGroups = [
+            'firstname' => ['firstname'],
+            'lastname' => ['lastname'],
+            'pronouns' => ['pronouns'],
+            'birthdate' => ['birthdate'],
+            'phone' => ['phone'],
+            'telegram' => ['telegram_username'],
+            'address' => ['address_line1', 'address_line2', 'city', 'postal_code', 'country'],
+            'emergency_contact' => ['emergency_contact_name', 'emergency_contact_phone', 'emergency_contact_telegram'],
+        ];
+
+        $visibleFields = [];
+        foreach ($fieldGroups as $visibilityKey => $columns) {
+            if (! $user->canViewStaffField($visibilityKey, $viewer)) {
+                continue;
+            }
+            foreach ($columns as $column) {
+                // Preserve existing wire shape: `telegram` key (not `telegram_username`).
+                $wireKey = $visibilityKey === 'telegram' ? 'telegram' : $column;
+                $visibleFields[$wireKey] = $user->getAttributeValue($column);
+            }
+        }
 
         $canEdit = $group->canManageMembers($viewer);
 
