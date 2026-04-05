@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use App\Observers\UserObserver;
 use App\Providers\Socialite\SocialiteIdentityProvider;
 use App\Services\Hydra\Admin;
 use App\Services\Hydra\Client;
@@ -31,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         \App\Models\NotificationType::observe(\App\Observers\NotificationTypeObserver::class);
+        User::observe(UserObserver::class);
 
         RateLimiter::for('login', function (Request $request) {
             return Limit::perMinute(5)->by($request->email . $request->ip());
