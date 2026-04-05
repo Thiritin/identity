@@ -7,8 +7,9 @@ use App\Models\User;
 use App\Services\Auth\ApiGuard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
+use Tests\Concerns\ValidatesOpenApiV2;
 
-uses(RefreshDatabase::class);
+uses(RefreshDatabase::class, ValidatesOpenApiV2::class);
 
 function actingAsGroupApiUser(User $user, string $clientId, array $scopes = []): void
 {
@@ -48,6 +49,8 @@ it('returns groups index as a bare array with no data envelope', function () {
     $body = $response->json();
     expect($body)->toBeArray();
     expect(array_is_list($body))->toBeTrue();
+
+    $this->assertMatchesOpenApiV2($response, '/groups');
 });
 
 it('returns group members list as a bare array with no data envelope', function () {
@@ -64,6 +67,8 @@ it('returns group members list as a bare array with no data envelope', function 
     $body = $response->json();
     expect($body)->toBeArray();
     expect(array_is_list($body))->toBeTrue();
+
+    $this->assertMatchesOpenApiV2($response, '/groups/{group}/members');
 });
 
 it('adds a member by username (maps to users.name)', function () {
@@ -85,6 +90,8 @@ it('adds a member by username (maps to users.name)', function () {
 
     $response->assertCreated();
     expect($department->users()->where('user_id', $target->id)->exists())->toBeTrue();
+
+    $this->assertMatchesOpenApiV2($response, '/groups/{group}/members', 'post');
 });
 
 it('rejects adding a member when no identifier is provided', function () {
@@ -100,6 +107,8 @@ it('rejects adding a member when no identifier is provided', function () {
     ]);
 
     $response->assertStatus(422);
+
+    $this->assertMatchesOpenApiV2($response, '/groups/{group}/members', 'post');
 });
 
 it('rejects adding a non-staff user to a department without allow_making_staff', function () {
@@ -120,6 +129,8 @@ it('rejects adding a non-staff user to a department without allow_making_staff',
     expect($response->json('errors.allow_making_staff'))->not->toBeNull();
     expect($department->users()->where('user_id', $target->id)->exists())->toBeFalse();
     expect($this->staffGroup->users()->where('user_id', $target->id)->exists())->toBeFalse();
+
+    $this->assertMatchesOpenApiV2($response, '/groups/{group}/members', 'post');
 });
 
 it('allows adding a non-staff user to a department when allow_making_staff is true', function () {
@@ -141,6 +152,8 @@ it('allows adding a non-staff user to a department when allow_making_staff is tr
     expect($department->users()->where('user_id', $target->id)->exists())->toBeTrue();
     // Listener should have promoted to staff automatically for departments.
     expect($this->staffGroup->users()->where('user_id', $target->id)->exists())->toBeTrue();
+
+    $this->assertMatchesOpenApiV2($response, '/groups/{group}/members', 'post');
 });
 
 it('rejects adding a non-staff user to a team without allow_making_staff', function () {
@@ -161,6 +174,8 @@ it('rejects adding a non-staff user to a team without allow_making_staff', funct
     $response->assertStatus(422);
     expect($team->users()->where('user_id', $target->id)->exists())->toBeFalse();
     expect($this->staffGroup->users()->where('user_id', $target->id)->exists())->toBeFalse();
+
+    $this->assertMatchesOpenApiV2($response, '/groups/{group}/members', 'post');
 });
 
 it('allows adding a non-staff user to a team with allow_making_staff and promotes them', function () {
@@ -183,6 +198,8 @@ it('allows adding a non-staff user to a team with allow_making_staff and promote
     expect($team->users()->where('user_id', $target->id)->exists())->toBeTrue();
     // Team additions must also explicitly promote to staff since the listener only fires on departments.
     expect($this->staffGroup->users()->where('user_id', $target->id)->exists())->toBeTrue();
+
+    $this->assertMatchesOpenApiV2($response, '/groups/{group}/members', 'post');
 });
 
 it('allows adding an already-staff user to a department without allow_making_staff', function () {
@@ -202,6 +219,8 @@ it('allows adding an already-staff user to a department without allow_making_sta
 
     $response->assertCreated();
     expect($department->users()->where('user_id', $target->id)->exists())->toBeTrue();
+
+    $this->assertMatchesOpenApiV2($response, '/groups/{group}/members', 'post');
 });
 
 it('returns groups tree as a bare array with no data envelope', function () {
@@ -215,4 +234,6 @@ it('returns groups tree as a bare array with no data envelope', function () {
     $body = $response->json();
     expect($body)->toBeArray();
     expect(array_is_list($body))->toBeTrue();
+
+    $this->assertMatchesOpenApiV2($response, '/groups/tree');
 });
