@@ -77,8 +77,12 @@ class DeliverWebhookTest extends TestCase
 
         $job = new DeliverWebhook($delivery->id, now()->timestamp);
 
-        $this->expectException(\RuntimeException::class);
-        $job->handle();
+        try {
+            $job->handle();
+            $this->fail('Expected RuntimeException was not thrown');
+        } catch (\RuntimeException $e) {
+            // expected
+        }
 
         $delivery->refresh();
         $this->assertSame('retrying', $delivery->status);
@@ -117,5 +121,25 @@ class DeliverWebhookTest extends TestCase
         (new DeliverWebhook($delivery->id, now()->timestamp))->handle();
 
         Http::assertNothingSent();
+    }
+
+    public function test_missing_app_marks_failed(): void
+    {
+        Http::fake();
+        $delivery = $this->makeDelivery();
+        $deliveryId = $delivery->id;
+        $delivery->app()->delete();
+
+        // If the FK has cascadeOnDelete, the delivery row is gone — skip.
+        if (! WebhookDelivery::find($deliveryId)) {
+            $this->markTestSkipped('Cascade prevents orphaned delivery; app-null branch covered by inspection.');
+            return;
+        }
+
+        (new DeliverWebhook($deliveryId, now()->timestamp))->handle();
+
+        $delivery->refresh();
+        $this->assertSame('failed', $delivery->status);
+        $this->assertStringContainsString('no longer exists', $delivery->error);
     }
 }

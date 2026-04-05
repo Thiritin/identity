@@ -13,7 +13,7 @@ class WebhookDelivery extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'app_id', 'event', 'url', 'payload', 'signature', 'status', 'attempts',
+        'id', 'app_id', 'event', 'url', 'payload', 'signature', 'status', 'attempts',
         'response_code', 'response_body', 'error', 'next_retry_at', 'delivered_at', 'created_at',
     ];
 

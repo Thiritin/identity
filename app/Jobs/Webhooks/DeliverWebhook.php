@@ -33,7 +33,14 @@ class DeliverWebhook implements ShouldQueue
     public function handle(): void
     {
         $delivery = WebhookDelivery::with('app')->find($this->deliveryId);
-        if (! $delivery || $delivery->status === 'delivered' || ! $delivery->app) {
+        if (! $delivery || $delivery->status === 'delivered') {
+            return;
+        }
+
+        if (! $delivery->app) {
+            $delivery->status = 'failed';
+            $delivery->error = 'App no longer exists';
+            $delivery->save();
             return;
         }
 
@@ -95,7 +102,9 @@ class DeliverWebhook implements ShouldQueue
         $attempts = $this->attempts();
         if ($attempts < $this->tries) {
             $delivery->status = 'retrying';
-            $nextBackoff = $this->backoff()[$attempts] ?? 21600;
+            // Laravel schedules the next retry using backoff()[attempts - 1] (0-indexed on attempts).
+            // Match that here so the displayed next_retry_at matches the worker's actual schedule.
+            $nextBackoff = $this->backoff()[$attempts - 1] ?? 21600;
             $delivery->next_retry_at = now()->addSeconds($nextBackoff);
         }
         $delivery->save();
