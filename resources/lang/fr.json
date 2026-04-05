@@ -449,5 +449,7 @@
     "convention_attendance_no_entries": "Aucune participation enregistrée.",
     "convention_attendance_remove": "Supprimer",
     "convention_attendance_staff": "Staff",
-    "convention_attendance_staff_note": "Le statut staff est géré par le directeur de votre département."
+    "convention_attendance_staff_note": "Le statut staff est géré par le directeur de votre département.",
+    "devmode_enabled": "Mode développeur activé",
+    "devmode_disabled": "Mode développeur désactivé"
 }

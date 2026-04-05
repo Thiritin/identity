@@ -649,5 +649,7 @@
     "convention_attendance_no_entries": "Keine Conventions erfasst.",
     "convention_attendance_remove": "Entfernen",
     "convention_attendance_staff": "Staff",
-    "convention_attendance_staff_note": "Der Staff-Status wird von deinem Director verwaltet."
+    "convention_attendance_staff_note": "Der Staff-Status wird von deinem Director verwaltet.",
+    "devmode_enabled": "Entwicklermodus aktiviert",
+    "devmode_disabled": "Entwicklermodus deaktiviert"
 }

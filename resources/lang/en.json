@@ -650,5 +650,7 @@
     "convention_attendance_no_entries": "No convention attendance recorded.",
     "convention_attendance_remove": "Remove",
     "convention_attendance_staff": "Staff",
-    "convention_attendance_staff_note": "Staff status is managed by your department director."
+    "convention_attendance_staff_note": "Staff status is managed by your department director.",
+    "devmode_enabled": "Developer mode enabled",
+    "devmode_disabled": "Developer mode disabled"
 }
