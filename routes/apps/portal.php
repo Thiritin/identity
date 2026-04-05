@@ -7,6 +7,7 @@ use App\Http\Controllers\Directory\DirectoryTeamController;
 use App\Http\Controllers\Directory\NdaController;
 use App\Http\Controllers\Directory\StaffProfileController;
 use App\Http\Controllers\Profile\DeleteAccountController;
+use App\Http\Controllers\Profile\GrantStaffProfileConsentController;
 use App\Http\Controllers\Profile\ExportMyDataController;
 use App\Http\Controllers\Profile\MyDataController;
 use App\Http\Controllers\Profile\NotificationPreferencesController;
@@ -52,6 +53,8 @@ Route::post('/settings/staff-profile/credit-as', UpdateGroupCreditAsController::
 Route::post('/settings/staff-profile/conventions', [UpdateConventionAttendanceController::class, 'updateOwn'])
     ->middleware('staff.profile.consent')
     ->name('settings.staff-profile.conventions');
+Route::post('/settings/staff-profile/consent', GrantStaffProfileConsentController::class)
+    ->name('settings.staff-profile.consent.grant');
 
 Route::get('/settings/security', [SecurityController::class, 'index'])->name('settings.security');
 

@@ -85,3 +85,41 @@ test('consented staff user sees all gated columns in profile payload', function 
     expect($props['staffProfile']['consent']['is_current'])->toBeTrue();
     expect($props['staffProfile']['consent']['granted_at'])->not->toBeNull();
 });
+
+test('POST consent grant sets both consent columns and writes activity log', function () {
+    $user = makeStaffUserForConsentRead();
+
+    $response = $this->actingAs($user)
+        ->post(route('settings.staff-profile.consent.grant'));
+
+    $response->assertRedirect(route('settings.profile'));
+
+    $user->refresh();
+    expect($user->staff_profile_consent_at)->not->toBeNull();
+    expect($user->staff_profile_consent_version)->toBe(\App\Support\StaffProfile\ConsentNotice::CURRENT_VERSION);
+
+    $this->assertDatabaseHas('activity_log', [
+        'description' => 'staff-profile-consent-granted',
+        'causer_id' => $user->id,
+        'subject_id' => $user->id,
+    ]);
+});
+
+test('granting twice is idempotent on the row and appends a second log entry', function () {
+    $user = makeStaffUserForConsentRead();
+    $this->actingAs($user)->post(route('settings.staff-profile.consent.grant'));
+    $this->actingAs($user)->post(route('settings.staff-profile.consent.grant'));
+
+    $count = \DB::table('activity_log')
+        ->where('description', 'staff-profile-consent-granted')
+        ->where('causer_id', $user->id)
+        ->count();
+
+    expect($count)->toBe(2);
+});
+
+test('non-staff users receive 403 on consent grant', function () {
+    $user = User::factory()->create(); // non-staff
+    $response = $this->actingAs($user)->post(route('settings.staff-profile.consent.grant'));
+    $response->assertForbidden();
+});
