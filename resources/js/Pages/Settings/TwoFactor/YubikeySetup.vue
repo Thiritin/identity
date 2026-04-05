@@ -105,7 +105,7 @@ function submitDisableForm() {
             </div>
             <div class="flex justify-end gap-3">
                 <Button variant="secondary" size="sm" @click="disableKeyId = null">{{ $t('cancel') }}</Button>
-                <Button size="sm">{{ $t('submit') }}</Button>
+                <Button size="sm" type="submit">{{ $t('submit') }}</Button>
             </div>
         </form>
     </div>
