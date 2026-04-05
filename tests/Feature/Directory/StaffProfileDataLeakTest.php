@@ -32,6 +32,14 @@ function createProfileScenario(): array
         'birthdate' => '1990-06-15',
         'phone' => '+49123456789',
         'telegram_username' => 'maria_test',
+        'address_line1' => '123 Main St',
+        'address_line2' => 'Apt 4B',
+        'city' => 'Berlin',
+        'postal_code' => '10115',
+        'country' => 'DE',
+        'emergency_contact_name' => 'Jane Doe',
+        'emergency_contact_phone' => '+49987654321',
+        'emergency_contact_telegram' => 'jane_doe',
         'spoken_languages' => ['en', 'de'],
         'credit_as' => 'MariaS',
         'staff_profile_visibility' => [
@@ -41,6 +49,8 @@ function createProfileScenario(): array
             'birthdate' => StaffProfileVisibility::DirectorsOnly->value,
             'phone' => StaffProfileVisibility::DirectorsOnly->value,
             'telegram' => StaffProfileVisibility::MyDepartments->value,
+            'address' => StaffProfileVisibility::DirectorsOnly->value,
+            'emergency_contact' => StaffProfileVisibility::AllStaff->value,
         ],
     ]);
     $profileUser->twoFactors()->save(TwoFactor::factory()->totp()->make());
@@ -80,6 +90,14 @@ test('same-department staff sees AllStaff and MyDepartments fields', function ()
             ->where('visibleFields.telegram', 'maria_test')
             ->missing('visibleFields.birthdate')
             ->missing('visibleFields.phone')
+            ->where('visibleFields.emergency_contact_name', 'Jane Doe')
+            ->where('visibleFields.emergency_contact_phone', '+49987654321')
+            ->where('visibleFields.emergency_contact_telegram', 'jane_doe')
+            ->missing('visibleFields.address_line1')
+            ->missing('visibleFields.address_line2')
+            ->missing('visibleFields.city')
+            ->missing('visibleFields.postal_code')
+            ->missing('visibleFields.country')
         );
 });
 
@@ -137,6 +155,14 @@ test('profileUser prop never contains sensitive fields', function () {
             ->missing('profileUser.two_factor_secret')
             ->missing('profileUser.two_factor_recovery_codes')
             ->missing('profileUser.remember_token')
+            ->missing('profileUser.address_line1')
+            ->missing('profileUser.address_line2')
+            ->missing('profileUser.city')
+            ->missing('profileUser.postal_code')
+            ->missing('profileUser.country')
+            ->missing('profileUser.emergency_contact_name')
+            ->missing('profileUser.emergency_contact_phone')
+            ->missing('profileUser.emergency_contact_telegram')
         );
 });
 
@@ -151,6 +177,8 @@ test('all fields restricted hides everything from regular staff', function () {
             'birthdate' => StaffProfileVisibility::DirectorsOnly->value,
             'phone' => StaffProfileVisibility::DirectorsOnly->value,
             'telegram' => StaffProfileVisibility::DirectorsOnly->value,
+            'address' => StaffProfileVisibility::DirectorsOnly->value,
+            'emergency_contact' => StaffProfileVisibility::DirectorsOnly->value,
         ],
     ]);
 
@@ -208,6 +236,8 @@ test('LeadsAndDirectors visibility allows team leads but not regular members', f
             'birthdate' => StaffProfileVisibility::LeadsAndDirectors->value,
             'phone' => StaffProfileVisibility::LeadsAndDirectors->value,
             'telegram' => StaffProfileVisibility::LeadsAndDirectors->value,
+            'address' => StaffProfileVisibility::LeadsAndDirectors->value,
+            'emergency_contact' => StaffProfileVisibility::LeadsAndDirectors->value,
         ],
     ]);
 
@@ -220,6 +250,8 @@ test('LeadsAndDirectors visibility allows team leads but not regular members', f
         ->assertInertia(fn ($page) => $page
             ->where('visibleFields.firstname', 'Maria')
             ->where('visibleFields.phone', '+49123456789')
+            ->where('visibleFields.address_line1', '123 Main St')
+            ->where('visibleFields.emergency_contact_name', 'Jane Doe')
         );
 
     $this->actingAs($regularMember)
@@ -227,5 +259,47 @@ test('LeadsAndDirectors visibility allows team leads but not regular members', f
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->where('visibleFields', [])
+        );
+});
+
+test('partial address still emits all five keys atomically when visible', function () {
+    ['staffGroup' => $sg, 'department' => $dept, 'profileUser' => $pu] = createProfileScenario();
+    $pu->update([
+        'address_line1' => 'Only Line 1',
+        'address_line2' => null,
+        'city' => null,
+        'postal_code' => null,
+        'country' => null,
+    ]);
+
+    $director = makeViewer($sg, $dept, GroupUserLevel::Director);
+
+    $this->actingAs($director)
+        ->get(route('directory.members.show', ['slug' => $dept->slug, 'user' => $pu->hashid]))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('visibleFields.address_line1', 'Only Line 1')
+            ->where('visibleFields.address_line2', null)
+            ->where('visibleFields.city', null)
+            ->where('visibleFields.postal_code', null)
+            ->where('visibleFields.country', null)
+        );
+});
+
+test('address defaults to DirectorsOnly and emergency_contact defaults to AllStaff when visibility map is empty', function () {
+    ['staffGroup' => $sg, 'department' => $dept, 'profileUser' => $pu] = createProfileScenario();
+    // Clear the visibility map entirely to exercise the per-key defaults.
+    $pu->update(['staff_profile_visibility' => []]);
+
+    $viewer = makeViewer($sg, $dept);
+
+    $this->actingAs($viewer)
+        ->get(route('directory.members.show', ['slug' => $dept->slug, 'user' => $pu->hashid]))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('visibleFields.emergency_contact_name', 'Jane Doe')
+            ->missing('visibleFields.address_line1')
+            ->missing('visibleFields.city')
+            ->missing('visibleFields.country')
         );
 });
