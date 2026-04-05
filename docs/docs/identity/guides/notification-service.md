@@ -61,9 +61,38 @@ A successful call returns `202 Accepted` with an empty body. Notifications are d
 ## Content format
 
 - `subject` (required) — plain text, max 255 characters
-- `body` (required) — plain text, max 10,000 characters. Used by the email fallback, Telegram, and the bell feed.
-- `html` (optional) — HTML body used **only** by the email channel. Other channels always use `body`.
-- `cta` (optional) — a call-to-action with `label` and `url`. Both or neither.
+- `body` (required) — plain text, max 10,000 characters. Used by Telegram, the in-app bell, and by email when `html` is not provided.
+- `html` (optional) — HTML body used **only** by the email channel. When present, email renders this verbatim and ignores `body` for its output. Telegram and the bell still use `body`.
+- `cta` (optional) — a call-to-action with `label` and `url`. Both fields required together, or omit the object entirely.
+
+### Writing the `body`
+
+`body` is plain text. No Markdown, no HTML — special characters are rendered literally.
+
+**Paragraphs**: separate them with a blank line (two newlines `\n\n`). Each paragraph renders as its own block in email, gets a visible line break on Telegram, and wraps naturally in the bell feed.
+
+**Single newlines within a paragraph** collapse to a space in email. Telegram preserves them. If you need guaranteed hard breaks in email, send `html` instead.
+
+Example:
+
+```json
+{
+  "body": "Your payment of €50 was received.\n\nYou can manage your registration at any time from your dashboard. Thanks for attending!"
+}
+```
+
+This produces two paragraphs everywhere it's delivered.
+
+If you need rich formatting (bold, lists, images, links) in email, use `html`:
+
+```json
+{
+  "body": "Your payment of €50 was received. Manage your registration from your dashboard.",
+  "html": "<p>Your payment of <strong>€50</strong> was received.</p><p>Manage your registration from your <a href=\"https://reg.eurofurence.org\">dashboard</a>.</p>"
+}
+```
+
+Always include a meaningful `body` even when you provide `html` — Telegram and the bell feed always use `body`, never `html`.
 
 ## Channels and user preferences
 

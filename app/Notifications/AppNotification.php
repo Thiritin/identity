@@ -45,7 +45,12 @@ class AppNotification extends Notification
             return $mail;
         }
 
-        $mail->line($this->payload['body']);
+        // Split body on blank lines so each paragraph becomes its own <p> in the email.
+        // Newlines within a paragraph collapse — clients who need hard breaks should use `html`.
+        $paragraphs = preg_split('/\r?\n\r?\n+/', trim($this->payload['body']));
+        foreach ($paragraphs as $paragraph) {
+            $mail->line(trim($paragraph));
+        }
 
         if (! empty($this->payload['cta'])) {
             $mail->action($this->payload['cta']['label'], $this->payload['cta']['url']);
