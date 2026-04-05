@@ -105,6 +105,8 @@ A single `UserObserver::updated()` is the only dispatch site. In `updated()`:
 
 Using an observer means every future code path that mutates the user flows through the same hook — we do not have to remember to add calls in `EmailController`, a username change endpoint, or a future admin edit.
 
+**Only `updated` is observed**, not `created`. Account creation is not a profile change and has no "old value"; consuming apps receive new users via the normal login/`/userinfo` flow.
+
 ### 4.2 `WebhookDispatcher` service
 
 Pure service (no framework facades inside), injected where needed:
@@ -121,14 +123,16 @@ Separating the dispatcher from the observer lets us unit test dispatch rules wit
 - `public function backoff(): array` returns `[10, 60, 300, 1800, 7200, 21600]` — 10s, 1m, 5m, 30m, 2h, 6h.
 - `$timeout = 15` (8s HTTP connect timeout, 15s total request timeout enforced by Guzzle config).
 
-Execution:
+Execution (retry bookkeeping is driven by throwing — Horizon/Laravel handle the reschedule via the configured `backoff()`; we do **not** use `release()` in parallel):
 
 1. Load delivery. If already `delivered` or the app is soft-deleted/missing, return.
 2. Build headers (see 4.5).
 3. POST via Laravel HTTP client.
-4. On 2xx: set `status=delivered`, `response_code`, truncated `response_body`, `delivered_at`, `attempts = $this->attempts()`.
-5. On non-2xx or throwable: set `status=retrying`, record `attempts`, `response_code`/`error`, `next_retry_at = now()->addSeconds(backoff[attempts])`, and throw so Horizon reschedules.
-6. `failed()` hook: mark delivery `status=failed`, persist final error if not already stored.
+4. On 2xx: set `status=delivered`, `response_code`, truncated `response_body`, `delivered_at`, `attempts = $this->attempts()`. Job completes.
+5. On non-2xx or throwable, before rethrowing: set `status=retrying` (only if more attempts remain — otherwise leave for the `failed()` hook), record `attempts = $this->attempts()`, `response_code`/`error`, `next_retry_at = now()->addSeconds(backoff[attempts])`. Rethrow so the worker reschedules.
+6. `failed()` hook (runs after the final attempt): mark delivery `status=failed`, persist final error and `response_code` if not already stored.
+
+`pending` is the pre-first-attempt state written by `WebhookDispatcher`. As soon as `DeliverWebhook` runs, the status is always one of `delivered`, `retrying`, or `failed`.
 
 ### 4.4 Payload
 
@@ -222,7 +226,7 @@ Form fields:
 - **Event name** — free-text field (frontend only; backend hardcodes `user.updated`).
 - **Subscribed fields** — two checkboxes: `email`, `username`.
 - **Signing secret** — read-only display with **Reveal** (POST to `revealSecret`, returns plaintext to authorized user, logged to activity log) and **Rotate** (POST to `rotateSecret`, replaces the secret, invalidates all previous signatures).
-- **Send test delivery** — POST to `sendTest`, creates a synthetic `user.updated` delivery for the authenticated user's own id and dispatches the real job pipeline.
+- **Send test delivery** — POST to `sendTest`. Requires the webhook URL to already be **saved** (validates against the persisted `webhook_url`, not unsaved form state — the button is disabled in the UI until the section is saved). Creates a synthetic `user.updated` delivery for the authenticated user's own id and dispatches the real job pipeline, so test deliveries flow through the same code path and show up in the delivery log.
 
 Below the form, a **Recent deliveries** table paginated 25/page, sourced from `GET webhooks/deliveries`:
 
@@ -235,7 +239,7 @@ Row click opens a drawer showing the full JSON payload, the signature header, re
 
 - `AppPolicy@update` — reused by all section update endpoints.
 - `AppPolicy@manageWebhooks(User, App)` — new: allows only if the user can update the app and `app.first_party === true`. Guards every webhook route and the `UpdateAppWebhookRequest::authorize()`.
-- `AppPolicy@viewWebhookSecret` — new: same rule as `manageWebhooks`; enforced on reveal.
+- `AppPolicy@viewWebhookSecret(User, App)` — new: same rule as `manageWebhooks`; enforced by `revealSecret`. Listed again in §6 under new policy methods.
 
 `revealSecret` and `rotateSecret` are always `POST` so secrets never land in access logs. Both write an activity log entry via the existing activity log package (already used by `ActivityResource`).
 
@@ -245,6 +249,7 @@ Row click opens a drawer showing the full JSON payload, the signature header, re
 - `app/Services/Webhooks/WebhookDispatcher.php` — creates delivery rows and dispatches jobs given a user + field diff.
 - `app/Jobs/Webhooks/DeliverWebhook.php` — single-delivery HTTP job with retries.
 - `app/Observers/UserObserver.php` — observes `updated`, delegates to `WebhookDispatcher`. Registered in `AppServiceProvider::boot()`.
+- `app/Policies/AppPolicy.php` — add `manageWebhooks` and `viewWebhookSecret` methods (see §5.4).
 - `app/Http/Controllers/Profile/Settings/AppsController.php` — keeps index/create/store/destroy; `update` splits into `updateGeneral`/`updateOAuth`/`updateLogout`.
 - `app/Http/Controllers/Profile/Settings/AppWebhookController.php` — new: show/update/revealSecret/rotateSecret/sendTest/deliveries/redeliver.
 - `app/Http/Requests/Developer/{StoreAppRequest,UpdateAppGeneralRequest,UpdateAppOAuthRequest,UpdateAppLogoutRequest,UpdateAppWebhookRequest}.php` — replace the existing `Staff\StoreAppRequest` / `Staff\UpdateAppRequest`. (Those were misnamed — these are developer endpoints.)
