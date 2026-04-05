@@ -123,3 +123,99 @@ test('non-staff users receive 403 on consent grant', function () {
     $response = $this->actingAs($user)->post(route('settings.staff-profile.consent.grant'));
     $response->assertForbidden();
 });
+
+test('withdrawal nulls all 15 gated user columns + visibility + consent columns', function () {
+    $user = $this->grantStaffProfileConsent(makeStaffUserForConsentRead([
+        'firstname' => 'Alice',
+        'lastname' => 'Example',
+        'pronouns' => 'she/her',
+        'birthdate' => '1990-01-01',
+        'phone' => '+49 1',
+        'address_line1' => '1 A',
+        'address_line2' => '2 B',
+        'city' => 'Berlin',
+        'postal_code' => '10115',
+        'country' => 'DE',
+        'emergency_contact_name' => 'Bob',
+        'emergency_contact_phone' => '+49 2',
+        'emergency_contact_telegram' => '@bob',
+        'spoken_languages' => ['en', 'de'],
+        'credit_as' => 'Alice',
+        'staff_profile_visibility' => ['firstname' => 'all_staff'],
+    ]));
+
+    $this->actingAs($user)->delete(route('settings.staff-profile.consent.withdraw'))
+        ->assertRedirect(route('my-data'));
+
+    $user->refresh();
+
+    foreach (\App\Support\StaffProfile\ConsentNotice::GATED_USER_COLUMNS as $col) {
+        expect($user->$col)->toBeNull("column {$col} should be null after withdrawal");
+    }
+    expect($user->staff_profile_visibility)->toBeNull();
+    expect($user->staff_profile_consent_at)->toBeNull();
+    expect($user->staff_profile_consent_version)->toBeNull();
+});
+
+test('withdrawal clears credit_as on all group memberships', function () {
+    $user = $this->grantStaffProfileConsent(makeStaffUserForConsentRead());
+    $group = \App\Models\Group::factory()->create();
+    $user->groups()->attach($group->id, [
+        'credit_as' => 'Alice Credit',
+        'level' => GroupUserLevel::Member,
+    ]);
+
+    $this->actingAs($user)->delete(route('settings.staff-profile.consent.withdraw'));
+
+    $pivotRow = \DB::table('group_user')
+        ->where('user_id', $user->id)
+        ->where('group_id', $group->id)
+        ->first();
+    expect($pivotRow->credit_as)->toBeNull();
+});
+
+test('withdrawal removes all convention_attendee rows for the user', function () {
+    $user = $this->grantStaffProfileConsent(makeStaffUserForConsentRead());
+    $convention = \App\Models\Convention::factory()->create();
+    $user->conventions()->attach($convention->id, [
+        'is_attended' => true,
+        'is_staff' => true,
+    ]);
+
+    $this->actingAs($user)->delete(route('settings.staff-profile.consent.withdraw'));
+
+    $count = \DB::table('convention_attendee')->where('user_id', $user->id)->count();
+    expect($count)->toBe(0);
+});
+
+test('withdrawal writes activity log with version_at_withdrawal', function () {
+    $user = $this->grantStaffProfileConsent(makeStaffUserForConsentRead());
+    $this->actingAs($user)->delete(route('settings.staff-profile.consent.withdraw'));
+
+    $this->assertDatabaseHas('activity_log', [
+        'description' => 'staff-profile-consent-withdrawn',
+        'causer_id' => $user->id,
+        'subject_id' => $user->id,
+    ]);
+});
+
+test('withdrawal preserves unrelated user columns', function () {
+    $user = $this->grantStaffProfileConsent(
+        makeStaffUserForConsentRead([
+            'name' => 'alice_user',
+            'email' => 'alice@example.com',
+        ])
+    );
+
+    $this->actingAs($user)->delete(route('settings.staff-profile.consent.withdraw'));
+
+    $user->refresh();
+    expect($user->name)->toBe('alice_user');
+    expect($user->email)->toBe('alice@example.com');
+});
+
+test('non-staff users receive 403 on consent withdraw', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user)->delete(route('settings.staff-profile.consent.withdraw'))
+        ->assertForbidden();
+});
