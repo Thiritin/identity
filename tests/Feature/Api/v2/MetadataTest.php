@@ -164,52 +164,58 @@ it('requires metadata.read scope for GET index', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['other.scope']);
 
-    // OAS does not document this error shape — contract check skipped
-    $this->getJson('/api/v2/metadata')
+    $response = $this->getJson('/api/v2/metadata')
         ->assertForbidden();
+
+    $this->assertMatchesOpenApiV2($response, '/metadata');
 });
 
 it('requires metadata.read scope for GET show', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['other.scope']);
 
-    // OAS does not document this error shape — contract check skipped
-    $this->getJson('/api/v2/metadata/theme')
+    $response = $this->getJson('/api/v2/metadata/theme')
         ->assertForbidden();
+
+    $this->assertMatchesOpenApiV2($response, '/metadata/{key}');
 });
 
 it('requires metadata.write scope for PUT', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['metadata.read']);
 
-    // OAS does not document this error shape — contract check skipped
-    $this->putJson('/api/v2/metadata/theme', ['value' => 'dark'])
+    $response = $this->putJson('/api/v2/metadata/theme', ['value' => 'dark'])
         ->assertForbidden();
+
+    $this->assertMatchesOpenApiV2($response, '/metadata/{key}', 'put');
 });
 
 it('requires metadata.write scope for DELETE', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['metadata.read']);
 
-    // OAS does not document this error shape — contract check skipped
-    $this->deleteJson('/api/v2/metadata/theme')
+    $response = $this->deleteJson('/api/v2/metadata/theme')
         ->assertForbidden();
+
+    $this->assertMatchesOpenApiV2($response, '/metadata/{key}', 'delete');
 });
 
 it('rejects value exceeding 65535 characters', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['metadata.write']);
 
-    // OAS does not document this error shape — contract check skipped
-    $this->putJson('/api/v2/metadata/theme', ['value' => str_repeat('a', 65536)])
+    $response = $this->putJson('/api/v2/metadata/theme', ['value' => str_repeat('a', 65536)])
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['value']);
+
+    $this->assertMatchesOpenApiV2($response, '/metadata/{key}', 'put');
 });
 
 it('returns 401 for unauthenticated requests', function () {
-    // OAS does not document this error shape — contract check skipped
-    $this->getJson('/api/v2/metadata')
+    $response = $this->getJson('/api/v2/metadata')
         ->assertUnauthorized();
+
+    $this->assertMatchesOpenApiV2($response, '/metadata');
 });
 
 it('accepts a valid future expires_at on upsert', function () {
@@ -243,13 +249,14 @@ it('rejects expires_at in the past', function () {
     $user = User::factory()->create();
     actingAsApiUser($user, 'app-one', ['metadata.write']);
 
-    // OAS does not document this error shape — contract check skipped
-    $this->putJson('/api/v2/metadata/address', [
+    $response = $this->putJson('/api/v2/metadata/address', [
         'value' => '123 Main St',
         'expires_at' => now()->subDay()->toIso8601String(),
     ])
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['expires_at']);
+
+    $this->assertMatchesOpenApiV2($response, '/metadata/{key}', 'put');
 });
 
 it('accepts null expires_at meaning never expires', function () {
