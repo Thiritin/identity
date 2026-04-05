@@ -1826,6 +1826,71 @@ components:
           format: date
           nullable: true
           example: '2026-08-23'
+        location:
+          type: string
+          nullable: true
+          example: Hamburg, Germany
+        website_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://archive.eurofurence.org/EF29/
+        conbook_url:
+          type: string
+          format: uri
+          nullable: true
+          example: /conbooks/EF_29_Conbook.pdf
+        attendees_count:
+          type: integer
+          nullable: true
+          example: 6451
+        background_image_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://s3.example.com/conventions/backgrounds/ef29.jpg
+        dailies:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConventionLink'
+        videos:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConventionLink'
+        photos:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConventionPhoto'
+    ConventionLink:
+      type: object
+      required:
+        - title
+        - url
+      properties:
+        title:
+          type: string
+          example: Issue 67, Thursday
+        url:
+          type: string
+          example: /daily/EF29_2025.09.04_thursday_issue.67.pdf
+    ConventionPhoto:
+      type: object
+      required:
+        - title
+        - url
+        - thumb
+      properties:
+        title:
+          type: string
+          example: Group Photo
+        url:
+          type: string
+          format: uri
+          example: https://photo.eurofurence.org/2025/Group_Photo/Group-EF29-Everyone.jpg
+        thumb:
+          type: string
+          format: uri
+          example: https://photo.eurofurence.org/2025/Group_Photo/Group-EF29-Everyone.thumb.jpg
     Error:
       type: object
       properties:
