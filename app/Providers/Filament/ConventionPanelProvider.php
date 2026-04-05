@@ -3,7 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Http\Middleware\AccessTokenValidationMiddleware;
-use App\Http\Middleware\Authenticate as AuthenticateMiddleware;
+use Filament\Http\Middleware\Authenticate as FilamentAuthenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages\Dashboard;
@@ -57,7 +57,7 @@ class ConventionPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                AuthenticateMiddleware::class,
+                FilamentAuthenticate::class,
                 AccessTokenValidationMiddleware::class,
             ]);
     }
