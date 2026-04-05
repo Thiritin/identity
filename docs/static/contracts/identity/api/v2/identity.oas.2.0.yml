@@ -1266,6 +1266,42 @@ components:
           format: date-time
           nullable: true
           description: Timestamp of the last positive NDA check; `null` if never confirmed (requires `staff.my.read` scope)
+        pronouns:
+          type: string
+          nullable: true
+          description: Pronouns (requires `staff.my.read` scope)
+        address_line1:
+          type: string
+          nullable: true
+          description: Address line 1 (requires `staff.my.read` scope)
+        address_line2:
+          type: string
+          nullable: true
+          description: Address line 2 (requires `staff.my.read` scope)
+        city:
+          type: string
+          nullable: true
+          description: City (requires `staff.my.read` scope)
+        postal_code:
+          type: string
+          nullable: true
+          description: Postal code (requires `staff.my.read` scope)
+        country:
+          type: string
+          nullable: true
+          description: Country (ISO 3166-1 alpha-2; not validated against an allow-list; requires `staff.my.read` scope)
+        emergency_contact_name:
+          type: string
+          nullable: true
+          description: Emergency contact name (requires `staff.my.read` scope)
+        emergency_contact_phone:
+          type: string
+          nullable: true
+          description: Emergency contact phone (requires `staff.my.read` scope)
+        emergency_contact_telegram:
+          type: string
+          nullable: true
+          description: Emergency contact Telegram handle (requires `staff.my.read` scope)
     TokenIntrospectionRequest:
       type: object
       properties:
@@ -1353,6 +1389,42 @@ components:
           type: string
           nullable: true
           description: Preferred credit name (visibility-controlled)
+        pronouns:
+          type: string
+          nullable: true
+          description: Pronouns (visibility-controlled)
+        address_line1:
+          type: string
+          nullable: true
+          description: Address line 1 (visibility-controlled via `address` group key, default DirectorsOnly)
+        address_line2:
+          type: string
+          nullable: true
+          description: Address line 2 (visibility-controlled via `address` group key, default DirectorsOnly)
+        city:
+          type: string
+          nullable: true
+          description: City (visibility-controlled via `address` group key, default DirectorsOnly)
+        postal_code:
+          type: string
+          nullable: true
+          description: Postal code (visibility-controlled via `address` group key, default DirectorsOnly)
+        country:
+          type: string
+          nullable: true
+          description: Country code (visibility-controlled via `address` group key, default DirectorsOnly)
+        emergency_contact_name:
+          type: string
+          nullable: true
+          description: Emergency contact name (visibility-controlled via `emergency_contact` group key, default AllStaff)
+        emergency_contact_phone:
+          type: string
+          nullable: true
+          description: Emergency contact phone (visibility-controlled via `emergency_contact` group key, default AllStaff)
+        emergency_contact_telegram:
+          type: string
+          nullable: true
+          description: Emergency contact Telegram handle (visibility-controlled via `emergency_contact` group key, default AllStaff)
         groups:
           type: array
           description: Group memberships
