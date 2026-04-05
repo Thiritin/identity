@@ -36,4 +36,14 @@ class AppPolicy
     {
         return $user->id === $app->user_id;
     }
+
+    public function manageWebhooks(User $user, App $app): bool
+    {
+        return $this->update($user, $app) && $app->isFirstParty();
+    }
+
+    public function viewWebhookSecret(User $user, App $app): bool
+    {
+        return $this->manageWebhooks($user, $app);
+    }
 }
