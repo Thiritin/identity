@@ -366,6 +366,10 @@
               "sidebar": "identitySidebar"
             },
             {
+              "id": "identity/concepts/groups",
+              "path": "/identity/concepts/groups"
+            },
+            {
               "id": "identity/concepts/oauth-oidc-primer",
               "path": "/identity/concepts/oauth-oidc-primer",
               "sidebar": "identitySidebar"

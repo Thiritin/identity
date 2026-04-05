@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Enums\GroupTypeEnum;
 use App\Enums\GroupUserLevel;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v2\StoreGroupMemberRequest;
@@ -61,8 +62,10 @@ class GroupMemberController extends Controller
             $query->where('name', 'like', '%' . $request->input('search') . '%');
         }
 
-        return GroupMemberResource::collection(
-            $query->simplePaginate($request->integer('per_page', 25))
+        $paginator = $query->simplePaginate($request->integer('per_page', 25));
+
+        return response()->json(
+            GroupMemberResource::collection($paginator)->toArray($request),
         );
     }
 
@@ -73,9 +76,11 @@ class GroupMemberController extends Controller
         $group = $this->resolveGroup($groupHashid);
         $this->authorizeGroupManagement($group, $request);
 
-        $user = $request->filled('email')
-            ? User::where('email', $request->validated('email'))->firstOrFail()
-            : User::findByHashidOrFail($request->validated('user_id'));
+        $user = match (true) {
+            $request->filled('email') => User::where('email', $request->validated('email'))->firstOrFail(),
+            $request->filled('username') => User::where('name', $request->validated('username'))->firstOrFail(),
+            default => User::findByHashidOrFail($request->validated('user_id')),
+        };
 
         if (! $user->hasVerifiedEmail()) {
             throw ValidationException::withMessages(['email' => 'User has not verified their email.']);
@@ -85,12 +90,44 @@ class GroupMemberController extends Controller
             throw ValidationException::withMessages(['user_id' => 'User is already a member of this group.']);
         }
 
+        $staffPromoting = in_array($group->type, [GroupTypeEnum::Department, GroupTypeEnum::Team], true)
+            && ! $user->isStaff();
+
+        if ($staffPromoting && ! $request->boolean('allow_making_staff')) {
+            throw ValidationException::withMessages([
+                'allow_making_staff' => 'User is not a member of the staff group. Add them to staff first, or pass allow_making_staff=true to auto-promote.',
+            ]);
+        }
+
         $level = GroupUserLevel::tryFrom($request->validated('level', 'member')) ?? GroupUserLevel::Member;
 
         $group->users()->attach($user, [
             'level' => $level,
             'title' => $request->validated('title'),
         ]);
+
+        // The CheckStaffGroupMembership listener auto-promotes on department additions.
+        // For teams, the listener does not fire, so we promote explicitly when allowed.
+        if ($staffPromoting && $group->type === GroupTypeEnum::Team) {
+            $staffGroup = Group::where('system_name', 'staff')->first();
+            if ($staffGroup) {
+                $staffGroup->users()->syncWithoutDetaching([
+                    $user->id => ['level' => GroupUserLevel::Member],
+                ]);
+            }
+        }
+
+        if ($staffPromoting) {
+            activity()
+                ->performedOn($group)
+                ->causedBy($request->user())
+                ->withProperties([
+                    'target_user_id' => $user->id,
+                    'group_type' => $group->type->value,
+                    'allow_making_staff' => true,
+                ])
+                ->log('group-member-auto-promoted-to-staff');
+        }
 
         return (new GroupMemberResource($group->users()->find($user->id)))
             ->response()

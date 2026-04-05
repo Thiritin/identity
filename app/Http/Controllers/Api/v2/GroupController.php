@@ -65,7 +65,11 @@ class GroupController extends Controller
             }
         }
 
-        return GroupResource::collection($query->simplePaginate(25));
+        $paginator = $query->simplePaginate(25);
+
+        return response()->json(
+            GroupResource::collection($paginator)->toArray($request),
+        );
     }
 
     public function show(Request $request, string $groupHashid)
@@ -108,7 +112,7 @@ class GroupController extends Controller
             $tree = $this->limitDepth($tree, $depth);
         }
 
-        return response()->json(['data' => $tree]);
+        return response()->json($tree);
     }
 
     public function store(GroupStoreRequest $request)

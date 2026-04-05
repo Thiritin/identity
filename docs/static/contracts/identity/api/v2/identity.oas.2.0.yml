@@ -837,7 +837,25 @@ paths:
       operationId: getGroupMembers
     post:
       summary: Add member
-      description: Add a user to a group by email or user ID.
+      description: |
+        Add a user to a group. The user is identified by **exactly one** of
+        `email`, `username` (IDP login name), or `user_id` (hashid).
+
+        ### Staff promotion side-effect
+        Adding a user to a group of type `department` or `team` implies staff
+        membership. If the user is not already in the `staff` group, the request
+        is rejected with HTTP 422 unless `allow_making_staff: true` is set.
+
+        When `allow_making_staff` is true and the user is not yet staff, they
+        will be added to the `staff` group automatically as part of this request.
+        For `department` additions, this happens via a background listener; for
+        `team` additions, it is performed inline.
+
+        This guard exists so that bulk imports cannot silently promote non-staff
+        users. It defaults to `false` for safety.
+
+        See also: [Concepts — Groups](/identity/concepts/groups) for the group
+        hierarchy and function groups.
       security:
         - OpenID:
             - groups.write
@@ -865,7 +883,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/GroupMember'
         '422':
-          description: Validation Error
+          description: |
+            Validation Error. Common cases:
+            - No identifier provided (`email`, `username`, or `user_id` required).
+            - User has not verified their email.
+            - User is already a member of this group.
+            - User is not staff and `allow_making_staff` was not set — error key `allow_making_staff`.
           content:
             application/json:
               schema:
@@ -1530,14 +1553,22 @@ components:
           example: J. Doe
     AddMemberForm:
       type: object
+      description: |
+        Identify the user by **exactly one** of `email`, `username`, or `user_id`.
+        `allow_making_staff` is required when adding a non-staff user to a
+        `department` or `team` group (see the `addGroupMember` description).
       properties:
         email:
           type: string
-          description: 'User email (required if user_id not provided)'
+          description: 'User email (one of email / username / user_id)'
           example: john@example.com
+        username:
+          type: string
+          description: 'IDP login name (one of email / username / user_id). Matches `users.name`.'
+          example: jdoe
         user_id:
           type: string
-          description: 'User id (required if email not provided)'
+          description: 'User hashid (one of email / username / user_id)'
           example: 1VJEQAYWW54TZ5VD
         level:
           type: string
@@ -1547,6 +1578,17 @@ components:
           type: string
           nullable: true
           example: App Developer
+        allow_making_staff:
+          type: boolean
+          default: false
+          description: |
+            Opt-in flag allowing this request to auto-promote the user to staff
+            when adding them to a `department` or `team`. If the user is not
+            staff and this flag is false, the request returns 422.
+      oneOf:
+        - required: [email]
+        - required: [username]
+        - required: [user_id]
     UpdateMemberForm:
       type: object
       properties:

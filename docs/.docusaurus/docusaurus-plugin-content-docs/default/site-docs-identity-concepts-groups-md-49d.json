@@ -1,0 +1,18 @@
+{
+  "id": "identity/concepts/groups",
+  "title": "Groups",
+  "description": "Groups are how Eurofurence's identity service models organisational structure and access control beyond the individual user. Every staff member belongs to one or more groups, and those memberships drive everything from which Slack channels they end up in, to which internal tools they can use, to which API scopes their app tokens can assert.",
+  "source": "@site/docs/identity/concepts/groups.md",
+  "sourceDirName": "identity/concepts",
+  "slug": "/identity/concepts/groups",
+  "permalink": "/identity/concepts/groups",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "sidebar_position": 5,
+    "title": "Groups"
+  }
+}
