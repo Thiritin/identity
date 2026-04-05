@@ -35,7 +35,7 @@
 
                     <div v-if="apps.length" class="divide-y divide-gray-200 dark:divide-gray-700">
                         <Link v-for="app in apps" :key="app.id"
-                              :href="route('developers.show', app.id)"
+                              :href="route('developers.general', app.id)"
                               class="flex items-center justify-between py-4 first:pt-0 group">
                             <div>
                                 <div class="flex items-center gap-2">
