@@ -7,8 +7,9 @@ use App\Models\Group;
 use App\Models\TwoFactor;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Concerns\GrantsStaffProfileConsent;
 
-uses(RefreshDatabase::class);
+uses(RefreshDatabase::class, GrantsStaffProfileConsent::class);
 
 function createProfileScenario(): array
 {
@@ -301,5 +302,35 @@ test('address defaults to DirectorsOnly and emergency_contact defaults to AllSta
             ->missing('visibleFields.address_line1')
             ->missing('visibleFields.city')
             ->missing('visibleFields.country')
+        );
+});
+
+test('directory view of a withdrawn user shows empty staff profile data', function () {
+    ['staffGroup' => $sg, 'department' => $dept, 'profileUser' => $pu] = createProfileScenario();
+
+    // Grant consent first, then withdraw to wipe all gated data
+    $this->grantStaffProfileConsent($pu);
+    $this->actingAs($pu)->delete(route('settings.staff-profile.consent.withdraw'));
+
+    $viewer = makeViewer($sg, $dept);
+
+    $this->actingAs($viewer)
+        ->get(route('directory.members.show', ['slug' => $dept->slug, 'user' => $pu->hashid]))
+        ->assertOk()
+        ->assertDontSee('Maria')
+        ->assertDontSee('Schmidt')
+        ->assertDontSee('123 Main St')
+        ->assertDontSee('+49123456789')
+        ->assertDontSee('Jane Doe')
+        ->assertInertia(fn ($page) => $page
+            ->where('visibleFields.firstname', null)
+            ->where('visibleFields.lastname', null)
+            ->where('visibleFields.phone', null)
+            ->where('visibleFields.emergency_contact_name', null)
+            ->where('visibleFields.emergency_contact_phone', null)
+            ->where('visibleFields.emergency_contact_telegram', null)
+            ->missing('visibleFields.address_line1')
+            ->where('profileUser.credit_as', null)
+            ->where('profileUser.spoken_languages', null)
         );
 });
