@@ -57,6 +57,14 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'pronouns',
         'birthdate',
         'phone',
+        'address_line1',
+        'address_line2',
+        'city',
+        'postal_code',
+        'country',
+        'emergency_contact_name',
+        'emergency_contact_phone',
+        'emergency_contact_telegram',
         'spoken_languages',
         'credit_as',
         'staff_profile_visibility',
@@ -78,6 +86,14 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'pronouns',
         'birthdate',
         'phone',
+        'address_line1',
+        'address_line2',
+        'city',
+        'postal_code',
+        'country',
+        'emergency_contact_name',
+        'emergency_contact_phone',
+        'emergency_contact_telegram',
         'telegram_id',
         'telegram_username',
         'staff_profile_visibility',
@@ -342,6 +358,14 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             'pronouns',
             'birthdate',
             'phone',
+            'address_line1',
+            'address_line2',
+            'city',
+            'postal_code',
+            'country',
+            'emergency_contact_name',
+            'emergency_contact_phone',
+            'emergency_contact_telegram',
             'telegram_username',
             'spoken_languages',
             'credit_as',
@@ -357,12 +381,21 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     }
 
     /**
+     * Per-key default visibility. Keys absent from this map fall through to AllStaff.
+     */
+    private const STAFF_FIELD_DEFAULT_VISIBILITY = [
+        'address' => StaffProfileVisibility::DirectorsOnly,
+    ];
+
+    /**
      * Check if a viewer can see a specific PII field on this user's staff profile.
      */
     public function canViewStaffField(string $field, User $viewer): bool
     {
-        $visibility = $this->staff_profile_visibility[$field] ?? null;
-        $level = StaffProfileVisibility::tryFrom($visibility) ?? StaffProfileVisibility::AllStaff;
+        $stored = $this->staff_profile_visibility[$field] ?? null;
+        $level = ($stored !== null ? StaffProfileVisibility::tryFrom($stored) : null)
+            ?? self::STAFF_FIELD_DEFAULT_VISIBILITY[$field]
+            ?? StaffProfileVisibility::AllStaff;
 
         return match ($level) {
             StaffProfileVisibility::AllStaff => $viewer->isStaff(),
@@ -370,6 +403,18 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             StaffProfileVisibility::LeadsAndDirectors => $viewer->hasStaffLevel(GroupUserLevel::leadOrManagerLevels()),
             StaffProfileVisibility::DirectorsOnly => $viewer->hasStaffLevel([GroupUserLevel::Director, GroupUserLevel::DivisionDirector]),
         };
+    }
+
+    /**
+     * Default visibility values keyed by visibility key, exposed for the frontend.
+     *
+     * @return array<string, string>
+     */
+    public static function staffFieldDefaultVisibility(): array
+    {
+        return collect(self::STAFF_FIELD_DEFAULT_VISIBILITY)
+            ->map(fn (StaffProfileVisibility $v) => $v->value)
+            ->all();
     }
 
     public function sharesGroupWith(User $other): bool
