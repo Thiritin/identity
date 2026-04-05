@@ -44,6 +44,8 @@ class ExportMyDataController extends Controller
                 'first_eurofurence' => $user->first_eurofurence,
                 'first_year_staff' => $user->first_year_staff,
                 'staff_profile_visibility' => $user->staff_profile_visibility,
+                'staff_profile_consent_at'      => $user->staff_profile_consent_at?->toIso8601String(),
+                'staff_profile_consent_version' => $user->staff_profile_consent_version,
             ]);
         }
 
