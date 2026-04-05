@@ -12,8 +12,9 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\RateLimiter;
+use Tests\Concerns\ValidatesOpenApiV2;
 
-uses(RefreshDatabase::class);
+uses(RefreshDatabase::class, ValidatesOpenApiV2::class);
 
 function actingAsClient(string $clientId, array $scopes = []): void
 {
@@ -61,7 +62,7 @@ it('queues a notification on happy path', function () {
 
     actingAsClient('app-one', ['notifications.send']);
 
-    $this->postJson('/api/v2/notifications', [
+    $response = $this->postJson('/api/v2/notifications', [
         'type' => 'welcome',
         'user_id' => $user->hashid,
         'subject' => 'Hi',
@@ -69,6 +70,8 @@ it('queues a notification on happy path', function () {
     ])->assertStatus(202);
 
     Queue::assertPushed(SendAppNotificationJob::class);
+
+    $this->assertMatchesOpenApiV2($response, '/notifications', 'post');
 });
 
 it('returns 403 when app does not have allow_notifications enabled', function () {
@@ -81,7 +84,7 @@ it('returns 403 when app does not have allow_notifications enabled', function ()
 
     actingAsClient('app-one', ['notifications.send']);
 
-    $this->postJson('/api/v2/notifications', [
+    $response = $this->postJson('/api/v2/notifications', [
         'type' => 'welcome',
         'user_id' => $user->hashid,
         'subject' => 'Hi',
@@ -89,6 +92,8 @@ it('returns 403 when app does not have allow_notifications enabled', function ()
     ])->assertStatus(403);
 
     Queue::assertNothingPushed();
+
+    $this->assertMatchesOpenApiV2($response, '/notifications', 'post');
 });
 
 it('returns 403 when scope missing', function () {
@@ -101,12 +106,14 @@ it('returns 403 when scope missing', function () {
 
     actingAsClient('app-one', []);
 
-    $this->postJson('/api/v2/notifications', [
+    $response = $this->postJson('/api/v2/notifications', [
         'type' => 'welcome',
         'user_id' => $user->hashid,
         'subject' => 'Hi',
         'body' => 'Hello',
     ])->assertStatus(403);
+
+    $this->assertMatchesOpenApiV2($response, '/notifications', 'post');
 });
 
 it('returns 404 when type key does not exist for this app', function () {
@@ -115,12 +122,14 @@ it('returns 404 when type key does not exist for this app', function () {
 
     actingAsClient('app-one', ['notifications.send']);
 
-    $this->postJson('/api/v2/notifications', [
+    $response = $this->postJson('/api/v2/notifications', [
         'type' => 'missing',
         'user_id' => $user->hashid,
         'subject' => 'Hi',
         'body' => 'Hello',
     ])->assertStatus(404);
+
+    $this->assertMatchesOpenApiV2($response, '/notifications', 'post');
 });
 
 it('returns 404 when type is disabled', function () {
@@ -134,12 +143,14 @@ it('returns 404 when type is disabled', function () {
 
     actingAsClient('app-one', ['notifications.send']);
 
-    $this->postJson('/api/v2/notifications', [
+    $response = $this->postJson('/api/v2/notifications', [
         'type' => 'welcome',
         'user_id' => $user->hashid,
         'subject' => 'Hi',
         'body' => 'Hello',
     ])->assertStatus(404);
+
+    $this->assertMatchesOpenApiV2($response, '/notifications', 'post');
 });
 
 it('returns 404 when user hashid does not decode to an existing user', function () {
@@ -148,12 +159,14 @@ it('returns 404 when user hashid does not decode to an existing user', function 
 
     actingAsClient('app-one', ['notifications.send']);
 
-    $this->postJson('/api/v2/notifications', [
+    $response = $this->postJson('/api/v2/notifications', [
         'type' => 'welcome',
         'user_id' => 'NOTAREALHASHID',
         'subject' => 'Hi',
         'body' => 'Hello',
     ])->assertStatus(404);
+
+    $this->assertMatchesOpenApiV2($response, '/notifications', 'post');
 });
 
 it('rejects missing required fields with 422', function () {
@@ -162,9 +175,11 @@ it('rejects missing required fields with 422', function () {
 
     actingAsClient('app-one', ['notifications.send']);
 
-    $this->postJson('/api/v2/notifications', [
+    $response = $this->postJson('/api/v2/notifications', [
         'type' => 'welcome',
     ])->assertStatus(422);
+
+    $this->assertMatchesOpenApiV2($response, '/notifications', 'post');
 });
 
 it('rejects partial cta with 422', function () {
@@ -174,13 +189,15 @@ it('rejects partial cta with 422', function () {
 
     actingAsClient('app-one', ['notifications.send']);
 
-    $this->postJson('/api/v2/notifications', [
+    $response = $this->postJson('/api/v2/notifications', [
         'type' => 'welcome',
         'user_id' => $user->hashid,
         'subject' => 'Hi',
         'body' => 'Hello',
         'cta' => ['label' => 'Click'],
     ])->assertStatus(422);
+
+    $this->assertMatchesOpenApiV2($response, '/notifications', 'post');
 });
 
 it('enforces rate limit of 60 per minute per app', function () {
@@ -203,10 +220,12 @@ it('enforces rate limit of 60 per minute per app', function () {
         ])->assertStatus(202);
     }
 
-    $this->postJson('/api/v2/notifications', [
+    $response = $this->postJson('/api/v2/notifications', [
         'type' => 'welcome',
         'user_id' => $user->hashid,
         'subject' => 'Hi',
         'body' => 'Hello',
     ])->assertStatus(429)->assertHeader('Retry-After');
+
+    $this->assertMatchesOpenApiV2($response, '/notifications', 'post');
 });
