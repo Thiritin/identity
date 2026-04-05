@@ -122,6 +122,7 @@
     "apps_name": "Nom de l'app",
     "apps_client_id": "Client ID",
     "apps_client_secret": "Client Secret",
+    "apps_redirect_uri": "",
     "apps_redirect_uris": "URIs de redirection",
     "apps_post_logout_redirect_uris": "URIs de redirection post-déconnexion",
     "apps_scopes": "Permissions",
