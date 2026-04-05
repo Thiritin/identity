@@ -107,21 +107,11 @@ test('developer user can create an app', function () {
     $response = $this->actingAs($user)
         ->post(route('developers.store'), [
             'client_name' => 'My New App',
-            'redirect_uris' => ['https://myapp.com/callback'],
-            'post_logout_redirect_uris' => ['https://myapp.com/logout'],
+            'redirect_uri' => 'https://myapp.com/callback',
             'scope' => ['openid', 'profile'],
-            'description' => 'A test app',
-            'app_url' => 'https://myapp.com',
-            'developer_name' => 'Test Dev',
-            'privacy_policy_url' => 'https://myapp.com/privacy',
-            'terms_of_service_url' => 'https://myapp.com/terms',
         ]);
 
-    $response->assertSuccessful()
-        ->assertInertia(fn ($page) => $page
-            ->component('Settings/Apps/AppShow', false)
-            ->has('clientSecret')
-        );
+    $response->assertRedirect();
 
     $app = $user->apps()->first();
     expect($app)->not->toBeNull();
@@ -135,10 +125,10 @@ test('developer user can view their own app', function () {
     $app = App::factory()->create(['user_id' => $user->id]);
 
     $this->actingAs($user)
-        ->get(route('developers.show', $app))
+        ->get(route('developers.general', $app))
         ->assertSuccessful()
         ->assertInertia(fn ($page) => $page
-            ->component('Settings/Apps/AppShow', false)
+            ->component('Settings/Apps/AppDetail/General', false)
             ->has('app')
         );
 });
@@ -149,7 +139,7 @@ test('developer user cannot view another users app', function () {
     $otherApp = App::factory()->create();
 
     $this->actingAs($user)
-        ->get(route('developers.show', $otherApp))
+        ->get(route('developers.general', $otherApp))
         ->assertForbidden();
 });
 
@@ -159,12 +149,11 @@ test('developer user can edit their own app', function () {
     $app = App::factory()->create(['user_id' => $user->id]);
 
     $this->actingAs($user)
-        ->get(route('developers.edit', $app))
+        ->get(route('developers.general', $app))
         ->assertSuccessful()
         ->assertInertia(fn ($page) => $page
-            ->component('Settings/Apps/AppEdit', false)
+            ->component('Settings/Apps/AppDetail/General', false)
             ->has('app')
-            ->has('availableScopes')
         );
 });
 
@@ -174,7 +163,7 @@ test('developer user cannot edit another users app', function () {
     $otherApp = App::factory()->create();
 
     $this->actingAs($user)
-        ->get(route('developers.edit', $otherApp))
+        ->get(route('developers.general', $otherApp))
         ->assertForbidden();
 });
 
@@ -184,10 +173,13 @@ test('developer user can update their own app', function () {
     $app = App::factory()->create(['user_id' => $user->id, 'client_id' => 'test-client-id']);
 
     $this->actingAs($user)
-        ->put(route('developers.update', $app), [
+        ->put(route('developers.general.update', $app), [
             'client_name' => 'Updated Name',
-            'redirect_uris' => ['https://updated.com/callback'],
-            'scope' => ['openid', 'email'],
+            'description' => 'Some description',
+            'app_url' => 'https://updated.com',
+            'developer_name' => 'Dev Name',
+            'privacy_policy_url' => 'https://updated.com/privacy',
+            'terms_of_service_url' => 'https://updated.com/terms',
         ])
         ->assertRedirect();
 
@@ -201,9 +193,13 @@ test('developer user cannot update another users app', function () {
     $otherApp = App::factory()->create();
 
     $this->actingAs($user)
-        ->put(route('developers.update', $otherApp), [
+        ->put(route('developers.general.update', $otherApp), [
             'client_name' => 'Hacked',
-            'redirect_uris' => ['https://evil.com/callback'],
+            'description' => 'desc',
+            'app_url' => 'https://evil.com',
+            'developer_name' => 'Evil Dev',
+            'privacy_policy_url' => 'https://evil.com/privacy',
+            'terms_of_service_url' => 'https://evil.com/terms',
         ])
         ->assertForbidden();
 });
@@ -237,11 +233,7 @@ test('developer user can regenerate secret for their own app', function () {
 
     $this->actingAs($user)
         ->post(route('developers.regenerate-secret', $app))
-        ->assertSuccessful()
-        ->assertInertia(fn ($page) => $page
-            ->component('Settings/Apps/AppEdit', false)
-            ->has('clientSecret')
-        );
+        ->assertRedirect(route('developers.credentials', $app));
 
     $app->refresh();
     expect($app->client_secret)->not->toBeNull();
@@ -257,25 +249,25 @@ test('developer user cannot regenerate secret for another users app', function (
         ->assertForbidden();
 });
 
-test('create app validation requires client_name and redirect_uris', function () {
+test('create app validation requires client_name and redirect_uri', function () {
     fakeHydra();
     $user = createDeveloperUser();
 
     $this->actingAs($user)
         ->post(route('developers.store'), [])
-        ->assertSessionHasErrors(['client_name', 'redirect_uris']);
+        ->assertSessionHasErrors(['client_name', 'redirect_uri']);
 });
 
-test('create app validation requires valid urls in redirect_uris', function () {
+test('create app validation requires valid url in redirect_uri', function () {
     fakeHydra();
     $user = createDeveloperUser();
 
     $this->actingAs($user)
         ->post(route('developers.store'), [
             'client_name' => 'Test',
-            'redirect_uris' => ['not-a-url'],
+            'redirect_uri' => 'not-a-url',
         ])
-        ->assertSessionHasErrors(['redirect_uris.0']);
+        ->assertSessionHasErrors(['redirect_uri']);
 });
 
 test('developer cannot create app with restricted scopes', function () {
@@ -285,7 +277,7 @@ test('developer cannot create app with restricted scopes', function () {
     $this->actingAs($user)
         ->post(route('developers.store'), [
             'client_name' => 'Evil App',
-            'redirect_uris' => ['https://example.com/callback'],
+            'redirect_uri' => 'https://example.com/callback',
             'scope' => ['openid', 'registration.reg.live'],
         ])
         ->assertSessionHasErrors(['scope.1']);
@@ -297,8 +289,7 @@ test('developer cannot update app with restricted scopes', function () {
     $app = App::factory()->create(['user_id' => $user->id, 'client_id' => 'test-client-id']);
 
     $this->actingAs($user)
-        ->put(route('developers.update', $app), [
-            'client_name' => 'Updated',
+        ->put(route('developers.oauth.update', $app), [
             'redirect_uris' => ['https://example.com/callback'],
             'scope' => ['openid', 'view_full_staff_details'],
         ])
