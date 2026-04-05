@@ -10,7 +10,7 @@
         </Link>
         <div class="flex-1 min-w-0">
             <Link :href="route('directory.members.show', { slug: groupSlug, user: member.hashid })" class="text-sm font-medium text-gray-900 dark:text-gray-100 hover:underline truncate block">
-                {{ member.name }}
+                {{ member.name }}<DevHashid :id="member.hashid" />
             </Link>
             <span v-if="member.title" class="text-xs text-gray-500 dark:text-gray-400">{{ member.title }}</span>
         </div>
@@ -30,6 +30,7 @@ import { Link } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import { Badge } from '@/Components/ui/badge'
 import { Pencil } from 'lucide-vue-next'
+import DevHashid from '@/Components/DevHashid.vue'
 
 const props = defineProps({ member: Object, groupSlug: String, canEdit: Boolean })
 

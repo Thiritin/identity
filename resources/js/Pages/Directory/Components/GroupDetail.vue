@@ -8,7 +8,10 @@
                     <Pencil class="h-3.5 w-3.5 mr-1" /> {{ $t('directory_edit_group') }}
                 </Button>
             </div>
-            <h1 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ group.name }}</h1>
+            <div class="flex items-center">
+                <h1 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{{ group.name }}</h1>
+                <DevHashid :id="group.hashid" />
+            </div>
         </div>
 
         <div v-if="leaders.length > 0" class="flex flex-wrap gap-3">
@@ -25,7 +28,7 @@
                     </div>
                 </div>
                 <div>
-                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ leader.name }}</div>
+                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ leader.name }}<DevHashid :id="leader.hashid" /></div>
                     <div class="text-xs text-gray-500 dark:text-gray-400">{{ leader.title || levelLabel(leader.level) }}</div>
                 </div>
             </Link>
@@ -60,6 +63,7 @@ import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { trans } from 'laravel-vue-i18n'
 import { Pencil, UserPlus, Plus } from 'lucide-vue-next'
+import DevHashid from '@/Components/DevHashid.vue'
 import { iconMap } from './iconMap'
 import GroupDescription from './GroupDescription.vue'
 import MemberList from './MemberList.vue'

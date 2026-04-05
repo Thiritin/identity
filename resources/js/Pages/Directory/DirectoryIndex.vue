@@ -14,7 +14,7 @@
                         class="flex items-center justify-between gap-3 px-4 py-3 rounded-lg border border-primary/30 bg-primary/5 dark:border-primary/20 dark:bg-primary/10 hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors"
                     >
                         <div class="min-w-0">
-                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{{ group.name }}</div>
+                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{{ group.name }}<DevHashid :id="group.hashid" /></div>
                             <div class="text-xs text-gray-500 dark:text-gray-400">
                                 {{ group.title || levelLabel(group.level) || group.type }}
                             </div>
@@ -31,7 +31,7 @@
                         :href="route('directory.show', division.slug)"
                         class="text-sm font-semibold text-gray-900 dark:text-gray-100 hover:text-primary transition-colors"
                     >
-                        {{ division.name }}
+                        {{ division.name }}<DevHashid :id="division.hashid" />
                     </Link>
                     <Badge variant="secondary" class="text-xs">{{ division.member_count }}</Badge>
                 </div>
@@ -47,7 +47,7 @@
                     >
                         <div class="min-w-0 flex items-center gap-2">
                             <component :is="iconMap[dept.icon]" v-if="dept.icon && iconMap[dept.icon]" class="h-4 w-4 shrink-0 text-gray-400" />
-                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{{ dept.name }}</div>
+                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{{ dept.name }}<DevHashid :id="dept.hashid" /></div>
                             <span v-if="dept.is_mine" class="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
                         </div>
                         <Badge variant="secondary" class="shrink-0">{{ dept.member_count }}</Badge>
@@ -71,7 +71,7 @@
                         class="flex items-center justify-between gap-3 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
                     >
                         <div class="min-w-0">
-                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{{ dept.name }}</div>
+                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{{ dept.name }}<DevHashid :id="dept.hashid" /></div>
                         </div>
                         <Badge variant="secondary" class="shrink-0">{{ dept.member_count }}</Badge>
                     </Link>
@@ -85,6 +85,7 @@ import { Head, Link } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import { Badge } from '@/Components/ui/badge'
 import { iconMap } from './Components/iconMap'
+import DevHashid from '@/Components/DevHashid.vue'
 
 defineProps({
     myMemberships: Array,
