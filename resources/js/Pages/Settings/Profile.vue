@@ -73,19 +73,6 @@
     <!-- Staff Profile sections (staff only) -->
     <template v-if="$page.props.user.isStaff && staffForm">
         <StaffProfileConsentGate :consent="staffProfile.consent" @grant="grantStaffProfileConsent">
-            <template #placeholder>
-                <div class="bg-white/95 px-6 py-6 sm:px-10 space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="h-10 bg-gray-100 dark:bg-gray-800 rounded animate-pulse" />
-                        <div class="h-10 bg-gray-100 dark:bg-gray-800 rounded animate-pulse" />
-                        <div class="h-10 bg-gray-100 dark:bg-gray-800 rounded animate-pulse" />
-                        <div class="h-10 bg-gray-100 dark:bg-gray-800 rounded animate-pulse" />
-                    </div>
-                    <div class="h-24 bg-gray-100 dark:bg-gray-800 rounded animate-pulse mt-6" />
-                    <div class="h-24 bg-gray-100 dark:bg-gray-800 rounded animate-pulse" />
-                </div>
-            </template>
-
             <div v-if="staffProfile?.consent?.granted" class="px-6 py-2 text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                 {{ $t('staff_profile_consent_state_granted', {
                     date: new Date(staffProfile.consent.granted_at).toLocaleDateString(),
