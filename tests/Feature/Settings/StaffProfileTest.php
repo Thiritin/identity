@@ -4,13 +4,17 @@ use App\Enums\GroupUserLevel;
 use App\Models\Group;
 use App\Models\TwoFactor;
 use App\Models\User;
+use App\Support\StaffProfile\ConsentNotice;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
 function createStaffUser(): User
 {
-    $user = User::factory()->create();
+    $user = User::factory()->create([
+        'staff_profile_consent_at' => now(),
+        'staff_profile_consent_version' => ConsentNotice::CURRENT_VERSION,
+    ]);
     $staffGroup = Group::factory()->create(['system_name' => 'staff']);
     $user->groups()->attach($staffGroup, ['level' => GroupUserLevel::Member]);
     $user->twoFactors()->save(TwoFactor::factory()->totp()->make());
