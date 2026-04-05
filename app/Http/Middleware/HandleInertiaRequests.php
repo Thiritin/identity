@@ -104,6 +104,7 @@ class HandleInertiaRequests extends Middleware
 
         return array_merge(parent::share($request), [
             'locale' => app()->getLocale(),
+            'version' => config('app.version'),
             'user' => Route::is(['auth.login.view']) ? null : $user,
             'hideUserInfo' => Route::is(['auth.login.view', 'verification.notice', 'auth.consent']),
             'staffMemberList' => $staffMembers,
