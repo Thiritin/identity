@@ -16,52 +16,68 @@ class ShowProfileController extends Controller
     {
         $user = Auth::user();
         $isStaff = $user->isStaff();
+        $hasConsent = $isStaff && $user->hasStaffProfileConsent();
 
         $staffProfile = null;
         $groupMemberships = null;
 
         if ($isStaff) {
             $staffProfile = [
-                'firstname' => $user->firstname,
-                'lastname' => $user->lastname,
-                'pronouns' => $user->pronouns,
-                'birthdate' => $user->birthdate?->format('Y-m-d'),
-                'phone' => $user->phone,
-                'address_line1' => $user->address_line1,
-                'address_line2' => $user->address_line2,
-                'city' => $user->city,
-                'postal_code' => $user->postal_code,
-                'country' => $user->country,
-                'emergency_contact_name' => $user->emergency_contact_name,
-                'emergency_contact_phone' => $user->emergency_contact_phone,
-                'emergency_contact_telegram' => $user->emergency_contact_telegram,
-                'spoken_languages' => $user->spoken_languages ?? [],
-                'credit_as' => $user->credit_as,
-                'visibility' => $user->staff_profile_visibility ?? [],
+                'firstname' => $hasConsent ? $user->firstname : null,
+                'lastname' => $hasConsent ? $user->lastname : null,
+                'pronouns' => $hasConsent ? $user->pronouns : null,
+                'birthdate' => $hasConsent ? $user->birthdate?->format('Y-m-d') : null,
+                'phone' => $hasConsent ? $user->phone : null,
+                'address_line1' => $hasConsent ? $user->address_line1 : null,
+                'address_line2' => $hasConsent ? $user->address_line2 : null,
+                'city' => $hasConsent ? $user->city : null,
+                'postal_code' => $hasConsent ? $user->postal_code : null,
+                'country' => $hasConsent ? $user->country : null,
+                'emergency_contact_name' => $hasConsent ? $user->emergency_contact_name : null,
+                'emergency_contact_phone' => $hasConsent ? $user->emergency_contact_phone : null,
+                'emergency_contact_telegram' => $hasConsent ? $user->emergency_contact_telegram : null,
+                'spoken_languages' => $hasConsent ? ($user->spoken_languages ?? []) : [],
+                'credit_as' => $hasConsent ? $user->credit_as : null,
+                'visibility' => $hasConsent ? ($user->staff_profile_visibility ?? []) : [],
+                'consent' => [
+                    'granted' => $hasConsent,
+                    'granted_at' => $user->staff_profile_consent_at?->toIso8601String(),
+                    'version' => $user->staff_profile_consent_version,
+                    'current_version' => \App\Support\StaffProfile\ConsentNotice::CURRENT_VERSION,
+                    'is_current' => $user->hasCurrentStaffProfileConsent(),
+                ],
             ];
 
-            $groupMemberships = $user->groups()
-                ->where(fn ($q) => $q->whereNull('system_name')->orWhere('system_name', '!=', 'staff'))
-                ->get()
-                ->map(fn ($group) => [
-                    'id' => $group->id,
-                    'name' => $group->name,
-                    'title' => $group->pivot->title,
-                    'level' => $group->pivot->level->value,
-                    'credit_as' => $group->pivot->credit_as,
-                ]);
+            if ($hasConsent) {
+                $groupMemberships = $user->groups()
+                    ->where(fn ($q) => $q->whereNull('system_name')->orWhere('system_name', '!=', 'staff'))
+                    ->get()
+                    ->map(fn ($group) => [
+                        'id' => $group->id,
+                        'name' => $group->name,
+                        'title' => $group->pivot->title,
+                        'level' => $group->pivot->level->value,
+                        'credit_as' => $group->pivot->credit_as,
+                    ]);
+            } else {
+                $groupMemberships = collect();
+            }
         }
 
-        $conventionAttendance = $user->conventions()
-            ->orderByDesc('year')
-            ->get()
-            ->map(fn ($convention) => [
-                'id' => $convention->id,
-                'name' => $convention->name,
-                'year' => $convention->year,
-                'is_attended' => (bool) $convention->pivot->is_attended,
-                'is_staff' => (bool) $convention->pivot->is_staff,
-            ]);
+        if ($isStaff && ! $hasConsent) {
+            $conventionAttendance = collect();
+        } else {
+            $conventionAttendance = $user->conventions()
+                ->orderByDesc('year')
+                ->get()
+                ->map(fn ($convention) => [
+                    'id' => $convention->id,
+                    'name' => $convention->name,
+                    'year' => $convention->year,
+                    'is_attended' => (bool) $convention->pivot->is_attended,
+                    'is_staff' => (bool) $convention->pivot->is_staff,
+                ]);
+        }
 
         $allConventions = Convention::query()->orderBy('year')->get(['id', 'name', 'year']);
 
