@@ -17,7 +17,7 @@
 
         <!-- Consent notice modal -->
         <Dialog v-model:open="showModal">
-            <DialogScrollContent class="max-w-2xl max-h-[85vh]">
+            <DialogContent class="max-w-2xl max-h-[85vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>{{ $t('staff_profile_consent_notice_v1_heading') }}</DialogTitle>
                 </DialogHeader>
@@ -44,7 +44,7 @@
                         {{ $t('staff_profile_consent_accept') }}
                     </Button>
                 </DialogFooter>
-            </DialogScrollContent>
+            </DialogContent>
         </Dialog>
     </div>
 
@@ -63,8 +63,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { Button } from '@/Components/ui/button'
-import { Dialog, DialogFooter, DialogHeader, DialogTitle } from '@/Components/ui/dialog'
-import { DialogScrollContent } from '@/Components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/Components/ui/dialog'
 
 const SESSION_KEY = 'staff_profile_consent_dismissed'
 
