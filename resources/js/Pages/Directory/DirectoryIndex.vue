@@ -1,6 +1,14 @@
 <template>
     <Head :title="$t('tab_directory')" />
     <div class="space-y-8">
+            <!-- Export button (HR / Admin only) -->
+            <div v-if="canExport" class="flex justify-end">
+                <Link :href="route('export.index')" class="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <Download class="h-4 w-4" />
+                    {{ $t('tab_export') }}
+                </Link>
+            </div>
+
             <!-- My Groups -->
             <section v-if="myMemberships.length > 0">
                 <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
@@ -103,13 +111,18 @@
 </template>
 
 <script setup>
-import { Head, Link } from '@inertiajs/vue3'
+import { computed } from 'vue'
+import { Head, Link, usePage } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
+import { Download } from 'lucide-vue-next'
 import { Badge } from '@/Components/ui/badge'
 import { iconMap } from './Components/iconMap'
 import DevHashid from '@/Components/DevHashid.vue'
 import { useDevMode } from '@/Composables/useDevMode'
 const { enabled: devModeEnabled } = useDevMode()
+
+const user = computed(() => usePage().props.user)
+const canExport = computed(() => user.value.isHr || user.value.isAdmin)
 
 defineProps({
     myMemberships: Array,

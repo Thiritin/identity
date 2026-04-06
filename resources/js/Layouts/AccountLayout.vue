@@ -201,7 +201,7 @@
 import { ref, computed } from 'vue'
 import { Link, usePage, useForm, router } from '@inertiajs/vue3'
 import defaultBg from '../../assets/fantastic_furry_festival.jpg'
-import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness, BookUser, Settings, Github, Send, Download } from 'lucide-vue-next'
+import { LayoutGrid, UserRound, ShieldCheck, LogOut, BriefcaseBusiness, BookUser, Settings, Github, Send } from 'lucide-vue-next'
 import { Toaster } from '@/Components/ui/sonner'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/Components/ui/dialog'
 import { Input } from '@/Components/ui/input'
@@ -243,9 +243,6 @@ const tabs = computed(() => {
     }
     if (user.value.isAdmin) {
         items.push({ name: trans('tab_admin'), route: null, href: '/admin', icon: Settings, active: false, external: true })
-    }
-    if (user.value.isHr || user.value.isAdmin) {
-        items.push({ name: trans('tab_export'), route: 'export.index', href: route('export.index'), icon: Download, active: isActive('export.*') })
     }
     return items
 })
