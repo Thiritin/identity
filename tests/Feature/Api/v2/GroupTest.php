@@ -237,3 +237,44 @@ it('returns groups tree as a bare array with no data envelope', function () {
 
     $this->assertMatchesOpenApiV2($response, '/groups/tree');
 });
+
+it('allows admin to create a division', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+    $this->staffGroup->users()->attach($admin, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($admin, 'app-one', ['groups.write', 'groups.read']);
+
+    $response = $this->postJson('/api/v2/groups', [
+        'type' => 'division',
+        'name' => 'New Division',
+    ]);
+
+    $response->assertCreated();
+    $this->assertMatchesOpenApiV2($response, '/groups', 'post');
+});
+
+it('allows HR to create a division', function () {
+    $hr = User::factory()->create(['is_hr' => true]);
+    $this->staffGroup->users()->attach($hr, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($hr, 'app-one', ['groups.write', 'groups.read']);
+
+    $response = $this->postJson('/api/v2/groups', [
+        'type' => 'division',
+        'name' => 'Another Division',
+    ]);
+
+    $response->assertCreated();
+    $this->assertMatchesOpenApiV2($response, '/groups', 'post');
+});
+
+it('denies non-admin creating a group without parent', function () {
+    $user = User::factory()->create();
+    $this->staffGroup->users()->attach($user, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($user, 'app-one', ['groups.write']);
+
+    $response = $this->postJson('/api/v2/groups', [
+        'type' => 'department',
+        'name' => 'Unauthorized Dept',
+    ]);
+
+    $response->assertForbidden();
+});

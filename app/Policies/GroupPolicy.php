@@ -81,9 +81,33 @@ class GroupPolicy
         return Response::deny('User is not a member of the group');
     }
 
-    public function create(User $user): bool
+    public function create(User $user, ?Group $parent = null): bool
     {
-        return $user->can('admin.groups.create');
+        if ($user->is_admin || $user->is_hr) {
+            return true;
+        }
+
+        if ($parent === null) {
+            return false;
+        }
+
+        // Division Director can create Departments under their Division
+        if ($parent->type === GroupTypeEnum::Division) {
+            return GroupUser::where('user_id', $user->id)
+                ->where('group_id', $parent->id)
+                ->where('level', GroupUserLevel::DivisionDirector->value)
+                ->exists();
+        }
+
+        // Director can create Teams under their Department
+        if ($parent->type === GroupTypeEnum::Department) {
+            return GroupUser::where('user_id', $user->id)
+                ->where('group_id', $parent->id)
+                ->where('level', GroupUserLevel::Director->value)
+                ->exists();
+        }
+
+        return false;
     }
 
     public function update(User $user, Group $group): bool
@@ -91,48 +115,59 @@ class GroupPolicy
         if ($group->type === GroupTypeEnum::Automated) {
             return false;
         }
-        $userManagerInGroup = GroupUser::whereUserId($user->id)
-            ->whereGroupId($group->id)
-            ->where(function ($query) {
-                $query
-                    ->where('can_manage_members', true)
-                    ->orWhereIn('level', array_map(fn (GroupUserLevel $level) => $level->value, GroupUserLevel::leadOrManagerLevels()));
-            })
-            ->exists();
-        $userManagerInParentGroup = GroupUser::whereUserId($user->id)
-            ->whereGroupId($group->parent_id)
-            ->where(function ($query) {
-                $query
-                    ->where('can_manage_members', true)
-                    ->orWhereIn('level', array_map(fn (GroupUserLevel $level) => $level->value, GroupUserLevel::leadOrManagerLevels()));
-            })
-            ->exists();
 
-        return (Auth::guard('web')->check() && $user->can('admin.groups.update')) || (($userManagerInGroup || $userManagerInParentGroup) && $user->scopeCheck('groups.update'));
+        if ($user->is_admin || $user->is_hr) {
+            return true;
+        }
+
+        return $this->isManagerOfGroup($user, $group->id)
+            || $this->isManagerOfGroup($user, $group->parent_id);
     }
 
     public function delete(User $user, Group $group): bool
     {
-        if ($group->type !== GroupTypeEnum::Team) {
+        if (in_array($group->type, [GroupTypeEnum::Automated, GroupTypeEnum::Root], true)) {
             return false;
         }
-        $userManagerInGroup = GroupUser::whereUserId($user->id)
-            ->whereGroupId($group->id)
-            ->where(function ($query) {
-                $query
-                    ->where('can_manage_members', true)
-                    ->orWhereIn('level', array_map(fn (GroupUserLevel $level) => $level->value, GroupUserLevel::leadOrManagerLevels()));
-            })
-            ->exists();
-        $userManagerInParentGroup = GroupUser::whereUserId($user->id)
-            ->whereGroupId($group->parent_id)
-            ->where(function ($query) {
-                $query
-                    ->where('can_manage_members', true)
-                    ->orWhereIn('level', array_map(fn (GroupUserLevel $level) => $level->value, GroupUserLevel::leadOrManagerLevels()));
-            })
-            ->exists();
 
-        return (Auth::guard('web')->check() && $user->can('admin.groups.delete')) || (($userManagerInGroup || $userManagerInParentGroup) && $user->scopeCheck('groups.delete'));
+        if ($user->is_admin || $user->is_hr) {
+            return true;
+        }
+
+        // Division Director can delete Departments in their Division
+        if ($group->type === GroupTypeEnum::Department) {
+            return $group->parent_id !== null
+                && GroupUser::where('user_id', $user->id)
+                    ->where('group_id', $group->parent_id)
+                    ->where('level', GroupUserLevel::DivisionDirector->value)
+                    ->exists();
+        }
+
+        // Director or TeamLead can delete Teams
+        if ($group->type === GroupTypeEnum::Team) {
+            return $this->isManagerOfGroup($user, $group->id)
+                || $this->isManagerOfGroup($user, $group->parent_id);
+        }
+
+        return false;
+    }
+
+    private function isManagerOfGroup(User $user, ?int $groupId): bool
+    {
+        if ($groupId === null) {
+            return false;
+        }
+
+        return GroupUser::where('user_id', $user->id)
+            ->where('group_id', $groupId)
+            ->where(function ($query) {
+                $query
+                    ->where('can_manage_members', true)
+                    ->orWhereIn('level', array_map(
+                        fn (GroupUserLevel $level) => $level->value,
+                        GroupUserLevel::leadOrManagerLevels()
+                    ));
+            })
+            ->exists();
     }
 }
