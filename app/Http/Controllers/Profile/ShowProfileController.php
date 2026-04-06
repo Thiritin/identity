@@ -37,6 +37,7 @@ class ShowProfileController extends Controller
                 'emergency_contact_phone' => $hasConsent ? $user->emergency_contact_phone : null,
                 'emergency_contact_telegram' => $hasConsent ? $user->emergency_contact_telegram : null,
                 'spoken_languages' => $hasConsent ? ($user->spoken_languages ?? []) : [],
+                'skills' => $hasConsent ? $user->skills->pluck('name')->all() : [],
                 'credit_as' => $hasConsent ? $user->credit_as : null,
                 'visibility' => $hasConsent ? ($user->staff_profile_visibility ?? []) : [],
                 'consent' => [
@@ -91,6 +92,16 @@ class ShowProfileController extends Controller
             ->sortBy('name')
             ->values();
 
+        $locale = app()->getLocale();
+        $regions = ResourceBundle::create($locale, 'ICUDATA-region')->get('Countries');
+        $availableCountries = collect();
+        foreach ($regions as $code => $name) {
+            if (strlen($code) === 2) {
+                $availableCountries->push(['code' => $code, 'name' => $name]);
+            }
+        }
+        $availableCountries = $availableCountries->sortBy('name')->values();
+
         return Inertia::render('Settings/Profile', [
             'staffProfile' => $staffProfile,
             'staffProfileVisibilityDefaults' => \App\Models\User::staffFieldDefaultVisibility(),
@@ -98,6 +109,7 @@ class ShowProfileController extends Controller
             'conventionAttendance' => $conventionAttendance,
             'allConventions' => $allConventions,
             'availableLanguages' => $availableLanguages,
+            'availableCountries' => $availableCountries,
             'telegram' => [
                 'linked' => $user->telegram_id !== null,
                 'username' => $user->telegram_username,
