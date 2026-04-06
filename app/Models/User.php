@@ -232,6 +232,11 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             ->withTimestamps();
     }
 
+    public function skills(): BelongsToMany
+    {
+        return $this->belongsToMany(Skill::class);
+    }
+
     public function resetTwoFactorAuth()
     {
         $this->twoFactors()->delete();
