@@ -314,6 +314,81 @@ it('rejects department with a team as parent', function () {
     expect($response->json('errors.parent_id'))->not->toBeNull();
 });
 
+it('allows division director to create a department in their division', function () {
+    $divDirector = User::factory()->create();
+    $this->staffGroup->users()->attach($divDirector, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($divDirector, 'app-one', ['groups.write', 'groups.read']);
+
+    $division = Group::factory()->division()->create();
+    $division->users()->attach($divDirector, ['level' => GroupUserLevel::DivisionDirector]);
+
+    $response = $this->postJson('/api/v2/groups', [
+        'type' => 'department',
+        'name' => 'New Department',
+        'parent_id' => $division->hashid,
+    ]);
+
+    $response->assertCreated();
+    expect($response->json('parent_id'))->toBe($division->hashid);
+    $this->assertMatchesOpenApiV2($response, '/groups', 'post');
+});
+
+it('allows director to create a team in their department', function () {
+    $director = User::factory()->create();
+    $this->staffGroup->users()->attach($director, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($director, 'app-one', ['groups.write', 'groups.read']);
+
+    $division = Group::factory()->division()->create();
+    $department = Group::factory()->department()->create(['parent_id' => $division->id]);
+    $department->users()->attach($director, ['level' => GroupUserLevel::Director]);
+
+    $response = $this->postJson('/api/v2/groups', [
+        'type' => 'team',
+        'name' => 'New Team',
+        'parent_id' => $department->hashid,
+    ]);
+
+    $response->assertCreated();
+    expect($response->json('parent_id'))->toBe($department->hashid);
+    $this->assertMatchesOpenApiV2($response, '/groups', 'post');
+});
+
+it('denies director creating a department (wrong level)', function () {
+    $director = User::factory()->create();
+    $this->staffGroup->users()->attach($director, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($director, 'app-one', ['groups.write']);
+
+    $division = Group::factory()->division()->create();
+    $division->users()->attach($director, ['level' => GroupUserLevel::Director]);
+
+    $response = $this->postJson('/api/v2/groups', [
+        'type' => 'department',
+        'name' => 'Unauthorized Dept',
+        'parent_id' => $division->hashid,
+    ]);
+
+    $response->assertForbidden();
+});
+
+it('denies division director creating department in another division', function () {
+    $divDirector = User::factory()->create();
+    $this->staffGroup->users()->attach($divDirector, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($divDirector, 'app-one', ['groups.write']);
+
+    $myDivision = Group::factory()->division()->create();
+    $myDivision->users()->attach($divDirector, ['level' => GroupUserLevel::DivisionDirector]);
+
+    $otherDivision = Group::factory()->division()->create();
+
+    $response = $this->postJson('/api/v2/groups', [
+        'type' => 'department',
+        'name' => 'Cross-Division Dept',
+        'parent_id' => $otherDivision->hashid,
+    ]);
+
+    $response->assertForbidden();
+});
+
 it('rejects creating automated group type', function () {
     $admin = User::factory()->create(['is_admin' => true]);
     $this->staffGroup->users()->attach($admin, ['level' => GroupUserLevel::Member]);

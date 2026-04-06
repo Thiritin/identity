@@ -118,9 +118,16 @@ class GroupController extends Controller
     public function store(GroupStoreRequest $request)
     {
         $this->requireScope('groups.write');
-        $this->authorize('create', Group::class);
 
-        $group = Group::create($request->validationData());
+        $parent = $request->resolvedParent();
+        $this->authorize('create', [Group::class, $parent]);
+
+        $data = $request->validationData();
+        if ($parent) {
+            $data['parent_id'] = $parent->id;
+        }
+
+        $group = Group::create($data);
 
         return (new GroupResource($group))
             ->response()
