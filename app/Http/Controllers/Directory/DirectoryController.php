@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Directory\UpdateGroupRequest;
 use App\Models\Group;
 use App\Models\User;
+use App\Support\Directory\DirectoryAuthorizer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -154,44 +155,10 @@ class DirectoryController extends Controller
             'members' => $members->values(),
             'subGroups' => $subGroups,
             'canEdit' => request()->user()->can('update', $group),
-            'assignableLevels' => $this->getAssignableLevels(request()->user(), $group),
+            'assignableLevels' => array_map(fn ($l) => $l->value, app(DirectoryAuthorizer::class)->assignableLevels(request()->user(), $group)),
+            'canCreateChildGroup' => app(DirectoryAuthorizer::class)->canCreateChildGroup(request()->user(), $group),
+            'childGroupType' => $group->type->childGroupType()?->value,
         ]);
-    }
-
-    /**
-     * @return string[]
-     */
-    private function getAssignableLevels(User $viewer, Group $group): array
-    {
-        if ($viewer->is_admin) {
-            return array_map(fn ($l) => $l->value, GroupUserLevel::cases());
-        }
-
-        // Check viewer's level in this group and parent group
-        $levels = collect();
-
-        $membership = $viewer->groups()->where('groups.id', $group->id)->first();
-        if ($membership) {
-            $level = $membership->pivot->level instanceof GroupUserLevel
-                ? $membership->pivot->level
-                : GroupUserLevel::from($membership->pivot->level);
-            $levels = $levels->merge($level->assignableLevels());
-        }
-
-        if ($group->parent_id) {
-            $parentMembership = $viewer->groups()->where('groups.id', $group->parent_id)->first();
-            if ($parentMembership) {
-                $level = $parentMembership->pivot->level instanceof GroupUserLevel
-                    ? $parentMembership->pivot->level
-                    : GroupUserLevel::from($parentMembership->pivot->level);
-                $levels = $levels->merge($level->assignableLevels());
-            }
-        }
-
-        // Always include member
-        $levels->push(GroupUserLevel::Member);
-
-        return $levels->unique()->map(fn ($l) => $l->value)->values()->all();
     }
 
     public function update(UpdateGroupRequest $request, Group $group): RedirectResponse

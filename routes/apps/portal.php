@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Directory\DirectoryController;
 use App\Http\Controllers\Directory\DirectoryMemberController;
+use App\Http\Controllers\Directory\DirectoryDepartmentController;
 use App\Http\Controllers\Directory\DirectoryTeamController;
 use App\Http\Controllers\Directory\NdaController;
 use App\Http\Controllers\Directory\StaffProfileController;
@@ -241,6 +242,7 @@ Route::middleware('groupmember:staff')
         Route::patch('/g/{group:hashid}/members/{user:hashid}', [DirectoryMemberController::class, 'update'])->name('members.update');
         Route::delete('/g/{group:hashid}/members/{user:hashid}', [DirectoryMemberController::class, 'destroy'])->name('members.destroy');
         Route::post('/g/{group:hashid}/teams', [DirectoryTeamController::class, 'store'])->name('teams.store');
+        Route::post('/g/{group:hashid}/departments', [DirectoryDepartmentController::class, 'store'])->name('departments.store');
 
         Route::get('/{slug}/members/{user:hashid}', [StaffProfileController::class, 'show'])
             ->where('slug', '.*')
