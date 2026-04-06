@@ -11,10 +11,11 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class ExportManagerController extends Controller
 {
     private const ALLOWED_FIELDS = [
+        'department',
         'username',
         'first_name',
         'last_name',
-        'department',
+        'role',
         'title',
         'credit_as',
         'pronouns',
@@ -61,10 +62,11 @@ class ExportManagerController extends Controller
                 $row = [];
                 foreach ($fields as $field) {
                     $row[] = match ($field) {
+                        'department' => $membership->group->name,
                         'username' => $membership->user->name,
                         'first_name' => $membership->user->firstname,
                         'last_name' => $membership->user->lastname,
-                        'department' => $membership->group->name,
+                        'role' => $membership->level?->name ?? 'Member',
                         'title' => $membership->title,
                         'credit_as' => $membership->credit_as ?? $membership->user->credit_as,
                         'pronouns' => $membership->user->pronouns,

@@ -53,10 +53,11 @@ import { Head } from '@inertiajs/vue3'
 import { Button } from '@/Components/ui/button'
 
 const availableFields = [
+    { value: 'department', label: 'Department' },
     { value: 'username', label: 'Username' },
     { value: 'first_name', label: 'First Name' },
     { value: 'last_name', label: 'Last Name' },
-    { value: 'department', label: 'Department' },
+    { value: 'role', label: 'Role' },
     { value: 'title', label: 'Title' },
     { value: 'credit_as', label: 'Credit As' },
     { value: 'pronouns', label: 'Pronouns' },
