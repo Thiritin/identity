@@ -142,8 +142,8 @@
             </dl>
         </section>
 
-        <!-- Spoken languages (global) -->
-        <section v-if="profileUser.spoken_languages?.length" class="mb-6">
+        <!-- Spoken languages & skills (global) -->
+        <section v-if="profileUser.spoken_languages?.length || profileUser.skills?.length" class="mb-6">
             <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                 {{ $t('staff_profile_skills') }}
             </h2>
@@ -151,6 +151,12 @@
                 <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_spoken_languages') }}</dt>
                 <dd class="flex flex-wrap gap-1 mt-1">
                     <Badge v-for="lang in profileUser.spoken_languages" :key="lang" variant="secondary" class="text-xs">{{ displayLanguage(lang) }}</Badge>
+                </dd>
+            </div>
+            <div v-if="profileUser.skills?.length" class="px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5 mt-3">
+                <dt class="text-xs text-gray-500 dark:text-gray-400">{{ $t('staff_profile_skills_label') }}</dt>
+                <dd class="flex flex-wrap gap-1 mt-1">
+                    <Badge v-for="skill in profileUser.skills" :key="skill" variant="secondary" class="text-xs">{{ skill }}</Badge>
                 </dd>
             </div>
         </section>

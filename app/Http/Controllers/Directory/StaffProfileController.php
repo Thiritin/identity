@@ -112,6 +112,7 @@ class StaffProfileController extends Controller
                     : null,
                 'spoken_languages' => $user->spoken_languages,
                 'credit_as' => $user->credit_as,
+                'skills' => $user->skills->pluck('name')->all(),
             ],
             'groups' => $groups,
             'visibleFields' => $visibleFields,
