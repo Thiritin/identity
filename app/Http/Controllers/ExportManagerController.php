@@ -46,12 +46,17 @@ class ExportManagerController extends Controller
 
         $fields = $validated['fields'];
 
+        $groupTypes = [
+            GroupTypeEnum::Division->value,
+            GroupTypeEnum::Department->value,
+        ];
+
+        if (in_array('team', $fields)) {
+            $groupTypes[] = GroupTypeEnum::Team->value;
+        }
+
         $memberships = GroupUser::with(['user', 'group.parent.parent'])
-            ->whereHas('group', fn ($q) => $q->whereIn('type', [
-                GroupTypeEnum::Division->value,
-                GroupTypeEnum::Department->value,
-                GroupTypeEnum::Team->value,
-            ]))
+            ->whereHas('group', fn ($q) => $q->whereIn('type', $groupTypes))
             ->cursor();
 
         $filename = 'staff-export-' . now()->format('Y-m-d') . '.csv';
