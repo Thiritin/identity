@@ -42,6 +42,12 @@ class UserFactory extends Factory
             ->afterCreating(fn (User $user) => $user->forceFill(['is_developer' => true])->save());
     }
 
+    public function hr(): static
+    {
+        return $this->afterMaking(fn (User $user) => $user->is_hr = true)
+            ->afterCreating(fn (User $user) => $user->forceFill(['is_hr' => true])->save());
+    }
+
     public function suspended(): static
     {
         return $this->state(fn () => [

@@ -57,6 +57,7 @@ class HandleInertiaRequests extends Middleware
                 'isDirector' => $request->user()->isDirector(),
                 'isDivisionDirector' => $request->user()->isDivisionDirector(),
                 'isDeveloper' => $request->user()->is_developer,
+                'isHr' => $request->user()->is_hr,
                 'language' => app()->getLocale(),
                 'preferences' => $request->user()->preferences ?? [],
                 'departments' => $request->user()->groups()
