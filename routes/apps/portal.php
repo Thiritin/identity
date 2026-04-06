@@ -10,6 +10,7 @@ use App\Http\Controllers\Profile\DeleteAccountController;
 use App\Http\Controllers\Profile\GrantStaffProfileConsentController;
 use App\Http\Controllers\Profile\WithdrawStaffProfileConsentController;
 use App\Http\Controllers\Profile\ExportMyDataController;
+use App\Http\Controllers\ExportManagerController;
 use App\Http\Controllers\Profile\MyDataController;
 use App\Http\Controllers\Profile\NotificationPreferencesController;
 use App\Http\Controllers\Profile\NotificationsController;
@@ -41,6 +42,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/dashboard', DashboardController::class)->name('dashboard');
 // Forward / to /dashboard
 Route::redirect('/', '/dashboard');
+Route::get('/export', [ExportManagerController::class, 'index'])->name('export.index');
+Route::post('/export', [ExportManagerController::class, 'export'])->name('export.download');
 Route::get('/settings/profile', ShowProfileController::class)->name('settings.profile');
 Route::post('/settings/profile/update', UpdateProfileController::class)
     ->middleware([HandlePrecognitiveRequests::class])
