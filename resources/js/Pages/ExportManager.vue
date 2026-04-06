@@ -31,7 +31,10 @@
                         v-model="selectedFields"
                         class="rounded border-gray-300 dark:border-gray-600 text-teal-600 focus:ring-teal-500 dark:bg-gray-800"
                     />
-                    <span class="text-sm text-gray-700 dark:text-gray-300">{{ field.label }}</span>
+                    <div>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">{{ field.label }}</span>
+                        <p v-if="field.description" class="text-xs text-gray-400 dark:text-gray-500">{{ field.description }}</p>
+                    </div>
                 </label>
             </div>
         </div>
@@ -55,7 +58,7 @@ import { Button } from '@/Components/ui/button'
 const availableFields = [
     { value: 'division', label: 'Division' },
     { value: 'department', label: 'Department' },
-    { value: 'team', label: 'Team' },
+    { value: 'team', label: 'Team', description: 'When selected, team members are included as separate rows' },
     { value: 'username', label: 'Username' },
     { value: 'first_name', label: 'First Name' },
     { value: 'last_name', label: 'Last Name' },
