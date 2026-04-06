@@ -17,7 +17,9 @@ class SearchSkillsController extends Controller
             ->when($query->isNotEmpty(), fn ($q) => $q->where('name', 'like', "%{$query}%"))
             ->orderBy('name')
             ->limit(20)
-            ->get(['id', 'name']);
+            ->get(['id', 'name'])
+            ->map(fn ($skill) => ['id' => $skill->id, 'name' => $skill->name])
+            ->all();
 
         return response()->json($skills);
     }
