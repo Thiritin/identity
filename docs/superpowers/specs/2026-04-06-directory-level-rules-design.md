@@ -203,7 +203,7 @@ levelAllowedByType(GroupUserLevel, Group): bool
 | Create  | `app/Http/Controllers/Directory/DirectoryDepartmentController.php` |
 | Edit    | `app/Http/Controllers/Directory/DirectoryController.php`        |
 | Edit    | `app/Http/Controllers/Directory/StaffProfileController.php`     |
-| Edit    | `routes/web.php`                                                |
+| Edit    | `routes/apps/portal.php`                                        |
 | Rename  | `SubGroupCreateModal.vue` (was `TeamCreateModal.vue`)           |
 | Edit    | `MemberAddModal.vue`                                            |
 | Edit    | `MemberEditModal.vue`                                           |
