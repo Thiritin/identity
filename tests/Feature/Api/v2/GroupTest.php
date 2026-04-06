@@ -266,15 +266,64 @@ it('allows HR to create a division', function () {
     $this->assertMatchesOpenApiV2($response, '/groups', 'post');
 });
 
-it('denies non-admin creating a group without parent', function () {
+it('denies non-admin creating a group', function () {
     $user = User::factory()->create();
     $this->staffGroup->users()->attach($user, ['level' => GroupUserLevel::Member]);
     actingAsGroupApiUser($user, 'app-one', ['groups.write']);
 
+    $division = Group::factory()->division()->create();
+
     $response = $this->postJson('/api/v2/groups', [
         'type' => 'department',
         'name' => 'Unauthorized Dept',
+        'parent_id' => $division->hashid,
     ]);
 
     $response->assertForbidden();
+});
+
+it('requires parent_id when creating a department', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+    $this->staffGroup->users()->attach($admin, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($admin, 'app-one', ['groups.write']);
+
+    $response = $this->postJson('/api/v2/groups', [
+        'type' => 'department',
+        'name' => 'Missing Parent Dept',
+    ]);
+
+    $response->assertStatus(422);
+    expect($response->json('errors.parent_id'))->not->toBeNull();
+});
+
+it('rejects department with a team as parent', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+    $this->staffGroup->users()->attach($admin, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($admin, 'app-one', ['groups.write']);
+
+    $department = Group::factory()->department()->create();
+    $team = Group::factory()->team()->create(['parent_id' => $department->id]);
+
+    $response = $this->postJson('/api/v2/groups', [
+        'type' => 'department',
+        'name' => 'Bad Parent Dept',
+        'parent_id' => $team->hashid,
+    ]);
+
+    $response->assertStatus(422);
+    expect($response->json('errors.parent_id'))->not->toBeNull();
+});
+
+it('rejects creating automated group type', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+    $this->staffGroup->users()->attach($admin, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($admin, 'app-one', ['groups.write']);
+
+    $response = $this->postJson('/api/v2/groups', [
+        'type' => 'automated',
+        'name' => 'Fake System Group',
+    ]);
+
+    $response->assertStatus(422);
+    expect($response->json('errors.type'))->not->toBeNull();
 });
