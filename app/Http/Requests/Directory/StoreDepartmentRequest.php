@@ -5,7 +5,7 @@ namespace App\Http\Requests\Directory;
 use App\Support\Directory\DirectoryAuthorizer;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTeamRequest extends FormRequest
+class StoreDepartmentRequest extends FormRequest
 {
     public function authorize(): bool
     {
