@@ -13,6 +13,13 @@
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Choose which columns to include in the export.</p>
             </div>
             <div class="md:col-span-2 space-y-3">
+                <button
+                    type="button"
+                    @click="toggleAll"
+                    class="text-xs font-medium text-teal-600 dark:text-teal-400 hover:text-teal-500 dark:hover:text-teal-300"
+                >
+                    {{ allSelected ? 'Deselect all' : 'Select all' }}
+                </button>
                 <label
                     v-for="field in availableFields"
                     :key="field.value"
@@ -41,7 +48,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import { Button } from '@/Components/ui/button'
 
@@ -56,7 +63,12 @@ const availableFields = [
 ]
 
 const selectedFields = ref(availableFields.map(f => f.value))
+const allSelected = computed(() => selectedFields.value.length === availableFields.length)
 const downloading = ref(false)
+
+function toggleAll() {
+    selectedFields.value = allSelected.value ? [] : availableFields.map(f => f.value)
+}
 
 async function download() {
     downloading.value = true
