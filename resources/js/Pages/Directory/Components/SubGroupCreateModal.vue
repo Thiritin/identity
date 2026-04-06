@@ -2,7 +2,7 @@
     <Dialog :open="open" @update:open="$emit('close')">
         <DialogContent class="max-w-md">
             <DialogHeader>
-                <DialogTitle>{{ $t('directory_create_team') }}</DialogTitle>
+                <DialogTitle>{{ title }}</DialogTitle>
             </DialogHeader>
             <form @submit.prevent="submit">
                 <div class="space-y-4">
@@ -23,7 +23,7 @@
                 </div>
                 <DialogFooter class="mt-4">
                     <Button type="button" variant="secondary" @click="$emit('close')">{{ $t('directory_cancel') }}</Button>
-                    <Button type="submit" :disabled="form.processing">{{ $t('directory_create_team') }}</Button>
+                    <Button type="submit" :disabled="form.processing">{{ title }}</Button>
                 </DialogFooter>
             </form>
         </DialogContent>
@@ -39,6 +39,8 @@ import { Input } from '@/Components/ui/input'
 const props = defineProps({
     open: Boolean,
     groupHashid: String,
+    routeName: { type: String, required: true },
+    title: { type: String, required: true },
 })
 
 const emit = defineEmits(['close'])
@@ -49,7 +51,7 @@ const form = useForm({
 })
 
 function submit() {
-    form.post(route('directory.teams.store', props.groupHashid), {
+    form.post(route(props.routeName, props.groupHashid), {
         preserveScroll: true,
         onSuccess: () => {
             form.reset()

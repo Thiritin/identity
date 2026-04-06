@@ -47,7 +47,7 @@
         </MemberList>
 
         <SubGroupList :groups="subGroups">
-            <template v-if="canEdit" #actions>
+            <template v-if="canCreateChildGroup" #actions>
                 <Button variant="outline" size="sm" @click="$emit('create-sub-group')">
                     <Plus class="h-3.5 w-3.5 mr-1" />
                     {{ group.type === 'division' ? $t('directory_create_department') : $t('directory_create_team') }}
@@ -75,6 +75,7 @@ defineProps({
     members: Array,
     subGroups: Array,
     canEdit: Boolean,
+    canCreateChildGroup: Boolean,
 })
 
 defineEmits(['toggle-edit', 'add-member', 'create-sub-group', 'edit-member'])

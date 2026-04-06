@@ -20,7 +20,7 @@
                         </SelectContent>
                     </Select>
                 </div>
-                <div class="flex items-center gap-2">
+                <div v-if="groupType === 'department' || groupType === 'team'" class="flex items-center gap-2">
                     <Checkbox id="edit_can_manage" v-model="form.can_manage_members" />
                     <label for="edit_can_manage" class="text-sm">{{ $t('staff_profile_can_manage_members') }}</label>
                 </div>
@@ -52,6 +52,7 @@ const props = defineProps({
     member: Object,
     groupHashid: String,
     assignableLevels: { type: Array, default: () => ['member'] },
+    groupType: { type: String, default: null },
 })
 
 const emit = defineEmits(['close'])

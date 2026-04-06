@@ -7,9 +7,10 @@
                 :members="members"
                 :sub-groups="subGroups"
                 :can-edit="canEdit"
+                :can-create-child-group="canCreateChildGroup"
                 @toggle-edit="showEdit = true"
                 @add-member="showAddMember = true"
-                @create-sub-group="showCreateTeam = true"
+                @create-sub-group="showCreateSubGroup = true"
                 @edit-member="(m) => { editingMember = m; showEditMember = true }"
             />
     </div>
@@ -18,14 +19,18 @@
         v-if="canEdit"
         :open="showAddMember"
         :group-hashid="group.hashid"
+        :group-type="group.type"
+        :assignable-levels="assignableLevels"
         @close="showAddMember = false"
     />
 
-    <TeamCreateModal
-        v-if="canEdit"
-        :open="showCreateTeam"
+    <SubGroupCreateModal
+        v-if="canCreateChildGroup"
+        :open="showCreateSubGroup"
         :group-hashid="group.hashid"
-        @close="showCreateTeam = false"
+        :route-name="childGroupRouteName"
+        :title="childGroupLabel"
+        @close="showCreateSubGroup = false"
     />
 
     <GroupEditModal
@@ -41,31 +46,42 @@
         :member="editingMember"
         :group-hashid="group.hashid"
         :assignable-levels="assignableLevels"
+        :group-type="group.type"
         @close="showEditMember = false"
     />
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Head } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
 import GroupDetail from './Components/GroupDetail.vue'
 import MemberAddModal from './Components/MemberAddModal.vue'
-import TeamCreateModal from './Components/TeamCreateModal.vue'
+import SubGroupCreateModal from './Components/SubGroupCreateModal.vue'
 import GroupEditModal from './Components/GroupEditModal.vue'
 import MemberEditModal from './Components/MemberEditModal.vue'
 
-defineProps({
+const props = defineProps({
     group: Object,
     leaders: Array,
     members: Array,
     subGroups: Array,
     canEdit: Boolean,
     assignableLevels: Array,
+    canCreateChildGroup: Boolean,
+    childGroupType: { type: String, default: null },
 })
+
+const childGroupRouteName = computed(() =>
+    props.childGroupType === 'department' ? 'directory.departments.store' : 'directory.teams.store'
+)
+const childGroupLabel = computed(() =>
+    props.childGroupType === 'department' ? trans('directory_create_department') : trans('directory_create_team')
+)
 
 const showEdit = ref(false)
 const showAddMember = ref(false)
-const showCreateTeam = ref(false)
+const showCreateSubGroup = ref(false)
 const showEditMember = ref(false)
 const editingMember = ref(null)
 </script>
