@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\GroupTypeEnum;
+use App\Models\Group;
 use App\Models\GroupUser;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -11,7 +12,9 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class ExportManagerController extends Controller
 {
     private const ALLOWED_FIELDS = [
+        'division',
         'department',
+        'team',
         'username',
         'first_name',
         'last_name',
@@ -43,7 +46,7 @@ class ExportManagerController extends Controller
 
         $fields = $validated['fields'];
 
-        $memberships = GroupUser::with(['user', 'group'])
+        $memberships = GroupUser::with(['user', 'group.parent.parent'])
             ->whereHas('group', fn ($q) => $q->whereIn('type', [
                 GroupTypeEnum::Division->value,
                 GroupTypeEnum::Department->value,
@@ -62,7 +65,9 @@ class ExportManagerController extends Controller
                 $row = [];
                 foreach ($fields as $field) {
                     $row[] = match ($field) {
-                        'department' => $membership->group->name,
+                        'division' => $this->resolveAncestor($membership->group, GroupTypeEnum::Division),
+                        'department' => $this->resolveAncestor($membership->group, GroupTypeEnum::Department),
+                        'team' => $membership->group->type === GroupTypeEnum::Team ? $membership->group->name : null,
                         'username' => $membership->user->name,
                         'first_name' => $membership->user->firstname,
                         'last_name' => $membership->user->lastname,
@@ -79,5 +84,22 @@ class ExportManagerController extends Controller
         }, $filename, [
             'Content-Type' => 'text/csv',
         ]);
+    }
+
+    private function resolveAncestor(Group $group, GroupTypeEnum $type): ?string
+    {
+        if ($group->type === $type) {
+            return $group->name;
+        }
+
+        $parent = $group->parent;
+        while ($parent) {
+            if ($parent->type === $type) {
+                return $parent->name;
+            }
+            $parent = $parent->parent;
+        }
+
+        return null;
     }
 }
