@@ -45,418 +45,474 @@
     </div>
 
     <!-- Your Departments (staff only, above staff profile form) -->
-    <div v-if="$page.props.user.isStaff && $page.props.user.departments?.length > 0"
-         class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
-        <div class="grid md:grid-cols-3 gap-6 md:gap-10">
+    <ProfileSection v-if="$page.props.user.isStaff && $page.props.user.departments?.length > 0" slot-class="space-y-2">
+        <template #header>
+            <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('directory_your_departments') }}</h3>
+        </template>
+        <Link
+            v-for="dept in $page.props.user.departments"
+            :key="dept.hashid"
+            :href="route('directory.show', dept.slug)"
+            class="flex items-center justify-between px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+        >
             <div>
-                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('directory_your_departments') }}</h3>
+                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ dept.name }}</span>
+                <span v-if="dept.title" class="text-xs text-gray-500 dark:text-gray-400 ml-2">{{ dept.title }}</span>
             </div>
-            <div class="md:col-span-2 space-y-2">
-                <Link
-                    v-for="dept in $page.props.user.departments"
-                    :key="dept.hashid"
-                    :href="route('directory.show', dept.slug)"
-                    class="flex items-center justify-between px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
-                >
-                    <div>
-                        <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ dept.name }}</span>
-                        <span v-if="dept.title" class="text-xs text-gray-500 dark:text-gray-400 ml-2">{{ dept.title }}</span>
-                    </div>
-                    <Badge v-if="dept.level && dept.level !== 'member'" variant="secondary" class="text-xs capitalize">
-                        {{ dept.level.replace(/_/g, ' ') }}
-                    </Badge>
-                </Link>
-            </div>
-        </div>
-    </div>
+            <Badge v-if="dept.level && dept.level !== 'member'" variant="secondary" class="text-xs capitalize">
+                {{ dept.level.replace(/_/g, ' ') }}
+            </Badge>
+        </Link>
+    </ProfileSection>
 
     <!-- Staff Profile sections (staff only) -->
     <template v-if="$page.props.user.isStaff && staffForm">
         <StaffProfileConsentGate :consent="staffProfile.consent" @grant="grantStaffProfileConsent">
-            <div v-if="staffProfile?.consent?.granted" class="px-6 py-2 text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+            <div v-if="staffProfile?.consent?.granted" class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-2 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50 text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                 {{ $t('staff_profile_consent_state_granted', {
                     date: new Date(staffProfile.consent.granted_at).toLocaleDateString(),
                     version: staffProfile.consent.version
                 }) }}
-                — <Link :href="route('settings.mydata')" class="underline">{{ $t('staff_profile_consent_state_heading') }}</Link>
+                — <Link :href="route('my-data')" class="underline">{{ $t('staff_profile_consent_state_heading') }}</Link>
             </div>
 
         <form @submit.prevent="submitStaffProfile">
 
             <!-- Section: Personal Information -->
-            <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10">
-                <div class="grid md:grid-cols-3 gap-6 md:gap-10">
+            <ProfileSection>
+                <template #header>
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_personal') }}</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('staff_profile_description') }}</p>
+                </template>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_personal') }}</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('staff_profile_description') }}</p>
+                        <div class="flex items-center justify-between mb-1">
+                            <label for="firstname" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_firstname') }}</label>
+                            <VisibilityPicker field="firstname" />
+                        </div>
+                        <Input id="firstname" v-model="staffForm.firstname" class="w-full bg-white dark:bg-primary-950" />
+                        <p v-if="staffForm.errors.firstname" class="text-xs text-destructive mt-1">{{ staffForm.errors.firstname }}</p>
                     </div>
-                    <div class="md:col-span-2 space-y-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <div class="flex items-center justify-between mb-1">
-                                    <label for="firstname" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_firstname') }}</label>
-                                    <VisibilityPicker field="firstname" />
-                                </div>
-                                <Input id="firstname" v-model="staffForm.firstname" class="w-full bg-white dark:bg-primary-950" />
-                                <p v-if="staffForm.errors.firstname" class="text-xs text-destructive mt-1">{{ staffForm.errors.firstname }}</p>
-                            </div>
-                            <div>
-                                <div class="flex items-center justify-between mb-1">
-                                    <label for="lastname" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_lastname') }}</label>
-                                    <VisibilityPicker field="lastname" />
-                                </div>
-                                <Input id="lastname" v-model="staffForm.lastname" class="w-full bg-white dark:bg-primary-950" />
-                                <p v-if="staffForm.errors.lastname" class="text-xs text-destructive mt-1">{{ staffForm.errors.lastname }}</p>
-                            </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label for="lastname" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_lastname') }}</label>
+                            <VisibilityPicker field="lastname" />
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <div class="flex items-center justify-between mb-1">
-                                    <label for="pronouns" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_pronouns') }}</label>
-                                    <VisibilityPicker field="pronouns" />
-                                </div>
-                                <Input id="pronouns" v-model="staffForm.pronouns" class="w-full bg-white dark:bg-primary-950" />
-                                <p v-if="staffForm.errors.pronouns" class="text-xs text-destructive mt-1">{{ staffForm.errors.pronouns }}</p>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <div class="flex items-center justify-between mb-1">
-                                    <label for="birthdate" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_birthdate') }}</label>
-                                    <VisibilityPicker field="birthdate" />
-                                </div>
-                                <Input id="birthdate" type="date" v-model="staffForm.birthdate" class="w-full bg-white dark:bg-primary-950" />
-                                <p v-if="staffForm.errors.birthdate" class="text-xs text-destructive mt-1">{{ staffForm.errors.birthdate }}</p>
-                            </div>
-                            <div>
-                                <div class="flex items-center justify-between mb-1">
-                                    <label for="phone" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_phone') }}</label>
-                                    <VisibilityPicker field="phone" />
-                                </div>
-                                <Input id="phone" type="tel" v-model="staffForm.phone" class="w-full bg-white dark:bg-primary-950" />
-                                <p v-if="staffForm.errors.phone" class="text-xs text-destructive mt-1">{{ staffForm.errors.phone }}</p>
-                            </div>
-                        </div>
-                        <div class="flex justify-end">
-                            <Button type="submit" :disabled="staffForm.processing">{{ $t('save') }}</Button>
-                        </div>
+                        <Input id="lastname" v-model="staffForm.lastname" class="w-full bg-white dark:bg-primary-950" />
+                        <p v-if="staffForm.errors.lastname" class="text-xs text-destructive mt-1">{{ staffForm.errors.lastname }}</p>
                     </div>
                 </div>
-            </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label for="pronouns" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_pronouns') }}</label>
+                            <VisibilityPicker field="pronouns" />
+                        </div>
+                        <Input id="pronouns" v-model="staffForm.pronouns" class="w-full bg-white dark:bg-primary-950" />
+                        <p v-if="staffForm.errors.pronouns" class="text-xs text-destructive mt-1">{{ staffForm.errors.pronouns }}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label for="birthdate" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_birthdate') }}</label>
+                            <VisibilityPicker field="birthdate" />
+                        </div>
+                        <Input id="birthdate" type="date" v-model="staffForm.birthdate" class="w-full bg-white dark:bg-primary-950" />
+                        <p v-if="staffForm.errors.birthdate" class="text-xs text-destructive mt-1">{{ staffForm.errors.birthdate }}</p>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label for="phone" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('staff_profile_phone') }}</label>
+                            <VisibilityPicker field="phone" />
+                        </div>
+                        <Input id="phone" type="tel" v-model="staffForm.phone" class="w-full bg-white dark:bg-primary-950" />
+                        <p v-if="staffForm.errors.phone" class="text-xs text-destructive mt-1">{{ staffForm.errors.phone }}</p>
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <Button type="submit" :disabled="staffForm.processing">{{ $t('save') }}</Button>
+                </div>
+            </ProfileSection>
 
             <!-- Section: Address -->
-            <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
-                <div class="grid md:grid-cols-3 gap-6 md:gap-10">
-                    <div>
-                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_address') }}</h3>
-                        <div class="mt-2">
-                            <VisibilityPicker field="address" />
-                        </div>
+            <ProfileSection>
+                <template #header>
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_address') }}</h3>
+                    <div class="mt-2">
+                        <VisibilityPicker field="address" />
                     </div>
-                    <div class="md:col-span-2 space-y-4">
-                        <div>
-                            <label for="address_line1" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_address_line1') }}</label>
-                            <Input id="address_line1" v-model="staffForm.address_line1" class="w-full bg-white dark:bg-primary-950" />
-                            <p v-if="staffForm.errors.address_line1" class="text-xs text-destructive mt-1">{{ staffForm.errors.address_line1 }}</p>
-                        </div>
-                        <div>
-                            <label for="address_line2" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_address_line2') }}</label>
-                            <Input id="address_line2" v-model="staffForm.address_line2" class="w-full bg-white dark:bg-primary-950" />
-                            <p v-if="staffForm.errors.address_line2" class="text-xs text-destructive mt-1">{{ staffForm.errors.address_line2 }}</p>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
-                                <label for="postal_code" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_postal_code') }}</label>
-                                <Input id="postal_code" v-model="staffForm.postal_code" class="w-full bg-white dark:bg-primary-950" />
-                                <p v-if="staffForm.errors.postal_code" class="text-xs text-destructive mt-1">{{ staffForm.errors.postal_code }}</p>
-                            </div>
-                            <div class="sm:col-span-2">
-                                <label for="city" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_city') }}</label>
-                                <Input id="city" v-model="staffForm.city" class="w-full bg-white dark:bg-primary-950" />
-                                <p v-if="staffForm.errors.city" class="text-xs text-destructive mt-1">{{ staffForm.errors.city }}</p>
-                            </div>
-                        </div>
-                        <div>
-                            <label for="country" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_country') }}</label>
-                            <Input id="country" v-model="staffForm.country" maxlength="2" class="w-full bg-white dark:bg-primary-950 uppercase" placeholder="DE" />
-                            <p v-if="staffForm.errors.country" class="text-xs text-destructive mt-1">{{ staffForm.errors.country }}</p>
-                        </div>
-                        <div class="flex justify-end">
-                            <Button type="submit" :disabled="staffForm.processing">{{ $t('save') }}</Button>
-                        </div>
+                </template>
+                <div>
+                    <label for="address_line1" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_address_line1') }}</label>
+                    <Input id="address_line1" v-model="staffForm.address_line1" class="w-full bg-white dark:bg-primary-950" />
+                    <p v-if="staffForm.errors.address_line1" class="text-xs text-destructive mt-1">{{ staffForm.errors.address_line1 }}</p>
+                </div>
+                <div>
+                    <label for="address_line2" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_address_line2') }}</label>
+                    <Input id="address_line2" v-model="staffForm.address_line2" class="w-full bg-white dark:bg-primary-950" />
+                    <p v-if="staffForm.errors.address_line2" class="text-xs text-destructive mt-1">{{ staffForm.errors.address_line2 }}</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label for="postal_code" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_postal_code') }}</label>
+                        <Input id="postal_code" v-model="staffForm.postal_code" class="w-full bg-white dark:bg-primary-950" />
+                        <p v-if="staffForm.errors.postal_code" class="text-xs text-destructive mt-1">{{ staffForm.errors.postal_code }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="city" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_city') }}</label>
+                        <Input id="city" v-model="staffForm.city" class="w-full bg-white dark:bg-primary-950" />
+                        <p v-if="staffForm.errors.city" class="text-xs text-destructive mt-1">{{ staffForm.errors.city }}</p>
                     </div>
                 </div>
-            </div>
+                <div>
+                    <label for="country" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_country') }}</label>
+                    <Popover v-model:open="countryPopoverOpen">
+                        <PopoverTrigger as-child>
+                            <button type="button" class="flex w-full items-center justify-between rounded-md border border-input bg-white dark:bg-primary-950 px-3 py-2 text-sm shadow-xs hover:bg-accent hover:text-accent-foreground">
+                                <span v-if="staffForm.country" class="truncate">{{ countryMap[staffForm.country] || staffForm.country }}</span>
+                                <span v-else class="text-muted-foreground">{{ $t('staff_profile_select_country') }}</span>
+                                <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </button>
+                        </PopoverTrigger>
+                        <PopoverContent class="w-[--reka-popover-trigger-width] p-0" align="start">
+                            <Command v-model="staffForm.country" @update:model-value="countryPopoverOpen = false">
+                                <CommandInput :placeholder="$t('staff_profile_search_country')" />
+                                <CommandList class="max-h-48">
+                                    <CommandEmpty>{{ $t('staff_profile_no_country_found') }}</CommandEmpty>
+                                    <CommandGroup>
+                                        <CommandItem v-for="c in priorityCountries" :key="c.code" :value="c.code">
+                                            <Check class="h-4 w-4 mr-2" :class="staffForm.country === c.code ? 'opacity-100' : 'opacity-0'" />
+                                            {{ c.name }}
+                                            <span class="ml-auto text-xs text-muted-foreground">{{ c.code }}</span>
+                                        </CommandItem>
+                                    </CommandGroup>
+                                    <CommandSeparator />
+                                    <CommandGroup>
+                                        <CommandItem v-for="c in otherCountries" :key="c.code" :value="c.code">
+                                            <Check class="h-4 w-4 mr-2" :class="staffForm.country === c.code ? 'opacity-100' : 'opacity-0'" />
+                                            {{ c.name }}
+                                            <span class="ml-auto text-xs text-muted-foreground">{{ c.code }}</span>
+                                        </CommandItem>
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+                    <p v-if="staffForm.errors.country" class="text-xs text-destructive mt-1">{{ staffForm.errors.country }}</p>
+                </div>
+                <div class="flex justify-end">
+                    <Button type="submit" :disabled="staffForm.processing">{{ $t('save') }}</Button>
+                </div>
+            </ProfileSection>
 
             <!-- Section: Emergency Contact -->
-            <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
-                <div class="grid md:grid-cols-3 gap-6 md:gap-10">
-                    <div>
-                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_emergency_contact') }}</h3>
-                        <div class="mt-2">
-                            <VisibilityPicker field="emergency_contact" />
-                        </div>
+            <ProfileSection>
+                <template #header>
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_emergency_contact') }}</h3>
+                    <div class="mt-2">
+                        <VisibilityPicker field="emergency_contact" />
                     </div>
-                    <div class="md:col-span-2 space-y-4">
-                        <div>
-                            <label for="emergency_contact_name" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_emergency_contact_name') }}</label>
-                            <Input id="emergency_contact_name" v-model="staffForm.emergency_contact_name" class="w-full bg-white dark:bg-primary-950" />
-                            <p v-if="staffForm.errors.emergency_contact_name" class="text-xs text-destructive mt-1">{{ staffForm.errors.emergency_contact_name }}</p>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label for="emergency_contact_phone" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_emergency_contact_phone') }}</label>
-                                <Input id="emergency_contact_phone" type="tel" v-model="staffForm.emergency_contact_phone" class="w-full bg-white dark:bg-primary-950" />
-                                <p v-if="staffForm.errors.emergency_contact_phone" class="text-xs text-destructive mt-1">{{ staffForm.errors.emergency_contact_phone }}</p>
-                            </div>
-                            <div>
-                                <label for="emergency_contact_telegram" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_emergency_contact_telegram') }}</label>
-                                <Input id="emergency_contact_telegram" v-model="staffForm.emergency_contact_telegram" class="w-full bg-white dark:bg-primary-950" placeholder="@handle" />
-                                <p v-if="staffForm.errors.emergency_contact_telegram" class="text-xs text-destructive mt-1">{{ staffForm.errors.emergency_contact_telegram }}</p>
-                            </div>
-                        </div>
-                        <div class="flex justify-end">
-                            <Button type="submit" :disabled="staffForm.processing">{{ $t('save') }}</Button>
-                        </div>
+                </template>
+                <div>
+                    <label for="emergency_contact_name" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_emergency_contact_name') }}</label>
+                    <Input id="emergency_contact_name" v-model="staffForm.emergency_contact_name" class="w-full bg-white dark:bg-primary-950" />
+                    <p v-if="staffForm.errors.emergency_contact_name" class="text-xs text-destructive mt-1">{{ staffForm.errors.emergency_contact_name }}</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="emergency_contact_phone" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_emergency_contact_phone') }}</label>
+                        <Input id="emergency_contact_phone" type="tel" v-model="staffForm.emergency_contact_phone" class="w-full bg-white dark:bg-primary-950" />
+                        <p v-if="staffForm.errors.emergency_contact_phone" class="text-xs text-destructive mt-1">{{ staffForm.errors.emergency_contact_phone }}</p>
+                    </div>
+                    <div>
+                        <label for="emergency_contact_telegram" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_emergency_contact_telegram') }}</label>
+                        <Input id="emergency_contact_telegram" v-model="staffForm.emergency_contact_telegram" class="w-full bg-white dark:bg-primary-950" placeholder="@handle" />
+                        <p v-if="staffForm.errors.emergency_contact_telegram" class="text-xs text-destructive mt-1">{{ staffForm.errors.emergency_contact_telegram }}</p>
                     </div>
                 </div>
-            </div>
+                <div class="flex justify-end">
+                    <Button type="submit" :disabled="staffForm.processing">{{ $t('save') }}</Button>
+                </div>
+            </ProfileSection>
 
             <!-- Section: Kenntnisse (Skills) -->
-            <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
-                <div class="grid md:grid-cols-3 gap-6 md:gap-10">
-                    <div>
-                        <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_skills') }}</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('staff_profile_skills_description') }}</p>
-                    </div>
-                    <div class="md:col-span-2 space-y-4">
-                        <div>
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_spoken_languages') }}</label>
-                            <Popover v-model:open="languagePopoverOpen">
-                                <PopoverTrigger as-child>
-                                    <button type="button" class="flex w-full items-center justify-between rounded-md border border-input bg-white dark:bg-primary-950 px-3 py-2 text-sm shadow-xs hover:bg-accent hover:text-accent-foreground">
-                                        <div v-if="staffForm.spoken_languages.length > 0" class="flex flex-wrap gap-1.5">
-                                            <span
-                                                v-for="(code, i) in staffForm.spoken_languages"
-                                                :key="code"
-                                                class="inline-flex items-center gap-1 rounded-md bg-primary/10 text-primary px-2 py-0.5 text-xs font-medium"
-                                            >
-                                                {{ languageMap[code] || code }}
-                                                <button type="button" class="hover:text-destructive" @click.stop="staffForm.spoken_languages.splice(i, 1)">
-                                                    <X class="h-3 w-3" />
-                                                </button>
-                                            </span>
-                                        </div>
-                                        <span v-else class="text-muted-foreground">{{ $t('staff_profile_search_language') }}</span>
-                                        <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                    </button>
-                                </PopoverTrigger>
-                                <PopoverContent class="w-[--reka-popover-trigger-width] p-0" align="start">
-                                    <Command :multiple="true" v-model="staffForm.spoken_languages">
-                                        <CommandInput :placeholder="$t('staff_profile_search_language')" />
-                                        <CommandList class="max-h-48">
-                                            <CommandEmpty>{{ $t('staff_profile_no_language_found') }}</CommandEmpty>
-                                            <CommandGroup>
-                                                <CommandItem v-for="lang in availableLanguages" :key="lang.code" :value="lang.code">
-                                                    <Check class="h-4 w-4 mr-2" :class="staffForm.spoken_languages.includes(lang.code) ? 'opacity-100' : 'opacity-0'" />
-                                                    {{ lang.name }}
-                                                    <span class="ml-auto text-xs text-muted-foreground">{{ lang.code }}</span>
-                                                </CommandItem>
-                                            </CommandGroup>
-                                        </CommandList>
-                                    </Command>
-                                </PopoverContent>
-                            </Popover>
-                            <p v-if="staffForm.errors.spoken_languages" class="text-xs text-destructive mt-1">{{ staffForm.errors.spoken_languages }}</p>
-                        </div>
-                        <div class="flex justify-end">
-                            <Button type="submit" :disabled="staffForm.processing">{{ $t('save') }}</Button>
-                        </div>
-                    </div>
+            <ProfileSection>
+                <template #header>
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_skills') }}</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('staff_profile_skills_description') }}</p>
+                </template>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_spoken_languages') }}</label>
+                    <Popover v-model:open="languagePopoverOpen">
+                        <PopoverTrigger as-child>
+                            <button type="button" class="flex w-full items-center justify-between rounded-md border border-input bg-white dark:bg-primary-950 px-3 py-2 text-sm shadow-xs hover:bg-accent hover:text-accent-foreground">
+                                <div v-if="staffForm.spoken_languages.length > 0" class="flex flex-wrap gap-1.5">
+                                    <span
+                                        v-for="(code, i) in staffForm.spoken_languages"
+                                        :key="code"
+                                        class="inline-flex items-center gap-1 rounded-md bg-primary/10 text-primary px-2 py-0.5 text-xs font-medium"
+                                    >
+                                        {{ languageMap[code] || code }}
+                                        <button type="button" class="hover:text-destructive" @click.stop="staffForm.spoken_languages.splice(i, 1)">
+                                            <X class="h-3 w-3" />
+                                        </button>
+                                    </span>
+                                </div>
+                                <span v-else class="text-muted-foreground">{{ $t('staff_profile_search_language') }}</span>
+                                <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </button>
+                        </PopoverTrigger>
+                        <PopoverContent class="w-[--reka-popover-trigger-width] p-0" align="start">
+                            <Command :multiple="true" v-model="staffForm.spoken_languages">
+                                <CommandInput :placeholder="$t('staff_profile_search_language')" />
+                                <CommandList class="max-h-48">
+                                    <CommandEmpty>{{ $t('staff_profile_no_language_found') }}</CommandEmpty>
+                                    <CommandGroup>
+                                        <CommandItem v-for="lang in priorityLanguages" :key="lang.code" :value="lang.code">
+                                            <Check class="h-4 w-4 mr-2" :class="staffForm.spoken_languages.includes(lang.code) ? 'opacity-100' : 'opacity-0'" />
+                                            {{ lang.name }}
+                                            <span class="ml-auto text-xs text-muted-foreground">{{ lang.code }}</span>
+                                        </CommandItem>
+                                    </CommandGroup>
+                                    <CommandSeparator />
+                                    <CommandGroup>
+                                        <CommandItem v-for="lang in otherLanguages" :key="lang.code" :value="lang.code">
+                                            <Check class="h-4 w-4 mr-2" :class="staffForm.spoken_languages.includes(lang.code) ? 'opacity-100' : 'opacity-0'" />
+                                            {{ lang.name }}
+                                            <span class="ml-auto text-xs text-muted-foreground">{{ lang.code }}</span>
+                                        </CommandItem>
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+                    <p v-if="staffForm.errors.spoken_languages" class="text-xs text-destructive mt-1">{{ staffForm.errors.spoken_languages }}</p>
                 </div>
-            </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_skills_label') }}</label>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ $t('staff_profile_skills_managed_in_english') }}</p>
+                    <Popover v-model:open="skillPopoverOpen">
+                        <PopoverTrigger as-child>
+                            <button type="button" class="flex w-full items-center justify-between rounded-md border border-input bg-white dark:bg-primary-950 px-3 py-2 text-sm shadow-xs hover:bg-accent hover:text-accent-foreground min-h-[38px]">
+                                <div v-if="staffForm.skills.length > 0" class="flex flex-wrap gap-1.5">
+                                    <span
+                                        v-for="(skill, i) in staffForm.skills"
+                                        :key="skill"
+                                        class="inline-flex items-center gap-1 rounded-md bg-primary/10 text-primary px-2 py-0.5 text-xs font-medium"
+                                    >
+                                        {{ skill }}
+                                        <button type="button" class="hover:text-destructive" @click.stop="removeSkill(i)">
+                                            <X class="h-3 w-3" />
+                                        </button>
+                                    </span>
+                                </div>
+                                <span v-else class="text-muted-foreground">{{ $t('staff_profile_skills_add') }}</span>
+                                <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </button>
+                        </PopoverTrigger>
+                        <PopoverContent class="w-[--reka-popover-trigger-width] p-0" align="start">
+                            <div class="flex flex-col">
+                                <input
+                                    v-model="skillSearch"
+                                    class="flex h-10 w-full bg-transparent px-3 py-2 text-sm outline-none placeholder:text-muted-foreground border-b"
+                                    :placeholder="$t('staff_profile_skills_search')"
+                                    @input="searchSkills($event.target.value)"
+                                    @keydown.enter.prevent="skillSearch.trim() && addSkill(skillSearch)"
+                                />
+                                <div class="max-h-48 overflow-y-auto">
+                                    <button
+                                        v-for="skill in skillResults.filter(s => !staffForm.skills.includes(s.name))"
+                                        :key="skill.id"
+                                        type="button"
+                                        class="w-full text-left px-3 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground"
+                                        @click="addSkill(skill.name)"
+                                    >
+                                        {{ skill.name }}
+                                    </button>
+                                    <button
+                                        v-if="skillSearch.trim() && !skillResults.some(s => s.name.toLowerCase() === skillSearch.trim().toLowerCase())"
+                                        type="button"
+                                        class="w-full text-left px-3 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground text-primary"
+                                        @click="addSkill(skillSearch)"
+                                    >
+                                        {{ $t('staff_profile_skills_create', { name: skillSearch.trim() }) }}
+                                    </button>
+                                </div>
+                            </div>
+                        </PopoverContent>
+                    </Popover>
+                    <p v-if="staffForm.errors.skills" class="text-xs text-destructive mt-1">{{ staffForm.errors.skills }}</p>
+                </div>
+                <div class="flex justify-end">
+                    <Button type="submit" :disabled="staffForm.processing">{{ $t('save') }}</Button>
+                </div>
+            </ProfileSection>
         </form>
 
         <!-- Section: Convention Attendance -->
-        <div v-if="$page.props.user.isStaff" class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
-            <div class="grid md:grid-cols-3 gap-6 md:gap-10">
-                <div>
-                    <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('convention_attendance') }}</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('convention_attendance_description') }}</p>
-
-                </div>
-                <div class="md:col-span-2">
-                    <ConventionAttendanceEditor
-                        :attendance="conventionAttendance"
-                        :all-conventions="allConventions"
-                        :endpoint="route('settings.staff-profile.conventions')"
-                    />
-                </div>
-            </div>
-        </div>
+        <ProfileSection v-if="$page.props.user.isStaff" slot-class="">
+            <template #header>
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('convention_attendance') }}</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('convention_attendance_description') }}</p>
+            </template>
+            <ConventionAttendanceEditor
+                :attendance="conventionAttendance"
+                :all-conventions="allConventions"
+                :endpoint="route('settings.staff-profile.conventions')"
+            />
+        </ProfileSection>
 
         <!-- Section: ConBook Credits -->
-        <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
-            <div class="grid md:grid-cols-3 gap-6 md:gap-10">
-                <div>
-                    <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_conbook_credits') }}</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('staff_profile_conbook_credits_description') }}</p>
-                </div>
-                <div class="md:col-span-2 space-y-4">
-                    <form @submit.prevent="submitCreditAs">
-                        <div class="space-y-4">
-                            <div>
-                                <label for="credit_as" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_credit_as_default') }}</label>
-                                <Input id="credit_as" v-model="creditAsForm.credit_as" class="w-full bg-white dark:bg-primary-950" />
-                            </div>
+        <ProfileSection>
+            <template #header>
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_conbook_credits') }}</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('staff_profile_conbook_credits_description') }}</p>
+            </template>
+            <form @submit.prevent="submitCreditAs">
+                <div class="space-y-4">
+                    <div>
+                        <label for="credit_as" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('staff_profile_credit_as_default') }}</label>
+                        <Input id="credit_as" v-model="creditAsForm.credit_as" class="w-full bg-white dark:bg-primary-950" />
+                    </div>
 
-                            <!-- Per-group override toggle -->
-                            <div v-if="groupMemberships && groupMemberships.length > 0" class="space-y-3">
-                                <div class="flex items-center gap-2">
-                                    <Checkbox id="custom_per_group" v-model="showPerGroupCredits" />
-                                    <label for="custom_per_group" class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
-                                        {{ $t('staff_profile_custom_per_group') }}
-                                    </label>
-                                </div>
-
-                                <div v-if="showPerGroupCredits" class="overflow-x-auto">
-                                    <table class="w-full text-sm">
-                                        <thead>
-                                            <tr class="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
-                                                <th class="pb-2 font-medium">{{ $t('staff_profile_group_name') }}</th>
-                                                <th class="pb-2 font-medium">{{ $t('staff_profile_group_credit_as') }}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="(group, index) in groupMemberships" :key="group.id" class="border-b border-gray-100 dark:border-gray-800">
-                                                <td class="py-2 pr-4">{{ group.name }}</td>
-                                                <td class="py-2">
-                                                    <Input v-model="creditAsForm.groups[index].credit_as" :placeholder="creditAsForm.credit_as || $t('staff_profile_credit_as')" class="h-8 w-full max-w-48 bg-white dark:bg-primary-950" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div class="flex justify-end">
-                                <Button type="submit" :disabled="creditAsForm.processing">{{ $t('save') }}</Button>
-                            </div>
+                    <!-- Per-group override toggle -->
+                    <div v-if="groupMemberships && groupMemberships.length > 0" class="space-y-3">
+                        <div class="flex items-center gap-2">
+                            <Checkbox id="custom_per_group" v-model="showPerGroupCredits" />
+                            <label for="custom_per_group" class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                                {{ $t('staff_profile_custom_per_group') }}
+                            </label>
                         </div>
-                    </form>
+
+                        <div v-if="showPerGroupCredits" class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
+                                        <th class="pb-2 font-medium">{{ $t('staff_profile_group_name') }}</th>
+                                        <th class="pb-2 font-medium">{{ $t('staff_profile_group_credit_as') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(group, index) in groupMemberships" :key="group.id" class="border-b border-gray-100 dark:border-gray-800">
+                                        <td class="py-2 pr-4">{{ group.name }}</td>
+                                        <td class="py-2">
+                                            <Input v-model="creditAsForm.groups[index].credit_as" :placeholder="creditAsForm.credit_as || $t('staff_profile_credit_as')" class="h-8 w-full max-w-48 bg-white dark:bg-primary-950" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <Button type="submit" :disabled="creditAsForm.processing">{{ $t('save') }}</Button>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </form>
+        </ProfileSection>
         </StaffProfileConsentGate>
     </template>
 
     <!-- Section: Telegram -->
-    <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
-        <div class="grid md:grid-cols-3 md:items-center gap-6 md:gap-10">
-            <div>
-                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('telegram_connect_title') }}</h3>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('telegram_connect_description') }}</p>
+    <ProfileSection class="md:items-center" slot-class="">
+        <template #header>
+            <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('telegram_connect_title') }}</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('telegram_connect_description') }}</p>
+        </template>
+        <!-- Linked state -->
+        <div v-if="telegramState.linked" class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <TelegramIcon class="h-4 w-4 text-[#26A5E4]" />
+                <span class="text-sm text-gray-900 dark:text-gray-100">{{ $t('telegram_linked_as', { username: telegramState.username }) }}</span>
             </div>
-            <div class="md:col-span-2">
-                <!-- Linked state -->
-                <div v-if="telegramState.linked" class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <TelegramIcon class="h-4 w-4 text-[#26A5E4]" />
-                        <span class="text-sm text-gray-900 dark:text-gray-100">{{ $t('telegram_linked_as', { username: telegramState.username }) }}</span>
-                    </div>
-                    <Button type="button" variant="outline" size="sm" @click="disconnectTelegram">
-                        {{ $t('telegram_disconnect') }}
-                    </Button>
-                </div>
-
-                <!-- Linking in progress -->
-                <div v-else-if="telegramState.linking" class="space-y-3">
-                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ $t('telegram_or_send_code') }}:</p>
-                    <div class="flex items-center gap-3">
-                        <code class="text-lg font-mono font-bold tracking-widest bg-gray-100 dark:bg-primary-950 px-4 py-2 rounded-md">{{ telegramState.code }}</code>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <Button type="button" as="a" :href="telegramState.deepLink" target="_blank" size="sm">
-                            <TelegramIcon class="h-4 w-4 mr-1.5" />
-                            {{ $t('telegram_open_bot') }}
-                        </Button>
-                        <Button type="button" variant="ghost" size="sm" @click="cancelLinking">
-                            {{ $t('cancel') }}
-                        </Button>
-                    </div>
-                    <p class="text-xs text-muted-foreground">{{ $t('telegram_code_expires') }}</p>
-                </div>
-
-                <!-- Not linked -->
-                <div v-else>
-                    <Button type="button" variant="outline" @click="startTelegramLink">
-                        <TelegramIcon class="h-4 w-4 mr-1.5" />
-                        {{ $t('telegram_connect') }}
-                    </Button>
-                </div>
-            </div>
+            <Button type="button" variant="outline" size="sm" @click="disconnectTelegram">
+                {{ $t('telegram_disconnect') }}
+            </Button>
         </div>
-    </div>
+
+        <!-- Linking in progress -->
+        <div v-else-if="telegramState.linking" class="space-y-3">
+            <p class="text-sm text-gray-600 dark:text-gray-400">{{ $t('telegram_or_send_code') }}:</p>
+            <div class="flex items-center gap-3">
+                <code class="text-lg font-mono font-bold tracking-widest bg-gray-100 dark:bg-primary-950 px-4 py-2 rounded-md">{{ telegramState.code }}</code>
+            </div>
+            <div class="flex items-center gap-2">
+                <Button type="button" as="a" :href="telegramState.deepLink" target="_blank" size="sm">
+                    <TelegramIcon class="h-4 w-4 mr-1.5" />
+                    {{ $t('telegram_open_bot') }}
+                </Button>
+                <Button type="button" variant="ghost" size="sm" @click="cancelLinking">
+                    {{ $t('cancel') }}
+                </Button>
+            </div>
+            <p class="text-xs text-muted-foreground">{{ $t('telegram_code_expires') }}</p>
+        </div>
+
+        <!-- Not linked -->
+        <div v-else>
+            <Button type="button" variant="outline" @click="startTelegramLink">
+                <TelegramIcon class="h-4 w-4 mr-1.5" />
+                {{ $t('telegram_connect') }}
+            </Button>
+        </div>
+    </ProfileSection>
 
     <!-- Section: Preferences -->
-    <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
-        <div class="grid md:grid-cols-3 gap-6 md:gap-10">
-            <div>
-                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('preferences') }}</h3>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('preferences_description') }}</p>
-            </div>
-            <div class="md:col-span-2 space-y-5">
-                <!-- Language -->
-                <div>
-                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('preferences_language_label') }}</label>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ $t('preferences_language_description') }}</p>
-                    <Select :model-value="currentLocale" @update:model-value="(val) => savePreference('locale', val)">
-                        <SelectTrigger class="w-full max-w-xs bg-white dark:bg-primary-950">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem v-for="lang in uiLanguages" :key="lang.code" :value="lang.code">
-                                {{ lang.name }}
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
+    <ProfileSection slot-class="space-y-5">
+        <template #header>
+            <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('preferences') }}</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('preferences_description') }}</p>
+        </template>
+        <!-- Language -->
+        <div>
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('preferences_language_label') }}</label>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ $t('preferences_language_description') }}</p>
+            <Select :model-value="currentLocale" @update:model-value="(val) => savePreference('locale', val)">
+                <SelectTrigger class="w-full max-w-xs bg-white dark:bg-primary-950">
+                    <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem v-for="lang in uiLanguages" :key="lang.code" :value="lang.code">
+                        {{ lang.name }}
+                    </SelectItem>
+                </SelectContent>
+            </Select>
+        </div>
 
-                <!-- Theme -->
-                <div>
-                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('preferences_theme_label') }}</label>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ $t('preferences_theme_description') }}</p>
-                    <div class="flex gap-2">
-                        <Button
-                            v-for="opt in themeOptions"
-                            :key="opt.value"
-                            type="button"
-                            :variant="currentTheme === opt.value ? 'default' : 'outline'"
-                            size="sm"
-                            class="gap-1.5"
-                            @click="savePreference('theme', opt.value)"
-                        >
-                            <component :is="opt.icon" class="h-4 w-4" />
-                            {{ $t(opt.label) }}
-                        </Button>
-                    </div>
-                </div>
-
-                <!-- NSFW -->
-                <div class="flex items-center justify-between">
-                    <div>
-                        <label for="nsfw_content" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('preferences_nsfw_label') }}</label>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $t('preferences_nsfw_description') }}</p>
-                    </div>
-                    <Switch
-                        id="nsfw_content"
-                        v-model="nsfwContent"
-                        @update:model-value="(val) => savePreference('nsfw_content', val)"
-                    />
-                </div>
+        <!-- Theme -->
+        <div>
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">{{ $t('preferences_theme_label') }}</label>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ $t('preferences_theme_description') }}</p>
+            <div class="flex gap-2">
+                <Button
+                    v-for="opt in themeOptions"
+                    :key="opt.value"
+                    type="button"
+                    :variant="currentTheme === opt.value ? 'default' : 'outline'"
+                    size="sm"
+                    class="gap-1.5"
+                    @click="savePreference('theme', opt.value)"
+                >
+                    <component :is="opt.icon" class="h-4 w-4" />
+                    {{ $t(opt.label) }}
+                </Button>
             </div>
         </div>
-    </div>
+
+        <!-- NSFW -->
+        <div class="flex items-center justify-between">
+            <div>
+                <label for="nsfw_content" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('preferences_nsfw_label') }}</label>
+                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $t('preferences_nsfw_description') }}</p>
+            </div>
+            <Switch
+                id="nsfw_content"
+                v-model="nsfwContent"
+                @update:model-value="(val) => savePreference('nsfw_content', val)"
+            />
+        </div>
+    </ProfileSection>
 </template>
 
 <script setup>
@@ -472,13 +528,14 @@ import {
     DropdownMenu, DropdownMenuContent, DropdownMenuLabel,
     DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/Components/ui/dropdown-menu'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/Components/ui/command'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '@/Components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover'
 import { Checkbox } from '@/Components/ui/checkbox'
 import { Badge } from '@/Components/ui/badge'
 import { Camera, Pencil, Check, X, Globe, Users, Shield, Lock, Sun, Moon, Monitor, ChevronsUpDown } from 'lucide-vue-next'
 import DevHashid from '@/Components/DevHashid.vue'
 import StaffProfileConsentGate from '@/Components/StaffProfileConsentGate.vue'
+import ProfileSection from '@/Components/ProfileSection.vue'
 
 const TelegramIcon = (props, { attrs }) => h('svg', { viewBox: '0 0 24 24', fill: 'currentColor', ...attrs }, [
     h('path', { d: 'M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z' })
@@ -493,6 +550,7 @@ const props = defineProps({
     conventionAttendance: Array,
     allConventions: Array,
     availableLanguages: Array,
+    availableCountries: Array,
     telegram: Object,
 })
 
@@ -689,6 +747,7 @@ const staffForm = page.props.user.isStaff ? useForm({
     emergency_contact_phone: props.staffProfile?.emergency_contact_phone ?? null,
     emergency_contact_telegram: props.staffProfile?.emergency_contact_telegram ?? null,
     spoken_languages: props.staffProfile?.spoken_languages ?? [],
+    skills: props.staffProfile?.skills ?? [],
     visibility: props.staffProfile?.visibility ?? {},
 }) : null
 
@@ -711,6 +770,46 @@ function submitCreditAs() {
 
 const languageMap = Object.fromEntries((props.availableLanguages ?? []).map(l => [l.code, l.name]))
 const languagePopoverOpen = ref(false)
+const priorityLanguageCodes = new Set(['de', 'en', 'fr', 'nl', 'pl', 'cs', 'da', 'it', 'es', 'pt'])
+const priorityLanguages = (props.availableLanguages ?? []).filter(l => priorityLanguageCodes.has(l.code))
+const otherLanguages = (props.availableLanguages ?? []).filter(l => !priorityLanguageCodes.has(l.code))
+const skillSearch = ref('')
+const skillResults = ref([])
+const skillPopoverOpen = ref(false)
+let skillSearchTimeout = null
+
+async function searchSkills(query) {
+    clearTimeout(skillSearchTimeout)
+    if (!query.trim()) { skillResults.value = []; return }
+    skillSearchTimeout = setTimeout(async () => {
+        const response = await fetch(route('settings.staff-profile.skills.search', { q: query }), {
+            headers: { 'Accept': 'application/json' },
+        })
+        skillResults.value = await response.json()
+    }, 200)
+}
+
+function addSkill(name) {
+    const trimmed = name.trim()
+    if (!trimmed) return
+    const titleCased = trimmed.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    if (!staffForm.skills.includes(titleCased)) {
+        staffForm.skills.push(titleCased)
+    }
+    skillSearch.value = ''
+    skillResults.value = []
+    skillPopoverOpen.value = false
+}
+
+function removeSkill(index) {
+    staffForm.skills.splice(index, 1)
+}
+
+const countryMap = Object.fromEntries((props.availableCountries ?? []).map(c => [c.code, c.name]))
+const countryPopoverOpen = ref(false)
+const priorityCountryCodes = new Set(['DE', 'AT', 'CH', 'NL', 'BE', 'LU', 'FR', 'PL', 'CZ', 'DK'])
+const priorityCountries = (props.availableCountries ?? []).filter(c => priorityCountryCodes.has(c.code))
+const otherCountries = (props.availableCountries ?? []).filter(c => !priorityCountryCodes.has(c.code))
 
 function getVisibility(field) {
     return staffForm.visibility[field] ?? visibilityDefaults[field] ?? 'all_staff'
