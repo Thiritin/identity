@@ -56,7 +56,10 @@ test('manager can add member to group', function () {
     $newUser = User::factory()->create();
 
     $this->actingAs($manager)
-        ->post(route('directory.members.store', $department), ['user_hashid' => $newUser->hashid])
+        ->post(route('directory.members.store', $department), [
+            'user_hashid' => $newUser->hashid,
+            'level' => 'member',
+        ])
         ->assertRedirect();
 
     expect($department->users()->where('user_id', $newUser->id)->exists())->toBeTrue();
@@ -64,18 +67,19 @@ test('manager can add member to group', function () {
 
 test('manager can update member level', function () {
     [$manager, $department] = setupManager();
+    $team = Group::factory()->team()->create(['name' => 'Test Team', 'parent_id' => $department->id]);
     $member = User::factory()->create();
-    $department->users()->attach($member, ['level' => GroupUserLevel::Member]);
+    $team->users()->attach($member, ['level' => GroupUserLevel::Member]);
 
     $this->actingAs($manager)
-        ->patch(route('directory.members.update', [$department, $member]), [
+        ->patch(route('directory.members.update', [$team, $member]), [
             'level' => GroupUserLevel::TeamLead->value,
             'title' => 'Lead',
             'can_manage_members' => true,
         ])
         ->assertRedirect();
 
-    $pivot = $department->users()->find($member)->pivot;
+    $pivot = $team->users()->find($member)->pivot;
     expect($pivot->level)->toBe(GroupUserLevel::TeamLead);
     expect($pivot->title)->toBe('Lead');
     expect($pivot->can_manage_members)->toBeTrue();
