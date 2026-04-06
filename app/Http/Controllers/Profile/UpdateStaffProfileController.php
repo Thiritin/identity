@@ -22,6 +22,17 @@ class UpdateStaffProfileController extends Controller
 
         $user->update($data);
 
+        // Sync skills
+        if ($request->has('skills')) {
+            $skillIds = collect($request->input('skills', []))
+                ->map(fn (string $name) => \App\Models\Skill::firstOrCreate(
+                    ['name' => str($name)->trim()->title()->toString()]
+                ))
+                ->pluck('id');
+
+            $user->skills()->sync($skillIds);
+        }
+
         return Redirect::route('settings.profile');
     }
 }

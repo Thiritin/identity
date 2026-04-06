@@ -46,6 +46,8 @@ class UpdateStaffProfileRequest extends FormRequest
             'credit_as' => ['nullable', 'string', 'max:100'],
             'visibility' => ['nullable', 'array'],
             'visibility.*' => [Rule::enum(StaffProfileVisibility::class)],
+            'skills' => ['nullable', 'array'],
+            'skills.*' => ['required', 'string', 'max:50'],
         ];
     }
 
@@ -68,6 +70,8 @@ class UpdateStaffProfileRequest extends FormRequest
                 ->only(self::VISIBILITY_FIELDS)
                 ->toArray();
         }
+
+        unset($data['skills']);
 
         return $data;
     }

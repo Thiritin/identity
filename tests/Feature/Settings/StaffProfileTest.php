@@ -179,3 +179,75 @@ it('validates spoken_languages items max length', function () {
         ])
         ->assertSessionHasErrors('spoken_languages.0');
 });
+
+it('can save skills to staff profile', function () {
+    $user = createStaffUser();
+
+    $this->actingAs($user)
+        ->post(route('settings.staff-profile.update'), [
+            'skills' => ['First Aid', 'Photography'],
+        ])
+        ->assertRedirect(route('settings.profile'));
+
+    $user->refresh();
+    expect($user->skills->pluck('name')->sort()->values()->all())
+        ->toBe(['First Aid', 'Photography']);
+});
+
+it('creates new skills that do not exist yet', function () {
+    $user = createStaffUser();
+
+    $this->actingAs($user)
+        ->post(route('settings.staff-profile.update'), [
+            'skills' => ['Brand New Skill'],
+        ])
+        ->assertRedirect(route('settings.profile'));
+
+    expect(\App\Models\Skill::where('name', 'Brand New Skill')->exists())->toBeTrue();
+    expect($user->refresh()->skills->pluck('name')->all())->toBe(['Brand New Skill']);
+});
+
+it('title-cases skill names on creation', function () {
+    $user = createStaffUser();
+
+    $this->actingAs($user)
+        ->post(route('settings.staff-profile.update'), [
+            'skills' => ['first aid'],
+        ]);
+
+    expect(\App\Models\Skill::first()->name)->toBe('First Aid');
+});
+
+it('rejects skill names exceeding 50 characters', function () {
+    $user = createStaffUser();
+
+    $this->actingAs($user)
+        ->post(route('settings.staff-profile.update'), [
+            'skills' => [str_repeat('a', 51)],
+        ])
+        ->assertSessionHasErrors('skills.0');
+});
+
+it('rejects empty skill names', function () {
+    $user = createStaffUser();
+
+    $this->actingAs($user)
+        ->post(route('settings.staff-profile.update'), [
+            'skills' => [''],
+        ])
+        ->assertSessionHasErrors('skills.0');
+});
+
+it('syncs skills removing previously set ones', function () {
+    $user = createStaffUser();
+    $old = \App\Models\Skill::create(['name' => 'Old Skill']);
+    $user->skills()->attach($old);
+
+    $this->actingAs($user)
+        ->post(route('settings.staff-profile.update'), [
+            'skills' => ['New Skill'],
+        ]);
+
+    $user->refresh();
+    expect($user->skills->pluck('name')->all())->toBe(['New Skill']);
+});
