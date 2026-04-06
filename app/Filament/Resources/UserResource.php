@@ -16,6 +16,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
@@ -59,6 +60,9 @@ class UserResource extends Resource
                     ->imageResizeTargetHeight('512')
                     ->imagePreviewHeight('256'),
 
+                Toggle::make('is_hr')
+                    ->label('HR'),
+
                 Placeholder::make('created_at')
                     ->label('Created Date')
                     ->content(fn (?User $record): string => $record?->created_at?->diffForHumans() ?? '-'),
@@ -90,6 +94,10 @@ class UserResource extends Resource
                     ->label('Admin')
                     ->boolean(),
 
+                IconColumn::make('is_hr')
+                    ->label('HR')
+                    ->boolean(),
+
                 IconColumn::make('two_factor_enabled')
                     ->label('2FA')
                     ->boolean()
@@ -113,6 +121,9 @@ class UserResource extends Resource
 
                 TernaryFilter::make('is_admin')
                     ->label('Admin'),
+
+                TernaryFilter::make('is_hr')
+                    ->label('HR'),
 
                 TernaryFilter::make('has_two_factor')
                     ->label('2FA')
