@@ -79,7 +79,7 @@
             </section>
 
             <!-- System groups (dev mode only) -->
-            <section v-if="devMode.enabled && systemMemberships.length > 0">
+            <section v-if="devModeEnabled && systemMemberships.length > 0">
                 <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                     System groups
                 </h2>
@@ -109,7 +109,7 @@ import { Badge } from '@/Components/ui/badge'
 import { iconMap } from './Components/iconMap'
 import DevHashid from '@/Components/DevHashid.vue'
 import { useDevMode } from '@/Composables/useDevMode'
-const devMode = useDevMode()
+const { enabled: devModeEnabled } = useDevMode()
 
 defineProps({
     myMemberships: Array,

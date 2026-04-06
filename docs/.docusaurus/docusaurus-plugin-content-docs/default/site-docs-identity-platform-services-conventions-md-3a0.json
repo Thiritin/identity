@@ -15,8 +15,8 @@
   },
   "sidebar": "identitySidebar",
   "previous": {
-    "title": "App-to-App APIs",
-    "permalink": "/identity/integration/app-to-app"
+    "title": "Webhooks",
+    "permalink": "/identity/integration/webhooks"
   },
   "next": {
     "title": "User Metadata",

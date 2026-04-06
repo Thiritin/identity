@@ -1,0 +1,1 @@
+{"schema":{"type":"object","required":["title","url"],"properties":{"title":{"type":"string","example":"Issue 67, Thursday"},"url":{"type":"string","example":"/daily/EF29_2025.09.04_thursday_issue.67.pdf"}},"title":"ConventionLink"},"schemaType":"response"}

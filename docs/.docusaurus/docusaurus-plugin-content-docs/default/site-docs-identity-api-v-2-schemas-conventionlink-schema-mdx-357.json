@@ -1,0 +1,28 @@
+{
+  "id": "identity/api/v2/schemas/conventionlink",
+  "title": "ConventionLink",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/conventionlink.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/conventionlink",
+  "permalink": "/identity/api/v2/schemas/conventionlink",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "conventionlink",
+    "title": "ConventionLink",
+    "description": "",
+    "sidebar_label": "ConventionLink",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "title": "Issue 67, Thursday",
+      "url": "/daily/EF29_2025.09.04_thursday_issue.67.pdf"
+    },
+    "custom_edit_url": null
+  }
+}

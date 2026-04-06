@@ -1,0 +1,29 @@
+{
+  "id": "identity/api/v2/schemas/conventionphoto",
+  "title": "ConventionPhoto",
+  "description": "",
+  "source": "@site/docs/identity/api/v2/schemas/conventionphoto.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/conventionphoto",
+  "permalink": "/identity/api/v2/schemas/conventionphoto",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "conventionphoto",
+    "title": "ConventionPhoto",
+    "description": "",
+    "sidebar_label": "ConventionPhoto",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "title": "Group Photo",
+      "url": "https://photo.eurofurence.org/2025/Group_Photo/Group-EF29-Everyone.jpg",
+      "thumb": "https://photo.eurofurence.org/2025/Group_Photo/Group-EF29-Everyone.thumb.jpg"
+    },
+    "custom_edit_url": null
+  }
+}

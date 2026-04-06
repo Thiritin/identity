@@ -241,6 +241,14 @@
               "sidebar": "identitySidebar"
             },
             {
+              "id": "identity/api/v2/schemas/conventionlink",
+              "path": "/identity/api/v2/schemas/conventionlink"
+            },
+            {
+              "id": "identity/api/v2/schemas/conventionphoto",
+              "path": "/identity/api/v2/schemas/conventionphoto"
+            },
+            {
               "id": "identity/api/v2/schemas/error",
               "path": "/identity/api/v2/schemas/error",
               "sidebar": "identitySidebar"
@@ -336,6 +344,10 @@
               "sidebar": "identitySidebar"
             },
             {
+              "id": "identity/api/v2/schemas/validationerror",
+              "path": "/identity/api/v2/schemas/validationerror"
+            },
+            {
               "id": "identity/api/v2/send-notification",
               "path": "/identity/api/v2/send-notification",
               "sidebar": "identitySidebar"
@@ -402,6 +414,11 @@
             {
               "id": "identity/integration/getting-started",
               "path": "/identity/integration/getting-started",
+              "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/integration/webhooks",
+              "path": "/identity/integration/webhooks",
               "sidebar": "identitySidebar"
             },
             {

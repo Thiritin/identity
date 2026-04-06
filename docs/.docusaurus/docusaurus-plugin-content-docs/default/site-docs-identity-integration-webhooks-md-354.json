@@ -1,0 +1,27 @@
+{
+  "id": "identity/integration/webhooks",
+  "title": "Webhooks",
+  "description": "What are Webhooks",
+  "source": "@site/docs/identity/integration/webhooks.md",
+  "sourceDirName": "identity/integration",
+  "slug": "/identity/integration/webhooks",
+  "permalink": "/identity/integration/webhooks",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "sidebar_position": 4,
+    "title": "Webhooks"
+  },
+  "sidebar": "identitySidebar",
+  "previous": {
+    "title": "App-to-App APIs",
+    "permalink": "/identity/integration/app-to-app"
+  },
+  "next": {
+    "title": "Conventions API",
+    "permalink": "/identity/platform-services/conventions"
+  }
+}

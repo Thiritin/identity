@@ -1,6 +1,6 @@
 <template>
     <span
-        v-if="devMode.enabled && id"
+        v-if="enabled && id"
         class="text-xs font-mono text-muted-foreground ml-2 select-all"
         :title="id"
     >
@@ -15,5 +15,5 @@ defineProps({
     id: { type: String, default: null },
 })
 
-const devMode = useDevMode()
+const { enabled } = useDevMode()
 </script>

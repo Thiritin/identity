@@ -21,7 +21,7 @@
     "permalink": "/identity/integration/build-an-application"
   },
   "next": {
-    "title": "Conventions API",
-    "permalink": "/identity/platform-services/conventions"
+    "title": "Webhooks",
+    "permalink": "/identity/integration/webhooks"
   }
 }

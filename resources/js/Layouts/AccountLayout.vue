@@ -5,7 +5,7 @@
         <!-- Desktop: background + folder tabs + card -->
         <div class="hidden md:block auth-background bg-primary-600 relative min-h-screen" :style="{ backgroundImage: `url(${bgUrl})` }">
             <div class="relative z-10 flex min-h-screen justify-center px-4 py-10 lg:py-14">
-                <div class="flex flex-col items-center w-full transition-all" :class="isDirectory ? 'max-w-6xl' : 'max-w-4xl'">
+                <div class="flex flex-col items-center w-full transition-all" :class="isWide ? 'max-w-6xl' : 'max-w-4xl'">
                     <!-- Folder Tabs + Card -->
                     <div class="w-full">
                         <div class="flex px-2">
@@ -230,6 +230,7 @@ function isActive(routeName) {
 
 const isProfile = computed(() => isActive('settings.profile'))
 const isDirectory = computed(() => isActive('directory.*'))
+const isWide = computed(() => isDirectory.value || isActive('developers.*'))
 
 const tabs = computed(() => {
     const items = [

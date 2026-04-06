@@ -1,0 +1,28 @@
+{
+  "id": "identity/api/v2/schemas/validationerror",
+  "title": "ValidationError",
+  "description": "Laravel-style validation error with per-field messages.",
+  "source": "@site/docs/identity/api/v2/schemas/validationerror.schema.mdx",
+  "sourceDirName": "identity/api/v2/schemas",
+  "slug": "/identity/api/v2/schemas/validationerror",
+  "permalink": "/identity/api/v2/schemas/validationerror",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "validationerror",
+    "title": "ValidationError",
+    "description": "Laravel-style validation error with per-field messages.",
+    "sidebar_label": "ValidationError",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "schema": true,
+    "sample": {
+      "message": "string",
+      "errors": {}
+    },
+    "custom_edit_url": null
+  }
+}

@@ -39,15 +39,15 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'eb2'),
+    component: ComponentCreator('/', 'a9a'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'ad0'),
+        component: ComponentCreator('/', '068'),
         routes: [
           {
             path: '/',
-            component: ComponentCreator('/', '66b'),
+            component: ComponentCreator('/', 'fcd'),
             routes: [
               {
                 path: '/identity/api/v1/create-group',
@@ -326,6 +326,16 @@ export default [
                 sidebar: "identitySidebar"
               },
               {
+                path: '/identity/api/v2/schemas/conventionlink',
+                component: ComponentCreator('/identity/api/v2/schemas/conventionlink', '719'),
+                exact: true
+              },
+              {
+                path: '/identity/api/v2/schemas/conventionphoto',
+                component: ComponentCreator('/identity/api/v2/schemas/conventionphoto', '744'),
+                exact: true
+              },
+              {
                 path: '/identity/api/v2/schemas/error',
                 component: ComponentCreator('/identity/api/v2/schemas/error', 'bde'),
                 exact: true,
@@ -440,6 +450,11 @@ export default [
                 sidebar: "identitySidebar"
               },
               {
+                path: '/identity/api/v2/schemas/validationerror',
+                component: ComponentCreator('/identity/api/v2/schemas/validationerror', 'e21'),
+                exact: true
+              },
+              {
                 path: '/identity/api/v2/send-notification',
                 component: ComponentCreator('/identity/api/v2/send-notification', 'b3a'),
                 exact: true,
@@ -513,6 +528,12 @@ export default [
               {
                 path: '/identity/integration/getting-started',
                 component: ComponentCreator('/identity/integration/getting-started', '4e3'),
+                exact: true,
+                sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/integration/webhooks',
+                component: ComponentCreator('/identity/integration/webhooks', '8a6'),
                 exact: true,
                 sidebar: "identitySidebar"
               },
