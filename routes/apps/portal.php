@@ -31,6 +31,7 @@ use App\Http\Controllers\Profile\Settings\UpdatePasswordController;
 use App\Http\Controllers\Profile\ShowProfileController;
 use App\Http\Controllers\Profile\StoreAvatarController;
 use App\Http\Controllers\Profile\UpdateConventionAttendanceController;
+use App\Http\Controllers\Profile\SearchSkillsController;
 use App\Http\Controllers\Profile\UpdateGroupCreditAsController;
 use App\Http\Controllers\Profile\UpdatePreferencesController;
 use App\Http\Controllers\Profile\UpdateProfileController;
@@ -48,6 +49,8 @@ Route::get('/settings/profile', ShowProfileController::class)->name('settings.pr
 Route::post('/settings/profile/update', UpdateProfileController::class)
     ->middleware([HandlePrecognitiveRequests::class])
     ->name('settings.update-profile.update');
+Route::get('/settings/staff-profile/skills/search', SearchSkillsController::class)
+    ->name('settings.staff-profile.skills.search');
 Route::post('/settings/staff-profile/update', UpdateStaffProfileController::class)
     ->middleware([HandlePrecognitiveRequests::class, 'staff.profile.consent'])
     ->name('settings.staff-profile.update');
