@@ -1633,7 +1633,10 @@ components:
         parent_id:
           type: string
           nullable: true
-          description: Parent group id
+          description: >-
+            Parent group id. Required when type is department (parent must be a
+            division) or team (parent must be a department). Optional for
+            division and default types.
       required:
         - type
         - name
