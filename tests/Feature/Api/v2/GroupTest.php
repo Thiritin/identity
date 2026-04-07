@@ -402,3 +402,136 @@ it('rejects creating automated group type', function () {
     $response->assertStatus(422);
     expect($response->json('errors.type'))->not->toBeNull();
 });
+
+it('allows admin to update a department', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+    $this->staffGroup->users()->attach($admin, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($admin, 'app-one', ['groups.write', 'groups.read']);
+
+    $department = Group::factory()->department()->create(['name' => 'Old Name']);
+
+    $response = $this->putJson('/api/v2/groups/' . $department->hashid, [
+        'name' => 'New Name',
+    ]);
+
+    $response->assertOk();
+    expect($response->json('name'))->toBe('New Name');
+    $this->assertMatchesOpenApiV2($response, '/groups/{group}', 'put');
+});
+
+it('allows division director to update a department in their division', function () {
+    $divDirector = User::factory()->create();
+    $this->staffGroup->users()->attach($divDirector, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($divDirector, 'app-one', ['groups.write', 'groups.read']);
+
+    $division = Group::factory()->division()->create();
+    $division->users()->attach($divDirector, ['level' => GroupUserLevel::DivisionDirector]);
+    $department = Group::factory()->department()->create(['parent_id' => $division->id, 'name' => 'Old Name']);
+
+    $response = $this->putJson('/api/v2/groups/' . $department->hashid, [
+        'name' => 'Updated Name',
+    ]);
+
+    $response->assertOk();
+    expect($response->json('name'))->toBe('Updated Name');
+    $this->assertMatchesOpenApiV2($response, '/groups/{group}', 'put');
+});
+
+it('allows director to update a team in their department', function () {
+    $director = User::factory()->create();
+    $this->staffGroup->users()->attach($director, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($director, 'app-one', ['groups.write', 'groups.read']);
+
+    $department = Group::factory()->department()->create();
+    $department->users()->attach($director, ['level' => GroupUserLevel::Director]);
+    $team = Group::factory()->team()->create(['parent_id' => $department->id, 'name' => 'Old Team']);
+
+    $response = $this->putJson('/api/v2/groups/' . $team->hashid, [
+        'name' => 'Updated Team',
+    ]);
+
+    $response->assertOk();
+    expect($response->json('name'))->toBe('Updated Team');
+    $this->assertMatchesOpenApiV2($response, '/groups/{group}', 'put');
+});
+
+it('allows team lead to update their team', function () {
+    $teamLead = User::factory()->create();
+    $this->staffGroup->users()->attach($teamLead, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($teamLead, 'app-one', ['groups.write', 'groups.read']);
+
+    $department = Group::factory()->department()->create();
+    $team = Group::factory()->team()->create(['parent_id' => $department->id, 'name' => 'Old Team']);
+    $team->users()->attach($teamLead, ['level' => GroupUserLevel::TeamLead]);
+
+    $response = $this->putJson('/api/v2/groups/' . $team->hashid, [
+        'name' => 'Renamed Team',
+    ]);
+
+    $response->assertOk();
+    expect($response->json('name'))->toBe('Renamed Team');
+    $this->assertMatchesOpenApiV2($response, '/groups/{group}', 'put');
+});
+
+it('allows admin to delete a department', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+    $this->staffGroup->users()->attach($admin, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($admin, 'app-one', ['groups.delete']);
+
+    $department = Group::factory()->department()->create();
+
+    $response = $this->deleteJson('/api/v2/groups/' . $department->hashid);
+
+    $response->assertNoContent();
+    expect(Group::find($department->id))->toBeNull();
+});
+
+it('allows division director to delete a department in their division', function () {
+    $divDirector = User::factory()->create();
+    $this->staffGroup->users()->attach($divDirector, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($divDirector, 'app-one', ['groups.delete']);
+
+    $division = Group::factory()->division()->create();
+    $division->users()->attach($divDirector, ['level' => GroupUserLevel::DivisionDirector]);
+    $department = Group::factory()->department()->create(['parent_id' => $division->id]);
+
+    $response = $this->deleteJson('/api/v2/groups/' . $department->hashid);
+
+    $response->assertNoContent();
+    expect(Group::find($department->id))->toBeNull();
+});
+
+it('denies deleting root group even for admin', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+    $this->staffGroup->users()->attach($admin, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($admin, 'app-one', ['groups.delete']);
+
+    $root = Group::where('type', GroupTypeEnum::Root)->first();
+
+    $response = $this->deleteJson('/api/v2/groups/' . $root->hashid);
+
+    $response->assertForbidden();
+});
+
+it('denies deleting automated group even for admin', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+    actingAsGroupApiUser($admin, 'app-one', ['groups.delete']);
+
+    $response = $this->deleteJson('/api/v2/groups/' . $this->staffGroup->hashid);
+
+    $response->assertForbidden();
+});
+
+it('allows team lead to delete their team', function () {
+    $teamLead = User::factory()->create();
+    $this->staffGroup->users()->attach($teamLead, ['level' => GroupUserLevel::Member]);
+    actingAsGroupApiUser($teamLead, 'app-one', ['groups.delete']);
+
+    $department = Group::factory()->department()->create();
+    $team = Group::factory()->team()->create(['parent_id' => $department->id]);
+    $team->users()->attach($teamLead, ['level' => GroupUserLevel::TeamLead]);
+
+    $response = $this->deleteJson('/api/v2/groups/' . $team->hashid);
+
+    $response->assertNoContent();
+});
