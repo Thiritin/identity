@@ -1513,6 +1513,115 @@ paths:
       tags:
         - User Attendances
       operationId: deleteUserAttendance
+  '/users/{user}/staff':
+    get:
+      summary: Get user staff profile
+      description: |-
+        Returns the staff profile for a user. Use `me` as the user parameter for the authenticated user's own profile.
+
+        Which fields are included depends on the granted scopes:
+        - `Staff.Profile.Read`: name, firstname, lastname, birthdate, avatar, pronouns, credit_as, nda_checked_at
+        - `Staff.Skills.Read`: spoken_languages, skills
+        - `Staff.Contact.Read`: phone, telegram_username
+        - `Staff.Address.Read`: address_line1, address_line2, city, postal_code, country
+        - `Staff.Emergency.Read`: emergency_contact (nested object)
+
+        Requesting another user's staff profile requires the `Staff.Profile.Read.All` scope.
+      security:
+        - OpenID:
+            - Staff.Profile.Read
+        - AccessToken:
+            - Staff.Profile.Read
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+          description: 'User hashid or the literal `me` for the authenticated user'
+          example: 1VJEQAYWW54TZ5VD
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserStaffProfile'
+        '403':
+          description: Forbidden (missing required scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Users
+      operationId: getUserStaffProfile
+    put:
+      summary: Update user staff profile
+      description: |-
+        Updates the staff profile for a user. Use `me` as the user parameter for the authenticated user's own profile.
+
+        Fields are gated by scope — the token must have the appropriate ReadWrite scope for each field group:
+        - `Staff.Profile.ReadWrite`: firstname, lastname, birthdate, pronouns, credit_as
+        - `Staff.Skills.ReadWrite`: spoken_languages, skills
+        - `Staff.Contact.ReadWrite`: phone, telegram_username
+        - `Staff.Address.ReadWrite`: address_line1, address_line2, city, postal_code, country
+        - `Staff.Emergency.ReadWrite`: emergency_contact
+
+        Updating another user's profile requires the `Staff.Profile.ReadWrite.All` scope and management permission.
+      security:
+        - OpenID:
+            - Staff.Profile.ReadWrite
+        - AccessToken:
+            - Staff.Profile.ReadWrite
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+          description: 'User hashid or the literal `me` for the authenticated user'
+          example: 1VJEQAYWW54TZ5VD
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserStaffProfile'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserStaffProfile'
+        '403':
+          description: Forbidden (missing required scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+      tags:
+        - Users
+      operationId: updateUserStaffProfile
   /conventions:
     get:
       summary: List conventions
@@ -2439,6 +2548,174 @@ components:
           type: string
           format: uri
           example: https://photo.eurofurence.org/2025/Group_Photo/Group-EF29-Everyone.thumb.jpg
+    UserStaffProfile:
+      type: object
+      description: 'User staff profile. Which fields are present depends on the granted scopes.'
+      properties:
+        name:
+          type: string
+          description: Display name
+          example: FurryUser42
+        firstname:
+          type: string
+          nullable: true
+          description: First name
+          example: John
+        lastname:
+          type: string
+          nullable: true
+          description: Last name
+          example: Doe
+        birthdate:
+          type: string
+          format: date
+          nullable: true
+          description: Date of birth
+          example: '1990-01-15'
+        avatar:
+          type: string
+          nullable: true
+          description: Avatar URL
+        pronouns:
+          type: string
+          nullable: true
+          description: Pronouns
+          example: he/him
+        credit_as:
+          type: string
+          nullable: true
+          description: Preferred credit name
+          example: J. Doe
+        nda_checked_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Timestamp of last positive NDA check
+        spoken_languages:
+          type: array
+          description: Spoken languages
+          items:
+            type: string
+        skills:
+          type: array
+          description: Skills
+          items:
+            type: string
+        phone:
+          type: string
+          nullable: true
+          description: Phone number
+        telegram_username:
+          type: string
+          nullable: true
+          description: Telegram username
+        address_line1:
+          type: string
+          nullable: true
+          description: Address line 1
+        address_line2:
+          type: string
+          nullable: true
+          description: Address line 2
+        city:
+          type: string
+          nullable: true
+          description: City
+        postal_code:
+          type: string
+          nullable: true
+          description: Postal code
+        country:
+          type: string
+          nullable: true
+          description: Country (ISO 3166-1 alpha-2)
+        emergency_contact:
+          type: object
+          nullable: true
+          description: Emergency contact information
+          properties:
+            name:
+              type: string
+              nullable: true
+            phone:
+              type: string
+              nullable: true
+            telegram:
+              type: string
+              nullable: true
+    UpdateUserStaffProfile:
+      type: object
+      description: Fields to update on the user staff profile. All fields are optional.
+      properties:
+        firstname:
+          type: string
+          maxLength: 255
+        lastname:
+          type: string
+          maxLength: 255
+        birthdate:
+          type: string
+          format: date
+          nullable: true
+        pronouns:
+          type: string
+          nullable: true
+          maxLength: 255
+        credit_as:
+          type: string
+          nullable: true
+          maxLength: 255
+        spoken_languages:
+          type: array
+          items:
+            type: string
+        skills:
+          type: array
+          items:
+            type: string
+        phone:
+          type: string
+          nullable: true
+          maxLength: 255
+        telegram_username:
+          type: string
+          nullable: true
+          maxLength: 255
+        address_line1:
+          type: string
+          nullable: true
+          maxLength: 255
+        address_line2:
+          type: string
+          nullable: true
+          maxLength: 255
+        city:
+          type: string
+          nullable: true
+          maxLength: 255
+        postal_code:
+          type: string
+          nullable: true
+          maxLength: 255
+        country:
+          type: string
+          nullable: true
+          maxLength: 2
+        emergency_contact:
+          type: object
+          properties:
+            name:
+              type: string
+              nullable: true
+              maxLength: 255
+            phone:
+              type: string
+              nullable: true
+              maxLength: 255
+            telegram:
+              type: string
+              nullable: true
+              maxLength: 255
     Error:
       type: object
       properties:

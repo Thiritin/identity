@@ -57,6 +57,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'pronouns',
         'birthdate',
         'phone',
+        'telegram_username',
         'address_line1',
         'address_line2',
         'city',
