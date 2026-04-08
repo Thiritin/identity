@@ -13,6 +13,7 @@ x-tagGroups:
       - Staff
       - Groups
       - Group Members
+      - Users
       - User Metadata
       - Notifications
       - Conventions
@@ -76,6 +77,11 @@ info:
     - `metadata.read`: Read per-app user metadata
     - `metadata.write`: Write per-app user metadata
     - `notifications.send`: Send notifications to users via the notification service (client credentials only)
+
+    ### Users
+    - `User.Read`: Read the authenticated user's own profile
+    - `User.Read.All`: Read any user's profile
+    - `Groups.Read`: Include group memberships in user profiles
   x-logo:
     url: 'https://raw.githubusercontent.com/Thiritin/identity/main/resources/assets/ef.svg'
     backgroundColor: '#004e4c'
@@ -99,6 +105,8 @@ tags:
       Send notifications to users through email, Telegram, and in-app channels.
 
       Requires client credentials authentication and the `notifications.send` scope. The owning app must have notifications enabled by an admin.
+  - name: Users
+    description: User profiles with optional group memberships
   - name: Conventions
     description: Public list of Eurofurence conventions. No authentication required.
 security:
@@ -1172,6 +1180,54 @@ paths:
       tags:
         - Notifications
       operationId: sendNotification
+  '/users/{user}':
+    get:
+      summary: Get user profile
+      description: |-
+        Returns a user's profile. Use `me` as the user parameter to retrieve the authenticated user's own profile.
+
+        Requesting another user's profile requires the `User.Read.All` scope. The optional `?include=groups` query parameter requires the `Groups.Read` scope; without it the `groups` key is simply omitted (no error).
+      security:
+        - OpenID:
+            - User.Read
+        - AccessToken:
+            - User.Read
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+          description: 'User hashid or the literal `me` for the authenticated user'
+          example: 1VJEQAYWW54TZ5VD
+        - in: query
+          name: include
+          schema:
+            type: string
+          description: 'Comma-separated list of relations to include (supported: groups)'
+          example: groups
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '403':
+          description: Forbidden (missing required scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Users
+      operationId: getUser
   /conventions:
     get:
       summary: List conventions
@@ -1341,6 +1397,63 @@ components:
           type: string
           nullable: true
           description: Emergency contact Telegram handle (requires `staff.my.read` scope)
+    UserProfile:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - email_verified
+        - avatar
+      properties:
+        id:
+          type: string
+          description: User hashid
+          example: 1VJEQAYWW54TZ5VD
+        name:
+          type: string
+          description: Display name
+          example: FurryUser42
+        email:
+          type: string
+          description: Email address
+          example: user@example.com
+        email_verified:
+          type: boolean
+          description: Whether the email address has been verified
+        avatar:
+          type: string
+          nullable: true
+          description: Avatar URL
+        groups:
+          type: array
+          description: 'Group memberships (only present when `?include=groups` is requested with the `Groups.Read` scope)'
+          items:
+            $ref: '#/components/schemas/UserGroup'
+    UserGroup:
+      type: object
+      properties:
+        id:
+          type: string
+          example: Y6K08PEKXG9Q7ZWJ
+        name:
+          type: string
+          example: Information Technology
+        type:
+          type: string
+          enum: [none, division, department, team, automated, root]
+          example: department
+        slug:
+          type: string
+          example: operations/information-technology
+        level:
+          type: string
+          enum: [member, team_lead, director, division_director]
+          example: member
+        title:
+          type: string
+          nullable: true
+          example: App Developer
     TokenIntrospectionRequest:
       type: object
       properties:
