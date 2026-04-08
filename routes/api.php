@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\v2\ConventionController as V2ConventionController;
 use App\Http\Controllers\Api\v2\GroupController as V2GroupController;
 use App\Http\Controllers\Api\v2\GroupMemberController;
 use App\Http\Controllers\Api\v2\IntrospectionController as V2IntrospectionController;
-use App\Http\Controllers\Api\v2\MetadataController;
+use App\Http\Controllers\Api\v2\Users as Users;
 use App\Http\Controllers\Api\v2\NotificationController;
 use App\Http\Controllers\Api\v2\StaffController;
 use App\Http\Controllers\Api\v2\UserinfoController as V2UserinfoController;
@@ -76,16 +76,26 @@ Route::middleware('api')->prefix('v2/')->name('api.v2.')->group(function () {
         Route::patch('groups/{group}/members/{user}', [GroupMemberController::class, 'update'])->name('groups.members.update');
         Route::delete('groups/{group}/members/{user}', [GroupMemberController::class, 'destroy'])->name('groups.members.destroy');
 
-        // Metadata
-        Route::get('metadata', [MetadataController::class, 'index'])->name('metadata.index');
-        Route::get('metadata/{key}', [MetadataController::class, 'show'])->name('metadata.show')->where('key', '[a-zA-Z0-9._-]+');
-        Route::put('metadata/{key}', [MetadataController::class, 'upsert'])->name('metadata.upsert')->where('key', '[a-zA-Z0-9._-]+');
-        Route::delete('metadata/{key}', [MetadataController::class, 'destroy'])->name('metadata.destroy')->where('key', '[a-zA-Z0-9._-]+');
-
         // Notifications
         Route::post('notifications', [NotificationController::class, 'store'])
             ->name('notifications.store')
             ->middleware('throttle:notifications');
+
+        // Users
+        Route::prefix('users/{user}')->where(['user' => '[a-zA-Z0-9]+'])->group(function () {
+            Route::get('/', [Users\UserController::class, 'show'])->name('users.show');
+            Route::get('/groups', [Users\UserGroupController::class, 'index'])->name('users.groups.index');
+            Route::get('/attendances', [Users\UserAttendanceController::class, 'index'])->name('users.attendances.index');
+            Route::post('/attendances', [Users\UserAttendanceController::class, 'store'])->name('users.attendances.store');
+            Route::put('/attendances/{attendance}', [Users\UserAttendanceController::class, 'update'])->name('users.attendances.update');
+            Route::delete('/attendances/{attendance}', [Users\UserAttendanceController::class, 'destroy'])->name('users.attendances.destroy');
+            Route::get('/metadata', [Users\UserMetadataController::class, 'index'])->name('users.metadata.index');
+            Route::get('/metadata/{key}', [Users\UserMetadataController::class, 'show'])->name('users.metadata.show')->where('key', '[a-zA-Z0-9._-]+');
+            Route::put('/metadata/{key}', [Users\UserMetadataController::class, 'upsert'])->name('users.metadata.upsert')->where('key', '[a-zA-Z0-9._-]+');
+            Route::delete('/metadata/{key}', [Users\UserMetadataController::class, 'destroy'])->name('users.metadata.destroy')->where('key', '[a-zA-Z0-9._-]+');
+            Route::get('/staff', [Users\UserStaffController::class, 'show'])->name('users.staff.show');
+            Route::put('/staff', [Users\UserStaffController::class, 'update'])->name('users.staff.update');
+        });
     });
 
     // Introspect (own auth via client credentials)
