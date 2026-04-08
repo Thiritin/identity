@@ -71,7 +71,7 @@ it('returns other user groups with Groups.Read.All scope', function () {
     $viewer = User::factory()->create();
     $other = User::factory()->create();
     $group = Group::factory()->create(['type' => GroupTypeEnum::Team, 'name' => 'Web']);
-    $group->users()->attach($other->id, ['level' => GroupUserLevel::TeamLead, 'title' => 'Lead']);
+    $group->users()->attach($other->id, ['level' => GroupUserLevel::Member, 'title' => 'Developer']);
 
     actingAsApiUserForGroups($viewer, 'app-one', ['Groups.Read', 'Groups.Read.All']);
 
@@ -79,7 +79,7 @@ it('returns other user groups with Groups.Read.All scope', function () {
         ->assertOk();
 
     expect($response->json())->toHaveCount(1);
-    expect($response->json('0.level'))->toBe('team_lead');
+    expect($response->json('0.level'))->toBe('member');
 
     $this->assertMatchesOpenApiV2($response, '/users/{user}/groups');
 });
