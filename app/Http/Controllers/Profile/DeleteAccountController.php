@@ -20,7 +20,7 @@ class DeleteAccountController extends Controller
         $user = Auth::user();
 
         try {
-            if ($registration->hasActiveRegistration($user)) {
+            if ($registration->hasActiveRegistration()) {
                 return redirect()->back()->withErrors([
                     'delete' => trans('my_data_delete_blocked_registration'),
                 ]);

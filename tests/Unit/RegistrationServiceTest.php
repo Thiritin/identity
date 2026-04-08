@@ -1,60 +1,89 @@
 <?php
 
-use App\Models\User;
+use App\Providers\Socialite\SocialiteIdentityProvider;
 use App\Services\RegistrationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
+use Laravel\Socialite\Facades\Socialite;
 
 uses(RefreshDatabase::class);
 
-it('returns false when no active registration found', function () {
-    Http::fake([
-        '*/attendees/find' => Http::response(['attendees' => []], 200),
-    ]);
-
-    $user = User::factory()->create();
-    $service = new RegistrationService();
-    $result = $service->hasActiveRegistration($user);
-
-    expect($result)->toBeFalse();
-});
-
-it('returns true when active registration found', function () {
+beforeEach(function () {
     config(['services.registration.attendee_service_url' => 'http://reg-service.test']);
 
-    Http::fake([
-        '*/attendees/find' => Http::response([
-            'attendees' => [
-                ['id' => 42, 'status' => 'approved'],
-            ],
-        ], 200),
-    ]);
-
-    $user = User::factory()->create();
-    $service = new RegistrationService();
-    $result = $service->hasActiveRegistration($user);
-
-    expect($result)->toBeTrue();
+    $provider = Mockery::mock(SocialiteIdentityProvider::class);
+    $provider->shouldReceive('getToken')->andReturn('fake-user-token');
+    Socialite::shouldReceive('driver')->with('idp-identity')->andReturn($provider);
 });
 
-it('throws exception on service error', function () {
-    config(['services.registration.attendee_service_url' => 'http://reg-service.test']);
-
+it('returns false when user has no registrations', function () {
     Http::fake([
-        '*/attendees/find' => Http::response('Unauthorized', 401),
+        '*/attendees' => Http::response(['ids' => []], 200),
     ]);
 
-    $user = User::factory()->create();
     $service = new RegistrationService();
-    $service->hasActiveRegistration($user);
+
+    expect($service->hasActiveRegistration())->toBeFalse();
+});
+
+it('returns true when user has an active registration', function () {
+    Http::fake([
+        '*/attendees' => Http::response(['ids' => [42]], 200),
+        '*/attendees/42/status' => Http::response(['status' => 'approved'], 200),
+    ]);
+
+    $service = new RegistrationService();
+
+    expect($service->hasActiveRegistration())->toBeTrue();
+});
+
+it('returns false when all registrations are cancelled or deleted', function () {
+    Http::fake([
+        '*/attendees' => Http::response(['ids' => [42, 99]], 200),
+        '*/attendees/42/status' => Http::response(['status' => 'cancelled'], 200),
+        '*/attendees/99/status' => Http::response(['status' => 'deleted'], 200),
+    ]);
+
+    $service = new RegistrationService();
+
+    expect($service->hasActiveRegistration())->toBeFalse();
+});
+
+it('returns true when at least one registration is active among inactive ones', function () {
+    Http::fake([
+        '*/attendees' => Http::response(['ids' => [42, 99]], 200),
+        '*/attendees/42/status' => Http::response(['status' => 'cancelled'], 200),
+        '*/attendees/99/status' => Http::response(['status' => 'paid'], 200),
+    ]);
+
+    $service = new RegistrationService();
+
+    expect($service->hasActiveRegistration())->toBeTrue();
+});
+
+it('throws exception when listMyRegistrations fails', function () {
+    Http::fake([
+        '*/attendees' => Http::response('Unauthorized', 401),
+    ]);
+
+    $service = new RegistrationService();
+    $service->hasActiveRegistration();
+})->throws(RuntimeException::class);
+
+it('throws exception when getStatusById fails', function () {
+    Http::fake([
+        '*/attendees' => Http::response(['ids' => [42]], 200),
+        '*/attendees/42/status' => Http::response('Not Found', 404),
+    ]);
+
+    $service = new RegistrationService();
+    $service->hasActiveRegistration();
 })->throws(RuntimeException::class);
 
 it('returns false when service URL is not configured', function () {
     config(['services.registration.attendee_service_url' => null]);
 
-    $user = User::factory()->create();
     $service = new RegistrationService();
-    $result = $service->hasActiveRegistration($user);
 
-    expect($result)->toBeFalse();
+    expect($service->hasActiveRegistration())->toBeFalse();
 });

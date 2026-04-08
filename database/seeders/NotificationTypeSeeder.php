@@ -12,7 +12,7 @@ class NotificationTypeSeeder extends Seeder
     public function run(): void
     {
         $types = [
-            'portal' => [
+            'identity' => [
                 [
                     'key' => 'security.login_alert',
                     'name' => 'New sign-in alert',

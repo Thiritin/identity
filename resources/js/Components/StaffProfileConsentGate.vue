@@ -1,19 +1,15 @@
 <template>
     <!-- Un-consented: "Enable your staff profile" button + auto-opening modal -->
     <div v-if="!consent.granted" data-testid="staff-profile-consent-gate">
-        <div class="bg-white/95 backdrop-blur-sm dark:bg-primary-900/95 dark:text-primary-300 px-6 py-6 sm:px-10 border-t border-gray-200/50 dark:border-primary-800/50">
-            <div class="grid md:grid-cols-3 gap-6 md:gap-10">
-                <div>
-                    <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_consent_state_heading') }}</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('staff_profile_consent_state_not_granted') }}</p>
-                </div>
-                <div class="md:col-span-2 flex items-center">
-                    <Button @click="showModal = true" data-testid="staff-profile-consent-open">
-                        {{ $t('staff_profile_consent_reminder_expand') }}
-                    </Button>
-                </div>
-            </div>
-        </div>
+        <ProfileSection slot-class="flex items-center">
+            <template #header>
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $t('staff_profile_consent_state_heading') }}</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('staff_profile_consent_state_not_granted') }}</p>
+            </template>
+            <Button @click="showModal = true" data-testid="staff-profile-consent-open">
+                {{ $t('staff_profile_consent_reminder_expand') }}
+            </Button>
+        </ProfileSection>
 
         <!-- Consent notice modal -->
         <Dialog v-model:open="showModal">
@@ -77,6 +73,7 @@
 
 <script setup>
 import { reactive, ref, onMounted } from 'vue'
+import ProfileSection from '@/Components/ProfileSection.vue'
 import { Button } from '@/Components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/Components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'

@@ -81,7 +81,8 @@ info:
     ### Users
     - `User.Read`: Read the authenticated user's own profile
     - `User.Read.All`: Read any user's profile
-    - `Groups.Read`: Include group memberships in user profiles
+    - `Groups.Read`: Read a user's group memberships
+    - `Groups.Read.All`: Read any user's group memberships
   x-logo:
     url: 'https://raw.githubusercontent.com/Thiritin/identity/main/resources/assets/ef.svg'
     backgroundColor: '#004e4c'
@@ -1228,6 +1229,50 @@ paths:
       tags:
         - Users
       operationId: getUser
+  '/users/{user}/groups':
+    get:
+      summary: List user's groups
+      description: |-
+        Returns the group memberships for a user. Use `me` as the user parameter for the authenticated user's own groups.
+
+        Requesting another user's groups requires the `Groups.Read.All` scope.
+      security:
+        - OpenID:
+            - Groups.Read
+        - AccessToken:
+            - Groups.Read
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+          description: 'User hashid or the literal `me` for the authenticated user'
+          example: 1VJEQAYWW54TZ5VD
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserGroup'
+        '403':
+          description: Forbidden (missing required scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Users
+      operationId: getUserGroups
   /conventions:
     get:
       summary: List conventions

@@ -45,6 +45,9 @@ const props = defineProps({
 })
 
 const visibleItems = computed(() =>
-    sidebarItems.filter(item => !item.firstPartyOnly || props.app.first_party)
+    sidebarItems.filter(item =>
+        (!item.firstPartyOnly || props.app.first_party) &&
+        (!item.requiresNotifications || props.app.allow_notifications)
+    )
 )
 </script>

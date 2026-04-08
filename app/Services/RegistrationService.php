@@ -2,14 +2,16 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Laravel\Socialite\Facades\Socialite;
 use RuntimeException;
 
 class RegistrationService
 {
-    public function hasActiveRegistration(User $user): bool
+    private const INACTIVE_STATUSES = ['cancelled', 'deleted'];
+
+    public function hasActiveRegistration(): bool
     {
         $baseUrl = config('services.registration.attendee_service_url');
 
@@ -17,20 +19,14 @@ class RegistrationService
             return false;
         }
 
-        $token = config('services.registration.attendee_service_token');
+        $token = Socialite::driver('idp-identity')->getToken();
 
         $response = Http::withToken($token)
-            ->post($baseUrl . '/attendees/find', [
-                'match_any' => [
-                    ['email' => $user->email],
-                ],
-            ]);
+            ->get($baseUrl . '/attendees');
 
         if ($response->failed()) {
-            Log::error('Registration service request failed', [
-                'user_id' => $user->id,
+            Log::error('Registration service listMyRegistrations failed', [
                 'status' => $response->status(),
-                'body' => $response->body(),
             ]);
 
             throw new RuntimeException(
@@ -39,8 +35,35 @@ class RegistrationService
             );
         }
 
-        $attendees = $response->json('attendees', []);
+        $ids = $response->json('ids', []);
 
-        return count($attendees) > 0;
+        if (empty($ids)) {
+            return false;
+        }
+
+        foreach ($ids as $id) {
+            $statusResponse = Http::withToken($token)
+                ->get($baseUrl . '/attendees/' . $id . '/status');
+
+            if ($statusResponse->failed()) {
+                Log::error('Registration service getStatusById failed', [
+                    'badge_number' => $id,
+                    'status' => $statusResponse->status(),
+                ]);
+
+                throw new RuntimeException(
+                    'Failed to check registration status.',
+                    $statusResponse->status(),
+                );
+            }
+
+            $status = $statusResponse->json('status');
+
+            if (! in_array($status, self::INACTIVE_STATUSES, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

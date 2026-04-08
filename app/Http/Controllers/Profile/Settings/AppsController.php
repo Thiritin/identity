@@ -298,6 +298,7 @@ class AppsController extends Controller
             'developer_name' => $app->developer_name ?? '',
             'privacy_policy_url' => $app->privacy_policy_url ?? '',
             'terms_of_service_url' => $app->terms_of_service_url ?? '',
+            'allow_notifications' => $app->allow_notifications,
             'icon_url' => $app->image ? asset('storage/' . $app->image) : null,
             'created_at' => $app->created_at->toDateTimeString(),
         ];
