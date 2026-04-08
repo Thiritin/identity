@@ -75,8 +75,8 @@ info:
 
     ### Other
     - `view_full_staff_details`: Access email addresses in group/user listings
-    - `metadata.read`: Read per-app user metadata
-    - `metadata.write`: Write per-app user metadata
+    - `Metadata.Read`: Read per-app user metadata
+    - `Metadata.ReadWrite`: Read and write per-app user metadata
     - `notifications.send`: Send notifications to users via the notification service (client credentials only)
 
     ### Users
@@ -124,16 +124,16 @@ security:
       - groups.read
       - groups.write
       - groups.delete
-      - metadata.read
-      - metadata.write
+      - Metadata.Read
+      - Metadata.ReadWrite
   - AccessToken:
       - groups.read
       - groups.write
       - groups.delete
       - staff.my.read
       - staff.all.read
-      - metadata.read
-      - metadata.write
+      - Metadata.Read
+      - Metadata.ReadWrite
 paths:
   /.well-known/openid-configuration:
     servers:
@@ -983,15 +983,23 @@ paths:
       tags:
         - Group Members
       operationId: removeGroupMember
-  /metadata:
+  '/users/{user}/metadata':
     get:
       summary: List all metadata
-      description: Returns all key-value pairs stored by the authenticated app for the current user.
+      description: Returns all key-value pairs stored by the authenticated app for the given user. Users can only access their own metadata.
       security:
         - OpenID:
-            - metadata.read
+            - Metadata.Read
         - AccessToken:
-            - metadata.read
+            - Metadata.Read
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+          description: 'User hashid or the literal `me` for the authenticated user'
+          example: me
       responses:
         '200':
           description: OK
@@ -1008,24 +1016,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '403':
-          description: Forbidden (missing `metadata.read` scope)
+          description: Forbidden (missing `Metadata.Read` scope or accessing another user's metadata)
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
       tags:
         - User Metadata
-      operationId: getMetadata
-  '/metadata/{key}':
+      operationId: getUserMetadata
+  '/users/{user}/metadata/{key}':
     get:
       summary: Get metadata value
       description: Returns a single metadata value by key.
       security:
         - OpenID:
-            - metadata.read
+            - Metadata.Read
         - AccessToken:
-            - metadata.read
+            - Metadata.Read
       parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+          description: 'User hashid or the literal `me` for the authenticated user'
+          example: me
         - in: path
           name: key
           required: true
@@ -1042,7 +1057,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Metadata'
         '403':
-          description: Forbidden (missing `metadata.read` scope)
+          description: Forbidden (missing `Metadata.Read` scope or accessing another user's metadata)
           content:
             application/json:
               schema:
@@ -1055,16 +1070,23 @@ paths:
                 $ref: '#/components/schemas/Error'
       tags:
         - User Metadata
-      operationId: getMetadataKey
+      operationId: getUserMetadataKey
     put:
       summary: Create or update metadata
       description: Creates or updates a metadata key-value pair. Returns 201 on create, 200 on update.
       security:
         - OpenID:
-            - metadata.write
+            - Metadata.ReadWrite
         - AccessToken:
-            - metadata.write
+            - Metadata.ReadWrite
       parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+          description: 'User hashid or the literal `me` for the authenticated user'
+          example: me
         - in: path
           name: key
           required: true
@@ -1093,7 +1115,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Metadata'
         '403':
-          description: Forbidden (missing `metadata.write` scope)
+          description: Forbidden (missing `Metadata.ReadWrite` scope or accessing another user's metadata)
           content:
             application/json:
               schema:
@@ -1109,16 +1131,23 @@ paths:
                 $ref: '#/components/schemas/ValidationError'
       tags:
         - User Metadata
-      operationId: putMetadataKey
+      operationId: putUserMetadataKey
     delete:
       summary: Delete metadata
       description: Deletes a metadata key-value pair.
       security:
         - OpenID:
-            - metadata.write
+            - Metadata.ReadWrite
         - AccessToken:
-            - metadata.write
+            - Metadata.ReadWrite
       parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+          description: 'User hashid or the literal `me` for the authenticated user'
+          example: me
         - in: path
           name: key
           required: true
@@ -1131,7 +1160,7 @@ paths:
         '204':
           description: No Content
         '403':
-          description: Forbidden (missing `metadata.write` scope)
+          description: Forbidden (missing `Metadata.ReadWrite` scope or accessing another user's metadata)
           content:
             application/json:
               schema:
@@ -1144,7 +1173,7 @@ paths:
                 $ref: '#/components/schemas/Error'
       tags:
         - User Metadata
-      operationId: deleteMetadataKey
+      operationId: deleteUserMetadataKey
   /notifications:
     post:
       summary: Send a notification
@@ -2120,6 +2149,11 @@ components:
         value:
           type: string
           example: Berlin
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Expiration timestamp (ISO 8601). Null means never expires.
     MetadataValue:
       type: object
       properties:
@@ -2127,6 +2161,11 @@ components:
           type: string
           description: The metadata value to store (max 64KB)
           example: Berlin
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: 'Optional expiration timestamp (ISO 8601). Null or omitted means never expires.'
       required:
         - value
     SendNotificationRequest:
