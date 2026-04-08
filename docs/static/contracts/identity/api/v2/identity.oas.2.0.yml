@@ -14,6 +14,7 @@ x-tagGroups:
       - Groups
       - Group Members
       - Users
+      - User Attendances
       - User Metadata
       - Notifications
       - Conventions
@@ -108,6 +109,8 @@ tags:
       Requires client credentials authentication and the `notifications.send` scope. The owning app must have notifications enabled by an admin.
   - name: Users
     description: User profiles with optional group memberships
+  - name: User Attendances
+    description: Convention attendance records for users
   - name: Conventions
     description: Public list of Eurofurence conventions. No authentication required.
 security:
@@ -1273,6 +1276,214 @@ paths:
       tags:
         - Users
       operationId: getUserGroups
+  '/users/{user}/attendances':
+    get:
+      summary: List user's attendances
+      description: |-
+        Returns the convention attendance records for a user. Use `me` as the user parameter for the authenticated user's own attendances.
+
+        Requesting another user's attendances requires the `Attendances.Read.All` scope.
+
+        Use `?include=convention` to embed the full convention object in each record.
+      security:
+        - OpenID:
+            - Attendances.Read
+        - AccessToken:
+            - Attendances.Read
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+          description: 'User hashid or the literal `me` for the authenticated user'
+          example: 1VJEQAYWW54TZ5VD
+        - in: query
+          name: include
+          schema:
+            type: string
+          description: 'Comma-separated list of relations to include (supported: convention)'
+          example: convention
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Attendance'
+        '403':
+          description: Forbidden (missing required scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - User Attendances
+      operationId: getUserAttendances
+    post:
+      summary: Create attendance
+      description: |-
+        Creates a new convention attendance record for a user. Defaults to `is_attended: true` and `is_staff: false`.
+
+        Creating attendance for another user requires the `Attendances.ReadWrite.All` scope.
+      security:
+        - OpenID:
+            - Attendances.ReadWrite
+        - AccessToken:
+            - Attendances.ReadWrite
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+          description: 'User hashid or the literal `me` for the authenticated user'
+          example: 1VJEQAYWW54TZ5VD
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - convention_id
+              properties:
+                convention_id:
+                  type: integer
+                  description: The convention to register attendance for
+                  example: 29
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attendance'
+        '403':
+          description: Forbidden (missing required scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Validation error (duplicate convention, non-existent convention)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+      tags:
+        - User Attendances
+      operationId: createUserAttendance
+  '/users/{user}/attendances/{attendance}':
+    put:
+      summary: Update attendance
+      description: |-
+        Updates an attendance record. Users can update their own `is_attended` field.
+
+        Updating `is_staff` on your own record is forbidden. Only a director with `Attendances.ReadWrite.All` scope can change `is_staff` on another user's record.
+      security:
+        - OpenID:
+            - Attendances.ReadWrite
+        - AccessToken:
+            - Attendances.ReadWrite
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+          description: 'User hashid or the literal `me` for the authenticated user'
+          example: 1VJEQAYWW54TZ5VD
+        - in: path
+          name: attendance
+          required: true
+          schema:
+            type: integer
+          description: Attendance record id
+          example: 42
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                is_attended:
+                  type: boolean
+                is_staff:
+                  type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attendance'
+        '403':
+          description: Forbidden (missing scope or cannot change own staff status)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - User Attendances
+      operationId: updateUserAttendance
+    delete:
+      summary: Delete attendance
+      description: |-
+        Deletes an attendance record. Returns 409 if the record has `is_staff: true` — staff assignment must be removed by a director first.
+      security:
+        - OpenID:
+            - Attendances.ReadWrite
+        - AccessToken:
+            - Attendances.ReadWrite
+      parameters:
+        - in: path
+          name: user
+          required: true
+          schema:
+            type: string
+          description: 'User hashid or the literal `me` for the authenticated user'
+          example: 1VJEQAYWW54TZ5VD
+        - in: path
+          name: attendance
+          required: true
+          schema:
+            type: integer
+          description: Attendance record id
+          example: 42
+      responses:
+        '204':
+          description: No Content
+        '403':
+          description: Forbidden (missing required scope)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Conflict (cannot remove staff attendance)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - User Attendances
+      operationId: deleteUserAttendance
   /conventions:
     get:
       summary: List conventions
@@ -1499,6 +1710,32 @@ components:
           type: string
           nullable: true
           example: App Developer
+    Attendance:
+      type: object
+      required:
+        - id
+        - convention_id
+        - is_attended
+        - is_staff
+      properties:
+        id:
+          type: integer
+          description: Attendance record id
+          example: 42
+        convention_id:
+          type: integer
+          description: Convention id
+          example: 29
+        is_attended:
+          type: boolean
+          description: Whether the user attended
+        is_staff:
+          type: boolean
+          description: Whether the user was staff at this convention
+        convention:
+          description: 'Convention details (only present when `?include=convention` is requested)'
+          allOf:
+            - $ref: '#/components/schemas/Convention'
     TokenIntrospectionRequest:
       type: object
       properties:
