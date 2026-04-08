@@ -15,7 +15,7 @@ class NotificationController extends Controller
 {
     public function store(SendNotificationRequest $request): Response
     {
-        $this->requireScope('notifications.send');
+        $this->requireScope('Notifications.Send');
 
         $clientId = Auth::guard('api')->getClientId();
         $app = App::where('client_id', $clientId)->first();

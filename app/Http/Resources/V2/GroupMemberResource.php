@@ -14,7 +14,7 @@ class GroupMemberResource extends JsonResource
 
     public function toArray(Request $request): array
     {
-        $hasFullStaffDetails = $request->user() && $request->user()->scopeCheck('view_full_staff_details');
+        $hasFullStaffDetails = $request->user() && \App\Support\ScopeChecker::has('Staff.Contact.Read.All');
 
         return [
             'user_id' => $this->hashid,

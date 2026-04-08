@@ -31,7 +31,7 @@ class UserinfoResource extends JsonResource
                 : null;
         }
 
-        if ($this->relationLoaded('groups') && $this->scopeCheck('groups')) {
+        if ($this->relationLoaded('groups') && $this->scopeCheck('Groups.Read')) {
             $data['groups'] = $this->groups->map(fn ($group) => [
                 'id' => $group->hashid,
                 'name' => $group->name,
@@ -42,7 +42,7 @@ class UserinfoResource extends JsonResource
             ])->values();
         }
 
-        if ($this->scopeCheck('staff.my.read')) {
+        if ($this->scopeCheck('Staff.Profile.Read')) {
             $data['firstname'] = $this->firstname;
             $data['lastname'] = $this->lastname;
             $data['pronouns'] = $this->pronouns;

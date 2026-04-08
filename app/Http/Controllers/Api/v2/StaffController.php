@@ -20,7 +20,7 @@ class StaffController extends Controller
 
     public function me(Request $request)
     {
-        $this->requireScope('staff.my.read');
+        $this->requireScope('Staff.Profile.Read');
 
         $user = $request->user();
         $user->loadMissing('groups');
@@ -30,7 +30,7 @@ class StaffController extends Controller
 
     public function index(Request $request)
     {
-        $this->requireScope('staff.all.read');
+        $this->requireScope('Staff.Profile.Read.All');
 
         $staffGroup = Group::where('system_name', 'staff')->firstOrFail();
 
@@ -48,7 +48,7 @@ class StaffController extends Controller
 
     public function show(Request $request, string $userHashid)
     {
-        $this->requireScope('staff.all.read');
+        $this->requireScope('Staff.Profile.Read.All');
 
         $user = User::findByHashidOrFail($userHashid);
 

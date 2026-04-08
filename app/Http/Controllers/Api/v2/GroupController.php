@@ -23,7 +23,7 @@ class GroupController extends Controller
 
     public function index(Request $request)
     {
-        $this->requireScope('groups.read');
+        $this->requireScope('Groups.Read');
         $this->authorize('viewAny', Group::class);
 
         $query = Group::query();
@@ -74,7 +74,7 @@ class GroupController extends Controller
 
     public function show(Request $request, string $groupHashid)
     {
-        $this->requireScope('groups.read');
+        $this->requireScope('Groups.Read');
 
         $group = Group::findByHashidOrFail($groupHashid);
         $this->authorize('view', [$group, $request->user()]);
@@ -102,7 +102,7 @@ class GroupController extends Controller
 
     public function tree(Request $request, DirectoryTreeBuilder $builder)
     {
-        $this->requireScope('groups.read');
+        $this->requireScope('Groups.Read');
 
         $myGroupIds = $request->user()->groups()->pluck('groups.id')->all();
         $tree = $builder->build($myGroupIds);
@@ -117,7 +117,7 @@ class GroupController extends Controller
 
     public function store(GroupStoreRequest $request)
     {
-        $this->requireScope('groups.write');
+        $this->requireScope('Groups.ReadWrite.All');
 
         $parent = $request->resolvedParent();
         $this->authorize('create', [Group::class, $parent]);
@@ -136,7 +136,7 @@ class GroupController extends Controller
 
     public function update(GroupUpdateRequest $request, string $groupHashid)
     {
-        $this->requireScope('groups.write');
+        $this->requireScope('Groups.ReadWrite.All');
 
         $group = Group::findByHashidOrFail($groupHashid);
         $this->authorize('update', [$group, $request->user()]);
@@ -149,7 +149,7 @@ class GroupController extends Controller
 
     public function destroy(Request $request, string $groupHashid)
     {
-        $this->requireScope('groups.delete');
+        $this->requireScope('Groups.ReadWrite.All');
 
         $group = Group::findByHashidOrFail($groupHashid);
         $this->authorize('delete', [$group, $request->user()]);

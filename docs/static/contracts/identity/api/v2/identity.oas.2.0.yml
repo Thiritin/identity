@@ -57,33 +57,42 @@ info:
 
     ## OAuth2 Scopes
 
-    ### Identity
+    ### Identity (OIDC standard)
     - `openid`: Basic OpenID Connect functionality
     - `profile`: User's display name and avatar
     - `email`: User's email address and verification status
     - `offline` / `offline_access`: Refresh tokens
 
-    ### Staff
-    - `staff.my.read`: Access to the authenticated user's own staff profile (firstname, lastname, phone, etc.)
-    - `staff.all.read`: Access to all staff members' profiles (respects per-user visibility settings)
-
-    ### Groups
-    - `groups`: User's group memberships (returned in userinfo)
-    - `groups.read`: Read group details via the API
-    - `groups.write`: Create/update groups and manage members
-    - `groups.delete`: Delete groups
-
-    ### Other
-    - `view_full_staff_details`: Access email addresses in group/user listings
-    - `Metadata.Read`: Read per-app user metadata
-    - `Metadata.ReadWrite`: Read and write per-app user metadata
-    - `notifications.send`: Send notifications to users via the notification service (client credentials only)
-
-    ### Users
+    ### User
     - `User.Read`: Read the authenticated user's own profile
     - `User.Read.All`: Read any user's profile
-    - `Groups.Read`: Read a user's group memberships
+
+    ### Staff
+    - `Staff.Profile.Read` / `Staff.Profile.ReadWrite`: Own staff profile (firstname, lastname, birthdate, avatar, pronouns, credit_as, nda_checked_at)
+    - `Staff.Profile.Read.All` / `Staff.Profile.ReadWrite.All`: Any staff member's profile
+    - `Staff.Skills.Read` / `Staff.Skills.ReadWrite`: Own spoken_languages, skills
+    - `Staff.Skills.Read.All` / `Staff.Skills.ReadWrite.All`: Any staff member's skills
+    - `Staff.Contact.Read` / `Staff.Contact.ReadWrite`: Own phone, telegram_username
+    - `Staff.Contact.Read.All` / `Staff.Contact.ReadWrite.All`: Any staff member's contact info (includes email in group listings)
+    - `Staff.Address.Read` / `Staff.Address.ReadWrite`: Own address fields
+    - `Staff.Address.Read.All` / `Staff.Address.ReadWrite.All`: Any staff member's address
+    - `Staff.Emergency.Read` / `Staff.Emergency.ReadWrite`: Own emergency contact
+    - `Staff.Emergency.Read.All` / `Staff.Emergency.ReadWrite.All`: Any staff member's emergency contact
+
+    ### Groups
+    - `Groups.Read`: Read group details and own group memberships (also returned in userinfo)
     - `Groups.Read.All`: Read any user's group memberships
+    - `Groups.ReadWrite.All`: Create/update/delete groups and manage members
+
+    ### Attendances
+    - `Attendances.Read` / `Attendances.ReadWrite`: Own attendance records
+    - `Attendances.Read.All` / `Attendances.ReadWrite.All`: Any user's attendance records
+
+    ### Metadata
+    - `Metadata.Read` / `Metadata.ReadWrite`: Per-app user metadata
+
+    ### Other
+    - `Notifications.Send`: Send notifications to users via the notification service (client credentials only)
   x-logo:
     url: 'https://raw.githubusercontent.com/Thiritin/identity/main/resources/assets/ef.svg'
     backgroundColor: '#004e4c'
@@ -106,7 +115,7 @@ tags:
     description: |-
       Send notifications to users through email, Telegram, and in-app channels.
 
-      Requires client credentials authentication and the `notifications.send` scope. The owning app must have notifications enabled by an admin.
+      Requires client credentials authentication and the `Notifications.Send` scope. The owning app must have notifications enabled by an admin.
   - name: Users
     description: User profiles with optional group memberships
   - name: User Attendances
@@ -118,20 +127,17 @@ security:
       - openid
       - profile
       - email
-      - groups
-      - staff.my.read
-      - staff.all.read
-      - groups.read
-      - groups.write
-      - groups.delete
+      - Groups.Read
+      - Staff.Profile.Read
+      - Staff.Profile.Read.All
+      - Groups.ReadWrite.All
       - Metadata.Read
       - Metadata.ReadWrite
   - AccessToken:
-      - groups.read
-      - groups.write
-      - groups.delete
-      - staff.my.read
-      - staff.all.read
+      - Groups.Read
+      - Groups.ReadWrite.All
+      - Staff.Profile.Read
+      - Staff.Profile.Read.All
       - Metadata.Read
       - Metadata.ReadWrite
 paths:
@@ -199,7 +205,7 @@ paths:
           schema:
             type: string
           description: Space-separated list of requested scopes
-          example: openid profile email groups
+          example: openid profile email Groups.Read
         - in: query
           name: state
           required: true
@@ -282,15 +288,15 @@ paths:
         Returns identity claims for the authenticated user based on granted scopes.
 
         **Differences from v1:**
-        - `groups` scope returns objects with name, type, slug, level, and title instead of just id arrays
-        - `staff.my.read` scope adds staff profile fields (firstname, lastname, etc.)
+        - `Groups.Read` scope returns objects with name, type, slug, level, and title instead of just id arrays
+        - `Staff.Profile.Read` scope adds staff profile fields (firstname, lastname, etc.)
       security:
         - OpenID:
             - openid
             - profile
             - email
-            - groups
-            - staff.my.read
+            - Groups.Read
+            - Staff.Profile.Read
       responses:
         '200':
           description: OK
@@ -332,9 +338,9 @@ paths:
       description: Returns the authenticated user's full staff profile including all PII fields.
       security:
         - OpenID:
-            - staff.my.read
+            - Staff.Profile.Read
         - AccessToken:
-            - staff.my.read
+            - Staff.Profile.Read
       responses:
         '200':
           description: OK
@@ -356,9 +362,9 @@ paths:
         Fields that are not visible to the viewer are omitted from the response.
       security:
         - OpenID:
-            - staff.all.read
+            - Staff.Profile.Read.All
         - AccessToken:
-            - staff.all.read
+            - Staff.Profile.Read.All
       parameters:
         - in: query
           name: search
@@ -401,9 +407,9 @@ paths:
         Returns 404 if the user is not a staff member.
       security:
         - OpenID:
-            - staff.all.read
+            - Staff.Profile.Read.All
         - AccessToken:
-            - staff.all.read
+            - Staff.Profile.Read.All
       parameters:
         - in: path
           name: user
@@ -438,9 +444,9 @@ paths:
         Each node includes a `is_mine` flag indicating whether the authenticated user is a member.
       security:
         - OpenID:
-            - groups.read
+            - Groups.Read
         - AccessToken:
-            - groups.read
+            - Groups.Read
       parameters:
         - in: query
           name: depth
@@ -472,9 +478,9 @@ paths:
         Staff members can see all hierarchy groups. Non-staff users only see groups they belong to.
       security:
         - OpenID:
-            - groups.read
+            - Groups.Read
         - AccessToken:
-            - groups.read
+            - Groups.Read
       parameters:
         - in: query
           name: type
@@ -595,9 +601,9 @@ paths:
       summary: Create group
       security:
         - OpenID:
-            - groups.write
+            - Groups.ReadWrite.All
         - AccessToken:
-            - groups.write
+            - Groups.ReadWrite.All
       requestBody:
         required: true
         content:
@@ -619,9 +625,9 @@ paths:
       summary: Get group
       security:
         - OpenID:
-            - groups.read
+            - Groups.Read
         - AccessToken:
-            - groups.read
+            - Groups.Read
       parameters:
         - in: path
           name: group
@@ -728,9 +734,9 @@ paths:
       summary: Update group
       security:
         - OpenID:
-            - groups.write
+            - Groups.ReadWrite.All
         - AccessToken:
-            - groups.write
+            - Groups.ReadWrite.All
       parameters:
         - in: path
           name: group
@@ -765,9 +771,9 @@ paths:
       summary: Delete group
       security:
         - OpenID:
-            - groups.delete
+            - Groups.ReadWrite.All
         - AccessToken:
-            - groups.delete
+            - Groups.ReadWrite.All
       parameters:
         - in: path
           name: group
@@ -794,9 +800,9 @@ paths:
       description: Returns a paginated list of group members with their roles and titles.
       security:
         - OpenID:
-            - groups.read
+            - Groups.Read
         - AccessToken:
-            - groups.read
+            - Groups.Read
       parameters:
         - in: path
           name: group
@@ -870,9 +876,9 @@ paths:
         hierarchy and function groups.
       security:
         - OpenID:
-            - groups.write
+            - Groups.ReadWrite.All
         - AccessToken:
-            - groups.write
+            - Groups.ReadWrite.All
       parameters:
         - in: path
           name: group
@@ -914,9 +920,9 @@ paths:
       description: Update a member's level or title within a group.
       security:
         - OpenID:
-            - groups.write
+            - Groups.ReadWrite.All
         - AccessToken:
-            - groups.write
+            - Groups.ReadWrite.All
       parameters:
         - in: path
           name: group
@@ -959,9 +965,9 @@ paths:
       description: Remove a user from a group.
       security:
         - OpenID:
-            - groups.write
+            - Groups.ReadWrite.All
         - AccessToken:
-            - groups.write
+            - Groups.ReadWrite.All
       parameters:
         - in: path
           name: group
@@ -1693,7 +1699,7 @@ components:
           description: Avatar URL (requires `profile` scope)
         groups:
           type: array
-          description: 'Group memberships with details (requires `groups` scope). In v2, returns objects instead of just id strings.'
+          description: 'Group memberships with details (requires `Groups.Read` scope). In v2, returns objects instead of just id strings.'
           items:
             type: object
             properties:
@@ -1720,77 +1726,77 @@ components:
                 example: App Developer
         firstname:
           type: string
-          description: First name (requires `staff.my.read` scope)
+          description: First name (requires `Staff.Profile.Read` scope)
           example: John
         lastname:
           type: string
-          description: Last name (requires `staff.my.read` scope)
+          description: Last name (requires `Staff.Profile.Read` scope)
           example: Doe
         birthdate:
           type: string
           format: date
           nullable: true
-          description: Date of birth (requires `staff.my.read` scope)
+          description: Date of birth (requires `Staff.Profile.Read` scope)
           example: '1990-01-15'
         phone:
           type: string
           nullable: true
-          description: Phone number (requires `staff.my.read` scope)
+          description: Phone number (requires `Staff.Profile.Read` scope)
         telegram_username:
           type: string
           nullable: true
-          description: Telegram username (requires `staff.my.read` scope)
+          description: Telegram username (requires `Staff.Profile.Read` scope)
         spoken_languages:
           type: array
           nullable: true
-          description: Spoken languages (requires `staff.my.read` scope)
+          description: Spoken languages (requires `Staff.Profile.Read` scope)
           items:
             type: string
         credit_as:
           type: string
           nullable: true
-          description: Preferred credit name (requires `staff.my.read` scope)
+          description: Preferred credit name (requires `Staff.Profile.Read` scope)
         nda_checked_at:
           type: string
           format: date-time
           nullable: true
-          description: Timestamp of the last positive NDA check; `null` if never confirmed (requires `staff.my.read` scope)
+          description: Timestamp of the last positive NDA check; `null` if never confirmed (requires `Staff.Profile.Read` scope)
         pronouns:
           type: string
           nullable: true
-          description: Pronouns (requires `staff.my.read` scope)
+          description: Pronouns (requires `Staff.Profile.Read` scope)
         address_line1:
           type: string
           nullable: true
-          description: Address line 1 (requires `staff.my.read` scope)
+          description: Address line 1 (requires `Staff.Profile.Read` scope)
         address_line2:
           type: string
           nullable: true
-          description: Address line 2 (requires `staff.my.read` scope)
+          description: Address line 2 (requires `Staff.Profile.Read` scope)
         city:
           type: string
           nullable: true
-          description: City (requires `staff.my.read` scope)
+          description: City (requires `Staff.Profile.Read` scope)
         postal_code:
           type: string
           nullable: true
-          description: Postal code (requires `staff.my.read` scope)
+          description: Postal code (requires `Staff.Profile.Read` scope)
         country:
           type: string
           nullable: true
-          description: Country (ISO 3166-1 alpha-2; not validated against an allow-list; requires `staff.my.read` scope)
+          description: Country (ISO 3166-1 alpha-2; not validated against an allow-list; requires `Staff.Profile.Read` scope)
         emergency_contact_name:
           type: string
           nullable: true
-          description: Emergency contact name (requires `staff.my.read` scope)
+          description: Emergency contact name (requires `Staff.Profile.Read` scope)
         emergency_contact_phone:
           type: string
           nullable: true
-          description: Emergency contact phone (requires `staff.my.read` scope)
+          description: Emergency contact phone (requires `Staff.Profile.Read` scope)
         emergency_contact_telegram:
           type: string
           nullable: true
-          description: Emergency contact Telegram handle (requires `staff.my.read` scope)
+          description: Emergency contact Telegram handle (requires `Staff.Profile.Read` scope)
     UserProfile:
       type: object
       required:
@@ -2185,7 +2191,7 @@ components:
         email:
           type: string
           nullable: true
-          description: 'Email (only visible with `view_full_staff_details` scope)'
+          description: 'Email (only visible with `Staff.Contact.Read.All` scope)'
         avatar:
           type: string
           nullable: true
@@ -2350,7 +2356,7 @@ components:
           type: array
           items:
             type: string
-          example: [openid, profile, email, offline, offline_access, groups]
+          example: [openid, profile, email, offline, offline_access, Groups.Read]
         token_endpoint_auth_methods_supported:
           type: array
           items:

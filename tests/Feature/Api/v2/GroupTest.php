@@ -39,7 +39,7 @@ beforeEach(function () {
 it('returns groups index as a bare array with no data envelope', function () {
     $user = User::factory()->create();
     $this->staffGroup->users()->attach($user, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($user, 'app-one', ['groups.read']);
+    actingAsGroupApiUser($user, 'app-one', ['Groups.Read']);
 
     Group::factory()->department()->create(['name' => 'IT'])->users()->attach($user, ['level' => GroupUserLevel::Member]);
 
@@ -56,7 +56,7 @@ it('returns groups index as a bare array with no data envelope', function () {
 it('returns group members list as a bare array with no data envelope', function () {
     $user = User::factory()->create();
     $this->staffGroup->users()->attach($user, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($user, 'app-one', ['groups.read']);
+    actingAsGroupApiUser($user, 'app-one', ['Groups.Read']);
 
     $department = Group::factory()->department()->create();
     $department->users()->attach($user, ['level' => GroupUserLevel::Member]);
@@ -74,7 +74,7 @@ it('returns group members list as a bare array with no data envelope', function 
 it('adds a member by username (maps to users.name)', function () {
     $actor = User::factory()->create();
     $this->staffGroup->users()->attach($actor, ['level' => GroupUserLevel::Director]);
-    actingAsGroupApiUser($actor, 'app-one', ['groups.write', 'groups.update', 'groups.read']);
+    actingAsGroupApiUser($actor, 'app-one', ['Groups.ReadWrite.All', 'Groups.ReadWrite.All', 'Groups.Read']);
 
     $department = Group::factory()->department()->create();
     $department->users()->attach($actor, ['level' => GroupUserLevel::Director]);
@@ -97,7 +97,7 @@ it('adds a member by username (maps to users.name)', function () {
 it('rejects adding a member when no identifier is provided', function () {
     $actor = User::factory()->create();
     $this->staffGroup->users()->attach($actor, ['level' => GroupUserLevel::Director]);
-    actingAsGroupApiUser($actor, 'app-one', ['groups.write', 'groups.update']);
+    actingAsGroupApiUser($actor, 'app-one', ['Groups.ReadWrite.All', 'Groups.ReadWrite.All']);
 
     $department = Group::factory()->department()->create();
     $department->users()->attach($actor, ['level' => GroupUserLevel::Director]);
@@ -114,7 +114,7 @@ it('rejects adding a member when no identifier is provided', function () {
 it('rejects adding a non-staff user to a department without allow_making_staff', function () {
     $actor = User::factory()->create();
     $this->staffGroup->users()->attach($actor, ['level' => GroupUserLevel::Director]);
-    actingAsGroupApiUser($actor, 'app-one', ['groups.write', 'groups.update']);
+    actingAsGroupApiUser($actor, 'app-one', ['Groups.ReadWrite.All', 'Groups.ReadWrite.All']);
 
     $department = Group::factory()->department()->create();
     $department->users()->attach($actor, ['level' => GroupUserLevel::Director]);
@@ -136,7 +136,7 @@ it('rejects adding a non-staff user to a department without allow_making_staff',
 it('allows adding a non-staff user to a department when allow_making_staff is true', function () {
     $actor = User::factory()->create();
     $this->staffGroup->users()->attach($actor, ['level' => GroupUserLevel::Director]);
-    actingAsGroupApiUser($actor, 'app-one', ['groups.write', 'groups.update']);
+    actingAsGroupApiUser($actor, 'app-one', ['Groups.ReadWrite.All', 'Groups.ReadWrite.All']);
 
     $department = Group::factory()->department()->create();
     $department->users()->attach($actor, ['level' => GroupUserLevel::Director]);
@@ -159,7 +159,7 @@ it('allows adding a non-staff user to a department when allow_making_staff is tr
 it('rejects adding a non-staff user to a team without allow_making_staff', function () {
     $actor = User::factory()->create();
     $this->staffGroup->users()->attach($actor, ['level' => GroupUserLevel::Director]);
-    actingAsGroupApiUser($actor, 'app-one', ['groups.write', 'groups.update']);
+    actingAsGroupApiUser($actor, 'app-one', ['Groups.ReadWrite.All', 'Groups.ReadWrite.All']);
 
     $department = Group::factory()->department()->create();
     $department->users()->attach($actor, ['level' => GroupUserLevel::Director]);
@@ -181,7 +181,7 @@ it('rejects adding a non-staff user to a team without allow_making_staff', funct
 it('allows adding a non-staff user to a team with allow_making_staff and promotes them', function () {
     $actor = User::factory()->create();
     $this->staffGroup->users()->attach($actor, ['level' => GroupUserLevel::Director]);
-    actingAsGroupApiUser($actor, 'app-one', ['groups.write', 'groups.update']);
+    actingAsGroupApiUser($actor, 'app-one', ['Groups.ReadWrite.All', 'Groups.ReadWrite.All']);
 
     $department = Group::factory()->department()->create();
     $department->users()->attach($actor, ['level' => GroupUserLevel::Director]);
@@ -205,7 +205,7 @@ it('allows adding a non-staff user to a team with allow_making_staff and promote
 it('allows adding an already-staff user to a department without allow_making_staff', function () {
     $actor = User::factory()->create();
     $this->staffGroup->users()->attach($actor, ['level' => GroupUserLevel::Director]);
-    actingAsGroupApiUser($actor, 'app-one', ['groups.write', 'groups.update']);
+    actingAsGroupApiUser($actor, 'app-one', ['Groups.ReadWrite.All', 'Groups.ReadWrite.All']);
 
     $department = Group::factory()->department()->create();
     $department->users()->attach($actor, ['level' => GroupUserLevel::Director]);
@@ -226,7 +226,7 @@ it('allows adding an already-staff user to a department without allow_making_sta
 it('returns groups tree as a bare array with no data envelope', function () {
     $user = User::factory()->create();
     $this->staffGroup->users()->attach($user, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($user, 'app-one', ['groups.read']);
+    actingAsGroupApiUser($user, 'app-one', ['Groups.Read']);
 
     $response = $this->getJson('/api/v2/groups/tree');
 
@@ -241,7 +241,7 @@ it('returns groups tree as a bare array with no data envelope', function () {
 it('allows admin to create a division', function () {
     $admin = User::factory()->create(['is_admin' => true]);
     $this->staffGroup->users()->attach($admin, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($admin, 'app-one', ['groups.write', 'groups.read']);
+    actingAsGroupApiUser($admin, 'app-one', ['Groups.ReadWrite.All', 'Groups.Read']);
 
     $response = $this->postJson('/api/v2/groups', [
         'type' => 'division',
@@ -255,7 +255,7 @@ it('allows admin to create a division', function () {
 it('allows HR to create a division', function () {
     $hr = User::factory()->create(['is_hr' => true]);
     $this->staffGroup->users()->attach($hr, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($hr, 'app-one', ['groups.write', 'groups.read']);
+    actingAsGroupApiUser($hr, 'app-one', ['Groups.ReadWrite.All', 'Groups.Read']);
 
     $response = $this->postJson('/api/v2/groups', [
         'type' => 'division',
@@ -269,7 +269,7 @@ it('allows HR to create a division', function () {
 it('denies non-admin creating a group', function () {
     $user = User::factory()->create();
     $this->staffGroup->users()->attach($user, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($user, 'app-one', ['groups.write']);
+    actingAsGroupApiUser($user, 'app-one', ['Groups.ReadWrite.All']);
 
     $division = Group::factory()->division()->create();
 
@@ -285,7 +285,7 @@ it('denies non-admin creating a group', function () {
 it('requires parent_id when creating a department', function () {
     $admin = User::factory()->create(['is_admin' => true]);
     $this->staffGroup->users()->attach($admin, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($admin, 'app-one', ['groups.write']);
+    actingAsGroupApiUser($admin, 'app-one', ['Groups.ReadWrite.All']);
 
     $response = $this->postJson('/api/v2/groups', [
         'type' => 'department',
@@ -299,7 +299,7 @@ it('requires parent_id when creating a department', function () {
 it('rejects department with a team as parent', function () {
     $admin = User::factory()->create(['is_admin' => true]);
     $this->staffGroup->users()->attach($admin, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($admin, 'app-one', ['groups.write']);
+    actingAsGroupApiUser($admin, 'app-one', ['Groups.ReadWrite.All']);
 
     $department = Group::factory()->department()->create();
     $team = Group::factory()->team()->create(['parent_id' => $department->id]);
@@ -317,7 +317,7 @@ it('rejects department with a team as parent', function () {
 it('allows division director to create a department in their division', function () {
     $divDirector = User::factory()->create();
     $this->staffGroup->users()->attach($divDirector, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($divDirector, 'app-one', ['groups.write', 'groups.read']);
+    actingAsGroupApiUser($divDirector, 'app-one', ['Groups.ReadWrite.All', 'Groups.Read']);
 
     $division = Group::factory()->division()->create();
     $division->users()->attach($divDirector, ['level' => GroupUserLevel::DivisionDirector]);
@@ -336,7 +336,7 @@ it('allows division director to create a department in their division', function
 it('allows director to create a team in their department', function () {
     $director = User::factory()->create();
     $this->staffGroup->users()->attach($director, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($director, 'app-one', ['groups.write', 'groups.read']);
+    actingAsGroupApiUser($director, 'app-one', ['Groups.ReadWrite.All', 'Groups.Read']);
 
     $division = Group::factory()->division()->create();
     $department = Group::factory()->department()->create(['parent_id' => $division->id]);
@@ -356,7 +356,7 @@ it('allows director to create a team in their department', function () {
 it('denies director creating a department (wrong level)', function () {
     $director = User::factory()->create();
     $this->staffGroup->users()->attach($director, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($director, 'app-one', ['groups.write']);
+    actingAsGroupApiUser($director, 'app-one', ['Groups.ReadWrite.All']);
 
     $division = Group::factory()->division()->create();
     $division->users()->attach($director, ['level' => GroupUserLevel::Director]);
@@ -373,7 +373,7 @@ it('denies director creating a department (wrong level)', function () {
 it('denies division director creating department in another division', function () {
     $divDirector = User::factory()->create();
     $this->staffGroup->users()->attach($divDirector, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($divDirector, 'app-one', ['groups.write']);
+    actingAsGroupApiUser($divDirector, 'app-one', ['Groups.ReadWrite.All']);
 
     $myDivision = Group::factory()->division()->create();
     $myDivision->users()->attach($divDirector, ['level' => GroupUserLevel::DivisionDirector]);
@@ -392,7 +392,7 @@ it('denies division director creating department in another division', function 
 it('rejects creating automated group type', function () {
     $admin = User::factory()->create(['is_admin' => true]);
     $this->staffGroup->users()->attach($admin, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($admin, 'app-one', ['groups.write']);
+    actingAsGroupApiUser($admin, 'app-one', ['Groups.ReadWrite.All']);
 
     $response = $this->postJson('/api/v2/groups', [
         'type' => 'automated',
@@ -406,7 +406,7 @@ it('rejects creating automated group type', function () {
 it('allows admin to update a department', function () {
     $admin = User::factory()->create(['is_admin' => true]);
     $this->staffGroup->users()->attach($admin, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($admin, 'app-one', ['groups.write', 'groups.read']);
+    actingAsGroupApiUser($admin, 'app-one', ['Groups.ReadWrite.All', 'Groups.Read']);
 
     $department = Group::factory()->department()->create(['name' => 'Old Name']);
 
@@ -422,7 +422,7 @@ it('allows admin to update a department', function () {
 it('allows division director to update a department in their division', function () {
     $divDirector = User::factory()->create();
     $this->staffGroup->users()->attach($divDirector, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($divDirector, 'app-one', ['groups.write', 'groups.read']);
+    actingAsGroupApiUser($divDirector, 'app-one', ['Groups.ReadWrite.All', 'Groups.Read']);
 
     $division = Group::factory()->division()->create();
     $division->users()->attach($divDirector, ['level' => GroupUserLevel::DivisionDirector]);
@@ -440,7 +440,7 @@ it('allows division director to update a department in their division', function
 it('allows director to update a team in their department', function () {
     $director = User::factory()->create();
     $this->staffGroup->users()->attach($director, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($director, 'app-one', ['groups.write', 'groups.read']);
+    actingAsGroupApiUser($director, 'app-one', ['Groups.ReadWrite.All', 'Groups.Read']);
 
     $department = Group::factory()->department()->create();
     $department->users()->attach($director, ['level' => GroupUserLevel::Director]);
@@ -458,7 +458,7 @@ it('allows director to update a team in their department', function () {
 it('allows team lead to update their team', function () {
     $teamLead = User::factory()->create();
     $this->staffGroup->users()->attach($teamLead, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($teamLead, 'app-one', ['groups.write', 'groups.read']);
+    actingAsGroupApiUser($teamLead, 'app-one', ['Groups.ReadWrite.All', 'Groups.Read']);
 
     $department = Group::factory()->department()->create();
     $team = Group::factory()->team()->create(['parent_id' => $department->id, 'name' => 'Old Team']);
@@ -476,7 +476,7 @@ it('allows team lead to update their team', function () {
 it('allows admin to delete a department', function () {
     $admin = User::factory()->create(['is_admin' => true]);
     $this->staffGroup->users()->attach($admin, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($admin, 'app-one', ['groups.delete']);
+    actingAsGroupApiUser($admin, 'app-one', ['Groups.ReadWrite.All']);
 
     $department = Group::factory()->department()->create();
 
@@ -489,7 +489,7 @@ it('allows admin to delete a department', function () {
 it('allows division director to delete a department in their division', function () {
     $divDirector = User::factory()->create();
     $this->staffGroup->users()->attach($divDirector, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($divDirector, 'app-one', ['groups.delete']);
+    actingAsGroupApiUser($divDirector, 'app-one', ['Groups.ReadWrite.All']);
 
     $division = Group::factory()->division()->create();
     $division->users()->attach($divDirector, ['level' => GroupUserLevel::DivisionDirector]);
@@ -504,7 +504,7 @@ it('allows division director to delete a department in their division', function
 it('denies deleting root group even for admin', function () {
     $admin = User::factory()->create(['is_admin' => true]);
     $this->staffGroup->users()->attach($admin, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($admin, 'app-one', ['groups.delete']);
+    actingAsGroupApiUser($admin, 'app-one', ['Groups.ReadWrite.All']);
 
     $root = Group::where('type', GroupTypeEnum::Root)->first();
 
@@ -515,7 +515,7 @@ it('denies deleting root group even for admin', function () {
 
 it('denies deleting automated group even for admin', function () {
     $admin = User::factory()->create(['is_admin' => true]);
-    actingAsGroupApiUser($admin, 'app-one', ['groups.delete']);
+    actingAsGroupApiUser($admin, 'app-one', ['Groups.ReadWrite.All']);
 
     $response = $this->deleteJson('/api/v2/groups/' . $this->staffGroup->hashid);
 
@@ -525,7 +525,7 @@ it('denies deleting automated group even for admin', function () {
 it('allows team lead to delete their team', function () {
     $teamLead = User::factory()->create();
     $this->staffGroup->users()->attach($teamLead, ['level' => GroupUserLevel::Member]);
-    actingAsGroupApiUser($teamLead, 'app-one', ['groups.delete']);
+    actingAsGroupApiUser($teamLead, 'app-one', ['Groups.ReadWrite.All']);
 
     $department = Group::factory()->department()->create();
     $team = Group::factory()->team()->create(['parent_id' => $department->id]);

@@ -51,7 +51,7 @@ it('GET /staff/me returns self with pronouns, address, emergency contact', funct
     ]);
     $this->staffGroup->users()->attach($user, ['level' => GroupUserLevel::Member]);
     $user = $user->fresh();
-    actingAsStaffApiUser($user, 'app-one', ['staff.my.read']);
+    actingAsStaffApiUser($user, 'app-one', ['Staff.Profile.Read']);
 
     $response = $this->getJson('/api/v2/staff/me');
 
@@ -95,7 +95,7 @@ it('GET /staff/{id} hides address from same-department staff by default and show
     $viewer = $viewer->fresh();
     $subject = $subject->fresh();
 
-    actingAsStaffApiUser($viewer, 'app-one', ['staff.all.read']);
+    actingAsStaffApiUser($viewer, 'app-one', ['Staff.Profile.Read.All']);
 
     $response = $this->getJson('/api/v2/staff/' . $subject->hashid);
 
@@ -134,7 +134,7 @@ it('GET /staff/{id} exposes address to directors', function () {
     $director = $director->fresh();
     $subject = $subject->fresh();
 
-    actingAsStaffApiUser($director, 'app-one', ['staff.all.read']);
+    actingAsStaffApiUser($director, 'app-one', ['Staff.Profile.Read.All']);
 
     $response = $this->getJson('/api/v2/staff/' . $subject->hashid);
 

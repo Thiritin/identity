@@ -40,7 +40,7 @@ class GroupMemberController extends Controller
 
     public function index(Request $request, string $groupHashid)
     {
-        $this->requireScope('groups.read');
+        $this->requireScope('Groups.Read');
 
         $group = $this->resolveGroup($groupHashid);
         $this->authorize('view', [$group, $request->user()]);
@@ -71,7 +71,7 @@ class GroupMemberController extends Controller
 
     public function store(StoreGroupMemberRequest $request, string $groupHashid)
     {
-        $this->requireScope('groups.write');
+        $this->requireScope('Groups.ReadWrite.All');
 
         $group = $this->resolveGroup($groupHashid);
         $this->authorizeGroupManagement($group, $request);
@@ -136,7 +136,7 @@ class GroupMemberController extends Controller
 
     public function update(UpdateGroupMemberRequest $request, string $groupHashid, string $userHashid)
     {
-        $this->requireScope('groups.write');
+        $this->requireScope('Groups.ReadWrite.All');
 
         $group = $this->resolveGroup($groupHashid);
         $this->authorizeGroupManagement($group, $request);
@@ -169,7 +169,7 @@ class GroupMemberController extends Controller
 
     public function destroy(Request $request, string $groupHashid, string $userHashid)
     {
-        $this->requireScope('groups.write');
+        $this->requireScope('Groups.ReadWrite.All');
 
         $group = $this->resolveGroup($groupHashid);
         $this->authorizeGroupManagement($group, $request);

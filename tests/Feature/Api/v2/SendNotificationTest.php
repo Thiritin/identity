@@ -60,7 +60,7 @@ it('queues a notification on happy path', function () {
     ]);
     $user = User::factory()->create();
 
-    actingAsClient('app-one', ['notifications.send']);
+    actingAsClient('app-one', ['Notifications.Send']);
 
     $response = $this->postJson('/api/v2/notifications', [
         'type' => 'welcome',
@@ -82,7 +82,7 @@ it('returns 403 when app does not have allow_notifications enabled', function ()
     NotificationType::factory()->create(['app_id' => $app->id, 'key' => 'welcome']);
     $user = User::factory()->create();
 
-    actingAsClient('app-one', ['notifications.send']);
+    actingAsClient('app-one', ['Notifications.Send']);
 
     $response = $this->postJson('/api/v2/notifications', [
         'type' => 'welcome',
@@ -120,7 +120,7 @@ it('returns 404 when type key does not exist for this app', function () {
     App::factory()->create(['client_id' => 'app-one', 'allow_notifications' => true]);
     $user = User::factory()->create();
 
-    actingAsClient('app-one', ['notifications.send']);
+    actingAsClient('app-one', ['Notifications.Send']);
 
     $response = $this->postJson('/api/v2/notifications', [
         'type' => 'missing',
@@ -141,7 +141,7 @@ it('returns 404 when type is disabled', function () {
     ]);
     $user = User::factory()->create();
 
-    actingAsClient('app-one', ['notifications.send']);
+    actingAsClient('app-one', ['Notifications.Send']);
 
     $response = $this->postJson('/api/v2/notifications', [
         'type' => 'welcome',
@@ -157,7 +157,7 @@ it('returns 404 when user hashid does not decode to an existing user', function 
     $app = App::factory()->create(['client_id' => 'app-one', 'allow_notifications' => true]);
     NotificationType::factory()->create(['app_id' => $app->id, 'key' => 'welcome']);
 
-    actingAsClient('app-one', ['notifications.send']);
+    actingAsClient('app-one', ['Notifications.Send']);
 
     $response = $this->postJson('/api/v2/notifications', [
         'type' => 'welcome',
@@ -173,7 +173,7 @@ it('rejects missing required fields with 422', function () {
     $app = App::factory()->create(['client_id' => 'app-one', 'allow_notifications' => true]);
     NotificationType::factory()->create(['app_id' => $app->id, 'key' => 'welcome']);
 
-    actingAsClient('app-one', ['notifications.send']);
+    actingAsClient('app-one', ['Notifications.Send']);
 
     $response = $this->postJson('/api/v2/notifications', [
         'type' => 'welcome',
@@ -187,7 +187,7 @@ it('rejects partial cta with 422', function () {
     NotificationType::factory()->create(['app_id' => $app->id, 'key' => 'welcome']);
     $user = User::factory()->create();
 
-    actingAsClient('app-one', ['notifications.send']);
+    actingAsClient('app-one', ['Notifications.Send']);
 
     $response = $this->postJson('/api/v2/notifications', [
         'type' => 'welcome',
@@ -205,7 +205,7 @@ it('enforces rate limit of 60 per minute per app', function () {
     NotificationType::factory()->create(['app_id' => $app->id, 'key' => 'welcome']);
     $user = User::factory()->create();
 
-    actingAsClient('app-one', ['notifications.send']);
+    actingAsClient('app-one', ['Notifications.Send']);
 
     // Raise the global api throttle so it doesn't interfere with the
     // notifications-specific limiter under test.

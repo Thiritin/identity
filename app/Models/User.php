@@ -351,11 +351,39 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             ->log('user-unsuspended');
     }
 
+    /**
+     * Legacy scope aliases: old dotted names → PascalCase equivalents.
+     * Allows policies using old scope names to work when the api guard
+     * only carries PascalCase scopes (v2 Hydra tokens).
+     */
+    private const SCOPE_ALIASES = [
+        'groups.read' => 'Groups.Read',
+        'groups.write' => 'Groups.ReadWrite.All',
+        'groups.update' => 'Groups.ReadWrite.All',
+        'groups.delete' => 'Groups.ReadWrite.All',
+        'staff.my.read' => 'Staff.Profile.Read',
+        'staff.all.read' => 'Staff.Profile.Read.All',
+        'view_full_staff_details' => 'Staff.Contact.Read.All',
+        'notifications.send' => 'Notifications.Send',
+    ];
+
     public function appCan(string $scope)
     {
-        $auth = Auth::guard('api');
+        try {
+            $auth = Auth::guard('api');
+            $scopes = $auth->getScopes();
+        } catch (\Throwable) {
+            return false;
+        }
 
-        return in_array($scope, $auth->getScopes(), true);
+        if (in_array($scope, $scopes, true)) {
+            return true;
+        }
+
+        // Check if the old scope name has a PascalCase alias
+        $alias = self::SCOPE_ALIASES[$scope] ?? null;
+
+        return $alias !== null && \App\Support\ScopeChecker::has($alias);
     }
 
     public function permCheck(string $ability)
