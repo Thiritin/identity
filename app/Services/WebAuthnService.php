@@ -17,6 +17,7 @@ use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\CeremonyStep\CeremonyStepManagerFactory;
+use Webauthn\CredentialRecord;
 use Webauthn\Denormalizer\WebauthnSerializerFactory;
 use Webauthn\PublicKeyCredential;
 use Webauthn\PublicKeyCredentialCreationOptions;
@@ -24,7 +25,6 @@ use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialParameters;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialRpEntity;
-use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialUserEntity;
 
 class WebAuthnService
@@ -236,7 +236,7 @@ class WebAuthnService
             throw new \RuntimeException('Credential not found.');
         }
 
-        $existingSource = $this->getSerializer()->deserialize($twoFactor->public_key, PublicKeyCredentialSource::class, 'json');
+        $existingSource = $this->getSerializer()->deserialize($twoFactor->public_key, CredentialRecord::class, 'json');
 
         $ceremonyStepManager = $this->getCeremonyStepManagerFactory()->requestCeremony();
         $validator = AuthenticatorAssertionResponseValidator::create(
