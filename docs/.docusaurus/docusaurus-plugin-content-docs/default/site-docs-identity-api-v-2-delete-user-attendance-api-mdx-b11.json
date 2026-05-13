@@ -1,0 +1,26 @@
+{
+  "id": "identity/api/v2/delete-user-attendance",
+  "title": "Delete attendance",
+  "description": "Deletes an attendance record. Returns 409 if the record has `is_staff: true` — staff assignment must be removed by a director first.",
+  "source": "@site/docs/identity/api/v2/delete-user-attendance.api.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/delete-user-attendance",
+  "permalink": "/identity/api/v2/delete-user-attendance",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "delete-user-attendance",
+    "title": "Delete attendance",
+    "description": "Deletes an attendance record. Returns 409 if the record has `is_staff: true` — staff assignment must be removed by a director first.",
+    "sidebar_label": "Delete attendance",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "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",
+    "sidebar_class_name": "delete api-method",
+    "info_path": "identity/api/v2/eurofurence-identity",
+    "custom_edit_url": null
+  }
+}

@@ -1,0 +1,32 @@
+---
+id: attendance
+title: "Attendance"
+description: ""
+sidebar_label: "Attendance"
+hide_title: true
+hide_table_of_contents: true
+schema: true
+sample: {"id":42,"convention_id":29,"is_attended":true,"is_staff":true,"convention":{"id":29,"name":"Eurofurence 29","year":2026,"theme":"Lost in Translation","start_date":"2026-08-19","end_date":"2026-08-23","location":"Hamburg, Germany","website_url":"https://archive.eurofurence.org/EF29/","conbook_url":"/conbooks/EF_29_Conbook.pdf","attendees_count":6451,"background_image_url":"https://s3.example.com/conventions/backgrounds/ef29.jpg","dailies":[{"title":"Issue 67, Thursday","url":"/daily/EF29_2025.09.04_thursday_issue.67.pdf"}],"videos":[{"title":"Issue 67, Thursday","url":"/daily/EF29_2025.09.04_thursday_issue.67.pdf"}],"photos":[{"title":"Group Photo","url":"https://photo.eurofurence.org/2025/Group_Photo/Group-EF29-Everyone.jpg","thumb":"https://photo.eurofurence.org/2025/Group_Photo/Group-EF29-Everyone.thumb.jpg"}]}}
+custom_edit_url: null
+---
+
+import Schema from "@theme/Schema";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Attendance"}
+>
+</Heading>
+
+
+
+
+
+<Schema
+  {...require("./attendance.Schema.json")}
+>
+  
+</Schema>
+            

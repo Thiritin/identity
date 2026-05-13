@@ -1,0 +1,1 @@
+{"parameters":[{"in":"path","name":"user","required":true,"schema":{"type":"string"},"description":"User hashid or the literal `me` for the authenticated user","example":"me"}]}

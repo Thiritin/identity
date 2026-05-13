@@ -1,0 +1,1 @@
+{"parameters":[{"in":"path","name":"user","required":true,"schema":{"type":"string"},"description":"User hashid or the literal `me` for the authenticated user","example":"1VJEQAYWW54TZ5VD"},{"in":"query","name":"include","schema":{"type":"string"},"description":"Comma-separated list of relations to include (supported: groups)","example":"groups"}]}

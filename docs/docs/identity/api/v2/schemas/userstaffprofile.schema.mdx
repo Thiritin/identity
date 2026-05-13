@@ -1,0 +1,32 @@
+---
+id: userstaffprofile
+title: "UserStaffProfile"
+description: "User staff profile. Which fields are present depends on the granted scopes."
+sidebar_label: "UserStaffProfile"
+hide_title: true
+hide_table_of_contents: true
+schema: true
+sample: {"name":"FurryUser42","firstname":"John","lastname":"Doe","birthdate":"1990-01-15","avatar":"string","pronouns":"he/him","credit_as":"J. Doe","nda_checked_at":"2024-07-29T15:51:28.071Z","spoken_languages":["string"],"skills":["string"],"phone":"string","telegram_username":"string","address_line1":"string","address_line2":"string","city":"string","postal_code":"string","country":"string","emergency_contact":{"name":"string","phone":"string","telegram":"string"}}
+custom_edit_url: null
+---
+
+import Schema from "@theme/Schema";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"UserStaffProfile"}
+>
+</Heading>
+
+
+
+User staff profile. Which fields are present depends on the granted scopes.
+
+<Schema
+  {...require("./userstaffprofile.Schema.json")}
+>
+  
+</Schema>
+            

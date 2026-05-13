@@ -39,15 +39,15 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'a9a'),
+    component: ComponentCreator('/', 'fba'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '068'),
+        component: ComponentCreator('/', 'f2e'),
         routes: [
           {
             path: '/',
-            component: ComponentCreator('/', 'fcd'),
+            component: ComponentCreator('/', '68c'),
             routes: [
               {
                 path: '/identity/api/v1/create-group',
@@ -164,6 +164,11 @@ export default [
                 sidebar: "identitySidebar"
               },
               {
+                path: '/identity/api/v2/create-user-attendance',
+                component: ComponentCreator('/identity/api/v2/create-user-attendance', 'dd2'),
+                exact: true
+              },
+              {
                 path: '/identity/api/v2/delete-group',
                 component: ComponentCreator('/identity/api/v2/delete-group', '27f'),
                 exact: true,
@@ -174,6 +179,16 @@ export default [
                 component: ComponentCreator('/identity/api/v2/delete-metadata-key', '2fd'),
                 exact: true,
                 sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/delete-user-attendance',
+                component: ComponentCreator('/identity/api/v2/delete-user-attendance', '424'),
+                exact: true
+              },
+              {
+                path: '/identity/api/v2/delete-user-metadata-key',
+                component: ComponentCreator('/identity/api/v2/delete-user-metadata-key', 'f2b'),
+                exact: true
               },
               {
                 path: '/identity/api/v2/eurofurence-identity',
@@ -266,6 +281,36 @@ export default [
                 sidebar: "identitySidebar"
               },
               {
+                path: '/identity/api/v2/get-user',
+                component: ComponentCreator('/identity/api/v2/get-user', 'e76'),
+                exact: true
+              },
+              {
+                path: '/identity/api/v2/get-user-attendances',
+                component: ComponentCreator('/identity/api/v2/get-user-attendances', 'a6f'),
+                exact: true
+              },
+              {
+                path: '/identity/api/v2/get-user-groups',
+                component: ComponentCreator('/identity/api/v2/get-user-groups', '68a'),
+                exact: true
+              },
+              {
+                path: '/identity/api/v2/get-user-metadata',
+                component: ComponentCreator('/identity/api/v2/get-user-metadata', '689'),
+                exact: true
+              },
+              {
+                path: '/identity/api/v2/get-user-metadata-key',
+                component: ComponentCreator('/identity/api/v2/get-user-metadata-key', 'eb4'),
+                exact: true
+              },
+              {
+                path: '/identity/api/v2/get-user-staff-profile',
+                component: ComponentCreator('/identity/api/v2/get-user-staff-profile', '049'),
+                exact: true
+              },
+              {
                 path: '/identity/api/v2/get-userinfo',
                 component: ComponentCreator('/identity/api/v2/get-userinfo', '68f'),
                 exact: true,
@@ -308,6 +353,11 @@ export default [
                 sidebar: "identitySidebar"
               },
               {
+                path: '/identity/api/v2/put-user-metadata-key',
+                component: ComponentCreator('/identity/api/v2/put-user-metadata-key', '9e9'),
+                exact: true
+              },
+              {
                 path: '/identity/api/v2/remove-group-member',
                 component: ComponentCreator('/identity/api/v2/remove-group-member', '983'),
                 exact: true,
@@ -318,6 +368,11 @@ export default [
                 component: ComponentCreator('/identity/api/v2/schemas/addmemberform', '940'),
                 exact: true,
                 sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/attendance',
+                component: ComponentCreator('/identity/api/v2/schemas/attendance', '022'),
+                exact: true
               },
               {
                 path: '/identity/api/v2/schemas/convention',
@@ -444,10 +499,30 @@ export default [
                 sidebar: "identitySidebar"
               },
               {
+                path: '/identity/api/v2/schemas/updateuserstaffprofile',
+                component: ComponentCreator('/identity/api/v2/schemas/updateuserstaffprofile', '1e5'),
+                exact: true
+              },
+              {
+                path: '/identity/api/v2/schemas/usergroup',
+                component: ComponentCreator('/identity/api/v2/schemas/usergroup', 'c9b'),
+                exact: true
+              },
+              {
                 path: '/identity/api/v2/schemas/userinfo',
                 component: ComponentCreator('/identity/api/v2/schemas/userinfo', '45a'),
                 exact: true,
                 sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/schemas/userprofile',
+                component: ComponentCreator('/identity/api/v2/schemas/userprofile', '957'),
+                exact: true
+              },
+              {
+                path: '/identity/api/v2/schemas/userstaffprofile',
+                component: ComponentCreator('/identity/api/v2/schemas/userstaffprofile', '8d3'),
+                exact: true
               },
               {
                 path: '/identity/api/v2/schemas/validationerror',
@@ -479,10 +554,30 @@ export default [
                 sidebar: "identitySidebar"
               },
               {
+                path: '/identity/api/v2/update-user-attendance',
+                component: ComponentCreator('/identity/api/v2/update-user-attendance', '1f7'),
+                exact: true
+              },
+              {
+                path: '/identity/api/v2/update-user-staff-profile',
+                component: ComponentCreator('/identity/api/v2/update-user-staff-profile', '506'),
+                exact: true
+              },
+              {
+                path: '/identity/api/v2/user-attendances',
+                component: ComponentCreator('/identity/api/v2/user-attendances', '491'),
+                exact: true
+              },
+              {
                 path: '/identity/api/v2/user-metadata',
                 component: ComponentCreator('/identity/api/v2/user-metadata', '8f4'),
                 exact: true,
                 sidebar: "identitySidebar"
+              },
+              {
+                path: '/identity/api/v2/users',
+                component: ComponentCreator('/identity/api/v2/users', '94b'),
+                exact: true
               },
               {
                 path: '/identity/concepts/audiences',

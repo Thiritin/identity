@@ -1,0 +1,26 @@
+{
+  "id": "identity/api/v2/put-user-metadata-key",
+  "title": "Create or update metadata",
+  "description": "Creates or updates a metadata key-value pair. Returns 201 on create, 200 on update.",
+  "source": "@site/docs/identity/api/v2/put-user-metadata-key.api.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/put-user-metadata-key",
+  "permalink": "/identity/api/v2/put-user-metadata-key",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "put-user-metadata-key",
+    "title": "Create or update metadata",
+    "description": "Creates or updates a metadata key-value pair. Returns 201 on create, 200 on update.",
+    "sidebar_label": "Create or update metadata",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "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",
+    "sidebar_class_name": "put api-method",
+    "info_path": "identity/api/v2/eurofurence-identity",
+    "custom_edit_url": null
+  }
+}

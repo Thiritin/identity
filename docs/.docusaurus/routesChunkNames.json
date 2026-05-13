@@ -42,17 +42,17 @@
       "plugin": "plugin---docusaurus-debugb-38-ad3"
     }
   },
-  "/-a9a": {
+  "/-fba": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-068": {
+  "/-f2e": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
-  "/-fcd": {
+  "/-68c": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/identity/api/v1/create-group-2ac": {
@@ -131,6 +131,10 @@
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-create-groupd-75-ec5"
   },
+  "/identity/api/v2/create-user-attendance-dd2": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-create-user-attendanceaf-8-3ad"
+  },
   "/identity/api/v2/delete-group-27f": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-delete-groupbd-5-757"
@@ -138,6 +142,14 @@
   "/identity/api/v2/delete-metadata-key-2fd": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-delete-metadata-key-8-d-3-50b"
+  },
+  "/identity/api/v2/delete-user-attendance-424": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-delete-user-attendanceb-11-bef"
+  },
+  "/identity/api/v2/delete-user-metadata-key-f2b": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-delete-user-metadata-key-566-7bb"
   },
   "/identity/api/v2/eurofurence-identity-f0f": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
@@ -199,6 +211,30 @@
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-get-token-095-c6b"
   },
+  "/identity/api/v2/get-user-e76": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-usere-1-a-493"
+  },
+  "/identity/api/v2/get-user-attendances-a6f": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-user-attendances-4-a-0-dff"
+  },
+  "/identity/api/v2/get-user-groups-68a": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-user-groups-9-b-4-abe"
+  },
+  "/identity/api/v2/get-user-metadata-689": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-user-metadataa-38-f1b"
+  },
+  "/identity/api/v2/get-user-metadata-key-eb4": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-user-metadata-key-0-c-8-163"
+  },
+  "/identity/api/v2/get-user-staff-profile-049": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-get-user-staff-profile-2-e-8-d6a"
+  },
   "/identity/api/v2/get-userinfo-68f": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-get-userinfof-3-b-197"
@@ -227,6 +263,10 @@
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-put-metadata-keye-67-6bd"
   },
+  "/identity/api/v2/put-user-metadata-key-9e9": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-put-user-metadata-key-007-8fa"
+  },
   "/identity/api/v2/remove-group-member-983": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-remove-group-memberd-48-28e"
@@ -234,6 +274,10 @@
   "/identity/api/v2/schemas/addmemberform-940": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-schemas-addmemberform-15-b-c1d"
+  },
+  "/identity/api/v2/schemas/attendance-022": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-attendance-082-afa"
   },
   "/identity/api/v2/schemas/convention-f49": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
@@ -319,9 +363,25 @@
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-schemas-updatememberformc-2-a-712"
   },
+  "/identity/api/v2/schemas/updateuserstaffprofile-1e5": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-updateuserstaffprofile-5-e-4-ddb"
+  },
+  "/identity/api/v2/schemas/usergroup-c9b": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-usergroupcbd-318"
+  },
   "/identity/api/v2/schemas/userinfo-45a": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-schemas-userinfo-6-f-1-689"
+  },
+  "/identity/api/v2/schemas/userprofile-957": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-userprofile-98-c-23d"
+  },
+  "/identity/api/v2/schemas/userstaffprofile-8d3": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-schemas-userstaffprofile-307-58d"
   },
   "/identity/api/v2/schemas/validationerror-e21": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
@@ -343,9 +403,25 @@
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-update-group-member-17-a-605"
   },
+  "/identity/api/v2/update-user-attendance-1f7": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-update-user-attendance-3-d-2-a49"
+  },
+  "/identity/api/v2/update-user-staff-profile-506": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-update-user-staff-profileea-0-1ca"
+  },
+  "/identity/api/v2/user-attendances-491": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-user-attendances-204-232"
+  },
   "/identity/api/v2/user-metadata-8f4": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",
     "content": "content---identity-api-v-2-user-metadatacba-4fd"
+  },
+  "/identity/api/v2/users-94b": {
+    "__comp": "__comp---theme-api-item-4-c-5-a29",
+    "content": "content---identity-api-v-2-usersaae-194"
   },
   "/identity/concepts/audiences-4a6": {
     "__comp": "__comp---theme-api-item-4-c-5-a29",

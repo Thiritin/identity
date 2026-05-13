@@ -1,0 +1,71 @@
+---
+id: create-user-attendance
+title: "Create attendance"
+description: "Creates a new convention attendance record for a user. Defaults to `is_attended: true` and `is_staff: false`."
+sidebar_label: "Create attendance"
+hide_title: true
+hide_table_of_contents: true
+api: eJzlWv1u28gRf5UB88fJAUU5uiR3VnFoXce5+ODEru0kbWNDXJEjcc/LXd7uUo7gCOhD9An7JMXskiJFSb40CfpHGyAwuR+/+dzZmaHugxRNonlhuZLBKDjSyCwaYCDxDhIl5yhpCpi1KFMmEwSNidIpTJUGBqVBHcELnLJSWANWQczN2K/GdARWlxgDk6kbN5ZNpyOYMmEwjq7ltXQEuZy1CThkqWyG2uGDxt9KrtGAzRDiw9VKE10gS99rbjE6FCIGk6gCoyAMDCal5nYRjD7cB2cFypMXwehDsHVrcLMM74PDJEFjrtQtyodW3oRBwTTL0aI2Dp2T3gpmsyAMJMsxGAXEdBAGFdtpMCIthIFJMsxZMLoP7KKgdcZqLmfBMuxY4S0JnTGT8RSUdlILblEzAXGOsVMQDbLSZmSfhFlMoaKKH1leCIJ/8u6X478c/u39+2dPr/7+7N2LgLgnptDYP6t0QZx0eUyUtCgtTbGiEATNlRz8aoix+00R1ORXTOyasB+Cxm/GPA1IZVoVqC1HQ1vXpxssLi3OnAzr6rjKsO2KVoHGGTcWdcdr2tIPD5buH3FmCiWNpz3cf0J/tnl9Gnwj8XmF1BIyDFqnwr+5s7CpnM/SyOHGaXQ0VsI/HS67HPw+6FGj4nW04cFynf8Ga6KUQCY3sN5n6I4veak7wqu9y5bwX4Bzxwy4zcAs2IyblmcEa0JvMXMjYIqWcWGgp6RYQKHRoLRwl6GE+I9cJqJM8acGKwZuoDo5mO4FYcCEOJu689/1hC8w58Oa90GlGzTaB/241GpaaiR/GB6QGhbI9FbCDfT+8PkyDGyG29FlKQSb0EofGBpqp8pY4BKuNJNGsFrzxjJtxymzW+GmSufMBqPALXgInhjr7//Yf+IEQZl+Q8zh94QplD/W/5nYr1g+KfUshJ9R50wuCOkOJ4ZbHJdaPMhgqfmD2Jm1hRkNBkwnGZ9jhI1BI6Vng+OXw4NB5d4TpW6/muCgAjKD45fj4cH4yL9GRTolMtVpRTNOVOnD4YYn7QR//vTZk2UYTFhyO9OqlOmY52z27ZRkvo+qwShR+aA5pWbQ0DQDnA4Pol8Lf70yLqoDWZFnWrMFBWKLufm9gG65FeRgJMFGwPaTD57PE2NKhOc/hHCVldqkzDnPDn20jERsL5zxx8P94bNo/yDafzq2FcaYE2z0/AdvNTrMnpVWPDnl8tZNzXmK6v9ZAUWm7LdRAAXNMp98kSJ+1qos4Jx4eUADnSOxeQScMBtRglQ0cBTGjoJ/7pP6+sdz1AslsT4RXoT/Mm1H1HOw1ViVXrZPBsub9kSTAgU+zXu6//3mlf9S6QlPU5TQy7kxVGjUZvXFwt7XJH3r5s/RGDbb4gBtto+1VrrmeDjc5PgdEzx1DADSWuilpeepnQSHIJXs40fKgqVtTXyVPOucnDLN5ij6xi4EwrzL1x23GRSo+1OOIoVKehN1Tk6tlTBw28zmsdmpty5Dr8qcyb5GltIFAabMc6YX0LOLgidMiIVLE6dcGwueKUdyL3KJhKf+u1K/ZgWoabWfUi+qN5gEFy5oxktfi1vVYqyiSNKzNOUExsT5enh4OO6snKXtLo03NI5D02xGxacvFFulKimXSLodJ2kwChJX2tC61oEJgxxtpmi+UMZ5MtWvo2BAObYZ3NOf5YC1gKmk1vO65l1X2blWaZm4lyqkrYIFT8kt7WIjXrCCD+bDgCrvjtephInPw6E8TmTK2BXaTVP5X5KXe8XX9X9jehpIj5SU3gPW3t9+ngDRHQrRv5XqTg5oP0/7iZJTPiu99jccy3MBNdVluN5yWDFHlIOqWeBKI2QaNa0/EhylvcREo/2MDcswoCN/0RT8x3Uw36jBfYknp4rmyMye52G0H+0HrejVKjROKs1UAYcljifMGSf95fgnm3HNLZeUpTW9katq1CXiPEFpHD/V7KkfSaGUKWp4fXK14QozbrNy4lK/GmtlpcFEqMkgZ1wOTk+Ojt9cHru7DnVuzqaXqOc8aV9lGYpiw7ACZ0wM3J7Nuvv8BOZDQJkWiktrVp2YbYoB4wm6PtejR3BR9SHAX7E0eijEOp5GW2oJv1yevfEFLoWfAgTOUURwyo3dXMzg8eMJ01jtovDy+PG17EkFccosiwex4PLWxIM4R8tiQDlHQXdfBJdczgQ1EYwqdYItTIfoY2QtwDmbcemcmwY6zNDywi/ANGqtBSJKfPgamuAxhTln8Orq6hzq7gxkyFLUJryWUyWEuqO7muT/mdtX5QQuji+vgPTf6gT1Ply8PIJnBz/+eNOrbWqVEibiaKfOmpnNxUBPE1q0tzcixj/BK0cKPsGLxrrw6Vp+6vf77j8tiil1jOETXKAvcpmAtxen3uZxoXEehxBL/Gjj0DU4e659wOaMuwJmD2J3FcUwgFgweijcBQke/q/9c9T9czZDIvKmzCeo6X5x9wJdrG55s/qo1BqlXe1wXTE/5laCdBDNhitlmegfUQHn1tNrtaihs94Aoct9ZVF3qyUqL0qLwMDS/r0uPHFjtsE7Wb8M/lr6SGfAZKoU1Gomh/AWGUEURX8AjeKn64C0fx3EUErLBXBLLsYmjpZmVeOIyYoKORRxdS09l66dnBsUczLKa+pqiHWfLo1TsVG6SoKKxqsp/VGlrTkHVyhfyx55R4HanXGZ4B786x//3LDGHRcCpLIwwbZybKaMDxeXZVEoTV3d30rUC2h6ziOIC+cBvZbRQ3jSnzCD6R55YkiNLI1EANMQ4gL12O2pD/LZYWmzIVxSAmz82KMmbPXOTl4cUZNNpkyne9eyD7G/4eIR/JkZnsD6XQbTUib+hHC7cOsLraZcYDwCSj2+M5ByUwi28BkVnRY2Z5Zpt9jdGc1S9wosTTUa49bOUfNplcYSY7Y0nqvpVHCJ7oRVz2PmLtV4BBc41WgysHS/rqQkGm4vPbjOvlvK0h0N9e8MqDsJlTzrO903h2o3k4t6/Wqtp3hJ3Uq30T1F537a0ybON4fdx4Z4BGd3smp2VpjQcyGFlBgCxRT/NOHaZtQECyu1hrRBqlKaEBKNKbdjZkKQKRsnGSa3mI6Z3dvBlP+UspuxSuxDuaiYy5F8sC35CvfylgthurK2RtdELchUY8HkrKToEYJxC7fjddjsYu7mcgP0yKcvXS7bw202i0xJDMGiwJlm+ZjMTnbYgdjhcwN1N6NVWgWUl0Gv6krX54NLmLlmAsUsLmembc5Df3i6ErWH2xLVZ82VMGYHTkeODazdclTwLdzjHPUMZbLocrg+0eYR65laLTvhOoxugdzN6hYq/hS7doYXwT+uxQ5vifqjAoUsChp+1GObjBcGekwY1SRBXLqYQfbd60LvCC4bmN19bQH9d61BWVBsGKQo0KJH8EzmTNIdUqHVorbqSQfe/RTqdLv1+2jtTt2vU9txVnba/UHX26gSfRus5/h1lWE6MvVLw+vaSM0oJV+sKPxXpXwF4AHPKHdwaG+UXV09JrpESTanP3S7NjPUJHC1s0ts6SppT9eVAPQSl9i4mEz3DBMGKEOirs3HvlAzV3+t1zua3UW+5iECVW9nR/njKp9VMj9gxqClTnhk5tROadrjR0ooHYyCR/v7T/Fp4j5o2Sv8aDtFHkbvIjglvlwPVRmbM9mq17yHtUzTLZnum27U/8yPC6q62+JHOygE87Vs1cr1jZQP7icAVD+Oqq/ybL1JQ10LWnZ/T2nbWy2WSxp2yV4w+nATBnOmuf8OQv0Wbug5DUZOugd03Luoem978FW/ItgqY93BklT0z5ko6S0Ig1tc1L96WN4sw8CXco5zP3Xk+etfEUCzdaM7Se0gv4N6I4V9cO1Nq411fnZJnYJJ9auGXKW0R7M76kayO8+mcvpyLSE3dh/UqUYwCjwmeTnpo/1p2rdTwvqh9c13XRH3936Fa+gslyu9uATUda+X/wZKmHAF
+sidebar_class_name: "post api-method"
+info_path: identity/api/v2/eurofurence-identity
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+import Translate from "@docusaurus/Translate";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Create attendance"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/users/{user}/attendances"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Creates a new convention attendance record for a user. Defaults to `is_attended: true` and `is_staff: false`.
+
+Creating attendance for another user requires the `Attendances.ReadWrite.All` scope.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+>
+  <Translate id="theme.openapi.request.title">Request</Translate>
+</Heading>
+
+<ParamsDetails
+  {...require("./create-user-attendance.ParamsDetails.json")}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  {...require("./create-user-attendance.RequestSchema.json")}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  {...require("./create-user-attendance.StatusCodes.json")}
+>
+  
+</StatusCodes>
+
+
+      

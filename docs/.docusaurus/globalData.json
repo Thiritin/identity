@@ -106,6 +106,10 @@
               "sidebar": "identitySidebar"
             },
             {
+              "id": "identity/api/v2/create-user-attendance",
+              "path": "/identity/api/v2/create-user-attendance"
+            },
+            {
               "id": "identity/api/v2/delete-group",
               "path": "/identity/api/v2/delete-group",
               "sidebar": "identitySidebar"
@@ -114,6 +118,14 @@
               "id": "identity/api/v2/delete-metadata-key",
               "path": "/identity/api/v2/delete-metadata-key",
               "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/delete-user-attendance",
+              "path": "/identity/api/v2/delete-user-attendance"
+            },
+            {
+              "id": "identity/api/v2/delete-user-metadata-key",
+              "path": "/identity/api/v2/delete-user-metadata-key"
             },
             {
               "id": "identity/api/v2/eurofurence-identity",
@@ -191,6 +203,30 @@
               "sidebar": "identitySidebar"
             },
             {
+              "id": "identity/api/v2/get-user",
+              "path": "/identity/api/v2/get-user"
+            },
+            {
+              "id": "identity/api/v2/get-user-attendances",
+              "path": "/identity/api/v2/get-user-attendances"
+            },
+            {
+              "id": "identity/api/v2/get-user-groups",
+              "path": "/identity/api/v2/get-user-groups"
+            },
+            {
+              "id": "identity/api/v2/get-user-metadata",
+              "path": "/identity/api/v2/get-user-metadata"
+            },
+            {
+              "id": "identity/api/v2/get-user-metadata-key",
+              "path": "/identity/api/v2/get-user-metadata-key"
+            },
+            {
+              "id": "identity/api/v2/get-user-staff-profile",
+              "path": "/identity/api/v2/get-user-staff-profile"
+            },
+            {
               "id": "identity/api/v2/get-userinfo",
               "path": "/identity/api/v2/get-userinfo",
               "sidebar": "identitySidebar"
@@ -226,6 +262,10 @@
               "sidebar": "identitySidebar"
             },
             {
+              "id": "identity/api/v2/put-user-metadata-key",
+              "path": "/identity/api/v2/put-user-metadata-key"
+            },
+            {
               "id": "identity/api/v2/remove-group-member",
               "path": "/identity/api/v2/remove-group-member",
               "sidebar": "identitySidebar"
@@ -234,6 +274,10 @@
               "id": "identity/api/v2/schemas/addmemberform",
               "path": "/identity/api/v2/schemas/addmemberform",
               "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/attendance",
+              "path": "/identity/api/v2/schemas/attendance"
             },
             {
               "id": "identity/api/v2/schemas/convention",
@@ -339,9 +383,25 @@
               "sidebar": "identitySidebar"
             },
             {
+              "id": "identity/api/v2/schemas/updateuserstaffprofile",
+              "path": "/identity/api/v2/schemas/updateuserstaffprofile"
+            },
+            {
+              "id": "identity/api/v2/schemas/usergroup",
+              "path": "/identity/api/v2/schemas/usergroup"
+            },
+            {
               "id": "identity/api/v2/schemas/userinfo",
               "path": "/identity/api/v2/schemas/userinfo",
               "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/schemas/userprofile",
+              "path": "/identity/api/v2/schemas/userprofile"
+            },
+            {
+              "id": "identity/api/v2/schemas/userstaffprofile",
+              "path": "/identity/api/v2/schemas/userstaffprofile"
             },
             {
               "id": "identity/api/v2/schemas/validationerror",
@@ -368,9 +428,25 @@
               "sidebar": "identitySidebar"
             },
             {
+              "id": "identity/api/v2/update-user-attendance",
+              "path": "/identity/api/v2/update-user-attendance"
+            },
+            {
+              "id": "identity/api/v2/update-user-staff-profile",
+              "path": "/identity/api/v2/update-user-staff-profile"
+            },
+            {
+              "id": "identity/api/v2/user-attendances",
+              "path": "/identity/api/v2/user-attendances"
+            },
+            {
               "id": "identity/api/v2/user-metadata",
               "path": "/identity/api/v2/user-metadata",
               "sidebar": "identitySidebar"
+            },
+            {
+              "id": "identity/api/v2/users",
+              "path": "/identity/api/v2/users"
             },
             {
               "id": "identity/concepts/audiences",

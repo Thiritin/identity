@@ -1,0 +1,26 @@
+{
+  "id": "identity/api/v2/get-user-metadata",
+  "title": "List all metadata",
+  "description": "Returns all key-value pairs stored by the authenticated app for the given user. Users can only access their own metadata.",
+  "source": "@site/docs/identity/api/v2/get-user-metadata.api.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/get-user-metadata",
+  "permalink": "/identity/api/v2/get-user-metadata",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "get-user-metadata",
+    "title": "List all metadata",
+    "description": "Returns all key-value pairs stored by the authenticated app for the given user. Users can only access their own metadata.",
+    "sidebar_label": "List all metadata",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "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",
+    "sidebar_class_name": "get api-method",
+    "info_path": "identity/api/v2/eurofurence-identity",
+    "custom_edit_url": null
+  }
+}

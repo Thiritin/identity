@@ -1,0 +1,1 @@
+{"title":"Body","body":{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["convention_id"],"properties":{"convention_id":{"type":"integer","description":"The convention to register attendance for","example":29}}}}}}}

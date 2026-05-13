@@ -1,0 +1,26 @@
+{
+  "id": "identity/api/v2/get-user-groups",
+  "title": "List user's groups",
+  "description": "Returns the group memberships for a user. Use `me` as the user parameter for the authenticated user's own groups.",
+  "source": "@site/docs/identity/api/v2/get-user-groups.api.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/get-user-groups",
+  "permalink": "/identity/api/v2/get-user-groups",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "get-user-groups",
+    "title": "List user's groups",
+    "description": "Returns the group memberships for a user. Use `me` as the user parameter for the authenticated user's own groups.",
+    "sidebar_label": "List user's groups",
+    "hide_title": true,
+    "hide_table_of_contents": true,
+    "api": "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",
+    "sidebar_class_name": "get api-method",
+    "info_path": "identity/api/v2/eurofurence-identity",
+    "custom_edit_url": null
+  }
+}

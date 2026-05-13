@@ -1,0 +1,20 @@
+{
+  "id": "identity/api/v2/user-attendances",
+  "title": "User Attendances",
+  "description": "User Attendances",
+  "source": "@site/docs/identity/api/v2/user-attendances.tag.mdx",
+  "sourceDirName": "identity/api/v2",
+  "slug": "/identity/api/v2/user-attendances",
+  "permalink": "/identity/api/v2/user-attendances",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": null,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "user-attendances",
+    "title": "User Attendances",
+    "description": "User Attendances",
+    "custom_edit_url": null
+  }
+}
