@@ -27,7 +27,7 @@
                         class="absolute bottom-2 left-2 text-sm text-primary-200 bg-black px-2 py-1 rounded shadow"
                     >
                         Artwork by
-                        <a class="hover:underline" href="https://www.furaffinity.net/user/jukajo">Jukajo</a>
+                        <a class="hover:underline" href="https://www.furaffinity.net/user/darbaras">Darbaras</a>
                     </div>
                 </div>
             </div>
@@ -145,7 +145,7 @@ export default {
 .auth-background {
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url('../../assets/fantastic_furry_festival.jpg');
+    background-image: url('../../assets/midnight_lab.jpg');
 }
 
 .page * {
